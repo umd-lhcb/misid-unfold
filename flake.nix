@@ -29,8 +29,9 @@
             clang-tools
 
             root
-            cxxopts
             roounfold
+            cxxopts
+            libyamlcpp
 
             # Python stack
             #pythonPackages.pyTuplingUtils
