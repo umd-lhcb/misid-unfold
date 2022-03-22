@@ -1,0 +1,39 @@
+# cuts for each tagged species, used for:
+#   - pidcalib2 wrapper (P)
+#   - tagged histogram builder (T)
+#   - ghost/uncategoried efficiency histogram builder (G)
+#   - unfolding weights applyer (A)
+#   - unfolding efficiency calculator (U)
+# FIXME: placeholder for now
+tags:
+    misid_pi: true
+    misid_k: true
+    misid_e: true
+    misid_mu: true
+    misid_g: "!misid_pi && !misid_k && !misid_e && !misid_mu"  # ghost/uncategoried
+
+
+# specify additional source of histograms
+# used by the efficiency histogram merger (M)
+# this will generate a single efficiency histo root file
+input_histos:
+    - "../histos/22_03_22-pidcalib/*.root:eff"
+    - "../histos/22_03_10-rjpsi_sample/rjpsi_sample.root:name*"
+
+
+# building tagged histograms, used by (T), (A) and (U)
+# for (A) and (U), it's for figuuring out histogram names only
+# the key names will be prepended to the histograms
+# e.g. Dst: <path_to_histo> -> Dst__piTag, Dst__kTag, etc.
+input_ntps:
+    # each entry should be a key-list pair, where list provides path to ntuples, with tree names
+    D0:
+        - "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_19--mu_misid--data--2016--*.root:tree"
+
+
+# generated histograms will have the following names, e.g.:
+#   - D0_ws__eTrueToETag
+#   - D0_ws__eTruetoPiTag
+#   ...
+# NOTE: here we use '__' as separators because '-' is not supported:
+#   https://root-forum.cern.ch/t/minus-sign-in-branch-name/13400
