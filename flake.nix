@@ -34,7 +34,6 @@
             libyamlcpp
 
             # Python stack
-            #pythonPackages.pyTuplingUtils
             virtualenvwrapper
             pylint
 
