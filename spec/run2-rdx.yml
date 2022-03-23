@@ -1,9 +1,11 @@
-# cuts for each tagged species, used for:
-#   - pidcalib2 wrapper (P)
-#   - tagged histogram builder (T)
-#   - ghost/uncategoried efficiency histogram builder (G)
-#   - unfolding weights applyer (A)
-#   - unfolding efficiency calculator (U)
+# this YAML is used by:
+# - pidcalib2 wrapper (P)
+# - tagged histogram builder (T)
+# - ghost/uncategoried efficiency histogram builder (G)
+# - unfolding weights applyer (A)
+# - unfolding efficiency calculator (U)
+
+# cuts for each tagged species, used by (T), (G)
 # FIXME: placeholder for now
 tags:
     misid_pi: true
@@ -11,6 +13,29 @@ tags:
     misid_e: true
     misid_mu: true
     misid_g: "!misid_pi && !misid_k && !misid_e && !misid_mu"  # ghost/uncategoried
+
+
+# used by (T), (G)
+binning:
+    P: [0, 100]
+    ETA: [0, 100]
+    nTracks: [0, 900]
+
+# used by (T), (A)
+binning_alias:
+    P: mu_P
+    ETA: [mu_P, mu_PZ]
+    nTracks: nTracks
+
+
+# used by (T)
+# NOTE: we apply all global cuts except Mu PID and B mass window
+add_global_cuts:
+    - dx_m_ok
+
+# used by (P)
+add_kinematic_cuts:
+    - P > 100
 
 
 # specify additional source of histograms
