@@ -5,13 +5,13 @@
 # - unfolding weights applyer (A)
 # - unfolding efficiency calculator (U)
 
-# cuts for each tagged species, used by (T), (G)
+# cuts for each tagged species, used by (P), (T), (G), and (A)
 # FIXME: placeholder for now
 tags:
-    misid_pi: true
-    misid_k: true
-    misid_e: true
-    misid_mu: true
+    misid_pi: "true"
+    misid_k: "true"
+    misid_e: "true"
+    misid_mu: "true"
     misid_g: "!misid_pi && !misid_k && !misid_e && !misid_mu"  # ghost/uncategoried
 
 
@@ -53,7 +53,7 @@ input_histos:
 input_ntps:
     # each entry should be a key-list pair, where list provides path to ntuples, with tree names
     D0:
-        - "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_19--mu_misid--data--2016--*.root:tree"
+        - "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_23--mu_misid--data--2016--*.root:tree"
 
 
 # generated histograms will have the following names, e.g.:
