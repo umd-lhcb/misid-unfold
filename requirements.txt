@@ -1,3 +1,4 @@
 uproot
 numpy
 pyyaml
+pyTuplingUtils
