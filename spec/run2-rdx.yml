@@ -29,12 +29,11 @@ binning_alias:
     nTracks: nTracks
 
 
-# used by (T), (P)
 # NOTE: we apply all global cuts except Mu PID and B mass window
 global_cuts:
-    kinematic:
+    kinematic:  # used by (P)
         - P > 100
-    offline:
+    offline:  # used by (T)
         - dx_m_ok
 
 

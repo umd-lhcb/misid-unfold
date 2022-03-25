@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# Author: Yipeng Sun
+# License: BSD 2-clause
+# Last Change: Fri Mar 25, 2022 at 12:29 AM -0400
 #
 # Description: tagged histogram builder (T)
 
