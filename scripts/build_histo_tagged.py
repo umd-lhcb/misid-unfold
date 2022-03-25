@@ -61,7 +61,7 @@ def histo_name_gen(name):
 #######################
 
 COMPUTE_FUNC = {
-    'ETA': lambda p, pz: np.log((p+pz) / (p-pz))
+    'ETA': lambda p, pz: 0.5*np.log((p+pz) / (p-pz))
 }
 
 
@@ -93,8 +93,10 @@ if __name__ == '__main__':
             else:
                 histo_brs.append(evaluator.eval(var[0]))
 
+        global_cut = evaluator.eval('&'.join(config["global_cuts"]["offline"]))
+
         for sp, cut in config['tags'].items():
-            cut_expr = f'{" & ".join(config["add_global_cuts"]["offline"])} & {convert_boolean_expr(cut)}'
+            cut_expr = convert_boolean_expr(cut)
             print(f'  specie {histo_name_gen(sp)} has the following cuts: {cut_expr}')
             cut = evaluator.eval(cut_expr)
 
@@ -104,5 +106,6 @@ if __name__ == '__main__':
 
             # Now build histograms
             ntp[f'{particle}__{histo_name_gen(sp)}'] = np.histogramdd(
-                histo_brs, bins=list(config['binning'].values()), weights=cut
+                histo_brs, bins=list(config['binning'].values()),
+                weights=(cut & global_cut)
             )

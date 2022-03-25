@@ -18,7 +18,7 @@ tags:
 # used by (T), (G)
 # FIXME: currently just placeholder
 binning:
-    P: [0, 10, 100]
+    P: [0, 1.e+4, 1.e+5, 1.e+6, 1.e+7, 1.e+8]  # the scific notation has to be written like this for PyYAML
     ETA: [1.9, 2.1, 2.7, 5.2]
     nTracks: [1, 2, 3, 5, 7, 9, 10, 100, 300, 500, 900]
 
@@ -31,7 +31,7 @@ binning_alias:
 
 # used by (T), (P)
 # NOTE: we apply all global cuts except Mu PID and B mass window
-add_global_cuts:
+global_cuts:
     kinematic:
         - P > 100
     offline:
