@@ -16,10 +16,11 @@ tags:
 
 
 # used by (T), (G)
+# FIXME: currently just placeholder
 binning:
-    P: [0, 100]
-    ETA: [0, 100]
-    nTracks: [0, 900]
+    P: [0, 10, 100]
+    ETA: [1.9, 2.1, 2.7, 5.2]
+    nTracks: [1, 2, 3, 5, 7, 9, 10, 100, 300, 500, 900]
 
 # used by (T), (A)
 binning_alias:
@@ -28,14 +29,13 @@ binning_alias:
     nTracks: nTracks
 
 
-# used by (T)
+# used by (T), (P)
 # NOTE: we apply all global cuts except Mu PID and B mass window
 add_global_cuts:
-    - dx_m_ok
-
-# used by (P)
-add_kinematic_cuts:
-    - P > 100
+    kinematic:
+        - P > 100
+    offline:
+        - dx_m_ok
 
 
 # specify additional source of histograms
