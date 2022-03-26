@@ -6,13 +6,13 @@
 # - unfolding efficiency calculator (U)
 
 # cuts for each tagged species, used by (P), (T), (G), and (A)
-# FIXME: placeholder for now
+# NOTE: here we follow C++ boolean convention (&&, ||)
 tags:
-    misid_pi: "true"
-    misid_k: "true"
-    misid_e: "true"
-    misid_mu: "true"
-    misid_g: "!misid_pi && !misid_k && !misid_e && !misid_mu"  # ghost/uncategoried
+    misid_pi: "mu_ProbNNpi > 0.1 && mu_PIDK < 0.0 && mu_PIDp < 0.0 && mu_PIDe < 2.0 && mu_ProbNNghost < 0.25"
+    misid_k: "mu_PIDK > 0.0 && mu_PIDp < 0.0 && (mu_PIDe - mu_PIDK) < -2.0 && mu_ProbNNghost < 0.25"
+    misid_p: "mu_PIDp > 2.0 && (mu_PIDe - mu_PIDp) < -2.0 && mu_ProbNNghost < 0.25"
+    misid_e: "mu_PIDe > 2.0 && (mu_PIDe - mu_PIDK) > -2.0 && (mu_PIDe - mu_PIDp) > -2.0 && mu_ProbNNghost < 0.25"
+    misid_g: "!misid_pi && !misid_k && !misid_p && !misid_e"  # ghost/uncategoried
 
 
 # used by (T), (G)
@@ -30,11 +30,13 @@ binning_alias:
 
 
 # NOTE: we apply all global cuts except Mu PID and B mass window
+#       here we follow Python boolean convention (&, |)
 global_cuts:
-    kinematic:  # used by (P)
-        - P > 100
-    offline:  # used by (T)
-        - dx_m_ok
+    # all except 'offline' is used by (P); 'offline' is used by (T)
+    kinematic: "P > 3000 & P < 100000"
+    non_mu: "!IsMuon & InMuAcc"
+    mu: "IsMuon & PIDmu > 2.0 & ProbNNghost < 0.5"
+    offline: dx_m_ok
 
 
 # specify additional source of histograms
