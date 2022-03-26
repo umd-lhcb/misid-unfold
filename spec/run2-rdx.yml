@@ -16,11 +16,11 @@ tags:
 
 
 # used by (T), (G)
-# FIXME: currently just placeholder
+# NOTE: currently consistent w/ Zishuo's binning
 binning:
-    P: [0, 1.e+4, 1.e+5, 1.e+6, 1.e+7, 1.e+8]  # the scific notation has to be written like this for PyYAML
-    ETA: [1.9, 2.1, 2.7, 5.2]
-    nTracks: [1, 2, 3, 5, 7, 9, 10, 100, 300, 500, 900]
+    P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]  # the scific notation has to be written like this for PyYAML
+    ETA: [1.7, 3.6, 5.0]
+    nTracks: [0, 200, 600]
 
 # used by (T), (A)
 binning_alias:
