@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Mar 25, 2022 at 09:09 PM -0400
+# Last Change: Sat Mar 26, 2022 at 12:02 AM -0400
 #
 # Description: tagged histogram builder (T)
 
@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
         # load branches needed to build histos
         histo_brs = []
-        for br_name, var in config['binning_alias'].items():
+        for br_name, var in config['binning_alias']['offline'].items():
             var = [var] if not isinstance(var, list) else var
 
             if br_name in COMPUTE_FUNC:

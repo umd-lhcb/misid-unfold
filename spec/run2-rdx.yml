@@ -22,11 +22,25 @@ binning:
     ETA: [1.7, 3.6, 5.0]
     nTracks: [0, 200, 600]
 
-# used by (T), (A)
+# used by (T), (A), (P)
 binning_alias:
-    P: mu_P
-    ETA: [mu_P, mu_PZ]
-    nTracks: nTracks
+    pidcalib:
+        P: Brunel_P
+        ETA: Brunel_ETA
+        nTracks: nTracks_Brunel
+    offline:
+        P: mu_P
+        ETA: [mu_P, mu_PZ]
+        nTracks: nTracks
+
+
+# used by (P)
+particle alias:
+    pi: Pi
+    k: K
+    p: P
+    e: e
+    mu: Mu_nopt
 
 
 # NOTE: we apply all global cuts except Mu PID and B mass window
@@ -34,8 +48,8 @@ binning_alias:
 global_cuts:
     # all except 'offline' is used by (P); 'offline' is used by (T)
     kinematic: "P > 3000 & P < 100000"
-    non_mu: "!IsMuon & InMuAcc"
-    mu: "IsMuon & PIDmu > 2.0 & ProbNNghost < 0.5"
+    non_mu: "IsMuon == 0.0 & InMuAcc == 1.0"
+    mu: "IsMuon == 1.0 & PIDmu > 2.0 & ProbNNghost < 0.5"
     offline: dx_m_ok
 
 
