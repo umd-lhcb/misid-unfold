@@ -35,7 +35,7 @@ binning_alias:
 
 
 # used by (P)
-particle alias:
+particle_alias:
     pi: Pi
     k: K
     p: P
