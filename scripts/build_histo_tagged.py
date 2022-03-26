@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Mar 25, 2022 at 12:29 AM -0400
+# Last Change: Fri Mar 25, 2022 at 09:09 PM -0400
 #
 # Description: tagged histogram builder (T)
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
             else:
                 histo_brs.append(evaluator.eval(var[0]))
 
-        global_cut = evaluator.eval('&'.join(config["global_cuts"]["offline"]))
+        global_cut = evaluator.eval(config["global_cuts"]["offline"])
 
         for sp, cut in config['tags'].items():
             cut_expr = convert_boolean_expr(cut)

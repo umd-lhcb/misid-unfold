@@ -10,7 +10,7 @@
 tags:
     misid_pi: "mu_ProbNNpi > 0.1 && mu_PIDK < 0.0 && mu_PIDp < 0.0 && mu_PIDe < 2.0 && mu_ProbNNghost < 0.25"
     misid_k: "mu_PIDK > 0.0 && mu_PIDp < 0.0 && (mu_PIDe - mu_PIDK) < -2.0 && mu_ProbNNghost < 0.25"
-    misid_p: "mu_PIDp > 2.0 && (mu_PIDe - mu_PIDp) < -2.0 && mu_ProbNNghost < 0.25"
+    misid_p: "mu_PIDp > 2.0 && mu_PIDK < 0.0 && (mu_PIDe - mu_PIDp) < -2.0 && mu_ProbNNghost < 0.25"
     misid_e: "mu_PIDe > 2.0 && (mu_PIDe - mu_PIDK) > -2.0 && (mu_PIDe - mu_PIDp) > -2.0 && mu_ProbNNghost < 0.25"
     misid_g: "!misid_pi && !misid_k && !misid_p && !misid_e"  # ghost/uncategoried
 
