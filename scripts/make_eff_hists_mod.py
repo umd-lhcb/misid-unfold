@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 ###############################################################################
 # (c) Copyright 2021 CERN for the benefit of the LHCb Collaboration           #
 #                                                                             #
@@ -224,7 +224,7 @@ def make_eff_hists(config: dict) -> None:
                 pickle.dump(eff_hists[f"passing_{cut}"], f)
                 pickle.dump(eff_hists["total"], f)
 
-            log.info(f"Efficiency histograms saved to '{eff_hist_path}'")
+            log.info(f"Efficiency histogram of cut {cut} saved to '{eff_hist_path}'")
 
 
 def main():
