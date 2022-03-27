@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 12:24 AM -0400
+# Last Change: Sun Mar 27, 2022 at 12:39 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -20,6 +20,7 @@ from yaml import safe_load
 JSON_BIN_FILENAME = 'binning.json'
 SAMPLE_ALIAS = lambda p: 'Electron' if p == 'e' else 'Turbo'
 REPLACEMENT_RULES = {
+    '!': '',
     '&&': '&',
     '||': '|',
     'mu_': '',
@@ -116,12 +117,13 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
 # Helpers for cut generation #
 ##############################
 
+# FIXME: Dirty hacks due to limited boolean expressions of pidcalib2
 def cut_replacement(tagged_cuts):
     result = dict()
 
     for p, cut in tagged_cuts.items():
         for p_else in tagged_cuts:
-            cut = cut.replace(p_else, f"({tagged_cuts[p_else]})")
+            cut = cut.replace(p_else, f"({tagged_cuts[p_else]} == 0)")
 
         for src, tgt in REPLACEMENT_RULES.items():
             cut = cut.replace(src, tgt)
@@ -146,7 +148,7 @@ def true_to_tag_directive_gen(config, year, output_folder, addon=['mu']):
             global_cuts.append(config['global_cuts']['kinematic'])
 
             pid_cut = config['global_cuts']['mu'] if p_true == 'mu' else \
-                config['global_cuts']['non_mu']
+                config['global_cuts']['non_mu'] + '&'
             pid_cut += pid_cut_addon
             pid_cuts.append(pid_cut)
 
