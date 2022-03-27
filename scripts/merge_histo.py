@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 06:28 PM -0400
+# Last Change: Sun Mar 27, 2022 at 06:37 PM -0400
 #
 # Description: histogram merger (M)
 
 from argparse import ArgumentParser
 from pathlib import Path
 from os import makedirs
+from os.path import basename
 from yaml import safe_load
 from glob import glob
 
@@ -50,13 +51,13 @@ def merge_true_to_tag(output_ntp, path_prefix, paths):
         for n in glob(p):
             input_ntp = uproot.open(n)
 
-            output_ntp[n.replace('.root', '')] = input_ntp['eff']
+            output_ntp[basename(n).replace('.root', '')] = input_ntp['eff']
 
 
-def merge_extra(output_ntp, path_prefix, config):
-    for path in config:
+def merge_extra(output_ntp, path_prefix, spec):
+    for path in spec:
         input_ntp = uproot.open(f'{path_prefix}/{path}')
-        for src, tgt in config[path]:
+        for src, tgt in spec[path].items():
             output_ntp[tgt] = input_ntp[src]
 
 
@@ -79,6 +80,6 @@ if __name__ == '__main__':
     with open(args.config, 'r') as f:
         config = safe_load(f)
 
-    for mode, args in config['input_histos']:
+    for mode, args in config['input_histos'].items():
         print(f'Merging {mode}...')
-        KNOWN_MERGERS[mode](output_ntp, path_prefix, config)
+        KNOWN_MERGERS[mode](output_ntp, path_prefix, args)

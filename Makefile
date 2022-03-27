@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 06:03 PM -0400
+# Last Change: Sun Mar 27, 2022 at 06:28 PM -0400
 
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
@@ -27,6 +27,10 @@ build-rdx-tag-2016:
 build-rdx-true-to-tag-2016:
 	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-true_to_tag-2016)
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o $(OUT_DIR) -y 16
+
+build-rdx-merged-2016:
+	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-merged-2016)
+	./scripts/merge_histo.py -c ./spec/rdx-2016.yml -o $(OUT_DIR)
 
 
 ########
