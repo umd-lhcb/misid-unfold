@@ -48,7 +48,7 @@ particle_alias:
 global_cuts:
     # all except 'offline' is used by (P); 'offline' is used by (T)
     kinematic: "P > 3000 & P < 100000"
-    non_mu: "IsMuon == 0.0 & InMuAcc == 1.0"
+    non_mu: "IsMuon == 0.0 & InMuonAcc == 1.0"
     mu: "IsMuon == 1.0 & DLLmu > 2.0 & MC15TuneV1_ProbNNghost < 0.5"
     offline: dx_m_ok
 
