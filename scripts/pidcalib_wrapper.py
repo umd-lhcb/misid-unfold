@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 02:03 AM -0400
+# Last Change: Sun Mar 27, 2022 at 02:07 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -159,8 +159,8 @@ def true_to_tag_directive_gen(config, year, output_folder, addon=['mu']):
             global_cuts.append(config['global_cuts']['kinematic'])
 
             pid_cut = config['global_cuts']['mu'] if p_true == 'mu' else \
-                config['global_cuts']['non_mu'] + '&'
-            pid_cut += pid_cut_addon
+                config['global_cuts']['non_mu']
+            pid_cut += '&' + pid_cut_addon
             pid_cuts.append(pid_cut)
 
         result.append([
