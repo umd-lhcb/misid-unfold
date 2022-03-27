@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 12:21 AM -0400
+# Last Change: Sun Mar 27, 2022 at 12:24 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -70,7 +70,9 @@ def run_cmd(cmd, debug=False):
     if debug:
         print(cmd)
     else:
-        system(cmd)
+        ret_val = system(cmd)
+        if ret_val:
+            raise ValueError('Command execution failed.')
 
 
 def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
