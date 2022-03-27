@@ -1,8 +1,14 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Mar 26, 2022 at 08:35 PM -0400
+# Last Change: Sat Mar 26, 2022 at 08:39 PM -0400
 
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
+
+
+.PHONY: clean
+
+clean:
+	@rm -rf ./gen/*
 
 
 .PHONY: build-tagged-histo

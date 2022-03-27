@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Mar 26, 2022 at 08:36 PM -0400
+# Last Change: Sat Mar 26, 2022 at 08:41 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -83,9 +83,6 @@ def pidcalib_gen(part_true, part_tag, part_sample, global_cut, pid_cut,
     --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel \
     --binning-file ./tmp/{JSON_BIN_FILENAME}
     '''
-
-    # for debugging only
-    cmd += ' --max-files 3'
 
     run_cmd(cmd, debug)
 
