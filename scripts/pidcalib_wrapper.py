@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 12:39 AM -0400
+# Last Change: Sun Mar 27, 2022 at 01:03 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -9,6 +9,7 @@ import json
 
 from argparse import ArgumentParser
 from os import system, chdir, makedirs
+from os.path import basename, dirname, abspath
 from glob import glob
 from yaml import safe_load
 
@@ -20,7 +21,7 @@ from yaml import safe_load
 JSON_BIN_FILENAME = 'binning.json'
 SAMPLE_ALIAS = lambda p: 'Electron' if p == 'e' else 'Turbo'
 REPLACEMENT_RULES = {
-    '!': '',
+    '!': '0 == ',  # FIXME: Dirty hacks due to limited ability of handling boolean expressions in pidcalib2
     '&&': '&',
     '||': '|',
     'mu_': '',
@@ -30,6 +31,7 @@ REPLACEMENT_RULES = {
     'PIDp': 'DLLp',
     'PIDe': 'DLLe'
 }
+CURR_DIR = dirname(abspath(__file__))
 
 
 #######################
@@ -80,11 +82,11 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
                  year, output_folder,
                  debug=False, polarity='down'):
     cuts = ''
-    for gc, pc in zip(global_cuts, pid_cuts):
-        cuts += f' --cut "{gc}" --pid-cut "{pc}"'
+    for gc, pc, nm in zip(global_cuts, pid_cuts, part_tag_arr):
+        cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {part_true}To{nm.capitalize()}Tag.pkl'
 
     folder_name = f'{part_true}True-{year}'
-    cmd = fr'''lb-conda pidcalib pidcalib2.make_eff_hists \
+    cmd = fr'''lb-conda pidcalib {CURR_DIR}/make_eff_hists_mod.py \
     --output-dir {output_folder}/{folder_name} \
     --sample {SAMPLE_ALIAS(part_true)}{year} --magnet {polarity} \
     --particle {part_sample} \
@@ -100,15 +102,10 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
         return 1
 
     # Convert pkl -> root, rename and relocate
-    rename_rules = {cut.replace(' ', ''): part
-                    for cut, part in zip(pid_cuts, part_tag_arr)}
-
     for pkl in glob(f'{output_folder}/{folder_name}/*.pkl'):
         run_cmd(f'lb-conda pidcalib2.pklhisto2root "{pkl}"')
-        for ntp in glob(f'{output_folder}/{folder_name}/*.root'):
-            for rule, p in rename_rules:
-                if rule in ntp:
-                    run_cmd(f'cp "{ntp}" {part_true}To{p.capitalize()}-{year}.root')
+    for ntp in glob(f'{output_folder}/{folder_name}/*.pkl'):
+        run_cmd(f'cp "{ntp}" ./{basename(ntp)}')
 
     return 0
 
@@ -117,13 +114,12 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
 # Helpers for cut generation #
 ##############################
 
-# FIXME: Dirty hacks due to limited boolean expressions of pidcalib2
 def cut_replacement(tagged_cuts):
     result = dict()
 
     for p, cut in tagged_cuts.items():
         for p_else in tagged_cuts:
-            cut = cut.replace(p_else, f"({tagged_cuts[p_else]} == 0)")
+            cut = cut.replace(p_else, f"({tagged_cuts[p_else]})")
 
         for src, tgt in REPLACEMENT_RULES.items():
             cut = cut.replace(src, tgt)
