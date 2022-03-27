@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Mar 26, 2022 at 08:30 PM -0400
+# Last Change: Sat Mar 26, 2022 at 08:36 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -167,4 +167,4 @@ if __name__ == '__main__':
         config, args.year, 'raw_histos')
     for d in sample_directives:
         #  pidcalib_gen(*d, debug=True)
-        pidcalib_gen(*d, debug=True)
+        pidcalib_gen(*d)
