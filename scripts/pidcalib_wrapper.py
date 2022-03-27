@@ -109,7 +109,7 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
     --binning-file ./tmp/{JSON_BIN_FILENAME}'''
 
     cmd += cuts
-    cmd += ' --max-files 3'  # debug only
+    # cmd += ' --max-files 3'  # debug only
 
     run_cmd(cmd, debug)
 
@@ -119,7 +119,7 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
     # Convert pkl -> root, rename and relocate
     for pkl in glob(f'{output_folder}/{folder_name}/*.pkl'):
         run_cmd(f'lb-conda pidcalib pidcalib2.pklhisto2root "{pkl}"')
-    for ntp in glob(f'{output_folder}/{folder_name}/*.pkl'):
+    for ntp in glob(f'{output_folder}/{folder_name}/*.root'):
         run_cmd(f'cp "{ntp}" ./{basename(ntp)}')
 
     return 0
