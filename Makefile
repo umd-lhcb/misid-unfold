@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Mar 26, 2022 at 08:39 PM -0400
+# Last Change: Sat Mar 26, 2022 at 10:54 PM -0400
 
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
@@ -17,11 +17,11 @@ build-tagged-histo:
 	./scripts/build_histo_tagged.py -c ./spec/run2-rdx.yml -o ./gen
 
 
-.PHONY: lxplus-build-pidcalib-histo
+.PHONY: lxplus-build-pidcalib-histo-2016
 
-lxplus-build-pidcalib-histo:
-	$(eval OUT_DIR	:=	gen/pidcalib-$(TIME_STAMP))
-	./scripts/pidcalib_wrapper.py -c ./spec/run2-rdx.yml -o $(OUT_DIR)
+lxplus-build-pidcalib-histo-2016:
+	$(eval OUT_DIR	:=	gen/pidcalib-$(TIME_STAMP)-2016)
+	./scripts/pidcalib_wrapper.py -c ./spec/run2-rdx.yml -o $(OUT_DIR) -y 2016
 
 
 .PHONY: test-pidcalib2-wrapper
