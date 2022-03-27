@@ -1,3 +1,4 @@
+#!/usr/bin/env python 
 ###############################################################################
 # (c) Copyright 2021 CERN for the benefit of the LHCb Collaboration           #
 #                                                                             #
