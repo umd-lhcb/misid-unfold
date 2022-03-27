@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 01:03 AM -0400
+# Last Change: Sun Mar 27, 2022 at 01:55 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -63,10 +63,23 @@ def parse_input():
 # Helpers #
 ###########
 
-def dump_binning(yml_bins, bin_alias, particles, output):
-    binning = {bin_alias[k]: v for k, v in yml_bins.items()}
+def bin_alias(config):
+    # FIXME: Special treatement for electron samples
+    def inner(var, part):
+        print(var, part)
+        if part == 'e_B_Jpsi' and var == 'nTracks':
+            return 'nTracks'
+        return config['binning_alias']['pidcalib'][var]
+    return inner
+
+
+def dump_binning(yml_bins, config, particles, output):
+    alias = bin_alias(config)
+
     with open(output, 'w') as f:
-        return json.dump({p: binning for p in particles}, f)
+        json.dump(
+            {p: {alias(k, p): v for k, v in yml_bins.items()}
+             for p in particles}, f)
 
 
 def run_cmd(cmd, debug=False):
@@ -178,8 +191,8 @@ if __name__ == '__main__':
                  if i in config['particle_alias'] else i for i in particles_raw]
 
     # Dump custom binning schema (a JSON file, consumed by pidcalib later)
-    dump_binning(config['binning'], config['binning_alias']['pidcalib'],
-                 particles, f'./tmp/{JSON_BIN_FILENAME}')
+    dump_binning(config['binning'], config, particles,
+                 f'./tmp/{JSON_BIN_FILENAME}')
 
     # Generate efficiency histograms with pidcalib2
     if args.mode == 'true_to_tag':
