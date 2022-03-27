@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Mar 26, 2022 at 08:41 PM -0400
+# Last Change: Sat Mar 26, 2022 at 08:45 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -73,7 +73,7 @@ def run_cmd(cmd, debug=False):
 def pidcalib_gen(part_true, part_tag, part_sample, global_cut, pid_cut,
                  year, output_folder,
                  debug=False, polarity='down'):
-    folder_name = f'{part_true}-to-{part_tag}-{year}'
+    folder_name = f'{part_true}TrueTo{part_tag.capitalize()}Tag-{year}'
     cmd = fr'''lb-conda pidcalib pidcalib2.make_eff_hists \
     --output-dir {output_folder}/{folder_name} \
     --sample {SAMPLE_ALIAS(part_true)}{year} --magnet {polarity} \
@@ -163,5 +163,4 @@ if __name__ == '__main__':
     sample_directives = gen_pidcalib_sample_directive(
         config, args.year, 'raw_histos')
     for d in sample_directives:
-        #  pidcalib_gen(*d, debug=True)
-        pidcalib_gen(*d)
+        pidcalib_gen(*d, debug=args.dry_run)
