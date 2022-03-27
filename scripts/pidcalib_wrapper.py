@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 02:07 AM -0400
+# Last Change: Sun Mar 27, 2022 at 02:41 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -95,7 +95,7 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
                  debug=False, polarity='down'):
     cuts = ''
     for gc, pc, nm in zip(global_cuts, pid_cuts, part_tag_arr):
-        cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {part_true}To{nm.capitalize()}Tag.pkl'
+        cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {part_true}TrueTo{nm.capitalize()}Tag.pkl'
 
     # FIXME: nTrack name
     ntracks = 'nTracks_Brunel' if part_true != 'e' else 'nTracks'
@@ -118,7 +118,7 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
 
     # Convert pkl -> root, rename and relocate
     for pkl in glob(f'{output_folder}/{folder_name}/*.pkl'):
-        run_cmd(f'lb-conda pidcalib2.pklhisto2root "{pkl}"')
+        run_cmd(f'lb-conda pidcalib pidcalib2.pklhisto2root "{pkl}"')
     for ntp in glob(f'{output_folder}/{folder_name}/*.pkl'):
         run_cmd(f'cp "{ntp}" ./{basename(ntp)}')
 
