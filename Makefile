@@ -21,7 +21,7 @@ build-tagged-histo:
 
 lxplus-build-pidcalib-histo-2016:
 	$(eval OUT_DIR	:=	gen/pidcalib-$(TIME_STAMP)-2016)
-	./scripts/pidcalib_wrapper.py -c ./spec/run2-rdx.yml -o $(OUT_DIR) -y 2016
+	./scripts/pidcalib_wrapper.py -c ./spec/run2-rdx.yml -o $(OUT_DIR) -y 16
 
 
 .PHONY: test-pidcalib2-wrapper
