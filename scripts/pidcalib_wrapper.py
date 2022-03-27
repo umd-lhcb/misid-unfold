@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Mar 26, 2022 at 08:45 PM -0400
+# Last Change: Sun Mar 27, 2022 at 12:21 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -50,6 +50,9 @@ def parse_input():
     parser.add_argument('-y', '--year', default='16',
                         help='specify year (only the last 2 digits).')
 
+    parser.add_argument('-m', '--mode', default='true_to_tag',
+                        help='specify working mode.')
+
     return parser.parse_args()
 
 
@@ -70,30 +73,41 @@ def run_cmd(cmd, debug=False):
         system(cmd)
 
 
-def pidcalib_gen(part_true, part_tag, part_sample, global_cut, pid_cut,
+def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
                  year, output_folder,
                  debug=False, polarity='down'):
-    folder_name = f'{part_true}TrueTo{part_tag.capitalize()}Tag-{year}'
+    cuts = ''
+    for gc, pc in zip(global_cuts, pid_cuts):
+        cuts += f' --cut "{gc}" --pid-cut "{pc}"'
+
+    folder_name = f'{part_true}True-{year}'
     cmd = fr'''lb-conda pidcalib pidcalib2.make_eff_hists \
     --output-dir {output_folder}/{folder_name} \
     --sample {SAMPLE_ALIAS(part_true)}{year} --magnet {polarity} \
     --particle {part_sample} \
-    --pid-cut "{pid_cut}" \
-    --cut "{global_cut}" \
     --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel \
-    --binning-file ./tmp/{JSON_BIN_FILENAME}
-    '''
+    --binning-file ./tmp/{JSON_BIN_FILENAME}'''
+
+    cmd += cuts
+    cmd += ' --max-files 3'  # debug only
 
     run_cmd(cmd, debug)
 
-    # Convert pkl -> root, rename and relocate
-    pkl = glob(f'{output_folder}/{folder_name}/*.pkl')
-    pkl = 'fake.pkl' if not pkl else pkl[0]  # for debugging
-    run_cmd(f'lb-conda pidcalib2.pklhisto2root {pkl}', debug=debug)
+    if debug:
+        return 1
 
-    ntp = glob(f'{output_folder}/{folder_name}/*.root')
-    ntp = 'fake.root' if not ntp else ntp[0]  # for debugging
-    run_cmd(f'cp {ntp} {folder_name}.root', debug=debug)
+    # Convert pkl -> root, rename and relocate
+    rename_rules = {cut.replace(' ', ''): part
+                    for cut, part in zip(pid_cuts, part_tag_arr)}
+
+    for pkl in glob(f'{output_folder}/{folder_name}/*.pkl'):
+        run_cmd(f'lb-conda pidcalib2.pklhisto2root "{pkl}"')
+        for ntp in glob(f'{output_folder}/{folder_name}/*.root'):
+            for rule, p in rename_rules:
+                if rule in ntp:
+                    run_cmd(f'cp "{ntp}" {part_true}To{p.capitalize()}-{year}.root')
+
+    return 0
 
 
 ##############################
@@ -115,7 +129,7 @@ def cut_replacement(tagged_cuts):
     return result
 
 
-def gen_pidcalib_sample_directive(config, year, output_folder, addon=['mu']):
+def true_to_tag_directive_gen(config, year, output_folder, addon=['mu']):
     result = []
     tagged = cut_replacement(config['tags'])
 
@@ -123,13 +137,21 @@ def gen_pidcalib_sample_directive(config, year, output_folder, addon=['mu']):
         if p_true not in config['particle_alias']:
             continue  # we don't use pidcalib2 for ghost
 
-        for p_tag, pid_cut in tagged.items():
-            global_cut = config['global_cuts']['mu'] if p_true == 'mu' else \
+        global_cuts = []
+        pid_cuts = []
+
+        for pid_cut_addon in tagged.values():
+            global_cuts.append(config['global_cuts']['kinematic'])
+
+            pid_cut = config['global_cuts']['mu'] if p_true == 'mu' else \
                 config['global_cuts']['non_mu']
-            result.append([
-                p_true, p_tag, config['particle_alias'][p_true],
-                global_cut, pid_cut, year, output_folder
-            ])
+            pid_cut += pid_cut_addon
+            pid_cuts.append(pid_cut)
+
+        result.append([
+            p_true, config['particle_alias'][p_true], tagged,
+            global_cuts, pid_cuts, year, output_folder
+        ])
 
     return result
 
@@ -160,7 +182,9 @@ if __name__ == '__main__':
                  particles, f'./tmp/{JSON_BIN_FILENAME}')
 
     # Generate efficiency histograms with pidcalib2
-    sample_directives = gen_pidcalib_sample_directive(
-        config, args.year, 'raw_histos')
-    for d in sample_directives:
-        pidcalib_gen(*d, debug=args.dry_run)
+    if args.mode == 'true_to_tag':
+        directives = true_to_tag_directive_gen(config, args.year, 'raw_histos')
+        for d in directives:
+            true_to_tag_gen(*d, debug=args.dry_run)
+    else:
+        print(f'unknown mode: {args.mode}')
