@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Mar 26, 2022 at 12:02 AM -0400
+# Last Change: Sun Mar 27, 2022 at 06:05 PM -0400
 #
 # Description: tagged histogram builder (T)
 
@@ -10,8 +10,16 @@ import uproot
 
 from argparse import ArgumentParser
 from pathlib import Path
+from os import makedirs
 from yaml import safe_load
 from pyTuplingUtils.boolean.eval import BooleanEvaluator
+
+
+################
+# Configurable #
+################
+
+HISTO_NAME = 'tagged.root'
 
 
 #######################
@@ -75,7 +83,8 @@ COMPUTE_FUNC = {
 if __name__ == '__main__':
     args = parse_input()
     config_dir_path = abs_dir(args.config)
-    ntp = uproot.recreate(f'{args.output}/histo_tagged.root')
+    makedirs(args.output, exist_ok=True)
+    ntp = uproot.recreate(f'{args.output}/{HISTO_NAME}')
 
     with open(args.config, 'r') as f:
         config = safe_load(f)
