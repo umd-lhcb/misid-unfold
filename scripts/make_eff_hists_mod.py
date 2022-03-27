@@ -213,8 +213,9 @@ def make_eff_hists(config: dict) -> None:
         hists = utils.add_hists(list(hists_list.values()))
 
     eff_hists = utils.create_eff_histograms(hists)
+    eff_hists_filtered = {k: v for k, v in eff_hists.items() if k.startswith("eff_")}
 
-    for name, output_filename in zip(eff_hists, config["pkl_name"]):
+    for name, output_filename in zip(eff_hists_filtered, config["pkl_name"]):
         if name.startswith("eff_"):
             cut = name.replace("eff_", "")
             eff_hist_path = output_dir / output_filename
