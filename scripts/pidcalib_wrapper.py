@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 01:55 AM -0400
+# Last Change: Sun Mar 27, 2022 at 01:56 AM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -66,7 +66,6 @@ def parse_input():
 def bin_alias(config):
     # FIXME: Special treatement for electron samples
     def inner(var, part):
-        print(var, part)
         if part == 'e_B_Jpsi' and var == 'nTracks':
             return 'nTracks'
         return config['binning_alias']['pidcalib'][var]
