@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 12:52 AM -0400
+// Last Change: Mon Mar 28, 2022 at 12:58 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -30,6 +30,16 @@ vector<string> getTagNames(YAML::Node cfgTagged) {
   return result;
 }
 
+vector<string> getMeaYldHistoNames(vector<string> ptclTagged) {
+  vector<string> result{};
+
+  for (auto pt : ptclTagged) {
+    result.push_back(pt + "Tag");
+  }
+
+  return result;
+}
+
 ///////////////////
 // Histo loaders //
 ///////////////////
@@ -51,7 +61,7 @@ int main(int argc, char** argv) {
     // input/output
     ("e,effHisto", "specify input ntuple containing efficiency histos",
      cxxopts::value<string>())
-    ("y,yldHisto", "specify input ntuple containing raw yield histos",
+    ("y,yldHisto", "specify input ntuple containing measured yield histos",
      cxxopts::value<string>())
     ("c,config", "specify input YAML config file",
      cxxopts::value<string>())
@@ -70,13 +80,17 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  auto ymlConfig  = YAML::LoadFile(parsedArgs["config"].as<string>());
-  auto ptclTagged = getTagNames(ymlConfig["tags"]);
+  auto ymlConfig    = YAML::LoadFile(parsedArgs["config"].as<string>());
+  auto ptclTagged   = getTagNames(ymlConfig["tags"]);
+  auto histoNameYld = getMeaYldHistoNames(ptclTagged);
 
   // debug output
   if (parsedArgs["debug"].as<bool>()) {
     cout << "The tagged species are:" << endl;
     for (const auto p : ptclTagged) cout << "  " << p << endl;
+
+    cout << "The measured yields are stored in these histos:" << endl;
+    for (const auto h : histoNameYld) cout << "  " << h << endl;
 
     return 0;
   }
