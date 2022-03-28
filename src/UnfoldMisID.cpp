@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 04:30 PM -0400
+// Last Change: Mon Mar 28, 2022 at 06:01 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -8,6 +8,7 @@
 #include <iostream>
 #include <regex>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include <TH3D.h>
@@ -71,16 +72,22 @@ vector<vector<string>> getEffHistoNames(vector<string> ptcl) {
   return result;
 }
 
-vector<vector<float>> getBins(YAML::Node cfgBinning) {
-  vector<vector<float>> result{};
+tuple<vector<vector<float>>, vector<int>> getBins(YAML::Node cfgBinning) {
+  vector<vector<float>> binnings{};
+  vector<int>           nbins{};
 
   for (auto it = cfgBinning.begin(); it != cfgBinning.end(); it++) {
     vector<float> binEdges{};
-    for (auto elem : it->second) binEdges.emplace_back(elem.as<float>());
-    result.emplace_back(binEdges);
+    int           counter = -1;
+    for (auto elem : it->second) {
+      binEdges.emplace_back(elem.as<float>());
+      counter += 1;
+    }
+    binnings.emplace_back(binEdges);
+    nbins.emplace_back(counter);
   }
 
-  return result;
+  return tuple<vector<vector<float>>, vector<int>>{binnings, nbins};
 }
 
 ///////////////////
@@ -115,7 +122,7 @@ vector<TH3D*> prepOutHisto(vector<string>& names, vector<vector<float>>& bins) {
 
 void unfoldDryRun(vector<string> ptcl, vector<string> nameMeaYld,
                   vector<string> nameUnfYld, vector<vector<string>> nameEff,
-                  vector<vector<float>> binnings) {
+                  vector<vector<float>> binnings, vector<int> nbins) {
   cout << "The tagged species are:" << endl;
   for (const auto p : ptcl) cout << "  " << p << endl;
 
@@ -138,6 +145,11 @@ void unfoldDryRun(vector<string> ptcl, vector<string> nameMeaYld,
     for (const auto elem : row) cout << elem << "\t";
     cout << endl;
   }
+
+  cout << "The bin sizes are:" << endl;
+  cout << "  ";
+  for (const auto n : nbins) cout << n << "\t";
+  cout << endl;
 }
 
 //////////
@@ -182,14 +194,16 @@ int main(int argc, char** argv) {
   auto histoNameMeaYld = getYldHistoNames(ptclTagged);
   auto histoNameUnfYld = getYldHistoNames(ptclTagged, "True");
   auto histoNameEff    = getEffHistoNames(ptclTagged);
-  auto histoBinSpec    = getBins(ymlConfig["binning"]);
+  auto [histoBinSpec, histoBinSize] = getBins(ymlConfig["binning"]);
 
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
     unfoldDryRun(ptclTagged, histoNameMeaYld, histoNameUnfYld, histoNameEff,
-                 histoBinSpec);
+                 histoBinSpec, histoBinSize);
     return 0;
   }
+
+  // prepare histograms
 
   return 0;
 }
