@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Mar 28, 2022 at 12:28 AM -0400
+# Last Change: Mon Mar 28, 2022 at 01:02 AM -0400
 
 BINPATH := bin
 VPATH := include:src
@@ -54,7 +54,7 @@ test-pidcalib2-wrapper:
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o ./gen --dry-run
 
 test-unfold: $(BINPATH)/UnfoldMisID.exe
-	./bin/UnfoldMisID.exe -c ./spec/rdx-2016.yml --debug
+	./bin/UnfoldMisID.exe -c ./spec/rdx-2016.yml --dryRun
 
 
 ###############

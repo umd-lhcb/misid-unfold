@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 12:58 AM -0400
+// Last Change: Mon Mar 28, 2022 at 01:03 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
   argOpts.add_options()
     // general
     ("h,help", "print help")
-    ("d,debug", "enable debug mode",
+    ("d,dryRun", "parse config and load histos, w/o unfolding",
      cxxopts::value<bool>()->default_value("false"))
     // input/output
     ("e,effHisto", "specify input ntuple containing efficiency histos",
@@ -80,12 +80,13 @@ int main(int argc, char** argv) {
     return 0;
   }
 
+  // parse YAML config
   auto ymlConfig    = YAML::LoadFile(parsedArgs["config"].as<string>());
   auto ptclTagged   = getTagNames(ymlConfig["tags"]);
   auto histoNameYld = getMeaYldHistoNames(ptclTagged);
 
   // debug output
-  if (parsedArgs["debug"].as<bool>()) {
+  if (parsedArgs["dryRun"].as<bool>()) {
     cout << "The tagged species are:" << endl;
     for (const auto p : ptclTagged) cout << "  " << p << endl;
 
