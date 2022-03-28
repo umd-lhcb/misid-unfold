@@ -1,9 +1,10 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 01:03 AM -0400
+// Last Change: Mon Mar 28, 2022 at 12:38 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
+#include <cctype>
 #include <iostream>
 #include <regex>
 #include <string>
@@ -14,6 +15,18 @@
 
 using namespace std;
 
+/////////////////////
+// General helpers //
+/////////////////////
+
+string capitalize(string str) {
+  for (auto& s : str) {
+    s = toupper(s);
+    break;
+  }
+  return str;
+}
+
 ////////////////////////
 // Histo name helpers //
 ////////////////////////
@@ -23,18 +36,34 @@ vector<string> getTagNames(YAML::Node cfgTagged) {
 
   for (auto it = cfgTagged.begin(); it != cfgTagged.end(); it++) {
     auto keyRaw = it->first.as<string>();
-    result.push_back(regex_replace(keyRaw, regex("^misid_"),
-                                   ""));  // remove the heading 'misid_'
+    result.emplace_back(regex_replace(keyRaw, regex("^misid_"),
+                                      ""));  // remove the heading 'misid_'
   }
 
   return result;
 }
 
-vector<string> getMeaYldHistoNames(vector<string> ptclTagged) {
+vector<string> getMeaYldHistoNames(vector<string> ptcl) {
   vector<string> result{};
 
-  for (auto pt : ptclTagged) {
-    result.push_back(pt + "Tag");
+  for (auto pt : ptcl) {
+    result.emplace_back(pt + "Tag");
+  }
+
+  return result;
+}
+
+vector<vector<string>> getEffHistoNames(vector<string> ptcl) {
+  vector<vector<string>> result{};
+
+  // Here we (indirectly) define the rows and columns of the response matrix, be
+  // careful!
+  for (auto ptTag : ptcl) {
+    vector<string> row{};
+    for (auto ptTrue : ptcl) {
+      row.emplace_back(ptTrue + "TrueTo" + capitalize(ptTag) + "Tag");
+    }
+    result.emplace_back(row);
   }
 
   return result;
@@ -66,7 +95,7 @@ int main(int argc, char** argv) {
     ("c,config", "specify input YAML config file",
      cxxopts::value<string>())
     ("o,output", "specify output folder")
-    // flags
+    // flags (typically don't configure these)
     ("targetParticle", "specify target particle for unfolding",
      cxxopts::value<string>()->default_value("mu"))
     ("outputHisto", "specify output histo name",
@@ -84,14 +113,22 @@ int main(int argc, char** argv) {
   auto ymlConfig    = YAML::LoadFile(parsedArgs["config"].as<string>());
   auto ptclTagged   = getTagNames(ymlConfig["tags"]);
   auto histoNameYld = getMeaYldHistoNames(ptclTagged);
+  auto histoNameEff = getEffHistoNames(ptclTagged);
 
-  // debug output
+  // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
     cout << "The tagged species are:" << endl;
     for (const auto p : ptclTagged) cout << "  " << p << endl;
 
     cout << "The measured yields are stored in these histos:" << endl;
     for (const auto h : histoNameYld) cout << "  " << h << endl;
+
+    cout << "The response matrix will be built from these histos:" << endl;
+    for (const auto row : histoNameEff) {
+      cout << "  ";
+      for (const auto elem : row) cout << elem << "\t";
+      cout << endl;
+    }
 
     return 0;
   }
