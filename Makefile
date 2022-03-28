@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Mar 28, 2022 at 01:02 AM -0400
+# Last Change: Mon Mar 28, 2022 at 07:02 PM -0400
 
 BINPATH := bin
 VPATH := include:src
@@ -43,6 +43,14 @@ build-rdx-true-to-tag-2016:
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-merged-2016)
 	./scripts/merge_histo.py -c ./spec/rdx-2016.yml -o $(OUT_DIR)
+
+build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
+	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-unfolded-2016)
+	$< --debug \
+		-e ./histos/rdx-22_03_27_18_37-merged-2016/merged.root \
+		-y ./histos/rdx-22_03_27_18_05-tag-2016/tagged.root \
+		-o $(OUT_DIR) \
+		-c ./spec/rdx-2016.yml
 
 
 ########
