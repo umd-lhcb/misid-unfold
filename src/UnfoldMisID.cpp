@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 04:06 PM -0400
+// Last Change: Mon Mar 28, 2022 at 04:30 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -9,6 +9,8 @@
 #include <regex>
 #include <string>
 #include <vector>
+
+#include <TH3D.h>
 
 #include <yaml-cpp/yaml.h>
 #include <cxxopts.hpp>
@@ -27,9 +29,9 @@ string capitalize(string str) {
   return str;
 }
 
-////////////////////////
-// Histo spec helpers //
-////////////////////////
+////////////////////
+// Config helpers //
+////////////////////
 
 vector<string> getTagNames(YAML::Node cfgTagged) {
   vector<string> result{};
@@ -82,8 +84,61 @@ vector<vector<float>> getBins(YAML::Node cfgBinning) {
 }
 
 ///////////////////
-// Histo loaders //
+// Histo helpers //
 ///////////////////
+
+vector<TH3D*> prepOutHisto(vector<string>& names, vector<vector<float>>& bins) {
+  vector<TH3D*> result{};
+
+  for (size_t idx = 0; idx != names.size(); idx++) {
+    auto histoName = names[idx].data();
+
+    auto nbinsX = bins[0].size();
+    auto nbinsY = bins[1].size();
+    auto nbinsZ = bins[2].size();
+
+    auto xBins = bins[0].data();
+    auto yBins = bins[1].data();
+    auto zBins = bins[2].data();
+
+    auto histo = new TH3D(histoName, histoName, nbinsX, xBins, nbinsY, yBins,
+                          nbinsZ, zBins);
+    result.emplace_back(histo);
+  }
+
+  return result;  // in principle these pointers need deleting
+}
+
+////////////
+// Unfold //
+////////////
+
+void unfoldDryRun(vector<string> ptcl, vector<string> nameMeaYld,
+                  vector<string> nameUnfYld, vector<vector<string>> nameEff,
+                  vector<vector<float>> binnings) {
+  cout << "The tagged species are:" << endl;
+  for (const auto p : ptcl) cout << "  " << p << endl;
+
+  cout << "The measured yields are stored in these histos:" << endl;
+  for (const auto h : nameMeaYld) cout << "  " << h << endl;
+
+  cout << "The unfolded yields will be stored in these histos:" << endl;
+  for (const auto h : nameUnfYld) cout << "  " << h << endl;
+
+  cout << "The response matrix will be built from these histos:" << endl;
+  for (const auto row : nameEff) {
+    cout << "  ";
+    for (const auto elem : row) cout << elem << "\t";
+    cout << endl;
+  }
+
+  cout << "The binning is defined as:" << endl;
+  for (const auto row : binnings) {
+    cout << "  ";
+    for (const auto elem : row) cout << elem << "\t";
+    cout << endl;
+  }
+}
 
 //////////
 // Main //
@@ -131,29 +186,8 @@ int main(int argc, char** argv) {
 
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
-    cout << "The tagged species are:" << endl;
-    for (const auto p : ptclTagged) cout << "  " << p << endl;
-
-    cout << "The measured yields are stored in these histos:" << endl;
-    for (const auto h : histoNameMeaYld) cout << "  " << h << endl;
-
-    cout << "The unfolded yields will be stored in these histos:" << endl;
-    for (const auto h : histoNameUnfYld) cout << "  " << h << endl;
-
-    cout << "The response matrix will be built from these histos:" << endl;
-    for (const auto row : histoNameEff) {
-      cout << "  ";
-      for (const auto elem : row) cout << elem << "\t";
-      cout << endl;
-    }
-
-    cout << "The binning is defined as:" << endl;
-    for (const auto row : histoBinSpec) {
-      cout << "  ";
-      for (const auto elem : row) cout << elem << "\t";
-      cout << endl;
-    }
-
+    unfoldDryRun(ptclTagged, histoNameMeaYld, histoNameUnfYld, histoNameEff,
+                 histoBinSpec);
     return 0;
   }
 
