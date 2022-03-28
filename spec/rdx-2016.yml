@@ -6,7 +6,7 @@
 # - unfolding efficiency calculator (U)
 # - histogram merger (M)
 
-# cuts for each tagged species, used by (P), (T), (G), and (A)
+# cuts for each tagged species, used by ALL
 # NOTE: here we follow C++ boolean convention (&&, ||)
 tags:
     misid_pi: "mu_ProbNNpi > 0.1 && mu_PIDK < 0.0 && mu_PIDp < 0.0 && mu_PIDe < 2.0 && mu_ProbNNghost < 0.25"
