@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 12:38 PM -0400
+// Last Change: Mon Mar 28, 2022 at 04:06 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -28,7 +28,7 @@ string capitalize(string str) {
 }
 
 ////////////////////////
-// Histo name helpers //
+// Histo spec helpers //
 ////////////////////////
 
 vector<string> getTagNames(YAML::Node cfgTagged) {
@@ -43,11 +43,11 @@ vector<string> getTagNames(YAML::Node cfgTagged) {
   return result;
 }
 
-vector<string> getMeaYldHistoNames(vector<string> ptcl) {
+vector<string> getYldHistoNames(vector<string> ptcl, string suffix = "Tag") {
   vector<string> result{};
 
   for (auto pt : ptcl) {
-    result.emplace_back(pt + "Tag");
+    result.emplace_back(pt + suffix);
   }
 
   return result;
@@ -64,6 +64,18 @@ vector<vector<string>> getEffHistoNames(vector<string> ptcl) {
       row.emplace_back(ptTrue + "TrueTo" + capitalize(ptTag) + "Tag");
     }
     result.emplace_back(row);
+  }
+
+  return result;
+}
+
+vector<vector<float>> getBins(YAML::Node cfgBinning) {
+  vector<vector<float>> result{};
+
+  for (auto it = cfgBinning.begin(); it != cfgBinning.end(); it++) {
+    vector<float> binEdges{};
+    for (auto elem : it->second) binEdges.emplace_back(elem.as<float>());
+    result.emplace_back(binEdges);
   }
 
   return result;
@@ -110,10 +122,12 @@ int main(int argc, char** argv) {
   }
 
   // parse YAML config
-  auto ymlConfig    = YAML::LoadFile(parsedArgs["config"].as<string>());
-  auto ptclTagged   = getTagNames(ymlConfig["tags"]);
-  auto histoNameYld = getMeaYldHistoNames(ptclTagged);
-  auto histoNameEff = getEffHistoNames(ptclTagged);
+  auto ymlConfig       = YAML::LoadFile(parsedArgs["config"].as<string>());
+  auto ptclTagged      = getTagNames(ymlConfig["tags"]);
+  auto histoNameMeaYld = getYldHistoNames(ptclTagged);
+  auto histoNameUnfYld = getYldHistoNames(ptclTagged, "True");
+  auto histoNameEff    = getEffHistoNames(ptclTagged);
+  auto histoBinSpec    = getBins(ymlConfig["binning"]);
 
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
@@ -121,10 +135,20 @@ int main(int argc, char** argv) {
     for (const auto p : ptclTagged) cout << "  " << p << endl;
 
     cout << "The measured yields are stored in these histos:" << endl;
-    for (const auto h : histoNameYld) cout << "  " << h << endl;
+    for (const auto h : histoNameMeaYld) cout << "  " << h << endl;
+
+    cout << "The unfolded yields will be stored in these histos:" << endl;
+    for (const auto h : histoNameUnfYld) cout << "  " << h << endl;
 
     cout << "The response matrix will be built from these histos:" << endl;
     for (const auto row : histoNameEff) {
+      cout << "  ";
+      for (const auto elem : row) cout << elem << "\t";
+      cout << endl;
+    }
+
+    cout << "The binning is defined as:" << endl;
+    for (const auto row : histoBinSpec) {
       cout << "  ";
       for (const auto elem : row) cout << elem << "\t";
       cout << endl;
