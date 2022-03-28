@@ -1,14 +1,27 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 06:28 PM -0400
+# Last Change: Mon Mar 28, 2022 at 12:15 AM -0400
+
+BINPATH := bin
+VPATH := include:src
+CPP_FILES	:=	$(wildcard src/*.cpp)
+EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%.exe,$(CPP_FILES))
 
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
+
+COMPILER	:=	$(shell root-config --cxx)
+CXXFLAGS	:=	$(shell root-config --cflags)
+LINKFLAGS	:=	$(shell root-config --libs)
+ADDCXXFLAGS	:=	-O2 -march=native -mtune=native
+ADDLINKFLAGS	:=	-lyaml-cpp -lRooUnfold
+
 
 ###########
 # General #
 ###########
+.PHONY: exe clean
 
-.PHONY: clean
+exe: $(EXE_FILES)
 
 clean:
 	@rm -rf ./gen/*
@@ -17,7 +30,6 @@ clean:
 #######
 # RDX #
 #######
-
 .PHONY: build-tagged-histo build-rdx-true-to-tag-2016
 
 build-rdx-tag-2016:
@@ -36,8 +48,15 @@ build-rdx-merged-2016:
 ########
 # Test #
 ########
-
 .PHONY: test-pidcalib2-wrapper
 
 test-pidcalib2-wrapper:
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o ./gen --dry-run
+
+
+###############
+# Compile C++ #
+###############
+
+$(BINPATH)/%.exe: %.cpp
+	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)

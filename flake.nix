@@ -48,7 +48,7 @@
           };
 
           shellHook = ''
-            export PATH=$(pwd)/scripts:$PATH
+            export PATH=$(pwd)/scripts:$(pwd)/bin:$PATH
 
             # Allow the use of wheels.
             SOURCE_DATE_EPOCH=$(date +%s)
