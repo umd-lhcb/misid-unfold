@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Mar 28, 2022 at 12:15 AM -0400
+# Last Change: Mon Mar 28, 2022 at 12:23 AM -0400
 
 BINPATH := bin
 VPATH := include:src
@@ -13,7 +13,7 @@ COMPILER	:=	$(shell root-config --cxx)
 CXXFLAGS	:=	$(shell root-config --cflags)
 LINKFLAGS	:=	$(shell root-config --libs)
 ADDCXXFLAGS	:=	-O2 -march=native -mtune=native
-ADDLINKFLAGS	:=	-lyaml-cpp -lRooUnfold
+ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 
 
 ###########
@@ -48,10 +48,13 @@ build-rdx-merged-2016:
 ########
 # Test #
 ########
-.PHONY: test-pidcalib2-wrapper
+.PHONY: test-pidcalib2-wrapper test-unfold
 
 test-pidcalib2-wrapper:
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o ./gen --dry-run
+
+test-unfold:
+	./bin/UnfoldMisID.exe -c ./spec/rdx-2016.yml --debug
 
 
 ###############
