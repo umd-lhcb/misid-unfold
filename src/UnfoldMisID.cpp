@@ -1,10 +1,11 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 12:02 AM -0400
+// Last Change: Tue Mar 29, 2022 at 12:12 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
 #include <cctype>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <regex>
@@ -218,9 +219,12 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           if (debug) {
             cout << "Bin index: x=" << x << " y=" << y << " z=" << z << endl;
 
-            cout << "The measured yields are:" << endl << "  ";
+            cout << "The yields are (top: measured; bot: unfolded):" << endl;
             for (int idx = 1; idx <= totSize; idx++)
-              cout << histMea->GetBinContent(idx) << "  ";
+              cout << setw(12) << histMea->GetBinContent(idx);
+            cout << endl;
+            for (int idx = 1; idx <= totSize; idx++)
+              cout << setw(12) << histUnf->GetBinContent(idx);
             cout << endl;
 
             cout << "The response matrix is:" << endl;
@@ -230,11 +234,6 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
                 cout << histRes->GetBinContent(idxRow, idxCol) << "\t";
               cout << endl;
             }
-
-            cout << "The unfolded yields are:" << endl << "  ";
-            for (int idx = 1; idx <= totSize; idx++)
-              cout << histUnf->GetBinContent(idx) << "  ";
-            cout << endl;
           }
         }
       }
