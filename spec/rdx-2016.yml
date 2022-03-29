@@ -63,9 +63,9 @@ input_histos:
     extra:
         "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
             H2H_Ghost_TO_Pi: gTrueToPiTag
-            H2H_Ghost_TO_K: kTrueToKTag
-            H2H_Ghost_TO_P: pTrueToPTag
-            H2H_Ghost_TO_e: eTrueToETag
+            H2H_Ghost_TO_K: gTrueToKTag
+            H2H_Ghost_TO_P: gTrueToPTag
+            H2H_Ghost_TO_e: gTrueToETag
             H2H_Ghost_TO_Ghost: gTrueToGTag
 
 
