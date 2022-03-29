@@ -1,9 +1,10 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 02:06 PM -0400
+// Last Change: Tue Mar 29, 2022 at 02:15 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
+#include <algorithm>
 #include <cctype>
 #include <cmath>
 #include <iomanip>
@@ -336,8 +337,8 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 }
 
 void unfoldDryRun(vStr ptcl, vStrStr nameMeaYld, vStrStr nameUnfYld,
-                  vStrStr nameEff, vector<vector<float>> binnings,
-                  vector<int> nbins) {
+                  vStrStr nameEff, vStrStr nameUnfEff,
+                  vector<vector<float>> binnings, vector<int> nbins) {
   cout << "The tagged species are:" << endl;
   for (const auto& p : ptcl) cout << "  " << p << endl;
 
@@ -350,6 +351,13 @@ void unfoldDryRun(vStr ptcl, vStrStr nameMeaYld, vStrStr nameUnfYld,
 
   cout << "The unfolded yields will be stored in these histos:" << endl;
   for (const auto& row : nameUnfYld) {
+    cout << "  ";
+    for (const auto& elem : row) cout << elem << "\t";
+    cout << endl;
+  }
+
+  cout << "The unfolded efficiencies will be stored in these histos:" << endl;
+  for (const auto& row : nameUnfEff) {
     cout << "  ";
     for (const auto& elem : row) cout << elem << "\t";
     cout << endl;
@@ -429,14 +437,14 @@ int main(int argc, char** argv) {
   auto [histoBinSpec, histoBinSize] = getBins(ymlConfig["binning"]);
 
   vStrStr histoNameUnfEff{};
-  for (const auto& pref : prefix)
-    histoNameEff.emplace_back(
-        getEffHistoNames(ptclList, ptclTarget, pref, "Tag", "Tag"));
+  for (auto pref : prefix)
+    histoNameUnfEff.emplace_back(
+        getEffHistoNames(ptclList, ptclTarget, "Tag", "Tag", pref + "__"));
 
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
     unfoldDryRun(ptclList, histoNameMeaYld, histoNameUnfYld, histoNameEff,
-                 histoBinSpec, histoBinSize);
+                 histoNameUnfEff, histoBinSpec, histoBinSize);
     return 0;
   }
 
@@ -445,7 +453,11 @@ int main(int argc, char** argv) {
   auto ntpEff = new TFile(parsedArgs["effHisto"].as<string>().data());
 
   // prepare histograms
-  auto histoOut = prepOutHisto(histoNameUnfYld, histoBinSpec);
+  vStrStr histoNameOut{};
+  set_union(histoNameMeaYld.begin(), histoNameMeaYld.end(),
+            histoNameUnfEff.begin(), histoNameUnfEff.end(),
+            back_inserter(histoNameOut));
+  auto histoOut = prepOutHisto(histoNameOut, histoBinSpec);
   auto histoIn = loadHisto({{ntpYld, histoNameMeaYld}, {ntpEff, histoNameEff}});
 
   // unfold
