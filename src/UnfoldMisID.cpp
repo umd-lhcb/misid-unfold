@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 02:17 AM -0400
+// Last Change: Tue Mar 29, 2022 at 02:06 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -46,6 +46,14 @@ string capitalize(string str) {
   return str;
 }
 
+vector<double> histoToProb(const TH1D* histo) {
+  vector<double> result{};
+  auto           normFac = histo->GetEntries();
+  for (int idx = 1; idx <= histo->GetNbinsX(); idx++)
+    result.emplace_back(histo->GetBinContent(idx) / normFac);
+  return result;
+}
+
 ////////////////////
 // Config helpers //
 ////////////////////
@@ -80,20 +88,43 @@ vStrStr getYldHistoNames(const vStr& ptcl, const vStr& prefix,
   return result;
 }
 
-vStrStr getEffHistoNames(const vStr& ptcl) {
+// These are a mess
+vStr getEffHistoNames(const string ptcl1, const vStr& ptcl2,
+                      string spc1 = "True", string spc2 = "Tag",
+                      string prefix = "") {
+  vStr result{};
+  // e.g. muTrueToPiTag, with mu fixed
+  for (auto p2 : ptcl2)
+    result.emplace_back(prefix + ptcl1 + spc1 + "To" + capitalize(p2) + spc2);
+  return result;
+}
+
+vStr getEffHistoNames(const vStr& ptcl1, const string ptcl2,
+                      string spc1 = "True", string spc2 = "Tag",
+                      string prefix = "") {
+  vStr result{};
+  // e.g. muTrueToPiTag, with Pi fixed
+  for (auto p1 : ptcl1)
+    result.emplace_back(prefix + p1 + spc1 + "To" + capitalize(ptcl2) + spc2);
+  return result;
+}
+
+vStrStr getEffHistoNames(const vStr& ptcl1, const vStr& ptcl2,
+                         string spc1 = "True", string spc2 = "Tag",
+                         string prefix = "") {
   vStrStr result{};
 
   // Here we (indirectly) define the rows and columns of the response matrix, be
   // careful!
-  for (auto ptTag : ptcl) {
-    vStr row{};
-    for (auto ptTrue : ptcl)
-      row.emplace_back(ptTrue + "TrueTo" + capitalize(ptTag) + "Tag");
+  for (auto p2 : ptcl2) {  // w/ default values, we are looping over Tag
+    // for each row, we hold tag unchanged
+    auto row = getEffHistoNames(ptcl1, p2, spc1, spc2, prefix);
     result.emplace_back(row);
   }
 
   return result;
 }
+// end of mess
 
 tuple<vector<vector<float>>, vector<int>> getBins(YAML::Node cfgBinning) {
   vector<vector<float>> binnings{};
@@ -172,8 +203,9 @@ map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
 ////////////
 
 void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
-            vStrStr nameMeaYld, vStrStr nameEff, vStrStr nameUnfYld,
-            bool debug = false, int numOfIter = 4) {
+            vStrStr nameMeaYld, vStrStr nameEff, vStr nameMuEff,
+            vStrStr nameUnfYld, vStrStr nameUnfEff, bool debug = false,
+            int numOfIter = 4) {
   int totSize = nameMeaYld[0].size();
 
   // These are used to stored measured yields (a vector) and response matrix (a
@@ -181,6 +213,9 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
   auto histMea = new TH1D("histMea", "histMea", totSize, 0, totSize);
   auto histRes =
       new TH2D("histRes", "histRes", totSize, 0, totSize, totSize, 0, totSize);
+  auto histInv = new TH2D("histInv", "histInv", totSize, 0, totSize, totSize, 0,
+                          totSize);  // conceptually inverted matrix of histRes
+  auto histProb = new TH1D("histProb", "histProb", totSize, 0, totSize);
 
   // This is used to provide dimension info for response matrix
   auto histTrue = new TH1D("histTrue", "histTrue", totSize, 0, totSize);
@@ -209,18 +244,17 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           }
 
           // build response matrix (2D matrix)
-          double arrRes[totSize][totSize];
-          for (int idxRow = 0; idxRow != totSize; idxRow++) {
-            for (int idxCol = 0; idxCol != totSize; idxCol++) {
-              auto name  = nameEff[idxRow][idxCol];
+          for (int idxTag = 0; idxTag != totSize; idxTag++) {
+            for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
+              auto name  = nameEff[idxTag][idxTrue];
               auto histo = histoIn[name];
               auto eff   = histo->GetBinContent(x, y, z);
               if (isnan(eff)) eff = 0.0;
-              histRes->SetBinContent(idxRow + 1, idxCol + 1, eff);
+              histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
             }
           }
 
-          // perform unfolding
+          // perform unfolding to get unfolded ("true") yield
           RooUnfoldResponse resp(nullptr, histTrue, histRes);
           RooUnfoldBayes    unfoldWorker(&resp, histMea, numOfIter);
           auto              histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
@@ -234,6 +268,38 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               yld = 0;
             }
             histoOut[name]->SetBinContent(x, y, z, yld);
+          }
+
+          // Compute unfolded ("true") probability
+          auto probTag  = histoToProb(histMea);
+          auto probTrue = histoToProb(histUnf);
+
+          // for each row, we hold True unchanged for xTagToYTrue
+          for (int idxTag = 0; idxTag != totSize; idxTag++) {
+            auto wtTagToMuTag = 1.0;
+
+            for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
+              // from pidcalib we have true -> tag
+              auto probTrueToTag =
+                  histRes->GetBinContent(idxTag + 1, idxTrue + 1);
+              if (isnan(probTrueToTag)) probTrueToTag = 0.0;
+
+              // probability: tag -> true
+              auto probTagToTrue =
+                  probTrueToTag * probTrue[idxTrue] / probTag[idxTag];
+              if (isnan(probTagToTrue)) probTagToTrue = 0.0;
+              histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTrueToTag);
+
+              // now contract with the mu misID
+              auto probTrueToMuTag =
+                  histoIn[nameMuEff[idxTrue]]->GetBinContent(x, y, z);
+              if (isnan(probTrueToMuTag)) probTrueToMuTag = 0.0;
+              wtTagToMuTag = probTagToTrue * probTrueToMuTag;
+            }
+
+            // we use idxTag as the second index, which checks out
+            histoOut[nameUnfEff[idxPref][idxTag]]->SetBinContent(x, y, z,
+                                                                 wtTagToMuTag);
           }
 
           if (debug) {
@@ -265,6 +331,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
   // cleanups
   delete histMea;
   delete histRes;
+  delete histInv;
   delete histTrue;
 }
 
@@ -349,17 +416,26 @@ int main(int argc, char** argv) {
   }
 
   // parse YAML config
-  auto ymlConfig       = YAML::LoadFile(parsedArgs["config"].as<string>());
-  auto ptclTagged      = getKeyNames(ymlConfig["tags"]);
-  auto prefix          = getKeyNames(ymlConfig["input_ntps"]);
-  auto histoNameMeaYld = getYldHistoNames(ptclTagged, prefix);
-  auto histoNameUnfYld = getYldHistoNames(ptclTagged, prefix, "True");
-  auto histoNameEff    = getEffHistoNames(ptclTagged);
+  auto ymlConfig  = YAML::LoadFile(parsedArgs["config"].as<string>());
+  auto ptclTarget = parsedArgs["targetParticle"].as<string>();
+  auto ptclList   = getKeyNames(ymlConfig["tags"]);
+  auto prefix     = getKeyNames(ymlConfig["input_ntps"]);
+
+  auto histoNameMeaYld = getYldHistoNames(ptclList, prefix);
+  auto histoNameUnfYld = getYldHistoNames(ptclList, prefix, "True");
+  auto histoNameEff    = getEffHistoNames(ptclList, ptclList);
+  auto histoNameMuEff  = getEffHistoNames(
+      ptclList, ptclTarget);  // e.g. kTrueToMuTag, where Mu is fixed
   auto [histoBinSpec, histoBinSize] = getBins(ymlConfig["binning"]);
+
+  vStrStr histoNameUnfEff{};
+  for (const auto& pref : prefix)
+    histoNameEff.emplace_back(
+        getEffHistoNames(ptclList, ptclTarget, pref, "Tag", "Tag"));
 
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
-    unfoldDryRun(ptclTagged, histoNameMeaYld, histoNameUnfYld, histoNameEff,
+    unfoldDryRun(ptclList, histoNameMeaYld, histoNameUnfYld, histoNameEff,
                  histoBinSpec, histoBinSize);
     return 0;
   }
@@ -375,8 +451,8 @@ int main(int argc, char** argv) {
   // unfold
   auto debug     = parsedArgs["debug"].as<bool>();
   auto numOfIter = parsedArgs["iteration"].as<int>();
-  unfold(histoIn, histoOut, histoNameMeaYld, histoNameEff, histoNameUnfYld,
-         debug, numOfIter);
+  unfold(histoIn, histoOut, histoNameMeaYld, histoNameEff, histoNameMuEff,
+         histoNameUnfYld, histoNameUnfEff, debug, numOfIter);
 
   // save output
   auto outputFilename = parsedArgs["output"].as<string>() + "/" +
