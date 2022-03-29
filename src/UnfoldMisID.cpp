@@ -1,10 +1,11 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 01:51 AM -0400
+// Last Change: Tue Mar 29, 2022 at 02:00 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
 #include <cctype>
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <map>
@@ -226,8 +227,12 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           // Save unfolded yields
           for (int idx = 0; idx != totSize; idx++) {
             auto name = nameUnfYld[idxPref][idx];
-            histoOut[name]->SetBinContent(x, y, z,
-                                          histUnf->GetBinContent(idx + 1));
+            auto yld  = histUnf->GetBinContent(idx + 1);
+            if (isnan(yld)) {
+              cout << "Warning: naN detected for " << name << endl;
+              yld = 0;
+            }
+            histoOut[name]->SetBinContent(x, y, z, yld);
           }
 
           if (debug) {
