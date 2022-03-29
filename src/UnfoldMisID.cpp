@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 01:23 AM -0400
+// Last Change: Tue Mar 29, 2022 at 01:41 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -171,10 +171,9 @@ map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
 ////////////
 
 void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
-            vector<int> nbins, vector<string> nameMeaYld,
-            vector<vector<string>> nameEff, vector<string> nameUnfYld,
-            vector<string> prefix, bool debug = false, int numOfIter = 4) {
-  int totSize = nameMeaYld.size();
+            vStrStr nameMeaYld, vStrStr nameEff, vStrStr nameUnfYld,
+            bool debug = false, int numOfIter = 4) {
+  int totSize = nameMeaYld[0].size();
 
   // These are used to stored measured yields (a vector) and response matrix (a
   // 2D matrix)
@@ -186,15 +185,24 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
   auto histTrue = new TH1D("histTrue", "histTrue", totSize, 0, totSize);
   for (int i = 1; i <= totSize; i++) histTrue->SetBinContent(i, 1);
 
+  // Figure out binning from one of the input histograms
+  vector<int> nbins{};
+  for (const auto pair : histoIn) {
+    auto ntp = pair.second;
+    nbins.emplace_back(ntp->GetNbinsX());
+    nbins.emplace_back(ntp->GetNbinsY());
+    nbins.emplace_back(ntp->GetNbinsZ());
+    break;
+  }
+
+  // Main unfolding procedure
   for (int x = 1; x <= nbins[0]; x++) {
     for (int y = 1; y <= nbins[1]; y++) {
       for (int z = 1; z <= nbins[2]; z++) {
-        for (auto pref : prefix) {
-          cout << "Working on " << pref << endl;
-
+        for (int idxPref = 0; idxPref != nameMeaYld.size(); idxPref++) {
           // build yield vector
           for (int idx = 0; idx != totSize; idx++) {
-            auto name  = pref + "__" + nameMeaYld[idx];
+            auto name  = nameMeaYld[idxPref][idx];
             auto histo = histoIn[name];
             histMea->SetBinContent(idx + 1, histo->GetBinContent(x, y, z));
           }
@@ -217,7 +225,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 
           // Save unfolded yields
           for (int idx = 0; idx != totSize; idx++) {
-            auto name = pref + "__" + nameUnfYld[idx];
+            auto name = nameUnfYld[idxPref][idx];
             histoOut[name]->SetBinContent(x, y, z,
                                           histUnf->GetBinContent(idx + 1));
           }
@@ -348,28 +356,25 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  /*
-   *   // open ntuples
-   *   auto ntpYld = new TFile(parsedArgs["yldHisto"].as<string>().data());
-   *   auto ntpEff = new TFile(parsedArgs["effHisto"].as<string>().data());
-   *
-   *   // prepare histograms
-   *   auto histoOut = prepOutHisto(histoNameUnfYld, histoBinSpec);
-   *   auto histoIn = loadHisto({{ntpYld, histoNameMeaYld}, {ntpEff,
-   * histoNameEff}});
-   *
-   *   // unfold
-   *   auto debug     = parsedArgs["debug"].as<bool>();
-   *   auto numOfIter = parsedArgs["iteration"].as<int>();
-   *   unfold(histoIn, histoOut, histoBinSize, histoNameMeaYld, histoNameEff,
-   * prefix, debug, numOfIter);
-   *
-   *   // cleanup
-   *   for (auto& h : histoOut) delete h.second;
-   *   for (auto& h : histoIn) delete h.second;
-   *   delete ntpYld;
-   *   delete ntpEff;
-   */
+  // open ntuples
+  auto ntpYld = new TFile(parsedArgs["yldHisto"].as<string>().data());
+  auto ntpEff = new TFile(parsedArgs["effHisto"].as<string>().data());
+
+  // prepare histograms
+  auto histoOut = prepOutHisto(histoNameUnfYld, histoBinSpec);
+  auto histoIn = loadHisto({{ntpYld, histoNameMeaYld}, {ntpEff, histoNameEff}});
+
+  // unfold
+  auto debug     = parsedArgs["debug"].as<bool>();
+  auto numOfIter = parsedArgs["iteration"].as<int>();
+  unfold(histoIn, histoOut, histoNameMeaYld, histoNameEff, histoNameUnfYld,
+         debug, numOfIter);
+
+  // cleanup
+  for (auto& h : histoOut) delete h.second;
+  for (auto& h : histoIn) delete h.second;
+  delete ntpYld;
+  delete ntpEff;
 
   return 0;
 }
