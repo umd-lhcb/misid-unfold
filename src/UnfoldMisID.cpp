@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 02:15 PM -0400
+// Last Change: Tue Mar 29, 2022 at 04:46 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -25,6 +25,8 @@
 
 #include <yaml-cpp/yaml.h>
 #include <cxxopts.hpp>
+
+#define DEBUG_OUT cout << __LINE__ << endl;
 
 using namespace std;
 
@@ -155,6 +157,7 @@ map<string, TH3D*> prepOutHisto(const vStrStr&         names,
 
   for (const auto vec : names) {
     for (const auto n : vec) {
+      cout << "Preparing output histo: " << n << endl;
       auto histoName = n.data();
 
       auto nbinsX = bins[0].size() - 1;
@@ -171,6 +174,7 @@ map<string, TH3D*> prepOutHisto(const vStrStr&         names,
     }
   }
 
+  cout << "All output histos prepared." << endl;
   return result;  // in principle these pointers need deleting
 }
 
@@ -197,6 +201,16 @@ map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
 
   cout << "All histograms loaded." << endl;
   return result;
+}
+
+TH3D* loadSingleHisto(map<string, TH3D*>& mapHisto, string nameHisto) {
+  auto ptrHisto = mapHisto[nameHisto];
+  if (ptrHisto == nullptr) {
+    cout << "Histo " << nameHisto << " is not defined! Terminate now..."
+         << endl;
+    exit(1);
+  }
+  return ptrHisto;
 }
 
 ////////////
@@ -239,16 +253,14 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
         for (int idxPref = 0; idxPref != nameMeaYld.size(); idxPref++) {
           // build yield vector
           for (int idx = 0; idx != totSize; idx++) {
-            auto name  = nameMeaYld[idxPref][idx];
-            auto histo = histoIn[name];
+            auto histo = loadSingleHisto(histoIn, nameMeaYld[idxPref][idx]);
             histMea->SetBinContent(idx + 1, histo->GetBinContent(x, y, z));
           }
 
           // build response matrix (2D matrix)
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
-              auto name  = nameEff[idxTag][idxTrue];
-              auto histo = histoIn[name];
+              auto histo = loadSingleHisto(histoIn, nameEff[idxTag][idxTrue]);
               auto eff   = histo->GetBinContent(x, y, z);
               if (isnan(eff)) eff = 0.0;
               histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
@@ -268,14 +280,14 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               cout << "Warning: naN detected for " << name << endl;
               yld = 0;
             }
-            histoOut[name]->SetBinContent(x, y, z, yld);
+            auto histo = loadSingleHisto(histoOut, name);
+            histo->SetBinContent(x, y, z, yld);
           }
 
           // Compute unfolded ("true") probability
           auto probTag  = histoToProb(histMea);
           auto probTrue = histoToProb(histUnf);
 
-          // for each row, we hold True unchanged for xTagToYTrue
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
             auto wtTagToMuTag = 1.0;
 
@@ -292,15 +304,15 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTrueToTag);
 
               // now contract with the mu misID
-              auto probTrueToMuTag =
-                  histoIn[nameMuEff[idxTrue]]->GetBinContent(x, y, z);
+              auto histo = loadSingleHisto(histoIn, nameMuEff[idxTrue]);
+              auto probTrueToMuTag = histo->GetBinContent(x, y, z);
               if (isnan(probTrueToMuTag)) probTrueToMuTag = 0.0;
               wtTagToMuTag = probTagToTrue * probTrueToMuTag;
             }
 
             // we use idxTag as the second index, which checks out
-            histoOut[nameUnfEff[idxPref][idxTag]]->SetBinContent(x, y, z,
-                                                                 wtTagToMuTag);
+            auto histo = loadSingleHisto(histoOut, nameUnfEff[idxPref][idxTag]);
+            histo->SetBinContent(x, y, z, wtTagToMuTag);
           }
 
           if (debug) {
@@ -454,7 +466,7 @@ int main(int argc, char** argv) {
 
   // prepare histograms
   vStrStr histoNameOut{};
-  set_union(histoNameMeaYld.begin(), histoNameMeaYld.end(),
+  set_union(histoNameUnfYld.begin(), histoNameUnfYld.end(),
             histoNameUnfEff.begin(), histoNameUnfEff.end(),
             back_inserter(histoNameOut));
   auto histoOut = prepOutHisto(histoNameOut, histoBinSpec);
