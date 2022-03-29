@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 04:46 PM -0400
+// Last Change: Tue Mar 29, 2022 at 05:37 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -204,13 +204,12 @@ map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
 }
 
 TH3D* loadSingleHisto(map<string, TH3D*>& mapHisto, string nameHisto) {
-  auto ptrHisto = mapHisto[nameHisto];
-  if (ptrHisto == nullptr) {
+  if (mapHisto.find(nameHisto) == mapHisto.end()) {
     cout << "Histo " << nameHisto << " is not defined! Terminate now..."
          << endl;
-    exit(1);
+    terminate();  // this is serious!
   }
-  return ptrHisto;
+  return mapHisto[nameHisto];
 }
 
 ////////////
@@ -281,6 +280,8 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               yld = 0;
             }
             auto histo = loadSingleHisto(histoOut, name);
+            cout << "Writhing unfolded yield to " << name << endl;
+            ;
             histo->SetBinContent(x, y, z, yld);
           }
 
@@ -303,7 +304,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               if (isnan(probTagToTrue)) probTagToTrue = 0.0;
               histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTrueToTag);
 
-              // now contract with the mu misID
+              // now contract with the mu misID eff (true -> mu tag)
               auto histo = loadSingleHisto(histoIn, nameMuEff[idxTrue]);
               auto probTrueToMuTag = histo->GetBinContent(x, y, z);
               if (isnan(probTrueToMuTag)) probTrueToMuTag = 0.0;
@@ -311,7 +312,9 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             }
 
             // we use idxTag as the second index, which checks out
-            auto histo = loadSingleHisto(histoOut, nameUnfEff[idxPref][idxTag]);
+            auto name  = nameUnfEff[idxPref][idxTag];
+            auto histo = loadSingleHisto(histoOut, name);
+            cout << "Writing final contracted efficiency to " << name << endl;
             histo->SetBinContent(x, y, z, wtTagToMuTag);
           }
 
@@ -357,28 +360,28 @@ void unfoldDryRun(vStr ptcl, vStrStr nameMeaYld, vStrStr nameUnfYld,
   cout << "The measured yields are stored in these histos:" << endl;
   for (const auto& row : nameMeaYld) {
     cout << "  ";
-    for (const auto& elem : row) cout << elem << "\t";
+    for (const auto& elem : row) cout << setw(12) << elem;
     cout << endl;
   }
 
   cout << "The unfolded yields will be stored in these histos:" << endl;
   for (const auto& row : nameUnfYld) {
     cout << "  ";
-    for (const auto& elem : row) cout << elem << "\t";
+    for (const auto& elem : row) cout << setw(12) << elem;
     cout << endl;
   }
 
   cout << "The unfolded efficiencies will be stored in these histos:" << endl;
   for (const auto& row : nameUnfEff) {
     cout << "  ";
-    for (const auto& elem : row) cout << elem << "\t";
+    for (const auto& elem : row) cout << setw(19) << elem;
     cout << endl;
   }
 
   cout << "The response matrix will be built from these histos:" << endl;
   for (const auto& row : nameEff) {
     cout << "  ";
-    for (const auto& elem : row) cout << elem << "\t";
+    for (const auto& elem : row) cout << setw(16) << elem;
     cout << endl;
   }
 
@@ -464,6 +467,10 @@ int main(int argc, char** argv) {
   auto ntpYld = new TFile(parsedArgs["yldHisto"].as<string>().data());
   auto ntpEff = new TFile(parsedArgs["effHisto"].as<string>().data());
 
+  auto outputFilename = parsedArgs["output"].as<string>() + "/" +
+                        parsedArgs["outputHisto"].as<string>();
+  auto ntpOut = new TFile(outputFilename.data(), "RECREATE");
+
   // prepare histograms
   vStrStr histoNameOut{};
   set_union(histoNameUnfYld.begin(), histoNameUnfYld.end(),
@@ -479,9 +486,6 @@ int main(int argc, char** argv) {
          histoNameUnfYld, histoNameUnfEff, debug, numOfIter);
 
   // save output
-  auto outputFilename = parsedArgs["output"].as<string>() + "/" +
-                        parsedArgs["outputHisto"].as<string>();
-  auto ntpOut = new TFile(outputFilename.data(), "RECREATE");
   for (const auto& pair : histoOut)
     ntpOut->WriteObject(pair.second, pair.first.data());
 
