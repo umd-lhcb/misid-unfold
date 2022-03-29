@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 06:58 PM -0400
+// Last Change: Mon Mar 28, 2022 at 08:34 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -36,13 +36,20 @@ string capitalize(string str) {
 // Config helpers //
 ////////////////////
 
-vector<string> getTagNames(YAML::Node cfgTagged) {
+vector<string> getKeyNames(YAML::Node node, string prefix = "",
+                           string suffix = "", bool repl = true,
+                           string replRegex = "^misid_") {
   vector<string> result{};
 
-  for (auto it = cfgTagged.begin(); it != cfgTagged.end(); it++) {
-    auto keyRaw = it->first.as<string>();
-    result.emplace_back(regex_replace(keyRaw, regex("^misid_"),
-                                      ""));  // remove the heading 'misid_'
+  for (auto it = node.begin(); it != node.end(); it++) {
+    auto   keyRaw = it->first.as<string>();
+    string key;
+    if (repl)
+      key = regex_replace(keyRaw, regex(replRegex),
+                          "");  // remove the heading 'misid_'
+    else
+      key = keyRaw;
+    result.emplace_back(prefix + key + suffix);
   }
 
   return result;
@@ -103,9 +110,9 @@ map<string, TH3D*> prepOutHisto(vector<string>&        names,
   for (size_t idx = 0; idx != names.size(); idx++) {
     auto histoName = names[idx].data();
 
-    auto nbinsX = bins[0].size();
-    auto nbinsY = bins[1].size();
-    auto nbinsZ = bins[2].size();
+    auto nbinsX = bins[0].size() - 1;
+    auto nbinsY = bins[1].size() - 1;
+    auto nbinsZ = bins[2].size() - 1;
 
     auto xBins = bins[0].data();
     auto yBins = bins[1].data();
@@ -124,14 +131,29 @@ map<string, TH3D*> loadHisto(TFile* ntpYld, TFile* ntpEff,
                              vector<vector<string>> nameEff) {
   map<string, TH3D*> result{};
 
-  for (const auto& n : nameMeaYld)
-    result[n] = static_cast<TH3D*>(ntpYld->Get(n.data()));
-
-  for (const auto& row : nameEff) {
-    for (const auto& n : row)
-      result[n] = static_cast<TH3D*>(ntpEff->Get(n.data()));
+  for (const auto& n : nameMeaYld) {
+    cout << "Loading " << n << endl;
+    auto histo = static_cast<TH3D*>(ntpYld->Get(n.data()));
+    if (!histo) {
+      cout << "Histogram " << n << " doesn't exist! terminate now..." << endl;
+      exit(1);
+    }
+    result[n] = histo;
   }
 
+  for (const auto& row : nameEff) {
+    for (const auto& n : row) {
+      cout << "Loading " << n << endl;
+      auto histo = static_cast<TH3D*>(ntpEff->Get(n.data()));
+      if (!histo) {
+        cout << "Histogram " << n << " doesn't exist! terminate now..." << endl;
+        exit(1);
+      }
+      result[n] = histo;
+    }
+  }
+
+  cout << "All histograms loaded." << endl;
   return result;
 }
 
@@ -149,16 +171,19 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
       for (int z = 1; z <= nbins[2]; z++) {
         // build yield array
         double arrYld[totSize];
+        cout << __LINE__ << endl;
         for (int idx = 0; idx != totSize; idx++)
           arrYld[idx] = histoIn[nameMeaYld[idx]]->GetBinContent(x, y, z);
 
+        cout << __LINE__ << endl;
+
         // build response array (2D matrix)
-        double arrRes[totSize][totSize];
-        for (int idxRow = 0; idxRow != totSize; idxRow++) {
-          for (int idxCol = 0; idxCol != totSize; idxCol++)
-            arrRes[idxRow][idxCol] =
-                histoIn[nameEff[idxRow][idxCol]]->GetBinContent(x, y, z);
-        }
+        // double arrRes[totSize][totSize];
+        // for (int idxRow = 0; idxRow != totSize; idxRow++) {
+        //   for (int idxCol = 0; idxCol != totSize; idxCol++)
+        //     arrRes[idxRow][idxCol] =
+        //         histoIn[nameEff[idxRow][idxCol]]->GetBinContent(x, y, z);
+        // }
 
         if (debug) {
           cout << "Bin index: x=" << x << " y=" << y << " z=" << z << endl;
@@ -167,12 +192,12 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           for (const auto& n : arrYld) cout << n << "\t";
           cout << endl;
 
-          cout << "The response matrix is:" << endl;
-          for (const auto& row : arrRes) {
-            cout << "  ";
-            for (const auto& n : row) cout << n << "\t";
-            cout << endl;
-          }
+          // cout << "The response matrix is:" << endl;
+          // for (const auto& row : arrRes) {
+          //   cout << "  ";
+          //   for (const auto& n : row) cout << n << "\t";
+          //   cout << endl;
+          // }
         }
       }
     }
@@ -251,7 +276,8 @@ int main(int argc, char** argv) {
 
   // parse YAML config
   auto ymlConfig       = YAML::LoadFile(parsedArgs["config"].as<string>());
-  auto ptclTagged      = getTagNames(ymlConfig["tags"]);
+  auto ptclTagged      = getKeyNames(ymlConfig["tags"]);
+  auto prefix          = getKeyNames(ymlConfig["input_ntps"]);
   auto histoNameMeaYld = getYldHistoNames(ptclTagged);
   auto histoNameUnfYld = getYldHistoNames(ptclTagged, "True");
   auto histoNameEff    = getEffHistoNames(ptclTagged);
@@ -271,6 +297,8 @@ int main(int argc, char** argv) {
   // prepare histograms
   auto histoOut = prepOutHisto(histoNameUnfYld, histoBinSpec);
   auto histoIn  = loadHisto(ntpYld, ntpEff, histoNameMeaYld, histoNameEff);
+
+  cout << histoIn["kTag"]->GetBin(1, 1, 1) << endl;
 
   // unfold
   auto debug = parsedArgs["debug"].as<bool>();
