@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 09:08 PM -0400
+// Last Change: Mon Mar 28, 2022 at 11:56 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -13,12 +13,23 @@
 #include <vector>
 
 #include <TFile.h>
+#include <TH1D.h>
+#include <TH2D.h>
 #include <TH3D.h>
+
+#include <RooUnfoldBayes.h>
+#include <RooUnfoldResponse.h>
 
 #include <yaml-cpp/yaml.h>
 #include <cxxopts.hpp>
 
 using namespace std;
+
+//////////////////
+// Configurable //
+//////////////////
+
+const static int NUM_OF_ITER = 4;
 
 /////////////////////
 // General helpers //
@@ -171,49 +182,75 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             bool debug = false) {
   int totSize = nameMeaYld.size();
 
+  // These are used to stored measured yields (a vector) and response matrix (a
+  // 2D matrix)
+  auto histMea = new TH1D("histMea", "histMea", totSize, 0, totSize);
+  auto histRes =
+      new TH2D("histRes", "histRes", totSize, 0, totSize, totSize, 0, totSize);
+
+  // This is used to provide dimension info for response matrix
+  auto histTrue = new TH1D("histTrue", "histTrue", totSize, 0, totSize);
+  for (int i = 1; i <= totSize; i++) histTrue->SetBinContent(i, 1);
+
   for (int x = 1; x <= nbins[0]; x++) {
     for (int y = 1; y <= nbins[1]; y++) {
       for (int z = 1; z <= nbins[2]; z++) {
         for (auto pref : prefix) {
           cout << "Working on " << pref << endl;
 
-          // build yield array
-          double arrYld[totSize];
+          // build yield vector
           for (int idx = 0; idx != totSize; idx++) {
             auto name  = pref + "__" + nameMeaYld[idx];
             auto histo = histoIn[name];
-            if (histo)
-              arrYld[idx] = histoIn[name]->GetBinContent(x, y, z);
-            else
-              cout << name << " is a nullptr!" << endl;
+            histMea->SetBinContent(idx + 1, histo->GetBinContent(x, y, z));
           }
 
-          // build response array (2D matrix)
+          // build response matrix (2D matrix)
           double arrRes[totSize][totSize];
           for (int idxRow = 0; idxRow != totSize; idxRow++) {
-            for (int idxCol = 0; idxCol != totSize; idxCol++)
-              arrRes[idxRow][idxCol] =
-                  histoIn[nameEff[idxRow][idxCol]]->GetBinContent(x, y, z);
+            for (int idxCol = 0; idxCol != totSize; idxCol++) {
+              auto name  = nameEff[idxRow][idxCol];
+              auto histo = histoIn[name];
+              histRes->SetBinContent(idxRow + 1, idxCol + 1,
+                                     histo->GetBinContent(x, y, z));
+            }
           }
+
+          // perform unfolding
+          RooUnfoldResponse resp(nullptr, histTrue, histRes);
+          RooUnfoldBayes    unfoldWorker(&resp, histMea, NUM_OF_ITER);
+          auto              histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
 
           if (debug) {
             cout << "Bin index: x=" << x << " y=" << y << " z=" << z << endl;
 
             cout << "The measured yields are:" << endl << "  ";
-            for (const auto& n : arrYld) cout << n << "\t";
+            for (int idx = 1; idx <= totSize; idx++)
+              cout << histMea->GetBinContent(idx) << "  ";
             cout << endl;
 
             cout << "The response matrix is:" << endl;
-            for (const auto& row : arrRes) {
+            for (int idxRow = 1; idxRow <= totSize; idxRow++) {
               cout << "  ";
-              for (const auto& n : row) cout << n << "\t";
+              for (int idxCol = 1; idxCol <= totSize; idxCol++)
+                cout << histRes->GetBinContent(idxRow, idxCol) << "\t";
               cout << endl;
             }
+
+            cout << "The unfolded yields are:" << endl << "  ";
+            for (int idx = 1; idx <= totSize; idx++)
+              cout << histUnf->GetBinContent(idx) << "  ";
+            cout << endl;
           }
         }
       }
     }
   }
+
+  // cleanups
+  delete histMea;
+  delete histRes;
+  delete histTrue;
 }
 
 void unfoldDryRun(vector<string> ptcl, vector<string> nameMeaYld,
