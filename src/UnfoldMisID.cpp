@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 08:34 PM -0400
+// Last Change: Mon Mar 28, 2022 at 09:08 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -45,8 +45,7 @@ vector<string> getKeyNames(YAML::Node node, string prefix = "",
     auto   keyRaw = it->first.as<string>();
     string key;
     if (repl)
-      key = regex_replace(keyRaw, regex(replRegex),
-                          "");  // remove the heading 'misid_'
+      key = regex_replace(keyRaw, regex(replRegex), "");
     else
       key = keyRaw;
     result.emplace_back(prefix + key + suffix);
@@ -57,11 +56,7 @@ vector<string> getKeyNames(YAML::Node node, string prefix = "",
 
 vector<string> getYldHistoNames(vector<string> ptcl, string suffix = "Tag") {
   vector<string> result{};
-
-  for (auto pt : ptcl) {
-    result.emplace_back(pt + suffix);
-  }
-
+  for (auto pt : ptcl) result.emplace_back(pt + suffix);
   return result;
 }
 
@@ -128,27 +123,36 @@ map<string, TH3D*> prepOutHisto(vector<string>&        names,
 
 map<string, TH3D*> loadHisto(TFile* ntpYld, TFile* ntpEff,
                              vector<string>         nameMeaYld,
-                             vector<vector<string>> nameEff) {
+                             vector<vector<string>> nameEff,
+                             vector<string>         prefix) {
   map<string, TH3D*> result{};
 
   for (const auto& n : nameMeaYld) {
-    cout << "Loading " << n << endl;
-    auto histo = static_cast<TH3D*>(ntpYld->Get(n.data()));
-    if (!histo) {
-      cout << "Histogram " << n << " doesn't exist! terminate now..." << endl;
-      exit(1);
+    for (auto pref : prefix) {
+      auto name = (pref + "__" + n);
+      cout << "Loading " << name << endl;
+
+      auto histo = static_cast<TH3D*>(ntpYld->Get(name.data()));
+      if (!histo) {
+        cout << "Histogram " << name << " doesn't exist! terminate now..."
+             << endl;
+        exit(1);
+      }
+
+      result[name] = histo;
     }
-    result[n] = histo;
   }
 
   for (const auto& row : nameEff) {
     for (const auto& n : row) {
       cout << "Loading " << n << endl;
+
       auto histo = static_cast<TH3D*>(ntpEff->Get(n.data()));
       if (!histo) {
         cout << "Histogram " << n << " doesn't exist! terminate now..." << endl;
         exit(1);
       }
+
       result[n] = histo;
     }
   }
@@ -163,41 +167,49 @@ map<string, TH3D*> loadHisto(TFile* ntpYld, TFile* ntpEff,
 
 void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             vector<int> nbins, vector<string> nameMeaYld,
-            vector<vector<string>> nameEff, bool debug = false) {
+            vector<vector<string>> nameEff, vector<string> prefix,
+            bool debug = false) {
   int totSize = nameMeaYld.size();
-  // loop over all bin indices
+
   for (int x = 1; x <= nbins[0]; x++) {
     for (int y = 1; y <= nbins[1]; y++) {
       for (int z = 1; z <= nbins[2]; z++) {
-        // build yield array
-        double arrYld[totSize];
-        cout << __LINE__ << endl;
-        for (int idx = 0; idx != totSize; idx++)
-          arrYld[idx] = histoIn[nameMeaYld[idx]]->GetBinContent(x, y, z);
+        for (auto pref : prefix) {
+          cout << "Working on " << pref << endl;
 
-        cout << __LINE__ << endl;
+          // build yield array
+          double arrYld[totSize];
+          for (int idx = 0; idx != totSize; idx++) {
+            auto name  = pref + "__" + nameMeaYld[idx];
+            auto histo = histoIn[name];
+            if (histo)
+              arrYld[idx] = histoIn[name]->GetBinContent(x, y, z);
+            else
+              cout << name << " is a nullptr!" << endl;
+          }
 
-        // build response array (2D matrix)
-        // double arrRes[totSize][totSize];
-        // for (int idxRow = 0; idxRow != totSize; idxRow++) {
-        //   for (int idxCol = 0; idxCol != totSize; idxCol++)
-        //     arrRes[idxRow][idxCol] =
-        //         histoIn[nameEff[idxRow][idxCol]]->GetBinContent(x, y, z);
-        // }
+          // build response array (2D matrix)
+          double arrRes[totSize][totSize];
+          for (int idxRow = 0; idxRow != totSize; idxRow++) {
+            for (int idxCol = 0; idxCol != totSize; idxCol++)
+              arrRes[idxRow][idxCol] =
+                  histoIn[nameEff[idxRow][idxCol]]->GetBinContent(x, y, z);
+          }
 
-        if (debug) {
-          cout << "Bin index: x=" << x << " y=" << y << " z=" << z << endl;
+          if (debug) {
+            cout << "Bin index: x=" << x << " y=" << y << " z=" << z << endl;
 
-          cout << "The measured yields are:" << endl << "  ";
-          for (const auto& n : arrYld) cout << n << "\t";
-          cout << endl;
+            cout << "The measured yields are:" << endl << "  ";
+            for (const auto& n : arrYld) cout << n << "\t";
+            cout << endl;
 
-          // cout << "The response matrix is:" << endl;
-          // for (const auto& row : arrRes) {
-          //   cout << "  ";
-          //   for (const auto& n : row) cout << n << "\t";
-          //   cout << endl;
-          // }
+            cout << "The response matrix is:" << endl;
+            for (const auto& row : arrRes) {
+              cout << "  ";
+              for (const auto& n : row) cout << n << "\t";
+              cout << endl;
+            }
+          }
         }
       }
     }
@@ -296,13 +308,15 @@ int main(int argc, char** argv) {
 
   // prepare histograms
   auto histoOut = prepOutHisto(histoNameUnfYld, histoBinSpec);
-  auto histoIn  = loadHisto(ntpYld, ntpEff, histoNameMeaYld, histoNameEff);
+  auto histoIn =
+      loadHisto(ntpYld, ntpEff, histoNameMeaYld, histoNameEff, prefix);
 
-  cout << histoIn["kTag"]->GetBin(1, 1, 1) << endl;
+  cout << histoIn["D0__piTag"]->GetBinContent(1, 1, 1);
 
   // unfold
   auto debug = parsedArgs["debug"].as<bool>();
-  unfold(histoIn, histoOut, histoBinSize, histoNameMeaYld, histoNameEff, debug);
+  unfold(histoIn, histoOut, histoBinSize, histoNameMeaYld, histoNameEff, prefix,
+         debug);
 
   // cleanup
   for (auto h : histoOut) delete h.second;
