@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 12:12 AM -0400
+// Last Change: Tue Mar 29, 2022 at 12:19 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -89,7 +89,7 @@ tuple<vector<vector<float>>, vector<int>> getBins(YAML::Node cfgBinning) {
   for (auto it = cfgBinning.begin(); it != cfgBinning.end(); it++) {
     vector<float> binEdges{};
     int           counter = -1;
-    for (auto elem : it->second) {
+    for (const auto elem : it->second) {
       binEdges.emplace_back(elem.as<float>());
       counter += 1;
     }
@@ -250,31 +250,31 @@ void unfoldDryRun(vector<string> ptcl, vector<string> nameMeaYld,
                   vector<string> nameUnfYld, vector<vector<string>> nameEff,
                   vector<vector<float>> binnings, vector<int> nbins) {
   cout << "The tagged species are:" << endl;
-  for (const auto p : ptcl) cout << "  " << p << endl;
+  for (const auto& p : ptcl) cout << "  " << p << endl;
 
   cout << "The measured yields are stored in these histos:" << endl;
-  for (const auto h : nameMeaYld) cout << "  " << h << endl;
+  for (const auto& h : nameMeaYld) cout << "  " << h << endl;
 
   cout << "The unfolded yields will be stored in these histos:" << endl;
-  for (const auto h : nameUnfYld) cout << "  " << h << endl;
+  for (const auto& h : nameUnfYld) cout << "  " << h << endl;
 
   cout << "The response matrix will be built from these histos:" << endl;
-  for (const auto row : nameEff) {
+  for (const auto& row : nameEff) {
     cout << "  ";
-    for (const auto elem : row) cout << elem << "\t";
+    for (const auto& elem : row) cout << elem << "\t";
     cout << endl;
   }
 
   cout << "The binning is defined as:" << endl;
-  for (const auto row : binnings) {
+  for (const auto& row : binnings) {
     cout << "  ";
-    for (const auto elem : row) cout << elem << "\t";
+    for (const auto& elem : row) cout << elem << "\t";
     cout << endl;
   }
 
   cout << "The bin sizes are:" << endl;
   cout << "  ";
-  for (const auto n : nbins) cout << n << "\t";
+  for (const auto& n : nbins) cout << n << "\t";
   cout << endl;
 }
 
@@ -350,8 +350,8 @@ int main(int argc, char** argv) {
          debug, numOfIter);
 
   // cleanup
-  for (auto h : histoOut) delete h.second;
-  for (auto h : histoIn) delete h.second;
+  for (auto& h : histoOut) delete h.second;
+  for (auto& h : histoIn) delete h.second;
   delete ntpYld;
   delete ntpEff;
 
