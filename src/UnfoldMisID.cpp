@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 01:41 AM -0400
+// Last Change: Tue Mar 29, 2022 at 01:51 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -323,7 +323,7 @@ int main(int argc, char** argv) {
      cxxopts::value<string>())
     ("c,config", "specify input YAML config file",
      cxxopts::value<string>())
-    ("o,output", "specify output folder")
+    ("o,output", "specify output folder", cxxopts::value<string>())
     // flags (typically don't configure these)
     ("i,iteration", "specify number of unfolding iterations",
      cxxopts::value<int>()->default_value("4"))
@@ -370,9 +370,17 @@ int main(int argc, char** argv) {
   unfold(histoIn, histoOut, histoNameMeaYld, histoNameEff, histoNameUnfYld,
          debug, numOfIter);
 
+  // save output
+  auto outputFilename = parsedArgs["output"].as<string>() + "/" +
+                        parsedArgs["outputHisto"].as<string>();
+  auto ntpOut = new TFile(outputFilename.data(), "RECREATE");
+  for (const auto& pair : histoOut)
+    ntpOut->WriteObject(pair.second, pair.first.data());
+
   // cleanup
   for (auto& h : histoOut) delete h.second;
   for (auto& h : histoIn) delete h.second;
+  delete ntpOut;
   delete ntpYld;
   delete ntpEff;
 
