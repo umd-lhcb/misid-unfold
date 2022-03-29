@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Mar 28, 2022 at 08:51 PM -0400
+# Last Change: Tue Mar 29, 2022 at 12:04 AM -0400
 
 BINPATH := bin
 VPATH := include:src
@@ -46,11 +46,12 @@ build-rdx-merged-2016:
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-unfolded-2016)
-	$< --debug \
+	@mkdir -p $(OUT_DIR)
+	$< --debug --iteration 20 \
 		-e ./histos/rdx-22_03_28_20_48-merged-2016/merged.root \
 		-y ./histos/rdx-22_03_27_18_05-tag-2016/tagged.root \
 		-o $(OUT_DIR) \
-		-c ./spec/rdx-2016.yml
+		-c ./spec/rdx-2016.yml | tee $(OUT_DIR)/stdout.log
 
 
 ########

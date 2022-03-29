@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Mar 28, 2022 at 11:56 PM -0400
+// Last Change: Tue Mar 29, 2022 at 12:02 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -24,12 +24,6 @@
 #include <cxxopts.hpp>
 
 using namespace std;
-
-//////////////////
-// Configurable //
-//////////////////
-
-const static int NUM_OF_ITER = 4;
 
 /////////////////////
 // General helpers //
@@ -179,7 +173,7 @@ map<string, TH3D*> loadHisto(TFile* ntpYld, TFile* ntpEff,
 void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             vector<int> nbins, vector<string> nameMeaYld,
             vector<vector<string>> nameEff, vector<string> prefix,
-            bool debug = false) {
+            bool debug = false, int numOfIter = 4) {
   int totSize = nameMeaYld.size();
 
   // These are used to stored measured yields (a vector) and response matrix (a
@@ -218,7 +212,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 
           // perform unfolding
           RooUnfoldResponse resp(nullptr, histTrue, histRes);
-          RooUnfoldBayes    unfoldWorker(&resp, histMea, NUM_OF_ITER);
+          RooUnfoldBayes    unfoldWorker(&resp, histMea, numOfIter);
           auto              histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
 
           if (debug) {
@@ -310,6 +304,8 @@ int main(int argc, char** argv) {
      cxxopts::value<string>())
     ("o,output", "specify output folder")
     // flags (typically don't configure these)
+    ("i,iteration", "specify number of unfolding iterations",
+     cxxopts::value<int>()->default_value("4"))
     ("targetParticle", "specify target particle for unfolding",
      cxxopts::value<string>()->default_value("mu"))
     ("outputHisto", "specify output histo name",
@@ -348,12 +344,11 @@ int main(int argc, char** argv) {
   auto histoIn =
       loadHisto(ntpYld, ntpEff, histoNameMeaYld, histoNameEff, prefix);
 
-  cout << histoIn["D0__piTag"]->GetBinContent(1, 1, 1);
-
   // unfold
-  auto debug = parsedArgs["debug"].as<bool>();
+  auto debug     = parsedArgs["debug"].as<bool>();
+  auto numOfIter = parsedArgs["iteration"].as<int>();
   unfold(histoIn, histoOut, histoBinSize, histoNameMeaYld, histoNameEff, prefix,
-         debug);
+         debug, numOfIter);
 
   // cleanup
   for (auto h : histoOut) delete h.second;
