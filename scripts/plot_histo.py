@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Wed Mar 30, 2022 at 02:52 PM -0400
+#  Last Change: Wed Mar 30, 2022 at 02:53 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -33,6 +33,7 @@ KNOWN_PARTICLES = {
     'd0': r'$D^0$',
     'e': r'$e$',
     'pi': r'$\pi$',
+    'p': r'$p$',
     'k': r'$K$',
     'g': 'ghost',
     'mu': r'$\mu$',
