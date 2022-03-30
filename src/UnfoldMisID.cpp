@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Wed Mar 30, 2022 at 11:00 AM -0400
+// Last Change: Wed Mar 30, 2022 at 11:08 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -49,9 +49,14 @@ string capitalize(string str) {
 
 vector<double> histoToProb(const TH1D* histo) {
   vector<double> result{};
-  auto           normFac = histo->GetEntries();
-  for (int idx = 1; idx <= histo->GetNbinsX(); idx++)
+  double         normFac = 0;
+  for (int idx = 1; idx <= histo->GetNbinsX(); idx++) {
+    normFac += histo->GetBinContent(idx);
+  }
+  // we loop twice. it's stupid but it works
+  for (int idx = 1; idx <= histo->GetNbinsX(); idx++) {
     result.emplace_back(histo->GetBinContent(idx) / normFac);
+  }
   return result;
 }
 
