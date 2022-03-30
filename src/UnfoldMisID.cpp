@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 10:23 PM -0400
+// Last Change: Wed Mar 30, 2022 at 01:41 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -11,7 +11,6 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <tuple>
 #include <vector>
 
 #include <TFile.h>
@@ -174,9 +173,8 @@ map<string, TH3D*> prepOutHisto(const vStrStr&         names,
 map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
   map<string, TH3D*> result{};
 
-  for (const auto& pairs : directive) {
-    auto ntp = pairs.first;
-    for (const auto& row : pairs.second) {
+  for (const auto& [ntp, val] : directive) {
+    for (const auto& row : val) {
       for (const auto& n : row) {
         cout << "Loading " << n << endl;
 
@@ -273,7 +271,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               yld = 0;
             }
             auto histo = loadSingleHisto(histoOut, name);
-            cout << "Writhing unfolded yield to " << name << endl;
+            cout << "Writing unfolded yield to " << name << endl;
             ;
             histo->SetBinContent(x, y, z, yld);
           }
@@ -345,7 +343,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 }
 
 void unfoldDryRun(vStr ptcl, vStrStr nameMeaYld, vStrStr nameUnfYld,
-                  vStrStr nameEff, vStrStr nameUnfEff,
+                  vStrStr nameEff, vStrStr nameUnfEff, vStr nameMuEff,
                   vector<vector<float>> binnings, vector<int> nbins) {
   cout << "The tagged species are:" << endl;
   for (const auto& p : ptcl) cout << "  " << p << endl;
@@ -377,6 +375,9 @@ void unfoldDryRun(vStr ptcl, vStrStr nameMeaYld, vStrStr nameUnfYld,
     for (const auto& elem : row) cout << setw(16) << elem;
     cout << endl;
   }
+
+  cout << "The Mu efficiencies will be loaded from these histos:" << endl;
+  for (const auto& h : nameMuEff) cout << "  " << h << endl;
 
   cout << "The binning is defined as:" << endl;
   for (const auto& row : binnings) {
@@ -452,7 +453,7 @@ int main(int argc, char** argv) {
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
     unfoldDryRun(ptclList, histoNameMeaYld, histoNameUnfYld, histoNameEff,
-                 histoNameUnfEff, histoBinSpec, histoBinSize);
+                 histoNameUnfEff, histoNameMuEff, histoBinSpec, histoBinSize);
     return 0;
   }
 
@@ -470,7 +471,13 @@ int main(int argc, char** argv) {
             histoNameUnfEff.begin(), histoNameUnfEff.end(),
             back_inserter(histoNameOut));
   auto histoOut = prepOutHisto(histoNameOut, histoBinSpec);
-  auto histoIn = loadHisto({{ntpYld, histoNameMeaYld}, {ntpEff, histoNameEff}});
+
+  vStrStr histoNameEffComb(histoNameEff);
+  histoNameEffComb.emplace_back(histoNameMuEff);
+  auto histoIn =
+      loadHisto({{ntpYld, histoNameMeaYld}, {ntpEff, histoNameEffComb}});
+  // ^^the argumnets are maps of TFile* -> vStrStr, so we have to combine names
+  // from the same file!
 
   // unfold
   auto debug     = parsedArgs["debug"].as<bool>();
