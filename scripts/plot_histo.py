@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Wed Mar 30, 2022 at 01:55 PM -0400
+#  Last Change: Wed Mar 30, 2022 at 02:33 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -25,8 +25,12 @@ DEFAULT_COLORS = [
     'lightsteelblue',
     'mediumpurple',
     'salmon',
-    'goldenrod'
+    'palegoldenrod'
 ]
+
+KNOWN_PARTICLES = {
+    'D0': r'$D^0$'
+}
 
 
 #######################
@@ -72,8 +76,27 @@ def name_cleanup(name):
     return name.split(';')[0]
 
 
+def prefix_gen(histo_spec):
+    raw_name = list(histo_spec)[0]
+    ptcl, descr = raw_name.split('__')
+    mod = ''
+    if 'true' in descr.lower():
+        mod = 'true'
+    elif 'tag' in descr.lower():
+        mod = 'tag'
+    return f'{ptcl}_{mod}'
+
+
 def label_gen(name):
-    return name_cleanup(name)
+    name = name_cleanup(name).split('__')[1]
+    return name
+
+
+def title_gen(name, known=KNOWN_PARTICLES):
+    ptcl, descr = name.split('_')
+    if name in known:
+        return f'{known[name]} {descr}'
+    return f'{ptcl} {descr}'
 
 
 ########
@@ -82,7 +105,7 @@ def label_gen(name):
 
 def plot(histo_spec, bin_vars, bin_names, output_dir,
          colors=DEFAULT_COLORS, suffix='png'):
-    prefix = list(histo_spec)[0].split('__')[0]
+    prefix = prefix_gen(histo_spec)
 
     for idx, v in enumerate(bin_vars):
         labels = [label_gen(i) for i in histo_spec]
@@ -100,7 +123,7 @@ def plot(histo_spec, bin_vars, bin_names, output_dir,
                     b, h, add, figure=fig, axis=ax, show_legend=False))
 
         plot_top(plotters, f'{output_dir}/{prefix}_{v}.{suffix}',
-                 xlabel=bin_names[idx])
+                 xlabel=bin_names[idx], title=title_gen(prefix))
 
 
 ########
@@ -108,6 +131,7 @@ def plot(histo_spec, bin_vars, bin_names, output_dir,
 ########
 
 if __name__ == '__main__':
+    mplhep.style.use('LHCb2')
     args = parse_input()
     ntp = uproot.open(args.input)
 
