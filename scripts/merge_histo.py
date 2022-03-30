@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 06:37 PM -0400
+# Last Change: Tue Mar 29, 2022 at 09:40 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -13,6 +13,7 @@ from yaml import safe_load
 from glob import glob
 
 import uproot
+import numpy as np
 
 
 ################
@@ -46,12 +47,20 @@ def abs_dir(path):
     return str(Path(path).parent.absolute())
 
 
-def merge_true_to_tag(output_ntp, path_prefix, paths):
-    for p in [f'{path_prefix}/{i}' for i in paths]:
-        for n in glob(p):
-            input_ntp = uproot.open(n)
+def merge_true_to_tag(output_ntp, path_prefix, path):
+    for n in glob(f'{path_prefix}/{path}'):
+        input_ntp = uproot.open(n)
+        histo = list(input_ntp['eff'].to_numpy())
 
-            output_ntp[basename(n).replace('.root', '')] = input_ntp['eff']
+        if 'MuTag' in n:
+            print('Special treatment for MuTag efficiency...')
+            aux_ntp = uproot.open(n.replace('MuTag', 'GlobalTag'))
+            aux_histo = aux_ntp['eff'].to_numpy()
+            # We need to divide out the efficiency(!isMuon)
+            histo[0] = histo[0] / aux_histo[0]
+
+        histo[0][np.isnan(histo[0])] = 0  # no need to keep nan
+        output_ntp[Path(n).stem] = histo
 
 
 def merge_extra(output_ntp, path_prefix, spec):
