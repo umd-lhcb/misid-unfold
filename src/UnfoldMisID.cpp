@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Wed Mar 30, 2022 at 11:14 AM -0400
+// Last Change: Wed Mar 30, 2022 at 12:40 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -298,6 +298,17 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               auto probTagToTrue =
                   probTrueToTag * probTrue[idxTrue] / probTag[idxTag];
               if (isnan(probTagToTrue)) probTagToTrue = 0.0;
+
+              if (debug) {
+                cout << "  idxTrue: " << idxTrue << " idxTag: " << idxTag
+                     << endl;
+                cout << "  prob = " << nameEff[idxTag][idxTrue] << " * "
+                     << nameUnfYld[idxPref][idxTrue] << " / "
+                     << nameMeaYld[idxPref][idxTag] << endl;
+                cout << "       = " << probTagToTrue << " * "
+                     << probTrue[idxTrue] << " / " << probTag[idxTag] << " = "
+                     << probTagToTrue << endl;
+              }
               histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTagToTrue);
 
               // now contract with the mu misID eff (true -> mu tag)
@@ -336,7 +347,8 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             for (const auto p : probTrue) cout << setw(8) << p;
             cout << endl;
 
-            cout << "The response matrix is (row: fixed tag; col: fixed true):"
+            cout << "The true -> tag matrix is (row: fixed tag; col: fixed "
+                    "true):"
                  << endl;
             for (int idxRow = 1; idxRow <= totSize; idxRow++) {
               for (int idxCol = 1; idxCol <= totSize; idxCol++)
@@ -344,7 +356,8 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               cout << endl;
             }
 
-            cout << "The tag -> true efficiencies are (row: fixed true; col: "
+            cout << "The tag -> true efficiency matrix is (row: fixed true; "
+                    "col: "
                     "fixed tag):"
                  << endl;
             for (int idxRow = 1; idxRow <= totSize; idxRow++) {
