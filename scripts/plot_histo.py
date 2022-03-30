@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Wed Mar 30, 2022 at 01:43 PM -0400
+#  Last Change: Wed Mar 30, 2022 at 01:55 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -43,6 +43,9 @@ def parse_input():
     parser.add_argument('-p', '--prefix', action='append', default=['D0'],
                         help='specify histo prefixes to plot.')
 
+    parser.add_argument('-s', '--suffix', default='True',
+                        help='specify histo suffix to plot.')
+
     parser.add_argument('-v', '--vars', nargs='+',
                         default=['p', 'eta', 'ntracks'],
                         help='specify histo binning variables.')
@@ -66,7 +69,7 @@ def find_key(name, list_of_keys, sep='__'):
 
 
 def name_cleanup(name):
-    return name.split(':')[0]
+    return name.split(';')[0]
 
 
 def label_gen(name):
@@ -79,8 +82,9 @@ def label_gen(name):
 
 def plot(histo_spec, bin_vars, bin_names, output_dir,
          colors=DEFAULT_COLORS, suffix='png'):
+    prefix = list(histo_spec)[0].split('__')[0]
+
     for idx, v in enumerate(bin_vars):
-        filenames = [f'{name_cleanup(i)}_{v}.{suffix}' for i in histo_spec]
         labels = [label_gen(i) for i in histo_spec]
         histos = [np.sum(h[0], axis=tuple(x for x in range(3) if x!= idx))
                   for h in histo_spec.values()]
@@ -88,19 +92,15 @@ def plot(histo_spec, bin_vars, bin_names, output_dir,
         baselines = gen_histo_stacked_baseline(histos)
 
         plotters = []
-        for name, lbl, hist, bins, bot, clr in \
-                zip(filenames, labels, histos, binspecs, baselines, colors):
+        for lbl, hist, bins, bot, clr in \
+                zip(labels, histos, binspecs, baselines, colors):
             add_args = ax_add_args_histo(lbl, clr, baseline=bot)
-            print(name)
-            print(lbl)
-            print(hist)
-            print(bins)
             plotters.append(
                 lambda fig, ax, b=bins, h=hist+bot, add=add_args: plot_histo(
                     b, h, add, figure=fig, axis=ax, show_legend=False))
 
-            plot_top(plotters, f'{output_dir}/{name}.png',
-                     xlabel=bin_names[idx])
+        plot_top(plotters, f'{output_dir}/{prefix}_{v}.{suffix}',
+                 xlabel=bin_names[idx])
 
 
 ########
@@ -110,6 +110,11 @@ def plot(histo_spec, bin_vars, bin_names, output_dir,
 if __name__ == '__main__':
     args = parse_input()
     ntp = uproot.open(args.input)
-    histos = {k: ntp[k].to_numpy() for k in ntp if find_key(k, args.prefix)}
 
-    plot(histos, args.vars, args.labels, args.output)
+    # group histograms
+    for pref in args.prefix:
+        histos = {name_cleanup(k): ntp[k].to_numpy() for k in ntp
+                  if find_key(k, args.prefix) and
+                  name_cleanup(k).endswith(args.suffix)}
+
+        plot(histos, args.vars, args.labels, args.output)
