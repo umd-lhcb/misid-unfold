@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 06:05 PM -0400
+# Last Change: Tue Mar 29, 2022 at 10:14 PM -0400
 #
 # Description: tagged histogram builder (T)
 
@@ -64,7 +64,7 @@ def ntp_tree(name, tree=None, dir_abs_path=''):
 
 
 def histo_name_gen(name):
-    return f'{name.replace("misid_", "")}Tag'
+    return f'{name}Tag'
 
 
 #######################

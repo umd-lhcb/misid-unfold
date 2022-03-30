@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Mar 29, 2022 at 08:44 PM -0400
+# Last Change: Tue Mar 29, 2022 at 10:19 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
 import json
+import re
 
 from argparse import ArgumentParser
 from os import system, chdir, makedirs
@@ -138,12 +139,12 @@ def cut_replacement(tagged_cuts):
 
     for p, cut in tagged_cuts.items():
         for p_else in tagged_cuts:
-            cut = cut.replace(p_else, f"({tagged_cuts[p_else]})")
+            cut = re.sub(rf'\b{p_else}\b', f"({tagged_cuts[p_else]})", cut)
 
         for src, tgt in REPLACEMENT_RULES.items():
             cut = cut.replace(src, tgt)
 
-        result[p.replace('misid_', '')] = cut
+        result[p] = cut
 
     return result
 

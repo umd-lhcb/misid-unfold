@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Mar 29, 2022 at 05:37 PM -0400
+// Last Change: Tue Mar 29, 2022 at 10:23 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -10,7 +10,6 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
-#include <regex>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -61,17 +60,11 @@ vector<double> histoToProb(const TH1D* histo) {
 // Config helpers //
 ////////////////////
 
-vStr getKeyNames(YAML::Node node, string prefix = "", string suffix = "",
-                 bool repl = true, string replRegex = "^misid_") {
+vStr getKeyNames(YAML::Node node, string prefix = "", string suffix = "") {
   vStr result{};
 
   for (auto it = node.begin(); it != node.end(); it++) {
-    auto   keyRaw = it->first.as<string>();
-    string key;
-    if (repl)
-      key = regex_replace(keyRaw, regex(replRegex), "");
-    else
-      key = keyRaw;
+    auto key = it->first.as<string>();
     result.emplace_back(prefix + key + suffix);
   }
 
