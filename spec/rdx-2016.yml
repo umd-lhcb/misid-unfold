@@ -62,7 +62,7 @@ global_cuts:
 # used by the efficiency histogram merger (M)
 # this will generate a single efficiency histo root file
 input_histos:
-    true_to_tag: "../histos/rdx-22_03_30_02_48-true_to_tag-2016/*.root"
+    true_to_tag: "../histos/rdx-22_03_30_03_13-true_to_tag-2016/*.root"
     extra:
         "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
             H2H_Ghost_TO_Pi: gTrueToPiTag
@@ -70,6 +70,7 @@ input_histos:
             H2H_Ghost_TO_P: gTrueToPTag
             H2H_Ghost_TO_e: gTrueToETag
             H2H_Ghost_TO_Ghost: gTrueToGTag
+            H2H_Ghost_TO_Mu: gTrueToMuTag
 
 
 # building tagged histograms, used by (T), (A) and (U)
