@@ -84,8 +84,8 @@ def dump_binning(yml_bins, config, particles, output):
              for p in particles}, f)
 
 
-def run_cmd(cmd, debug=False):
-    if debug:
+def run_cmd(cmd, dry_run=False):
+    if dry_run:
         print(cmd)
     else:
         ret_val = system(cmd)
@@ -115,7 +115,7 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
     if debug:
         cmd += ' --max-files 3'  # debug only
 
-    run_cmd(cmd, debug)
+    run_cmd(cmd, dry_run)
 
     if dry_run:
         return 1
