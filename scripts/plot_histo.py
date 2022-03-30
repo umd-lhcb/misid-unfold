@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Wed Mar 30, 2022 at 02:33 PM -0400
+#  Last Change: Wed Mar 30, 2022 at 02:42 PM -0400
 #
 # Description: histogram plotter (for this project)
 
+import re
 import uproot
 import mplhep
 import numpy as np
@@ -25,12 +26,20 @@ DEFAULT_COLORS = [
     'lightsteelblue',
     'mediumpurple',
     'salmon',
-    'palegoldenrod'
+    'palegoldenrod',
 ]
 
 KNOWN_PARTICLES = {
-    'D0': r'$D^0$'
+    'd0': r'$D^0$',
+    'e': r'$e$',
+    'pi': r'$\pi$',
+    'k': r'$K$',
+    'g': 'ghost',
+    'mu': r'$\mu$',
 }
+
+GET_PARTICLE = lambda x: KNOWN_PARTICLES[x.lower()] \
+    if x.lower() in KNOWN_PARTICLES else x
 
 
 #######################
@@ -87,16 +96,15 @@ def prefix_gen(histo_spec):
     return f'{ptcl}_{mod}'
 
 
-def label_gen(name):
+def label_gen(name, known=KNOWN_PARTICLES):
     name = name_cleanup(name).split('__')[1]
-    return name
+    regex = re.search(r'(\w+)(True|Tag)', name)
+    return f'{GET_PARTICLE(regex.group(1))} {regex.group(2)}'
 
 
 def title_gen(name, known=KNOWN_PARTICLES):
     ptcl, descr = name.split('_')
-    if name in known:
-        return f'{known[name]} {descr}'
-    return f'{ptcl} {descr}'
+    return f'{GET_PARTICLE(ptcl)} {descr.lower()}'
 
 
 ########
@@ -123,7 +131,9 @@ def plot(histo_spec, bin_vars, bin_names, output_dir,
                     b, h, add, figure=fig, axis=ax, show_legend=False))
 
         plot_top(plotters, f'{output_dir}/{prefix}_{v}.{suffix}',
-                 xlabel=bin_names[idx], title=title_gen(prefix))
+                 xlabel=bin_names[idx], title=title_gen(prefix),
+                 legend_add_args={
+                     'numpoints': 1, 'loc': 'best', 'frameon': 'true'})
 
 
 ########
