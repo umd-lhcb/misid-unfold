@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Wed Mar 30, 2022 at 10:55 AM -0400
+// Last Change: Wed Mar 30, 2022 at 11:00 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -321,6 +321,14 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             cout << endl;
             for (int idx = 1; idx <= totSize; idx++)
               cout << setw(12) << histUnf->GetBinContent(idx);
+            cout << endl;
+
+            cout
+                << "The prior probabilities are (top: measured; bot: unfolded):"
+                << endl;
+            for (const auto p : probTag) cout << setw(8) << p;
+            cout << endl;
+            for (const auto p : probTrue) cout << setw(8) << p;
             cout << endl;
 
             cout << "The response matrix is:" << endl;
