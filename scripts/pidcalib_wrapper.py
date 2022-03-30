@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Mar 27, 2022 at 02:41 AM -0400
+# Last Change: Tue Mar 29, 2022 at 08:08 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -91,8 +91,8 @@ def run_cmd(cmd, debug=False):
 
 
 def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
-                 year, output_folder,
-                 debug=False, polarity='down'):
+                    year, output_folder,
+                    debug=False, polarity='down'):
     cuts = ''
     for gc, pc, nm in zip(global_cuts, pid_cuts, part_tag_arr):
         cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {part_true}TrueTo{nm.capitalize()}Tag.pkl'
@@ -144,13 +144,14 @@ def cut_replacement(tagged_cuts):
     return result
 
 
-def true_to_tag_directive_gen(config, year, output_folder, addon=['mu']):
+def true_to_tag_directive_gen(config, year, output_folder):
     result = []
-    tagged = cut_replacement(config['tags'])
 
-    for p_true in list(tagged)+addon:
+    tagged = cut_replacement(config['tags'])
+    tagged_addon = config['tags_addon']
+    for p_true in tagged:  # yes, it's the true particle
         if p_true not in config['particle_alias']:
-            continue  # we don't use pidcalib2 for ghost
+            continue  # e.g. we don't use pidcalib2 for ghost
 
         global_cuts = []
         pid_cuts = []
@@ -158,17 +159,21 @@ def true_to_tag_directive_gen(config, year, output_folder, addon=['mu']):
         for pid_cut_addon in tagged.values():
             global_cuts.append(config['global_cuts']['kinematic'])
 
-            pid_cut = config['global_cuts']['mu'] if p_true == 'mu' else \
-                config['global_cuts']['non_mu']
-            pid_cut += '&' + pid_cut_addon
+            pid_cut = config['global_cuts']['tags'] + '&' + pid_cut_addon
             pid_cuts.append(pid_cut)
 
+        # now handle 'tags_addon'
+        for cut in tagged_addon.values():
+            global_cuts.append(config['global_cuts']['kinematic'])
+            pid_cuts.append(cut)
+
         result.append([
-            p_true, config['particle_alias'][p_true], tagged,
+            p_true, config['particle_alias'][p_true],
+            list(tagged) + list(tagged_addon),
             global_cuts, pid_cuts, year, output_folder
         ])
 
-    return result
+    return result  # we keep 'tags_addon' as-is
 
 
 ########

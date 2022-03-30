@@ -15,6 +15,11 @@ tags:
     misid_e: "mu_PIDe > 2.0 && (mu_PIDe - mu_PIDK) > -2.0 && (mu_PIDe - mu_PIDp) > -2.0 && mu_ProbNNghost < 0.25"
     misid_g: "!misid_pi && !misid_k && !misid_p && !misid_e"  # ghost/uncategoried
 
+# additional species used by (P)
+tags_addon:
+    mu: "IsMuon == 1.0 & DLLmu > 2.0 & MC15TuneV1_ProbNNghost < 0.5"
+    global: "IsMuon == 0.0 & InMuonAcc == 1.0"
+
 
 # used by (T), (G)
 # NOTE: currently consistent w/ Zishuo's binning
@@ -41,7 +46,7 @@ particle_alias:
     k: K
     p: P
     e: e_B_Jpsi
-    mu: Mu_nopt
+    # mu: Mu_nopt  # Mu samples are not used as of now
 
 
 # NOTE: we apply all global cuts except Mu PID and B mass window
@@ -49,8 +54,7 @@ particle_alias:
 global_cuts:
     # all except 'offline' is used by (P); 'offline' is used by (T)
     kinematic: "P > 3000 & P < 100000"
-    non_mu: "IsMuon == 0.0 & InMuonAcc == 1.0"
-    mu: "IsMuon == 1.0 & DLLmu > 2.0 & MC15TuneV1_ProbNNghost < 0.5"
+    tags: "IsMuon == 0.0 & InMuonAcc == 1.0"
     offline: dx_m_ok
 
 
@@ -69,7 +73,6 @@ input_histos:
             H2H_Ghost_TO_Ghost: gTrueToGTag
 
 
-
 # building tagged histograms, used by (T), (A) and (U)
 # for (A) and (U), it's for figuuring out histogram names only
 # the key names will be prepended to the histograms
@@ -78,11 +81,3 @@ input_ntps:
     # each entry should be a key-list pair, where list provides path to ntuples, with tree names
     D0:
         - "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_23--mu_misid--data--2016--*.root:tree"
-
-
-# generated histograms will have the following names, e.g.:
-#   - D0_ws__eTrueToETag
-#   - D0_ws__eTruetoPiTag
-#   ...
-# NOTE: here we use '__' as separators because '-' is not supported:
-#   https://root-forum.cern.ch/t/minus-sign-in-branch-name/13400
