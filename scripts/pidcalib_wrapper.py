@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Mar 29, 2022 at 08:08 PM -0400
+# Last Change: Tue Mar 29, 2022 at 08:17 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -49,6 +49,9 @@ def parse_input():
 
     parser.add_argument('-d', '--dry-run', action='store_true',
                         help='printout command to execute w/o actually executing.')
+
+    parser.add_argument('-D', '--debug', action='store_true',
+                        help='enable debug mode by looping over a small subset of pidcalib samples.')
 
     parser.add_argument('-y', '--year', default='16',
                         help='specify year (only the last 2 digits).')
@@ -109,7 +112,8 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
     --binning-file ./tmp/{JSON_BIN_FILENAME}'''
 
     cmd += cuts
-    # cmd += ' --max-files 3'  # debug only
+    if debug:
+        cmd += ' --max-files 3'  # debug only
 
     run_cmd(cmd, debug)
 
@@ -144,11 +148,9 @@ def cut_replacement(tagged_cuts):
     return result
 
 
-def true_to_tag_directive_gen(config, year, output_folder):
+def true_to_tag_directive_gen(tagged, tagged_addon, year, output_folder):
     result = []
 
-    tagged = cut_replacement(config['tags'])
-    tagged_addon = config['tags_addon']
     for p_true in tagged:  # yes, it's the true particle
         if p_true not in config['particle_alias']:
             continue  # e.g. we don't use pidcalib2 for ghost
@@ -193,17 +195,17 @@ if __name__ == '__main__':
     makedirs('tmp', exist_ok=True)
 
     # Find particle names known to pidcalib
-    particles_raw = [i.replace('misid_', '') for i in config['tags']] + ['mu']
-    particles = [config['particle_alias'][i]
-                 if i in config['particle_alias'] else i for i in particles_raw]
+    ptcl_tagged = cut_replacement(config['tags'])
+    ptcl = [config['particle_alias'][i]
+            if i in config['particle_alias'] else i for i in ptcl_tagged]
 
     # Dump custom binning schema (a JSON file, consumed by pidcalib later)
-    dump_binning(config['binning'], config, particles,
-                 f'./tmp/{JSON_BIN_FILENAME}')
+    dump_binning(config['binning'], config, ptcl, f'./tmp/{JSON_BIN_FILENAME}')
 
     # Generate efficiency histograms with pidcalib2
     if args.mode == 'true_to_tag':
-        directives = true_to_tag_directive_gen(config, args.year, 'raw_histos')
+        directives = true_to_tag_directive_gen(
+            ptcl_tagged, config['tags_addon'], args.year, 'raw_histos')
         for d in directives:
             true_to_tag_gen(*d, debug=args.dry_run)
     else:
