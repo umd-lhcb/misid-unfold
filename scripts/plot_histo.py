@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Wed Mar 30, 2022 at 02:53 PM -0400
+#  Last Change: Wed Mar 30, 2022 at 02:56 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -100,7 +100,7 @@ def prefix_gen(histo_spec):
 def label_gen(name, known=KNOWN_PARTICLES):
     name = name_cleanup(name).split('__')[1]
     regex = re.search(r'(\w+)(True|Tag)', name)
-    return f'{GET_PARTICLE(regex.group(1))} {regex.group(2)}'
+    return f'{GET_PARTICLE(regex.group(1))} {regex.group(2).lower()}'
 
 
 def title_gen(name, known=KNOWN_PARTICLES):
