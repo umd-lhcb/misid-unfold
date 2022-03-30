@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Wed Mar 30, 2022 at 01:41 AM -0400
+// Last Change: Wed Mar 30, 2022 at 10:55 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -252,7 +252,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
               auto histo = loadSingleHisto(histoIn, nameEff[idxTag][idxTrue]);
               auto eff   = histo->GetBinContent(x, y, z);
-              if (isnan(eff)) eff = 0.0;
+              if (isnan(eff) || isinf(eff)) eff = 0.0;
               histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
             }
           }
@@ -266,8 +266,8 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           for (int idx = 0; idx != totSize; idx++) {
             auto name = nameUnfYld[idxPref][idx];
             auto yld  = histUnf->GetBinContent(idx + 1);
-            if (isnan(yld)) {
-              cout << "Warning: naN detected for " << name << endl;
+            if (isnan(yld) || isinf(yld)) {
+              cout << "Warning: naN or inf detected for " << name << endl;
               yld = 0;
             }
             auto histo = loadSingleHisto(histoOut, name);
@@ -327,6 +327,15 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             for (int idxRow = 1; idxRow <= totSize; idxRow++) {
               for (int idxCol = 1; idxCol <= totSize; idxCol++)
                 cout << setw(8) << histRes->GetBinContent(idxRow, idxCol);
+              cout << endl;
+            }
+
+            cout << "The tag -> true efficiencies are (row: fixed tag; col: "
+                    "fixed true):"
+                 << endl;
+            for (int idxRow = 1; idxRow <= totSize; idxRow++) {
+              for (int idxCol = 1; idxCol <= totSize; idxCol++)
+                cout << setw(8) << histInv->GetBinContent(idxRow, idxCol);
               cout << endl;
             }
           }
