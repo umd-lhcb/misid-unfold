@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Wed Mar 30, 2022 at 11:08 AM -0400
+// Last Change: Wed Mar 30, 2022 at 11:14 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -298,13 +298,13 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               auto probTagToTrue =
                   probTrueToTag * probTrue[idxTrue] / probTag[idxTag];
               if (isnan(probTagToTrue)) probTagToTrue = 0.0;
-              histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTrueToTag);
+              histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTagToTrue);
 
               // now contract with the mu misID eff (true -> mu tag)
               auto histo = loadSingleHisto(histoIn, nameMuEff[idxTrue]);
               auto probTrueToMuTag = histo->GetBinContent(x, y, z);
               if (isnan(probTrueToMuTag)) probTrueToMuTag = 0.0;
-              wtTagToMuTag = probTagToTrue * probTrueToMuTag;
+              wtTagToMuTag += probTagToTrue * probTrueToMuTag;
             }
 
             // we use idxTag as the second index, which checks out
@@ -336,15 +336,16 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             for (const auto p : probTrue) cout << setw(8) << p;
             cout << endl;
 
-            cout << "The response matrix is:" << endl;
+            cout << "The response matrix is (row: fixed tag; col: fixed true):"
+                 << endl;
             for (int idxRow = 1; idxRow <= totSize; idxRow++) {
               for (int idxCol = 1; idxCol <= totSize; idxCol++)
                 cout << setw(8) << histRes->GetBinContent(idxRow, idxCol);
               cout << endl;
             }
 
-            cout << "The tag -> true efficiencies are (row: fixed tag; col: "
-                    "fixed true):"
+            cout << "The tag -> true efficiencies are (row: fixed true; col: "
+                    "fixed tag):"
                  << endl;
             for (int idxRow = 1; idxRow <= totSize; idxRow++) {
               for (int idxCol = 1; idxCol <= totSize; idxCol++)
