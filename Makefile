@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Mar 30, 2022 at 01:43 AM -0400
+# Last Change: Wed Mar 30, 2022 at 02:48 PM -0400
 
 BINPATH := bin
 VPATH := include:src
@@ -30,7 +30,7 @@ clean:
 #######
 # RDX #
 #######
-.PHONY: build-tagged-histo build-rdx-true-to-tag-2016
+.PHONY: build-tagged-histo build-rdx-true-to-tag-2016 plot-rdx-2016
 
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-tag-2016)
@@ -52,6 +52,12 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 		-y ./histos/rdx-22_03_27_18_05-tag-2016/tagged.root \
 		-o $(OUT_DIR) \
 		-c ./spec/rdx-2016.yml | tee $(OUT_DIR)/stdout.log
+
+plot-rdx-2016:
+	./scripts/plot_histo.py -o ./gen \
+		-i ./histos/rdx-22_03_30_12_40-unfolded-2016/unfolded.root
+	./scripts/plot_histo.py -o ./gen -s Tag \
+		-i ./histos/rdx-22_03_27_18_05-tag-2016/tagged.root
 
 
 ########

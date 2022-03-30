@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Wed Mar 30, 2022 at 02:42 PM -0400
+#  Last Change: Wed Mar 30, 2022 at 02:52 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -116,10 +116,12 @@ def plot(histo_spec, bin_vars, bin_names, output_dir,
     prefix = prefix_gen(histo_spec)
 
     for idx, v in enumerate(bin_vars):
-        labels = [label_gen(i) for i in histo_spec]
-        histos = [np.sum(h[0], axis=tuple(x for x in range(3) if x!= idx))
-                  for h in histo_spec.values()]
-        binspecs = [h[1+idx] for h in histo_spec.values()]
+        ordering = sorted(histo_spec)
+        labels = [label_gen(i) for i in ordering]
+        histos = [np.sum(histo_spec[i][0],
+                         axis=tuple(x for x in range(3) if x!= idx))
+                  for i in ordering]
+        binspecs = [histo_spec[i][1+idx] for i in ordering]
         baselines = gen_histo_stacked_baseline(histos)
 
         plotters = []
