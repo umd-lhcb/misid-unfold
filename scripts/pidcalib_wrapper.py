@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Mar 29, 2022 at 08:17 PM -0400
+# Last Change: Tue Mar 29, 2022 at 08:44 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -95,7 +95,7 @@ def run_cmd(cmd, debug=False):
 
 def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
                     year, output_folder,
-                    debug=False, polarity='down'):
+                    dry_run=False, debug=False, polarity='down'):
     cuts = ''
     for gc, pc, nm in zip(global_cuts, pid_cuts, part_tag_arr):
         cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {part_true}TrueTo{nm.capitalize()}Tag.pkl'
@@ -117,7 +117,7 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
 
     run_cmd(cmd, debug)
 
-    if debug:
+    if dry_run:
         return 1
 
     # Convert pkl -> root, rename and relocate
@@ -207,6 +207,6 @@ if __name__ == '__main__':
         directives = true_to_tag_directive_gen(
             ptcl_tagged, config['tags_addon'], args.year, 'raw_histos')
         for d in directives:
-            true_to_tag_gen(*d, debug=args.dry_run)
+            true_to_tag_gen(*d, dry_run=args.dry_run, debug=args.debug)
     else:
         print(f'unknown mode: {args.mode}')
