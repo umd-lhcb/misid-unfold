@@ -39,23 +39,28 @@ tags_addon:
 # used by (P), as the names suggests
 pidcalib_samples: [Pi, K, P, e_B_Jpsi]
 pidcalib_cuts:
-    gloabl: "P > 3000 & P < 100000"  # this is always applied as --cut <global>
-    tags: "IsMuon == 0.0 & InMuonAcc == 1.0"
+    tags:
+        cuts:
+        pid_cuts: "IsMuon == 0.0 & InMuonAcc == 1.0"
+    tags_addon:
+        cuts:
+        pid_cuts: "P > 3000 & P < 100000"  # this is always applied as --cut <global>
 
 
 # specify additional source of histograms
 # used by the efficiency histogram merger (M)
 # this will generate a single efficiency histo root file
 input_histos:
-    true_to_tag: "../histos/rdx-22_03_30_03_13-true_to_tag-2016/*.root"
-    extra:
-        "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
-            H2H_Ghost_TO_Pi: gTrueToPiTag
-            H2H_Ghost_TO_K: gTrueToKTag
-            H2H_Ghost_TO_P: gTrueToPTag
-            H2H_Ghost_TO_e: gTrueToETag
-            H2H_Ghost_TO_Ghost: gTrueToGTag
-            H2H_Ghost_TO_Mu: gTrueToMuTag
+    2016:
+        true_to_tag: "../histos/rdx-22_03_30_03_13-true_to_tag-2016/*.root"
+        extra:
+            "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
+                H2H_Ghost_TO_Pi: gTrueToPiTag
+                H2H_Ghost_TO_K: gTrueToKTag
+                H2H_Ghost_TO_P: gTrueToPTag
+                H2H_Ghost_TO_e: gTrueToETag
+                H2H_Ghost_TO_Ghost: gTrueToGTag
+                H2H_Ghost_TO_Mu: gTrueToMuTag
 
 
 # building tagged histograms, used by (T), (A) and (U)
@@ -63,8 +68,8 @@ input_histos:
 # the key names will be prepended to the histograms
 # e.g. Dst: <path_to_histo> -> Dst__piTag, Dst__kTag, etc.
 input_ntps:
-    # each entry should be a key-list pair, where list provides path to ntuples, with tree names
-    D0:
-        files:
-            - "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_23--mu_misid--data--2016--*.root:tree"
-        cuts: dx_m_ok
+    2016:
+        # each entry should be a key-list pair, where list provides path to ntuples, with tree names
+        D0:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_23--mu_misid--data--2016--*.root:tree"
+            cuts: dx_m_ok
