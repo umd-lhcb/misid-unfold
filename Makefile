@@ -1,11 +1,14 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Mar 30, 2022 at 02:48 PM -0400
+# Last Change: Wed Mar 30, 2022 at 10:53 PM -0400
 
-BINPATH := bin
-VPATH := include:src
+BINPATH := ./bin
+GENPATH := ./gen
+VPATH := include:src:docs
 CPP_FILES	:=	$(wildcard src/*.cpp)
 EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%.exe,$(CPP_FILES))
+TEX_FILES	:=	$(wildcard docs/*.tex)
+PDF_FILES	:=	$(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
 
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
@@ -24,7 +27,7 @@ ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 exe: $(EXE_FILES)
 
 clean:
-	@rm -rf ./gen/*
+	@rm -rf $(GENPATH)/*
 
 
 #######
@@ -33,19 +36,19 @@ clean:
 .PHONY: build-tagged-histo build-rdx-true-to-tag-2016 plot-rdx-2016
 
 build-rdx-tag-2016:
-	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-tag-2016)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
 	./scripts/build_histo_tagged.py -c ./spec/rdx-2016.yml -o $(OUT_DIR)
 
 build-rdx-true-to-tag-2016:
-	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-true_to_tag-2016)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o $(OUT_DIR) -y 16
 
 build-rdx-merged-2016:
-	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-merged-2016)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
 	./scripts/merge_histo.py -c ./spec/rdx-2016.yml -o $(OUT_DIR)
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
-	$(eval OUT_DIR	:=	./gen/rdx-$(TIME_STAMP)-unfolded-2016)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 20 \
 		-e ./histos/rdx-22_03_30_01_43-merged-2016/merged.root \
@@ -54,9 +57,9 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 		-c ./spec/rdx-2016.yml | tee $(OUT_DIR)/stdout.log
 
 plot-rdx-2016:
-	./scripts/plot_histo.py -o ./gen \
+	./scripts/plot_histo.py -o $(GENPATH) \
 		-i ./histos/rdx-22_03_30_12_40-unfolded-2016/unfolded.root
-	./scripts/plot_histo.py -o ./gen -s Tag \
+	./scripts/plot_histo.py -o $(GENPATH) -s Tag \
 		-i ./histos/rdx-22_03_27_18_05-tag-2016/tagged.root
 
 
@@ -66,7 +69,7 @@ plot-rdx-2016:
 .PHONY: test-pidcalib2-wrapper test-unfold
 
 test-pidcalib2-wrapper:
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o ./gen --dry-run
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o $(GENPATH) --dry-run
 
 test-unfold: $(BINPATH)/UnfoldMisID.exe
 	./bin/UnfoldMisID.exe -c ./spec/rdx-2016.yml --dryRun
@@ -78,3 +81,14 @@ test-unfold: $(BINPATH)/UnfoldMisID.exe
 
 $(BINPATH)/%.exe: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)
+
+
+#######
+# Doc #
+#######
+.PHONY: doc
+
+doc: $(PDF_FILES)
+
+$(GENPATH)/%.pdf: %.tex
+	latexmk $<
