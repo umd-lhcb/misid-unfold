@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Wed Mar 30, 2022 at 12:40 PM -0400
+// Last Change: Wed Mar 30, 2022 at 11:44 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -331,7 +331,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             cout.precision(4);
             cout << fixed;
 
-            cout << "The yields are (top: measured; bot: unfolded):" << endl;
+            cout << "The yields are (top: tag; bot: true):" << endl;
             for (int idx = 1; idx <= totSize; idx++)
               cout << setw(12) << histMea->GetBinContent(idx);
             cout << endl;
@@ -339,16 +339,15 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               cout << setw(12) << histUnf->GetBinContent(idx);
             cout << endl;
 
-            cout
-                << "The prior probabilities are (top: measured; bot: unfolded):"
-                << endl;
+            cout << "The prior probabilities are (top: tag; bot: true):"
+                 << endl;
             for (const auto p : probTag) cout << setw(8) << p;
             cout << endl;
             for (const auto p : probTrue) cout << setw(8) << p;
             cout << endl;
 
-            cout << "The true -> tag matrix is (row: fixed tag; col: fixed "
-                    "true):"
+            cout << "The true -> tag matrix is (row: fixed tag; "
+                    "col: fixed true):"
                  << endl;
             for (int idxRow = 1; idxRow <= totSize; idxRow++) {
               for (int idxCol = 1; idxCol <= totSize; idxCol++)
@@ -357,8 +356,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             }
 
             cout << "The tag -> true efficiency matrix is (row: fixed true; "
-                    "col: "
-                    "fixed tag):"
+                    "col: fixed tag):"
                  << endl;
             for (int idxRow = 1; idxRow <= totSize; idxRow++) {
               for (int idxCol = 1; idxCol <= totSize; idxCol++)
