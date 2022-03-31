@@ -39,6 +39,30 @@
 
             # Pinned Python dependencies
             numpy
+
+            # LaTeX
+            (texlive.combine {
+              inherit (texlive)
+                scheme-basic
+                # Explicit dependencies
+                latexmk
+                blkarray
+                booktabs
+                amsmath
+                enumitem
+                mathtools
+                standalone
+                preview
+                # Implicit dependencies
+                pgf
+                pgfopts
+                etoolbox
+                translator
+                selnolig
+                everysel
+                xkeyval
+                ;
+            })
           ]);
 
           FONTCONFIG_FILE = pkgs.makeFontsConf {
