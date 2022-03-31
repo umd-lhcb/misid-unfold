@@ -7,28 +7,34 @@
 # - histogram merger (M)
 
 # cuts for each tagged species, used by ALL
-# NOTE: here we follow C++ boolean convention (&&, ||)
 tags:
-    pi: "mu_ProbNNpi > 0.1 && mu_PIDK < 0.0 && mu_PIDp < 0.0 && mu_PIDe < 2.0 && mu_ProbNNghost < 0.25"
-    k: "mu_PIDK > 0.0 && mu_PIDp < 0.0 && (mu_PIDe - mu_PIDK) < -2.0 && mu_ProbNNghost < 0.25"
-    p: "mu_PIDp > 2.0 && mu_PIDK < 0.0 && (mu_PIDe - mu_PIDp) < -2.0 && mu_ProbNNghost < 0.25"
-    e: "mu_PIDe > 2.0 && (mu_PIDe - mu_PIDK) > -2.0 && (mu_PIDe - mu_PIDp) > -2.0 && mu_ProbNNghost < 0.25"
-    g: "!pi && !k && !p && !e"  # ghost/uncategoried
+    pi: >-
+        MC15TuneV1_ProbNNpi > 0.1 &
+        DLLK < 0.0 & DLLp < 0.0 & DLLe < 2.0 &
+        MC15TuneV1_ProbNNghost < 0.25
+    k: >-
+        DLLK > 0.0 & DLLp < 0.0 & (DLLe - DLLK) < -2.0 &
+        MC15TuneV1_ProbNNghost < 0.25
+    p: >-
+        DLLp > 2.0 & DLLK < 0.0 & (DLLe - DLLp) < -2.0 &
+        MC15TuneV1_ProbNNghost < 0.25
+    e: >-
+        DLLe > 2.0 & (DLLe - DLLK) > -2.0 & (DLLe - DLLp) > -2.0 &
+        MC15TuneV1_ProbNNghost < 0.25
+    g: "!pi & !k & !p & !e"  # ghost/uncategoried
 
 # additional species used by (P)
 tags_addon:
     mu: "IsMuon == 1.0 & DLLmu > 2.0 & MC15TuneV1_ProbNNghost < 0.5"
-    global: "IsMuon == 0.0 & InMuonAcc == 1.0"
+    non_mu: "IsMuon == 0.0 & InMuonAcc == 1.0"
 
 
-# used by (T), (G)
-# NOTE: currently consistent w/ Zishuo's binning
 binning:
     P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]  # the scific notation has to be written like this for PyYAML
     ETA: [1.7, 3.6, 5.0]
     nTracks: [0, 200, 600]
 
-# used by (T), (A), (P)
+# used by (A), (P)
 binning_alias:
     pidcalib:
         P: Brunel_P
