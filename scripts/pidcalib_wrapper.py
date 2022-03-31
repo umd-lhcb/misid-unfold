@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Mar 29, 2022 at 10:19 PM -0400
+# Last Change: Thu Mar 31, 2022 at 02:29 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -19,20 +19,15 @@ from yaml import safe_load
 # Configurable #
 ################
 
-JSON_BIN_FILENAME = 'binning.json'
-SAMPLE_ALIAS = lambda p: 'Electron' if p == 'e' else 'Turbo'
-REPLACEMENT_RULES = {
-    '!': '0 == ',  # FIXME: Dirty hacks due to limited ability of handling boolean expressions in pidcalib2
-    '&&': '&',
-    '||': '|',
-    'mu_': '',
-    'ProbNNpi': 'MC15TuneV1_ProbNNpi',
-    'ProbNNghost': 'MC15TuneV1_ProbNNghost',
-    'PIDK': 'DLLK',
-    'PIDp': 'DLLp',
-    'PIDe': 'DLLe'
-}
 CURR_DIR = dirname(abspath(__file__))
+JSON_BIN_FILENAME = 'binning.json'
+SAMPLE_ALIAS = lambda p: 'Electron' if p == 'e_B_Jpsi' else 'Turbo'
+BINNING_ALIAS = {
+    'P': lambda sample: 'Brunel_P',
+    'ETA': lambda sample: 'Brunel_ETA',
+    'nTracks': lambda sample: \
+        'nTracks' if sample == 'e_B_Jpsi' else 'nTracks_Brunel',
+}
 
 
 #######################
@@ -76,13 +71,13 @@ def bin_alias(config):
     return inner
 
 
-def dump_binning(yml_bins, config, particles, output):
+def dump_binning(yml_bins, config, samples, output):
     alias = bin_alias(config)
 
     with open(output, 'w') as f:
         json.dump(
-            {p: {alias(k, p): v for k, v in yml_bins.items()}
-             for p in particles}, f)
+            {s: {alias(k, s): v for k, v in yml_bins.items()}
+             for s in samples}, f)
 
 
 def run_cmd(cmd, dry_run=False):
@@ -140,10 +135,6 @@ def cut_replacement(tagged_cuts):
     for p, cut in tagged_cuts.items():
         for p_else in tagged_cuts:
             cut = re.sub(rf'\b{p_else}\b', f"({tagged_cuts[p_else]})", cut)
-
-        for src, tgt in REPLACEMENT_RULES.items():
-            cut = cut.replace(src, tgt)
-
         result[p] = cut
 
     return result
@@ -196,9 +187,7 @@ if __name__ == '__main__':
     makedirs('tmp', exist_ok=True)
 
     # Find particle names known to pidcalib
-    ptcl_tagged = cut_replacement(config['tags'])
-    ptcl = [config['particle_alias'][i]
-            if i in config['particle_alias'] else i for i in ptcl_tagged]
+    samples = config['pidcalib_samples']
 
     # Dump custom binning schema (a JSON file, consumed by pidcalib later)
     dump_binning(config['binning'], config, ptcl, f'./tmp/{JSON_BIN_FILENAME}')

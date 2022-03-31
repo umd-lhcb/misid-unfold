@@ -6,6 +6,13 @@
 # - unfolding efficiency calculator (U)
 # - histogram merger (M)
 
+
+binning:
+    P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]  # the scific notation has to be written like this for PyYAML
+    ETA: [1.7, 3.6, 5.0]
+    nTracks: [0, 200, 600]
+
+
 # cuts for each tagged species, used by ALL
 tags:
     pi: >-
@@ -29,39 +36,11 @@ tags_addon:
     non_mu: "IsMuon == 0.0 & InMuonAcc == 1.0"
 
 
-binning:
-    P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]  # the scific notation has to be written like this for PyYAML
-    ETA: [1.7, 3.6, 5.0]
-    nTracks: [0, 200, 600]
-
-# used by (A), (P)
-binning_alias:
-    pidcalib:
-        P: Brunel_P
-        ETA: Brunel_ETA
-        nTracks: nTracks_Brunel
-    offline:
-        P: mu_P
-        ETA: [mu_P, mu_PZ]
-        nTracks: nTracks
-
-
-# used by (P)
-particle_alias:
-    pi: Pi
-    k: K
-    p: P
-    e: e_B_Jpsi
-    # mu: Mu_nopt  # Mu samples are not used as of now
-
-
-# NOTE: we apply all global cuts except Mu PID and B mass window
-#       here we follow Python boolean convention (&, |)
-global_cuts:
-    # all except 'offline' is used by (P); 'offline' is used by (T)
-    kinematic: "P > 3000 & P < 100000"
+# used by (P), as the names suggests
+pidcalib_samples: [Pi, K, P, e_B_Jpsi]
+pidcalib_cuts:
+    gloabl: "P > 3000 & P < 100000"  # this is always applied as --cut <global>
     tags: "IsMuon == 0.0 & InMuonAcc == 1.0"
-    offline: dx_m_ok
 
 
 # specify additional source of histograms
@@ -86,4 +65,6 @@ input_histos:
 input_ntps:
     # each entry should be a key-list pair, where list provides path to ntuples, with tree names
     D0:
-        - "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_23--mu_misid--data--2016--*.root:tree"
+        files:
+            - "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_23--mu_misid--data--2016--*.root:tree"
+        cuts: dx_m_ok
