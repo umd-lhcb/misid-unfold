@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Wed Mar 30, 2022 at 11:44 PM -0400
+// Last Change: Thu Mar 31, 2022 at 10:57 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -305,7 +305,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
                 cout << "  prob = " << nameEff[idxTag][idxTrue] << " * "
                      << nameUnfYld[idxPref][idxTrue] << " / "
                      << nameMeaYld[idxPref][idxTag] << endl;
-                cout << "       = " << probTagToTrue << " * "
+                cout << "       = " << probTrueToTag << " * "
                      << probTrue[idxTrue] << " / " << probTag[idxTag] << " = "
                      << probTagToTrue << endl;
               }
