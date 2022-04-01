@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Wed Mar 30, 2022 at 02:56 PM -0400
+#  Last Change: Thu Mar 31, 2022 at 09:19 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -21,13 +21,10 @@ from pyTuplingUtils.plot import (
 # Configurable #
 ################
 
-DEFAULT_COLORS = [
-    'mediumseagreen',
-    'lightsteelblue',
-    'mediumpurple',
-    'salmon',
-    'palegoldenrod',
-]
+# generated w/ https://gka.github.io/palettes of the input colors:
+#   #00429d, #96ffea, #8bd189
+#   #8bd189, #ff005e, #93003a
+DEFAULT_COLORS = ['#93003a', '#d15d5f', '#8bd189', '#00429d', '#5585b7']
 
 KNOWN_PARTICLES = {
     'd0': r'$D^0$',
