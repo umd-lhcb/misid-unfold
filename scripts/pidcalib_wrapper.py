@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 04, 2022 at 07:08 PM -0400
+# Last Change: Mon Apr 04, 2022 at 07:14 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -71,12 +71,11 @@ def bin_alias(config):
     return inner
 
 
-def dump_binning(yml_bins, config, samples, output):
-    alias = bin_alias(config)
-
+def dump_binning(yml_bins, samples, output):
     with open(output, 'w') as f:
         json.dump(
-            {s: {alias(k, s): v for k, v in yml_bins.items()}
+            {s: {BINNING_ALIAS[bin_name](s): bin_range
+                 for bin_name, bin_range in yml_bins.items()}
              for s in samples}, f)
 
 
@@ -186,17 +185,16 @@ if __name__ == '__main__':
     makedirs('raw_histos', exist_ok=True)
     makedirs('tmp', exist_ok=True)
 
-    # Find particle names known to pidcalib
-    samples = config['pidcalib_samples']
-
     # Dump custom binning schema (a JSON file, consumed by pidcalib later)
-    dump_binning(config['binning'], config, ptcl, f'./tmp/{JSON_BIN_FILENAME}')
+    dump_binning(
+        config['binning'], config['pidcalib_config']['samples'].values(),
+        f'./tmp/{JSON_BIN_FILENAME}')
 
     # Generate efficiency histograms with pidcalib2
-    if args.mode == 'true_to_tag':
-        directives = true_to_tag_directive_gen(
-            ptcl_tagged, config['tags_addon'], args.year, 'raw_histos')
-        for d in directives:
-            true_to_tag_gen(*d, dry_run=args.dry_run, debug=args.debug)
-    else:
-        print(f'unknown mode: {args.mode}')
+    #  if args.mode == 'true_to_tag':
+    #      directives = true_to_tag_directive_gen(
+    #          ptcl_tagged, config['tags_addon'], args.year, 'raw_histos')
+    #      for d in directives:
+    #          true_to_tag_gen(*d, dry_run=args.dry_run, debug=args.debug)
+    #  else:
+    #      print(f'unknown mode: {args.mode}')

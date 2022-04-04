@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Mar 30, 2022 at 10:53 PM -0400
+# Last Change: Mon Apr 04, 2022 at 07:13 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -69,10 +69,10 @@ plot-rdx-2016:
 .PHONY: test-pidcalib2-wrapper test-unfold
 
 test-pidcalib2-wrapper:
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o $(GENPATH) --dry-run
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run
 
 test-unfold: $(BINPATH)/UnfoldMisID.exe
-	./bin/UnfoldMisID.exe -c ./spec/rdx-2016.yml --dryRun
+	./bin/UnfoldMisID.exe -c ./spec/rdx-run2.yml --dryRun
 
 
 ###############
