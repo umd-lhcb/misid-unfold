@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Thu Mar 31, 2022 at 02:29 PM -0400
+# Last Change: Mon Apr 04, 2022 at 07:08 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -100,7 +100,7 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
     ntracks = 'nTracks_Brunel' if part_true != 'e' else 'nTracks'
 
     folder_name = f'{part_true}True-{year}'
-    cmd = fr'''lb-conda pidcalib {CURR_DIR}/make_eff_hists_mod.py \
+    cmd = fr'''lb-conda pidcalib {CURR_DIR}/make_eff_histo_mod.py \
     --output-dir {output_folder}/{folder_name} \
     --sample {SAMPLE_ALIAS(part_true)}{year} --magnet {polarity} \
     --particle {part_sample} \
