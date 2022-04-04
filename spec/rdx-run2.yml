@@ -17,34 +17,48 @@ binning:
 tags:
     pi: >-
         MC15TuneV1_ProbNNpi > 0.1 &
-        DLLK < 0.0 & DLLp < 0.0 & DLLe < 2.0 &
+        DLLK < 0.0 &
+        DLLp < 0.0 &
+        DLLe < 2.0 &
         MC15TuneV1_ProbNNghost < 0.25
     k: >-
-        DLLK > 0.0 & DLLp < 0.0 & (DLLe - DLLK) < -2.0 &
+        MC15TuneV1_ProbNNK > 0.1 &
+        DLLK > 0.0 &
+        (DLLp - DLLK) < 0.0 &
+        (DLLe - DLLK) < -2.0 &
         MC15TuneV1_ProbNNghost < 0.25
     p: >-
-        DLLp > 2.0 & DLLK < 0.0 & (DLLe - DLLp) < -2.0 &
+        MC15TuneV1_ProbNNp > 0.1 &
+        DLLp > 0.0 &
+        (DLLp - DLLK) > 2.0 &
+        (DLLe - DLLp) < -2.0 &
         MC15TuneV1_ProbNNghost < 0.25
     e: >-
-        DLLe > 2.0 & (DLLe - DLLK) > -2.0 & (DLLe - DLLp) > -2.0 &
+        DLLe > 2.0 &
+        (DLLe - DLLK) > -2.0 &
+        (DLLe - DLLp) > -2.0 &
         MC15TuneV1_ProbNNghost < 0.25
     g: "!pi & !k & !p & !e"  # ghost/uncategoried
 
-# additional species used by (P)
-tags_addon:
-    mu: "IsMuon == 1.0 & DLLmu > 2.0 & MC15TuneV1_ProbNNghost < 0.5"
-    non_mu: "IsMuon == 0.0 & InMuonAcc == 1.0"
-
 
 # used by (P), as the names suggests
-pidcalib_samples: [Pi, K, P, e_B_Jpsi]
-pidcalib_cuts:
+pidcalib_config:
+    samples:
+        pi: Pi
+        k: K
+        p: P
+        e: e_B_Jpsi
     tags:
-        cuts:
-        pid_cuts: "IsMuon == 0.0 & InMuonAcc == 1.0"
+        cut: "Brunel_IPCHI2 > 45.0 & Brunel_TRACK_GHOSTPROB < 0.5"
+        pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
     tags_addon:
-        cuts:
-        pid_cuts: "P > 3000 & P < 100000"  # this is always applied as --cut <global>
+        mu:
+            nom:
+                cut: "Brunel_IPCHI2 > 45.0 & Brunel_TRACK_GHOSTPROB < 0.5"
+                pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
+            denom:
+                cut: "Brunel_IPCHI2 > 45.0 & Brunel_TRACK_GHOSTPROB < 0.5"
+                pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
 
 
 # specify additional source of histograms
