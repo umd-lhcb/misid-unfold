@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 04, 2022 at 07:14 PM -0400
+# Last Change: Mon Apr 04, 2022 at 07:54 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -12,6 +12,7 @@ from argparse import ArgumentParser
 from os import system, chdir, makedirs
 from os.path import basename, dirname, abspath
 from glob import glob
+from collections import namedtuple
 from yaml import safe_load
 
 
@@ -49,11 +50,8 @@ def parse_input():
     parser.add_argument('-D', '--debug', action='store_true',
                         help='enable debug mode by looping over a small subset of pidcalib samples.')
 
-    parser.add_argument('-y', '--year', default='16',
-                        help='specify year (only the last 2 digits).')
-
-    parser.add_argument('-m', '--mode', default='true_to_tag',
-                        help='specify working mode.')
+    parser.add_argument('-y', '--year', default='2016',
+                        help='specify year (format: 20XX).')
 
     return parser.parse_args()
 
@@ -61,6 +59,15 @@ def parse_input():
 ###########
 # Helpers #
 ###########
+
+PidDirective = namedtuple(
+    'PidDirective',
+    [
+        'sample_name', 'sample_file', 'year', 'polarity',
+        'cut_arr', 'pid_cut_arr',
+        'folder_name', 'pkl_names'
+    ])
+
 
 def bin_alias(config):
     # FIXME: Special treatement for electron samples
@@ -128,45 +135,47 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
 # Helpers for cut generation #
 ##############################
 
-def cut_replacement(tagged_cuts):
+def cut_replacement(tagged):
     result = dict()
 
-    for p, cut in tagged_cuts.items():
-        for p_else in tagged_cuts:
-            cut = re.sub(rf'\b{p_else}\b', f"({tagged_cuts[p_else]})", cut)
+    for p, cut in tagged.items():
+        cut = re.sub(r'!(\w+)', r'\1 == 0.0', cut)  # NOTE: workaround for negate expression
+        for p_else in tagged:
+            cut = re.sub(rf'\b{p_else}\b', f"({tagged[p_else]})", cut)
         result[p] = cut
 
     return result
 
 
-def true_to_tag_directive_gen(tagged, tagged_addon, year, output_folder):
+def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
     result = []
 
-    for p_true in tagged:  # yes, it's the true particle
-        if p_true not in config['particle_alias']:
-            continue  # e.g. we don't use pidcalib2 for ghost
+    for p_true, sample_name in config['pidcalib_config']['samples'].items():
+        cut_arr = []
+        pid_cut_arr = []
+        pkl_names = []
 
-        global_cuts = []
-        pid_cuts = []
+        folder_name = f'{output_folder}/{p_true}To-{year}'
+        sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
 
-        for pid_cut_addon in tagged.values():
-            global_cuts.append(config['global_cuts']['kinematic'])
+        # handle nominal tags first
+        for p_tag, pid_cut in config['tags'].items():
+            cut_arr.append(config['pidcalib_config']['tags']['cut'])
+            pid_cut += ' & ' + config['pidcalib_config']['tags']['pid_cut']
+            pkl_names.append(f'{p_true}To{p_tag.capitalize()}')
 
-            pid_cut = config['global_cuts']['tags'] + '&' + pid_cut_addon
-            pid_cuts.append(pid_cut)
+        # now handle ad-hoc tags
+        for p_tag, subconfig in config['pidcalib_config']['tags_addon'].items():
+            for sub_tag in subconfig:
+                cut_arr.append(subconfig[sub_tag]['cut'])
+                pid_cut_arr.append(subconfig[sub_tag]['pid_cut'])
+                pkl_names.append(f'{p_true}To{p_tag.capitalize()}_{sub_tag}')
 
-        # now handle 'tags_addon'
-        for cut in tagged_addon.values():
-            global_cuts.append(config['global_cuts']['kinematic'])
-            pid_cuts.append(cut)
+        result.append(PidDirective(
+            sample_name, sample_file, year, polarity,
+            cut_arr, pid_cut_arr, folder_name, pkl_names))
 
-        result.append([
-            p_true, config['particle_alias'][p_true],
-            list(tagged) + list(tagged_addon),
-            global_cuts, pid_cuts, year, output_folder
-        ])
-
-    return result  # we keep 'tags_addon' as-is
+    return result
 
 
 ########
@@ -191,10 +200,21 @@ if __name__ == '__main__':
         f'./tmp/{JSON_BIN_FILENAME}')
 
     # Generate efficiency histograms with pidcalib2
-    #  if args.mode == 'true_to_tag':
-    #      directives = true_to_tag_directive_gen(
-    #          ptcl_tagged, config['tags_addon'], args.year, 'raw_histos')
-    #      for d in directives:
-    #          true_to_tag_gen(*d, dry_run=args.dry_run, debug=args.debug)
-    #  else:
-    #      print(f'unknown mode: {args.mode}')
+    config['tags'] = cut_replacement(config['tags'])
+    directives = true_to_tag_directive_gen(config, args.year, args.output)
+
+    if args.dry_run:
+        for d in directives:
+            print(d.sample_name)
+            for f in d._fields:
+                if f != 'sample_name':
+                    val = getattr(d, f)
+                    if isinstance(val, str):
+                        print(f'  {f}: {val}')
+                    else:
+                        print(f'  {f}:')
+                        for i in val:
+                            print(f'    {i}')
+
+    #  for d in directives:
+    #      true_to_tag_gen(*d, dry_run=args.dry_run, debug=args.debug)
