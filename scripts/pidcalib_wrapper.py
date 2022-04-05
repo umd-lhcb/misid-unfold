@@ -189,7 +189,7 @@ if __name__ == '__main__':
 
     # Generate efficiency histograms with pidcalib2
     config['tags'] = cut_replacement(config['tags'])
-    directives = true_to_tag_directive_gen(config, args.year, args.output)
+    directives = true_to_tag_directive_gen(config, args.year, 'raw_histos')
 
     # in case of a dry run
     if args.dry_run:
