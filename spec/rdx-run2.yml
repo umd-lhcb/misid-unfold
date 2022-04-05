@@ -22,7 +22,7 @@ tags:
         DLLe < 2.0 &
         MC15TuneV1_ProbNNghost < 0.25
     k: >-
-        MC15TuneV1_ProbNNK > 0.1 &
+        MC15TuneV1_ProbNNk > 0.1 &
         DLLK > 0.0 &
         (DLLp - DLLK) < 0.0 &
         (DLLe - DLLK) < -2.0 &
