@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Mar 29, 2022 at 09:40 PM -0400
+# Last Change: Tue Apr 05, 2022 at 12:15 PM -0400
 #
 # Description: histogram merger (M)
 
 from argparse import ArgumentParser
 from pathlib import Path
 from os import makedirs
-from os.path import basename
 from yaml import safe_load
-from glob import glob
 
 import uproot
 import numpy as np
@@ -36,6 +34,9 @@ def parse_input():
     parser.add_argument('-o', '--output', required=True,
                         help='specify output dir.')
 
+    parser.add_argument('-y', '--year', default='2016',
+                        help='specify year.')
+
     return parser.parse_args()
 
 
@@ -47,23 +48,41 @@ def abs_dir(path):
     return str(Path(path).parent.absolute())
 
 
-def merge_true_to_tag(output_ntp, path_prefix, path):
-    for n in glob(f'{path_prefix}/{path}'):
-        input_ntp = uproot.open(n)
-        histo = list(input_ntp['eff'].to_numpy())
+def merge_true_to_tag(output_ntp, path_prefix, path, config):
+    ptcl_true = list(config['pidcalib_config']['samples'])
+    ptcl_tag = list(config['tags'])
 
-        if 'MuTag' in n:
-            print('Special treatment for MuTag efficiency...')
-            aux_ntp = uproot.open(n.replace('MuTag', 'GlobalTag'))
-            aux_histo = aux_ntp['eff'].to_numpy()
-            # We need to divide out the efficiency(!isMuon)
-            histo[0] = histo[0] / aux_histo[0]
+    # Handle normal trueToTag first
+    for p_true in ptcl_true:
+        for p_tag in ptcl_tag:
+            histo_name = f'{p_true}To{p_tag.capitalize()}'
+            input_ntp = uproot.open(f'{path_prefix}/{path}/{histo_name}.root')
+            histo = list(input_ntp['eff'].to_numpy())
 
-        histo[0][np.isnan(histo[0])] = 0  # no need to keep nan
-        output_ntp[Path(n).stem] = histo
+            histo[0][np.isnan(histo[0])] = 0  # no need to keep nan
+            output_ntp[histo_name] = histo
+
+    # Handle additional ntuples
+    for p_true in ptcl_true:
+        for p_addon, suffixes \
+                in config['pidcalib_config']['tags_addon'].items():
+            histo_name_base = f'{p_true}To{p_addon.capitalize()}'
+            aux_histos = []
+
+            for suf in suffixes:
+                histo_name = histo_name_base + '_' + suf
+                input_ntp = uproot.open(f'{path_prefix}/{path}/{histo_name}.root')
+                histo = list(input_ntp['eff'].to_numpy())
+
+                aux_histos.append(histo)
+
+            histo_ratio = aux_histos[0][0] / aux_histos[1][0]
+
+            histo_ratio[np.isnan(histo_ratio)] = 0
+            output_ntp[histo_name_base] = tuple([histo_ratio]+aux_histos[0][1:])
 
 
-def merge_extra(output_ntp, path_prefix, spec):
+def merge_extra(output_ntp, path_prefix, spec, config):
     for path in spec:
         input_ntp = uproot.open(f'{path_prefix}/{path}')
         for src, tgt in spec[path].items():
@@ -89,6 +108,6 @@ if __name__ == '__main__':
     with open(args.config, 'r') as f:
         config = safe_load(f)
 
-    for mode, args in config['input_histos'].items():
+    for mode, args in config['input_histos'][int(args.year)].items():
         print(f'Merging {mode}...')
-        KNOWN_MERGERS[mode](output_ntp, path_prefix, args)
+        KNOWN_MERGERS[mode](output_ntp, path_prefix, args, config)
