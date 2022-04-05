@@ -49,15 +49,15 @@ pidcalib_config:
         p: P
         e: e_B_Jpsi
     tags:
-        cut: "Brunel_IPCHI2 > 45.0 & Brunel_TRACK_GHOSTPROB < 0.5"
+        cut: "IPCHI2 > 45.0 & TRACK_GHOSTPROB < 0.5"
         pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
     tags_addon:
         mu:
             nom:
-                cut: "Brunel_IPCHI2 > 45.0 & Brunel_TRACK_GHOSTPROB < 0.5"
+                cut: "IPCHI2 > 45.0 & TRACK_GHOSTPROB < 0.5"
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
             denom:
-                cut: "Brunel_IPCHI2 > 45.0 & Brunel_TRACK_GHOSTPROB < 0.5"
+                cut: "IPCHI2 > 45.0 & TRACK_GHOSTPROB < 0.5"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
 
 
