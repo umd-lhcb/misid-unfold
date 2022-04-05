@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 04, 2022 at 07:13 PM -0400
+# Last Change: Mon Apr 04, 2022 at 08:18 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -41,7 +41,7 @@ build-rdx-tag-2016:
 
 build-rdx-true-to-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-2016.yml -o $(OUT_DIR) -y 16
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
 
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
