@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 04, 2022 at 07:59 PM -0400
+# Last Change: Mon Apr 04, 2022 at 08:16 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -13,7 +13,6 @@ from os import system, chdir, makedirs
 from os.path import basename, dirname, abspath
 from glob import glob
 from collections import namedtuple
-from sys import exit
 from yaml import safe_load
 
 
@@ -64,19 +63,10 @@ def parse_input():
 PidDirective = namedtuple(
     'PidDirective',
     [
-        'sample_name', 'sample_file', 'year', 'polarity',
+        'sample_name', 'sample_file', 'year', 'polarity', 'bin_vars',
         'cut_arr', 'pid_cut_arr',
         'folder_name', 'pkl_names'
     ])
-
-
-def bin_alias(config):
-    # FIXME: Special treatement for electron samples
-    def inner(var, part):
-        if part == 'e_B_Jpsi' and var == 'nTracks':
-            return 'nTracks'
-        return config['binning_alias']['pidcalib'][var]
-    return inner
 
 
 def dump_binning(yml_bins, samples, output):
@@ -96,25 +86,21 @@ def run_cmd(cmd, dry_run=False):
             raise ValueError('Command execution failed.')
 
 
-def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
-                    year, output_folder,
-                    dry_run=False, debug=False, polarity='down'):
+def true_to_tag_gen(directive, dry_run=False, debug=False, polarity='down'):
+    bin_vars = ' '.join(f'--bin-var {b}' for b in directive.bin_vars)
     cuts = ''
-    for gc, pc, nm in zip(global_cuts, pid_cuts, part_tag_arr):
-        cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {part_true}TrueTo{nm.capitalize()}Tag.pkl'
+    for gc, pc, nm in \
+            zip(directive.cut_arr, directive.pid_cut_arr, directive.pkl_names):
+        cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {nm}.pkl'
 
-    # FIXME: nTrack name
-    ntracks = 'nTracks_Brunel' if part_true != 'e' else 'nTracks'
-
-    folder_name = f'{part_true}True-{year}'
     cmd = fr'''lb-conda pidcalib {CURR_DIR}/make_eff_histo_mod.py \
-    --output-dir {output_folder}/{folder_name} \
-    --sample {SAMPLE_ALIAS(part_true)}{year} --magnet {polarity} \
-    --particle {part_sample} \
-    --bin-var Brunel_P --bin-var Brunel_ETA --bin-var {ntracks} \
+    --output-dir {directive.folder_name} \
+    --sample {directive.sample_file} --magnet {directive.polarity} \
+    --particle {directive.sample_name} \
     --binning-file ./tmp/{JSON_BIN_FILENAME}'''
 
     cmd += cuts
+    cmd += bin_vars
     if debug:
         cmd += ' --max-files 3'  # debug only
 
@@ -124,9 +110,9 @@ def true_to_tag_gen(part_true, part_sample, part_tag_arr, global_cuts, pid_cuts,
         return 1
 
     # Convert pkl -> root, rename and relocate
-    for pkl in glob(f'{output_folder}/{folder_name}/*.pkl'):
+    for pkl in glob(f'{directive.folder_name}/*.pkl'):
         run_cmd(f'lb-conda pidcalib pidcalib2.pklhisto2root "{pkl}"')
-    for ntp in glob(f'{output_folder}/{folder_name}/*.root'):
+    for ntp in glob(f'{directive.folder_name}/*.root'):
         run_cmd(f'cp "{ntp}" ./{basename(ntp)}')
 
     return 0
@@ -155,6 +141,7 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
         cut_arr = []
         pid_cut_arr = []
         pkl_names = []
+        bin_vars = [BINNING_ALIAS[b](sample_name) for b in config['binning']]
 
         folder_name = f'{output_folder}/{p_true}To-{year}'
         sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
@@ -174,7 +161,7 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
                 pkl_names.append(f'{p_true}To{p_tag.capitalize()}_{sub_tag}')
 
         result.append(PidDirective(
-            sample_name, sample_file, year, polarity,
+            sample_name, sample_file, year, polarity, bin_vars,
             cut_arr, pid_cut_arr, folder_name, pkl_names))
 
     return result
@@ -218,7 +205,6 @@ if __name__ == '__main__':
                         print(f'  {f}:')
                         for i in val:
                             print(f'    {i}')
-        exit(0)
 
-    #  for d in directives:
-    #      true_to_tag_gen(*d, dry_run=args.dry_run, debug=args.debug)
+    for d in directives:
+        true_to_tag_gen(d, dry_run=args.dry_run, debug=args.debug)
