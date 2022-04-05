@@ -44,10 +44,10 @@ tags:
 # used by (P), as the names suggests
 pidcalib_config:
     samples:
-        e: e_B_Jpsi
         pi: Pi
         k: K
         p: P
+        e: e_B_Jpsi
     tags:
         cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0"
     tags_addon:
@@ -84,5 +84,5 @@ input_ntps:
     2016:
         # each entry should be a key-list pair, where list provides path to ntuples, with tree names
         D0:
-            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_03_23--mu_misid--data--2016--*.root:tree"
-            cuts: dx_m_ok
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid_study-step2/D0--22_04_02--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"

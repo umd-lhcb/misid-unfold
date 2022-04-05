@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 04, 2022 at 08:18 PM -0400
+# Last Change: Tue Apr 05, 2022 at 02:10 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -37,7 +37,7 @@ clean:
 
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
-	./scripts/build_histo_tagged.py -c ./spec/rdx-2016.yml -o $(OUT_DIR)
+	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
 
 build-rdx-true-to-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
@@ -45,7 +45,7 @@ build-rdx-true-to-tag-2016:
 
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
-	./scripts/merge_histo.py -c ./spec/rdx-2016.yml -o $(OUT_DIR)
+	./scripts/merge_histo.py -c ./spec/rdx-run2.yml -o $(OUT_DIR)
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
@@ -54,7 +54,7 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 		-e ./histos/rdx-22_03_30_01_43-merged-2016/merged.root \
 		-y ./histos/rdx-22_03_27_18_05-tag-2016/tagged.root \
 		-o $(OUT_DIR) \
-		-c ./spec/rdx-2016.yml | tee $(OUT_DIR)/stdout.log
+		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
 plot-rdx-2016:
 	./scripts/plot_histo.py -o $(GENPATH) \

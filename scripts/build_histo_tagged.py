@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 05, 2022 at 01:39 AM -0400
+# Last Change: Tue Apr 05, 2022 at 02:15 AM -0400
 #
 # Description: tagged histogram builder (T)
 
@@ -35,6 +35,9 @@ def parse_input():
     parser.add_argument('-o', '--output', required=True,
                         help='specify output dir.')
 
+    parser.add_argument('-y', '--year', default='2016',
+                        help='specify year.')
+
     return parser.parse_args()
 
 
@@ -46,15 +49,10 @@ def abs_dir(path):
     return str(Path(path).parent.absolute())
 
 
-def ntp_tree(name, tree=None, dir_abs_path=''):
+def ntp_tree(name, dir_abs_path=''):
     ntps = []
-
-    for n in name:
-        path, tree_in_file = n.split(':')
-        ntps.append(f'{dir_abs_path}/{path}')
-        if not tree:
-            tree = tree_in_file
-
+    path, tree = name.split(':')
+    ntps.append(f'{dir_abs_path}/{path}')
     return ntps, tree
 
 
@@ -75,17 +73,17 @@ if __name__ == '__main__':
     with open(args.config, 'r') as f:
         config = safe_load(f)
 
-    for particle, files in config['input_ntps'].items():
+    for particle, subconfig in config['input_ntps'][int(args.year)].items():
         print(f'Working on {particle}...')
         evaluator = BooleanEvaluator(
-            *ntp_tree(files, dir_abs_path=config_dir_path))
+            *ntp_tree(subconfig['files'], dir_abs_path=config_dir_path))
 
         # load branches needed to build histos
         histo_brs = []
         for br_name in config['binning']:
             histo_brs.append(evaluator.eval(br_name))
 
-        global_cut = evaluator.eval(config["global_cuts"]["offline"])
+        global_cut = evaluator.eval(subconfig["cuts"])
 
         for sp, cut_expr in config['tags'].items():
             print(f'  specie {histo_name_gen(sp)} has the following cuts: {cut_expr}')
