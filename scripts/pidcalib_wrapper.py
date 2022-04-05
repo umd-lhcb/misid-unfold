@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 04, 2022 at 07:54 PM -0400
+# Last Change: Mon Apr 04, 2022 at 07:59 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -13,6 +13,7 @@ from os import system, chdir, makedirs
 from os.path import basename, dirname, abspath
 from glob import glob
 from collections import namedtuple
+from sys import exit
 from yaml import safe_load
 
 
@@ -162,6 +163,7 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
         for p_tag, pid_cut in config['tags'].items():
             cut_arr.append(config['pidcalib_config']['tags']['cut'])
             pid_cut += ' & ' + config['pidcalib_config']['tags']['pid_cut']
+            pid_cut_arr.append(pid_cut)
             pkl_names.append(f'{p_true}To{p_tag.capitalize()}')
 
         # now handle ad-hoc tags
@@ -203,6 +205,7 @@ if __name__ == '__main__':
     config['tags'] = cut_replacement(config['tags'])
     directives = true_to_tag_directive_gen(config, args.year, args.output)
 
+    # in case of a dry run
     if args.dry_run:
         for d in directives:
             print(d.sample_name)
@@ -215,6 +218,7 @@ if __name__ == '__main__':
                         print(f'  {f}:')
                         for i in val:
                             print(f'    {i}')
+        exit(0)
 
     #  for d in directives:
     #      true_to_tag_gen(*d, dry_run=args.dry_run, debug=args.debug)
