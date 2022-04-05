@@ -44,20 +44,19 @@ tags:
 # used by (P), as the names suggests
 pidcalib_config:
     samples:
+        e: e_B_Jpsi
         pi: Pi
         k: K
         p: P
-        e: e_B_Jpsi
     tags:
-        cut: "IPCHI2 > 45.0 & TRACK_GHOSTPROB < 0.5"
-        pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
+        cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0"
     tags_addon:
         mu:
             nom:
-                cut: "IPCHI2 > 45.0 & TRACK_GHOSTPROB < 0.5"
+                cut: "TRACK_GHOSTPROB < 0.5"
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
             denom:
-                cut: "IPCHI2 > 45.0 & TRACK_GHOSTPROB < 0.5"
+                cut: "TRACK_GHOSTPROB < 0.5"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
 
 
