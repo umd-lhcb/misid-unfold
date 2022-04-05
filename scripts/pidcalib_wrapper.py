@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 04, 2022 at 08:16 PM -0400
+# Last Change: Mon Apr 04, 2022 at 08:21 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -87,7 +87,7 @@ def run_cmd(cmd, dry_run=False):
 
 
 def true_to_tag_gen(directive, dry_run=False, debug=False, polarity='down'):
-    bin_vars = ' '.join(f'--bin-var {b}' for b in directive.bin_vars)
+    bin_vars = ' ' + ' '.join(f'--bin-var {b}' for b in directive.bin_vars)
     cuts = ''
     for gc, pc, nm in \
             zip(directive.cut_arr, directive.pid_cut_arr, directive.pkl_names):
