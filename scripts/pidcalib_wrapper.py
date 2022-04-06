@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 06, 2022 at 06:59 PM -0400
+# Last Change: Wed Apr 06, 2022 at 07:04 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -97,7 +97,7 @@ def true_to_tag_gen(directive, dry_run=False, debug=False, polarity='down'):
     --sample {directive.sample_file} --magnet {directive.polarity} \
     --particle {directive.sample_name} \
     --binning-file ./tmp/{JSON_BIN_FILENAME} \
-    --cut {directive.cut}'''
+    --cut "{directive.cut}"'''
 
     cmd += cuts
     cmd += bin_vars
