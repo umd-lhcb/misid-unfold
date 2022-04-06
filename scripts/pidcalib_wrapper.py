@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 05, 2022 at 01:48 AM -0400
+# Last Change: Tue Apr 05, 2022 at 11:55 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -143,21 +143,22 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
         pkl_names = []
         bin_vars = [BINNING_ALIAS[b](sample_name) for b in config['binning']]
 
-        folder_name = f'{output_folder}/{p_true}To-{year}'
+        folder_name = f'{output_folder}/{p_true}TrueTo-{year}'
         sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
 
         # handle nominal tags first
         for p_tag, pid_cut in config['tags'].items():
             cut_arr.append(config['pidcalib_config']['tags']['cut'])
             pid_cut_arr.append(pid_cut)
-            pkl_names.append(f'{p_true}To{p_tag.capitalize()}')
+            pkl_names.append(f'{p_true}TrueTo{p_tag.capitalize()}Tag')
 
         # now handle ad-hoc tags
         for p_tag, subconfig in config['pidcalib_config']['tags_addon'].items():
             for sub_tag in subconfig:
                 cut_arr.append(subconfig[sub_tag]['cut'])
                 pid_cut_arr.append(subconfig[sub_tag]['pid_cut'])
-                pkl_names.append(f'{p_true}To{p_tag.capitalize()}_{sub_tag}')
+                pkl_names.append(
+                    f'{p_true}TrueTo{p_tag.capitalize()}Tag_{sub_tag}')
 
         result.append(PidDirective(
             sample_name, sample_file, year, polarity, bin_vars,
