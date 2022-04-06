@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 05, 2022 at 11:55 PM -0400
+# Last Change: Wed Apr 06, 2022 at 06:59 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -64,7 +64,7 @@ PidDirective = namedtuple(
     'PidDirective',
     [
         'sample_name', 'sample_file', 'year', 'polarity', 'bin_vars',
-        'cut_arr', 'pid_cut_arr',
+        'cut', 'pid_cut_arr',
         'folder_name', 'pkl_names'
     ])
 
@@ -89,15 +89,15 @@ def run_cmd(cmd, dry_run=False):
 def true_to_tag_gen(directive, dry_run=False, debug=False, polarity='down'):
     bin_vars = ' ' + ' '.join(f'--bin-var {b}' for b in directive.bin_vars)
     cuts = ''
-    for gc, pc, nm in \
-            zip(directive.cut_arr, directive.pid_cut_arr, directive.pkl_names):
-        cuts += f' --cut "{gc}" --pid-cut "{pc}" --pkl-name {nm}.pkl'
+    for pc, nm in zip(directive.pid_cut_arr, directive.pkl_names):
+        cuts += f' --pid-cut "{pc}" --pkl-name {nm}.pkl'
 
     cmd = fr'''lb-conda pidcalib {CURR_DIR}/make_eff_histo_mod.py \
     --output-dir {directive.folder_name} \
     --sample {directive.sample_file} --magnet {directive.polarity} \
     --particle {directive.sample_name} \
-    --binning-file ./tmp/{JSON_BIN_FILENAME}'''
+    --binning-file ./tmp/{JSON_BIN_FILENAME} \
+    --cut {directive.cut}'''
 
     cmd += cuts
     cmd += bin_vars
@@ -137,8 +137,9 @@ def cut_replacement(tagged):
 def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
     result = []
 
+    # handle nominal tags first
     for p_true, sample_name in config['pidcalib_config']['samples'].items():
-        cut_arr = []
+        cut = config['pidcalib_config']['tags']['cut']
         pid_cut_arr = []
         pkl_names = []
         bin_vars = [BINNING_ALIAS[b](sample_name) for b in config['binning']]
@@ -146,23 +147,32 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
         folder_name = f'{output_folder}/{p_true}TrueTo-{year}'
         sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
 
-        # handle nominal tags first
         for p_tag, pid_cut in config['tags'].items():
-            cut_arr.append(config['pidcalib_config']['tags']['cut'])
             pid_cut_arr.append(pid_cut)
             pkl_names.append(f'{p_true}TrueTo{p_tag.capitalize()}Tag')
 
-        # now handle ad-hoc tags
-        for p_tag, subconfig in config['pidcalib_config']['tags_addon'].items():
-            for sub_tag in subconfig:
-                cut_arr.append(subconfig[sub_tag]['cut'])
-                pid_cut_arr.append(subconfig[sub_tag]['pid_cut'])
-                pkl_names.append(
-                    f'{p_true}TrueTo{p_tag.capitalize()}Tag_{sub_tag}')
-
         result.append(PidDirective(
             sample_name, sample_file, year, polarity, bin_vars,
-            cut_arr, pid_cut_arr, folder_name, pkl_names))
+            cut, pid_cut_arr, folder_name, pkl_names))
+
+    # now handle ad-hoc tags
+    for p_true, sample_name in config['pidcalib_config']['samples'].items():
+        bin_vars = [BINNING_ALIAS[b](sample_name) for b in config['binning']]
+        folder_name = f'{output_folder}/{p_true}TrueTo-{year}'
+        sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
+
+        if not config['pidcalib_config']['tags_addon']:
+            break
+
+        for p_tag, subconfig in config['pidcalib_config']['tags_addon'].items():
+            for sub_tag in subconfig:
+                cut = subconfig[sub_tag]['cut']
+                pid_cut = subconfig[sub_tag]['pid_cut']
+                pkl_name = f'{p_true}TrueTo{p_tag.capitalize()}Tag_{sub_tag}'
+
+                result.append(PidDirective(
+                    sample_name, sample_file, year, polarity, bin_vars,
+                    cut, [pid_cut], folder_name, [pkl_name]))
 
     return result
 
