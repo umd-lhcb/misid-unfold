@@ -39,6 +39,7 @@
 
             # Pinned Python dependencies
             numpy
+            scipy
 
             # LaTeX
             (texlive.combine {
