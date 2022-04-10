@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 05, 2022 at 12:15 PM -0400
+# Last Change: Sat Apr 09, 2022 at 09:25 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -55,7 +55,7 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
     # Handle normal trueToTag first
     for p_true in ptcl_true:
         for p_tag in ptcl_tag:
-            histo_name = f'{p_true}To{p_tag.capitalize()}'
+            histo_name = f'{p_true}TrueTo{p_tag.capitalize()}Tag'
             input_ntp = uproot.open(f'{path_prefix}/{path}/{histo_name}.root')
             histo = list(input_ntp['eff'].to_numpy())
 
@@ -66,7 +66,7 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
     for p_true in ptcl_true:
         for p_addon, suffixes \
                 in config['pidcalib_config']['tags_addon'].items():
-            histo_name_base = f'{p_true}To{p_addon.capitalize()}'
+            histo_name_base = f'{p_true}TrueTo{p_addon.capitalize()}Tag'
             aux_histos = []
 
             for suf in suffixes:

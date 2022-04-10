@@ -65,7 +65,7 @@ pidcalib_config:
 # this will generate a single efficiency histo root file
 input_histos:
     2016:
-        true_to_tag: "../histos/rdx-22_04_05_08_38-true_to_tag-2016"
+        true_to_tag: "../histos/rdx-22_04_07_01_05-true_to_tag-2016"
         extra:
             "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
                 H2H_Ghost_TO_Pi: gTrueToPiTag
