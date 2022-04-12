@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 11, 2022 at 10:38 PM -0400
+# Last Change: Tue Apr 12, 2022 at 12:13 AM -0400
 #
 # Description: histogram merger (M)
 
@@ -106,12 +106,15 @@ def prep_root_histo(name, histo_orig):
     return histo, histo_axis_nbins
 
 
+def recenter_dist(mean, std):
+    pass
+
+
 def rebuild_root_histo(name, histo_orig):
     histo, histo_axis_nbins = prep_root_histo(name, histo_orig)
 
     indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
     for idx in itertools.product(*indices_ranges):
-
         value = histo_orig.GetBinContent(*idx)
         value = 0.0 if np.isnan(value) else value
         error = histo_orig.GetBinError(*idx)
@@ -119,6 +122,34 @@ def rebuild_root_histo(name, histo_orig):
 
         histo.SetBinContent(histo.GetBin(*idx), value)
         histo.SetBinError(histo.GetBin(*idx), error)
+
+    return histo
+
+
+def divide_histo(name, histo_nom, histo_denom):
+    histo, histo_axis_nbins = prep_root_histo(name, histo_nom)
+
+    indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
+    for idx in itertools.product(*indices_ranges):
+        nom = histo_nom.GetBinContent(*idx)
+        nom = 0.0 if np.isnan(nom) else nom
+        nom_err = histo_nom.GetBinError(*idx)
+        nom_err = 0.0 if np.isnan(nom_err) else nom_err
+
+        denom = histo_denom.GetBinContent(*idx)
+        denom = 0.0 if np.isnan(denom) else nom
+        denom_err = histo_denom.GetBinError(*idx)
+        denom_err = 0.0 if np.isnan(denom_err) else denom_err
+
+        if denom == 0.0 or nom == 0.0:
+            histo.SetBinContent(histo.GetBin(*idx), 0.0)
+
+        else:
+            value = nom / denom
+            # Also do the error propagation
+            # assuming both nom and denom are Gaussian, we have:
+            error = value * np.sqrt((nom_err/nom)**2 + (denom_err/denom)**2)
+            histo.SetBinContent(histo.GetBin(*idx), value)
 
     return histo
 
@@ -147,23 +178,20 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
             histo_out.Write()
 
     # Handle additional ntuples
-    #  for p_true in ptcl_true:
-    #      for p_addon, suffixes \
-    #              in config['pidcalib_config']['tags_addon'].items():
-    #          histo_name_base = f'{p_true}TrueTo{p_addon.capitalize()}Tag'
-    #          aux_histos = []
+    for p_true in ptcl_true:
+        for p_addon in config['pidcalib_config']['tags_addon']:
+            histo_name = f'{p_true}TrueTo{p_addon.capitalize()}Tag'
 
-    #          for suf in suffixes:
-    #              histo_name = histo_name_base + '_' + suf
-    #              input_ntp = uproot.open(f'{path_prefix}/{path}/{histo_name}.root')
-    #              histo = list(input_ntp['eff'].to_numpy())
+            ntp_nom = ROOT.TFile(f'{path_prefix}/{path}/{histo_name}_nom.root')
+            ntp_denom = ROOT.TFile(
+                f'{path_prefix}/{path}/{histo_name}_denom.root')
 
-    #              aux_histos.append(histo)
+            histo_nom = ntp_nom.Get('eff')
+            histo_denom = ntp_denom.Get('eff')
+            histo_ratio = divide_histo(histo_name, histo_nom, histo_denom)
 
-    #          histo_ratio = aux_histos[0][0] / aux_histos[1][0]
-
-    #          histo_ratio[np.isnan(histo_ratio)] = 0
-    #          output_ntp[histo_name_base] = tuple([histo_ratio]+aux_histos[0][1:])
+            output_ntp.cd()
+            histo_ratio.Write()
 
 
 def merge_extra(output_ntp, path_prefix, spec, config):
