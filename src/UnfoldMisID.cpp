@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 12, 2022 at 01:54 PM -0400
+// Last Change: Tue Apr 12, 2022 at 02:09 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -229,7 +229,7 @@ void ensureUnitarity(TH2D* res, bool debug = true) {
   for (int y = 1; y <= nbinsY; y++) {
     double prob = 0.0;
     for (int x = 1; x < nbinsX; x++) {
-      prob *= res->GetBinContent(res->GetBin(x, y));
+      prob += res->GetBinContent(res->GetBin(x, y));
     }
     res->SetBinContent(res->GetBin(nbinsX, y), 1 - prob);
   }
@@ -476,6 +476,8 @@ int main(int argc, char** argv) {
      cxxopts::value<bool>()->default_value("false"))
     ("D,dryRun", "parse config and load histos, w/o unfolding",
      cxxopts::value<bool>()->default_value("false"))
+    ("Y,year", "sample year",
+     cxxopts::value<string>()->default_value("2016"))
     // input/output
     ("e,effHisto", "specify input ntuple containing efficiency histos",
      cxxopts::value<string>())
@@ -504,7 +506,8 @@ int main(int argc, char** argv) {
   auto ymlConfig  = YAML::LoadFile(parsedArgs["config"].as<string>());
   auto ptclTarget = parsedArgs["targetParticle"].as<string>();
   auto ptclList   = getKeyNames(ymlConfig["tags"]);
-  auto prefix     = getKeyNames(ymlConfig["input_ntps"]);
+  auto year       = parsedArgs["year"].as<string>();
+  auto prefix     = getKeyNames(ymlConfig["input_ntps"][year]);
 
   auto histoNameMeaYld = getYldHistoNames(ptclList, prefix);
   auto histoNameUnfYld = getYldHistoNames(ptclList, prefix, "True");
