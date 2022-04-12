@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 11, 2022 at 07:53 PM -0400
+# Last Change: Mon Apr 11, 2022 at 10:38 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -13,7 +13,6 @@ from pathlib import Path
 from os import makedirs
 from yaml import safe_load
 
-import cppyy
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True  # Don't hijack argparse!
 ROOT.PyConfig.DisableRootLogon = True  # Don't read .rootlogon.py
@@ -68,7 +67,7 @@ def prep_root_histo(name, histo_orig):
     histo = None
     histo_axis_nbins = None
 
-    if type(histo_orig) == cppyy.gbl.TH1D:
+    if 'TH1' in str(type(histo_orig)):
         histo = ROOT.TH1D(name, name, 3, 0, 1)
         nbins_x, bin_edges_x = get_bin_info(histo_orig)
         histo_axis_nbins = (nbins_x)
@@ -76,7 +75,7 @@ def prep_root_histo(name, histo_orig):
         histo.SetBins(nbins_x, bin_edges_x.data())
         histo.GetXaxis().SetTitle(get_axis_title(histo_orig))
 
-    elif type(histo_orig) == cppyy.gbl.TH2D:
+    elif 'TH2' in str(type(histo_orig)):
         histo = ROOT.TH2D(name, name, 3, 0, 1, 3, 0, 1)
         nbins_x, bin_edges_x = get_bin_info(histo_orig, 'x')
         nbins_y, bin_edges_y = get_bin_info(histo_orig, 'y')
@@ -87,7 +86,7 @@ def prep_root_histo(name, histo_orig):
         histo.GetXaxis().SetTitle(get_axis_title(histo_orig, 'x'))
         histo.GetYaxis().SetTitle(get_axis_title(histo_orig, 'y'))
 
-    elif type(histo_orig) == cppyy.gbl.TH3D:
+    elif 'TH3' in str(type(histo_orig)):
         histo = ROOT.TH3D(name, name, 3, 0, 1, 3, 0, 1, 3, 0, 1)
         nbins_x, bin_edges_x = get_bin_info(histo_orig, 'x')
         nbins_y, bin_edges_y = get_bin_info(histo_orig, 'y')
@@ -168,13 +167,14 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
 
 
 def merge_extra(output_ntp, path_prefix, spec, config):
-    return []
-    #  for path in spec:
-    #      input_ntp = ROOT.TFile(f'{path_prefix}/{path}')
-    #      for src, tgt in spec[path].items():
-    #          histo = input_ntp.Get(src)
+    for path in spec:
+        input_ntp = ROOT.TFile(f'{path_prefix}/{path}')
+        for src, tgt in spec[path].items():
+            histo_src = input_ntp.Get(src)
+            histo_tgt = rebuild_root_histo(tgt, histo_src)
 
-    #          output_ntp[tgt] = input_ntp[src]
+            output_ntp.cd()
+            histo_tgt.Write()
 
 
 ########
