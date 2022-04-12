@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 12, 2022 at 01:22 PM -0400
+# Last Change: Tue Apr 12, 2022 at 01:33 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -136,7 +136,6 @@ def divide_histo(name, histo_nom, histo_denom):
 
     indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
     for idx in itertools.product(*indices_ranges):
-        print('=====')
         nom = histo_nom.GetBinContent(*idx)
         nom = 0.0 if np.isnan(nom) else nom
         nom_err = histo_nom.GetBinError(*idx)
@@ -151,15 +150,9 @@ def divide_histo(name, histo_nom, histo_denom):
             histo.SetBinContent(histo.GetBin(*idx), 0.0)
 
         else:
-            print(nom, nom_err)
-            print(denom, denom_err)
             nom = recenter_dist(nom, nom_err)
             denom = recenter_dist(denom, denom_err)
-
-            print(nom, nom_err)
-            print(denom, denom_err)
             value = nom / denom
-            print(value)
             histo.SetBinContent(histo.GetBin(*idx), value)
 
     return histo
