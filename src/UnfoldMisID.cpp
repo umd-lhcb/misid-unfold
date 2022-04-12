@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 12, 2022 at 02:25 PM -0400
+// Last Change: Tue Apr 12, 2022 at 02:26 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -399,6 +399,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
                 cout << setw(8) << histInv->GetBinContent(idxRow, idxCol);
               cout << endl;
             }
+            cout << "------" << endl;
           }
         }
       }
