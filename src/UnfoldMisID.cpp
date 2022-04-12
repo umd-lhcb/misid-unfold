@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Mar 31, 2022 at 10:57 AM -0400
+// Last Change: Tue Apr 12, 2022 at 01:54 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -212,6 +212,39 @@ TH3D* loadSingleHisto(map<string, TH3D*>& mapHisto, string nameHisto) {
 // Unfold //
 ////////////
 
+void ensureUnitarity(TH2D* res, bool debug = true) {
+  auto nbinsX = res->GetNbinsX();
+  auto nbinsY = res->GetNbinsY();
+
+  if (debug) {
+    cout << "The raw true -> tag matrix is (row: fixed tag; col: fixed true):"
+         << endl;
+    for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
+      for (int idxCol = 1; idxCol <= nbinsY; idxCol++)
+        cout << setw(8) << res->GetBinContent(idxRow, idxCol);
+      cout << endl;
+    }
+  }
+
+  for (int y = 1; y <= nbinsY; y++) {
+    double prob = 0.0;
+    for (int x = 1; x < nbinsX; x++) {
+      prob *= res->GetBinContent(res->GetBin(x, y));
+    }
+    res->SetBinContent(res->GetBin(nbinsX, y), 1 - prob);
+  }
+
+  if (debug) {
+    cout << "The fixed true -> tag matrix is (row: fixed tag; col: fixed true):"
+         << endl;
+    for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
+      for (int idxCol = 1; idxCol <= nbinsY; idxCol++)
+        cout << setw(8) << res->GetBinContent(idxRow, idxCol);
+      cout << endl;
+    }
+  }
+}
+
 void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             vStrStr nameMeaYld, vStrStr nameEff, vStr nameMuEff,
             vStrStr nameUnfYld, vStrStr nameUnfEff, bool debug = false,
@@ -261,6 +294,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
             }
           }
+          ensureUnitarity(histRes);
 
           // perform unfolding to get unfolded ("true") yield
           RooUnfoldResponse resp(nullptr, histTrue, histRes);
