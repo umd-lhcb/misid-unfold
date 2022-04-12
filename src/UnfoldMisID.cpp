@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 12, 2022 at 02:26 PM -0400
+// Last Change: Tue Apr 12, 2022 at 02:32 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -320,7 +320,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
             auto wtTagToMuTag    = 1.0;
-            auto probTrueNormFac = 1.0;
+            auto probTrueNormFac = 0.0;
 
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++)
               probTrueNormFac +=
