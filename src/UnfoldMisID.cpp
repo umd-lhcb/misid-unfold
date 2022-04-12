@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 12, 2022 at 02:09 PM -0400
+// Last Change: Tue Apr 12, 2022 at 02:25 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -316,11 +316,16 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           }
 
           // Compute unfolded ("true") probability
-          auto probTag  = histoToProb(histMea);
           auto probTrue = histoToProb(histUnf);
 
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
-            auto wtTagToMuTag = 1.0;
+            auto wtTagToMuTag    = 1.0;
+            auto probTrueNormFac = 1.0;
+
+            for (int idxTrue = 0; idxTrue != totSize; idxTrue++)
+              probTrueNormFac +=
+                  probTrue[idxTrue] *
+                  histRes->GetBinContent(idxTag + 1, idxTrue + 1);
 
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
               // from pidcalib we have true -> tag
@@ -330,7 +335,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 
               // probability: tag -> true
               auto probTagToTrue =
-                  probTrueToTag * probTrue[idxTrue] / probTag[idxTag];
+                  probTrueToTag * probTrue[idxTrue] / probTrueNormFac;
               if (isnan(probTagToTrue)) probTagToTrue = 0.0;
 
               if (debug) {
@@ -340,7 +345,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
                      << nameUnfYld[idxPref][idxTrue] << " / "
                      << nameMeaYld[idxPref][idxTag] << endl;
                 cout << "       = " << probTrueToTag << " * "
-                     << probTrue[idxTrue] << " / " << probTag[idxTag] << " = "
+                     << probTrue[idxTrue] << " / " << probTrueNormFac << " = "
                      << probTagToTrue << endl;
               }
               histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTagToTrue);
@@ -373,10 +378,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               cout << setw(12) << histUnf->GetBinContent(idx);
             cout << endl;
 
-            cout << "The prior probabilities are (top: tag; bot: true):"
-                 << endl;
-            for (const auto p : probTag) cout << setw(8) << p;
-            cout << endl;
+            cout << "The prior true probabilities are:" << endl;
             for (const auto p : probTrue) cout << setw(8) << p;
             cout << endl;
 
