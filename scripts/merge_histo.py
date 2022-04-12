@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 12, 2022 at 01:33 PM -0400
+# Last Change: Tue Apr 12, 2022 at 01:35 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -123,7 +123,7 @@ def rebuild_root_histo(name, histo_orig, recenter=True):
         error = histo_orig.GetBinError(*idx)
         error = 0.0 if np.isnan(error) else error
 
-        if recenter:
+        if recenter and value*error != 0:
             value = recenter_dist(value, error)
 
         histo.SetBinContent(histo.GetBin(*idx), value)
