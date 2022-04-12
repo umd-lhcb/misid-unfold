@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 12, 2022 at 12:13 AM -0400
+# Last Change: Tue Apr 12, 2022 at 01:22 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -12,10 +12,12 @@ from argparse import ArgumentParser
 from pathlib import Path
 from os import makedirs
 from yaml import safe_load
+from scipy.special import erf, erfinv
 
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True  # Don't hijack argparse!
 ROOT.PyConfig.DisableRootLogon = True  # Don't read .rootlogon.py
+
 
 ################
 # Configurable #
@@ -107,10 +109,11 @@ def prep_root_histo(name, histo_orig):
 
 
 def recenter_dist(mean, std):
-    pass
+    half = 0.5*(erf((1-mean)/(std*np.sqrt(2))) + erf((0-mean)/(std*np.sqrt(2))))
+    return erfinv(half)*std*np.sqrt(2) + mean
 
 
-def rebuild_root_histo(name, histo_orig):
+def rebuild_root_histo(name, histo_orig, recenter=True):
     histo, histo_axis_nbins = prep_root_histo(name, histo_orig)
 
     indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
@@ -120,8 +123,10 @@ def rebuild_root_histo(name, histo_orig):
         error = histo_orig.GetBinError(*idx)
         error = 0.0 if np.isnan(error) else error
 
+        if recenter:
+            value = recenter_dist(value, error)
+
         histo.SetBinContent(histo.GetBin(*idx), value)
-        histo.SetBinError(histo.GetBin(*idx), error)
 
     return histo
 
@@ -131,13 +136,14 @@ def divide_histo(name, histo_nom, histo_denom):
 
     indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
     for idx in itertools.product(*indices_ranges):
+        print('=====')
         nom = histo_nom.GetBinContent(*idx)
         nom = 0.0 if np.isnan(nom) else nom
         nom_err = histo_nom.GetBinError(*idx)
         nom_err = 0.0 if np.isnan(nom_err) else nom_err
 
         denom = histo_denom.GetBinContent(*idx)
-        denom = 0.0 if np.isnan(denom) else nom
+        denom = 0.0 if np.isnan(denom) else denom
         denom_err = histo_denom.GetBinError(*idx)
         denom_err = 0.0 if np.isnan(denom_err) else denom_err
 
@@ -145,10 +151,15 @@ def divide_histo(name, histo_nom, histo_denom):
             histo.SetBinContent(histo.GetBin(*idx), 0.0)
 
         else:
+            print(nom, nom_err)
+            print(denom, denom_err)
+            nom = recenter_dist(nom, nom_err)
+            denom = recenter_dist(denom, denom_err)
+
+            print(nom, nom_err)
+            print(denom, denom_err)
             value = nom / denom
-            # Also do the error propagation
-            # assuming both nom and denom are Gaussian, we have:
-            error = value * np.sqrt((nom_err/nom)**2 + (denom_err/denom)**2)
+            print(value)
             histo.SetBinContent(histo.GetBin(*idx), value)
 
     return histo
