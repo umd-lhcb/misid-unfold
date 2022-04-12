@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 12, 2022 at 02:27 PM -0400
+# Last Change: Tue Apr 12, 2022 at 02:34 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -58,9 +58,9 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 
 plot-rdx-2016:
 	./scripts/plot_histo.py -o $(GENPATH) \
-		-i ./histos/rdx-22_03_30_12_40-unfolded-2016/unfolded.root
+		-i ./histos/rdx-22_04_12_14_34-unfolded-2016/unfolded.root
 	./scripts/plot_histo.py -o $(GENPATH) -s Tag \
-		-i ./histos/rdx-22_03_27_18_05-tag-2016/tagged.root
+		-i ./histos/rdx-22_04_12_14_03-tag-2016/tagged.root
 
 
 ########
