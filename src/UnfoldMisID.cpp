@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 12, 2022 at 02:32 PM -0400
+// Last Change: Tue Apr 12, 2022 at 03:30 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -215,6 +215,9 @@ TH3D* loadSingleHisto(map<string, TH3D*>& mapHisto, string nameHisto) {
 void ensureUnitarity(TH2D* res, bool debug = true) {
   auto nbinsX = res->GetNbinsX();
   auto nbinsY = res->GetNbinsY();
+
+  cout.precision(4);
+  cout << fixed;
 
   if (debug) {
     cout << "The raw true -> tag matrix is (row: fixed tag; col: fixed true):"
