@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  Author: Yipeng Sun
 #  License: GPLv3
-#  Last Change: Thu Mar 31, 2022 at 09:19 PM -0400
+#  Last Change: Wed Apr 13, 2022 at 09:14 AM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -110,7 +110,7 @@ def title_gen(name, known=KNOWN_PARTICLES):
 ########
 
 def plot(histo_spec, bin_vars, bin_names, output_dir,
-         colors=DEFAULT_COLORS, suffix='png'):
+         colors=DEFAULT_COLORS, suffix='pdf'):
     prefix = prefix_gen(histo_spec)
 
     for idx, v in enumerate(bin_vars):
