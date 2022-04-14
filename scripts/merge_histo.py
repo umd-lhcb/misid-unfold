@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 12, 2022 at 01:35 PM -0400
+# Last Change: Wed Apr 13, 2022 at 08:29 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -110,7 +110,11 @@ def prep_root_histo(name, histo_orig):
 
 def recenter_dist(mean, std):
     half = 0.5*(erf((1-mean)/(std*np.sqrt(2))) + erf((0-mean)/(std*np.sqrt(2))))
-    return erfinv(half)*std*np.sqrt(2) + mean
+    shifted = erfinv(half)*std*np.sqrt(2) + mean
+    if shifted < 0:
+        print(f'    Warning: Shifted mean < 0!')
+    print(f'    Raw mean ± std: {mean:.4f} ± {std:.4f}. Shifted mean: {shifted:.4f}')
+    return shifted
 
 
 def rebuild_root_histo(name, histo_orig, recenter=True):
@@ -118,6 +122,7 @@ def rebuild_root_histo(name, histo_orig, recenter=True):
 
     indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
     for idx in itertools.product(*indices_ranges):
+        print(f'  Working on index: {idx}')
         value = histo_orig.GetBinContent(*idx)
         value = 0.0 if np.isnan(value) else value
         error = histo_orig.GetBinError(*idx)
@@ -174,6 +179,8 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
     for p_true in ptcl_true:
         for p_tag in ptcl_tag:
             histo_name = f'{p_true}TrueTo{p_tag.capitalize()}Tag'
+            print(f'Copy {histo_name} and shift means...')
+
             input_ntp = ROOT.TFile(f'{path_prefix}/{path}/{histo_name}.root')
             histo_orig = input_ntp.Get('eff')
             histo_out = rebuild_root_histo(histo_name, histo_orig)
@@ -185,6 +192,7 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
     for p_true in ptcl_true:
         for p_addon in config['pidcalib_config']['tags_addon']:
             histo_name = f'{p_true}TrueTo{p_addon.capitalize()}Tag'
+            print(f'Copy {histo_name} and shift means...')
 
             ntp_nom = ROOT.TFile(f'{path_prefix}/{path}/{histo_name}_nom.root')
             ntp_denom = ROOT.TFile(
@@ -202,6 +210,7 @@ def merge_extra(output_ntp, path_prefix, spec, config):
     for path in spec:
         input_ntp = ROOT.TFile(f'{path_prefix}/{path}')
         for src, tgt in spec[path].items():
+            print(f'Copy {tgt} from {src} verbatim...')
             histo_src = input_ntp.Get(src)
             histo_tgt = rebuild_root_histo(tgt, histo_src)
 
