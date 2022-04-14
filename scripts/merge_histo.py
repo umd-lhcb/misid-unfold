@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 13, 2022 at 09:05 PM -0400
+# Last Change: Wed Apr 13, 2022 at 11:07 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -24,6 +24,7 @@ ROOT.PyConfig.DisableRootLogon = True  # Don't read .rootlogon.py
 ################
 
 HISTO_NAME = 'merged.root'
+BAD_ERROR_THRESH = 0.25
 
 
 #######################
@@ -112,12 +113,12 @@ def recenter_dist(mean, std):
     half = 0.5*(erf((1-mean)/(std*np.sqrt(2))) + erf((0-mean)/(std*np.sqrt(2))))
     shifted = erfinv(half)*std*np.sqrt(2) + mean
 
-    if abs(std) > 0.25:
+    if abs(std) > BAD_ERROR_THRESH:
         print('    WARNING: Very large std!')
     if mean < 0 or mean > 1:
         print('    INFO: Raw mean not in [0, 1]!')
     if shifted < 0:
-        print('    WARNING: Shifted mean < 0!')
+        print('    URGENT: Shifted mean < 0!')
     if max(abs(shifted / mean), abs(mean / shifted)) > 5:
         print('    WARNING: Raw and shifted means are significantly different!')
 
@@ -177,6 +178,81 @@ def divide_histo(name, histo_nom, histo_denom):
     return histo
 
 
+########################
+# Histo helpers: fixup #
+########################
+
+def is_valid_neighbor(idx_list1, idx_list2):
+    diff = np.abs(np.subtract(idx_list1, idx_list2))
+    if diff[diff == 1].size == 1:
+        return True
+    return False
+
+
+def get_nearby_idx(idx, nbins):
+    result = []
+
+    for i, bin_limit in zip(idx, nbins):
+        valid_idx = [i]
+        if i > 1:
+            valid_idx.append(i-1)
+        if i < bin_limit:
+            valid_idx.append(i+1)
+        result.append(valid_idx)
+
+    # this is a 3x3 cube (in 3D case, but it works for N-D)
+    neighbors_raw = itertools.product(*result)
+    # remove edges and center of the cube (center of the cube is the input idx
+    # itself) (so remove 8x2+4+1 = 21 points)
+    neighbors = [i for i in neighbors_raw if is_valid_neighbor(i, idx)]
+    return  neighbors
+
+
+def compute_weighted_average(means, stds):
+    wt = [1/x**2 for x in stds]
+    weighted_mean = np.sum(np.multiply(wt, means)) / np.sum(wt)
+    error = np.sqrt(1 / np.sum(wt))
+    return weighted_mean, error
+
+
+def fix_bad_bins_in_histo(histo, bad_err_thresh=0.2):
+    _, histo_axis_nbins = prep_root_histo('_tmp', histo)
+
+    indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
+    for idx in itertools.product(*indices_ranges):
+        error = histo.GetBinError(*idx)
+        if abs(error) > BAD_ERROR_THRESH:
+            print(f'  FIX: bin {idx} has large uncertainties of {error:.7f}, replace w/ weighted average of nearby bins')
+
+            means = []
+            stds = []
+            nearby_idx = get_nearby_idx(idx, histo_axis_nbins)
+            for ni in nearby_idx:
+                print(f'    Looking at nearby bin with index {ni}')
+                bin_std = abs(histo.GetBinError(*ni))
+                bin_mean = histo.GetBinContent(*ni)
+
+                if bin_std > BAD_ERROR_THRESH:
+                    print(f'    std = {bin_std:.7f} > {BAD_ERROR_THRESH}, skipping...')
+                    continue
+                if bin_mean < 0:
+                    print(f'    mean = {bin_mean:.7f} < 0, skipping...')
+                    continue
+                if bin_std == 0.0:
+                    print('    std = 0.0, replacing it with std = 0.01...')
+                    bin_std = 0.01
+
+                means.append(bin_mean)
+                stds.append(bin_std)
+                print(f'    Use {bin_mean:.7f} ± {bin_std:.7f}')
+
+            new_mean, new_error = compute_weighted_average(means, stds)
+            print(f'    Use weighted average: {new_mean:.7f} ± {new_error:.7f}')
+
+            histo.SetBinContent(histo.GetBin(*idx), new_mean)
+            histo.SetBinError(histo.GetBin(*idx), new_error)
+
+
 ###########
 # Helpers #
 ###########
@@ -198,6 +274,7 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
             input_ntp = ROOT.TFile(f'{path_prefix}/{path}/{histo_name}.root')
             histo_orig = input_ntp.Get('eff')
             histo_out = rebuild_root_histo(histo_name, histo_orig)
+            fix_bad_bins_in_histo(histo_out)
 
             output_ntp.cd()
             histo_out.Write()
@@ -215,6 +292,7 @@ def merge_true_to_tag(output_ntp, path_prefix, path, config):
             histo_nom = ntp_nom.Get('eff')
             histo_denom = ntp_denom.Get('eff')
             histo_ratio = divide_histo(histo_name, histo_nom, histo_denom)
+            fix_bad_bins_in_histo(histo_ratio)
 
             output_ntp.cd()
             histo_ratio.Write()
@@ -227,6 +305,7 @@ def merge_extra(output_ntp, path_prefix, spec, config):
             print(f'Copy {tgt} from {src} and shfit means...')
             histo_src = input_ntp.Get(src)
             histo_tgt = rebuild_root_histo(tgt, histo_src)
+            fix_bad_bins_in_histo(histo_tgt)
 
             output_ntp.cd()
             histo_tgt.Write()
