@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 13, 2022 at 08:59 PM -0400
+# Last Change: Wed Apr 13, 2022 at 09:05 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -111,10 +111,16 @@ def prep_root_histo(name, histo_orig):
 def recenter_dist(mean, std):
     half = 0.5*(erf((1-mean)/(std*np.sqrt(2))) + erf((0-mean)/(std*np.sqrt(2))))
     shifted = erfinv(half)*std*np.sqrt(2) + mean
+
+    if abs(std) > 0.25:
+        print('    WARNING: Very large std!')
+    if mean < 0 or mean > 1:
+        print('    INFO: Raw mean not in [0, 1]!')
     if shifted < 0:
-        print(f'    WARNING: Shifted mean < 0!')
+        print('    WARNING: Shifted mean < 0!')
     if max(abs(shifted / mean), abs(mean / shifted)) > 5:
-        print(f'    WARNING: Raw and shifted means are significantly different!')
+        print('    WARNING: Raw and shifted means are significantly different!')
+
     print(f'    Raw mean ± std: {mean:.7f} ± {std:.7f}. Shifted mean: {shifted:.7f}')
     return shifted
 
