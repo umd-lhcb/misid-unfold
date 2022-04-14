@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 13, 2022 at 08:29 PM -0400
+# Last Change: Wed Apr 13, 2022 at 08:59 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -112,8 +112,10 @@ def recenter_dist(mean, std):
     half = 0.5*(erf((1-mean)/(std*np.sqrt(2))) + erf((0-mean)/(std*np.sqrt(2))))
     shifted = erfinv(half)*std*np.sqrt(2) + mean
     if shifted < 0:
-        print(f'    Warning: Shifted mean < 0!')
-    print(f'    Raw mean ± std: {mean:.4f} ± {std:.4f}. Shifted mean: {shifted:.4f}')
+        print(f'    WARNING: Shifted mean < 0!')
+    if max(abs(shifted / mean), abs(mean / shifted)) > 5:
+        print(f'    WARNING: Raw and shifted means are significantly different!')
+    print(f'    Raw mean ± std: {mean:.7f} ± {std:.7f}. Shifted mean: {shifted:.7f}')
     return shifted
 
 
@@ -130,8 +132,11 @@ def rebuild_root_histo(name, histo_orig, recenter=True):
 
         if recenter and value*error != 0:
             value = recenter_dist(value, error)
+        else:
+            print(f'    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.')
 
         histo.SetBinContent(histo.GetBin(*idx), value)
+        histo.SetBinError(histo.GetBin(*idx), error)  # use the raw error
 
     return histo
 
@@ -141,6 +146,7 @@ def divide_histo(name, histo_nom, histo_denom):
 
     indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
     for idx in itertools.product(*indices_ranges):
+        print(f'  Working on index: {idx}')
         nom = histo_nom.GetBinContent(*idx)
         nom = 0.0 if np.isnan(nom) else nom
         nom_err = histo_nom.GetBinError(*idx)
@@ -153,12 +159,14 @@ def divide_histo(name, histo_nom, histo_denom):
 
         if denom == 0.0 or nom == 0.0:
             histo.SetBinContent(histo.GetBin(*idx), 0.0)
+            histo.SetBinError(histo.GetBin(*idx), 0.0)
 
         else:
             nom = recenter_dist(nom, nom_err)
             denom = recenter_dist(denom, denom_err)
             value = nom / denom
             histo.SetBinContent(histo.GetBin(*idx), value)
+            histo.SetBinError(histo.GetBin(*idx), nom_err)
 
     return histo
 
@@ -210,7 +218,7 @@ def merge_extra(output_ntp, path_prefix, spec, config):
     for path in spec:
         input_ntp = ROOT.TFile(f'{path_prefix}/{path}')
         for src, tgt in spec[path].items():
-            print(f'Copy {tgt} from {src} verbatim...')
+            print(f'Copy {tgt} from {src} and shfit means...')
             histo_src = input_ntp.Get(src)
             histo_tgt = rebuild_root_histo(tgt, histo_src)
 
