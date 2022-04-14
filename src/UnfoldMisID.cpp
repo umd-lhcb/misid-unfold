@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Apr 14, 2022 at 12:08 AM -0400
+// Last Change: Thu Apr 14, 2022 at 12:19 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -151,16 +151,27 @@ tuple<vector<vector<float>>, vector<int>> getBins(YAML::Node cfgBinning) {
 
 void printResGeneric(const TH2D*                             res,
                      function<double(const TH2D*, int, int)> getter) {
-  auto nbinsX = res->GetNbinsX();
-  auto nbinsY = res->GetNbinsY();
+  auto           nbinsX = res->GetNbinsX();
+  auto           nbinsY = res->GetNbinsY();
+  vector<string> badElem{};
 
   cout.precision(4);
   cout << fixed;
 
   for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
-    for (int idxCol = 1; idxCol <= nbinsY; idxCol++)
-      cout << setw(8) << getter(res, idxRow, idxCol);
+    for (int idxCol = 1; idxCol <= nbinsY; idxCol++) {
+      auto elem = getter(res, idxRow, idxCol);
+      cout << setw(8) << elem;
+      if (elem < 0)
+        badElem.emplace_back("(" + to_string(idxRow) + ", " +
+                             to_string(idxCol) + ") = " + to_string(elem));
+    }
     cout << endl;
+  }
+
+  if (badElem.size() > 0) {
+    cout << "  Matrix contains negative element(s)" << endl;
+    for (const auto& err : badElem) cout << "    " << err << endl;
   }
 }
 
@@ -320,7 +331,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               auto histo = loadSingleHisto(histoIn, nameEff[idxTag][idxTrue]);
               auto eff   = histo->GetBinContent(x, y, z);
               if (isnan(eff) || isinf(eff)) eff = 0.0;
-              histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
+              histRes->SetBinContent(idxTag + 1, idxTrue + 1, abs(eff));
             }
           }
           ensureUnitarity(histRes);
