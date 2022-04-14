@@ -1,12 +1,13 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 12, 2022 at 03:30 PM -0400
+// Last Change: Thu Apr 14, 2022 at 12:08 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <map>
@@ -148,6 +149,35 @@ tuple<vector<vector<float>>, vector<int>> getBins(YAML::Node cfgBinning) {
 // Histo helpers //
 ///////////////////
 
+void printResGeneric(const TH2D*                             res,
+                     function<double(const TH2D*, int, int)> getter) {
+  auto nbinsX = res->GetNbinsX();
+  auto nbinsY = res->GetNbinsY();
+
+  cout.precision(4);
+  cout << fixed;
+
+  for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
+    for (int idxCol = 1; idxCol <= nbinsY; idxCol++)
+      cout << setw(8) << getter(res, idxRow, idxCol);
+    cout << endl;
+  }
+}
+
+void printResVal(const TH2D* res) {
+  auto getter = [](const TH2D* res, int x, int y) {
+    return res->GetBinContent(x, y);
+  };
+  printResGeneric(res, getter);
+}
+
+void printResErr(const TH2D* res) {
+  auto getter = [](const TH2D* res, int x, int y) {
+    return res->GetBinError(x, y);
+  };
+  printResGeneric(res, getter);
+}
+
 map<string, TH3D*> prepOutHisto(const vStrStr&         names,
                                 vector<vector<float>>& bins) {
   map<string, TH3D*> result{};
@@ -222,11 +252,11 @@ void ensureUnitarity(TH2D* res, bool debug = true) {
   if (debug) {
     cout << "The raw true -> tag matrix is (row: fixed tag; col: fixed true):"
          << endl;
-    for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
-      for (int idxCol = 1; idxCol <= nbinsY; idxCol++)
-        cout << setw(8) << res->GetBinContent(idxRow, idxCol);
-      cout << endl;
-    }
+    printResVal(res);
+    cout << "The raw true -> tag matrix error is (row: fixed tag; col: fixed "
+            "true):"
+         << endl;
+    printResErr(res);
   }
 
   for (int y = 1; y <= nbinsY; y++) {
@@ -240,11 +270,7 @@ void ensureUnitarity(TH2D* res, bool debug = true) {
   if (debug) {
     cout << "The fixed true -> tag matrix is (row: fixed tag; col: fixed true):"
          << endl;
-    for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
-      for (int idxCol = 1; idxCol <= nbinsY; idxCol++)
-        cout << setw(8) << res->GetBinContent(idxRow, idxCol);
-      cout << endl;
-    }
+    printResVal(res);
   }
 }
 
@@ -388,20 +414,12 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             cout << "The true -> tag matrix is (row: fixed tag; "
                     "col: fixed true):"
                  << endl;
-            for (int idxRow = 1; idxRow <= totSize; idxRow++) {
-              for (int idxCol = 1; idxCol <= totSize; idxCol++)
-                cout << setw(8) << histRes->GetBinContent(idxRow, idxCol);
-              cout << endl;
-            }
+            printResVal(histRes);
 
             cout << "The tag -> true efficiency matrix is (row: fixed true; "
                     "col: fixed tag):"
                  << endl;
-            for (int idxRow = 1; idxRow <= totSize; idxRow++) {
-              for (int idxCol = 1; idxCol <= totSize; idxCol++)
-                cout << setw(8) << histInv->GetBinContent(idxRow, idxCol);
-              cout << endl;
-            }
+            printResVal(histInv);
             cout << "------" << endl;
           }
         }
