@@ -1,0 +1,3988 @@
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+Preparing output histo: D0__piTagToMuTag
+Preparing output histo: D0__kTagToMuTag
+Preparing output histo: D0__pTagToMuTag
+Preparing output histo: D0__eTagToMuTag
+Preparing output histo: D0__gTagToMuTag
+Preparing output histo: D0__piTrue
+Preparing output histo: D0__kTrue
+Preparing output histo: D0__pTrue
+Preparing output histo: D0__eTrue
+Preparing output histo: D0__gTrue
+All output histos prepared.
+Loading D0__piTag
+Loading D0__kTag
+Loading D0__pTag
+Loading D0__eTag
+Loading D0__gTag
+Loading piTrueToPiTag
+Loading kTrueToPiTag
+Loading pTrueToPiTag
+Loading eTrueToPiTag
+Loading gTrueToPiTag
+Loading piTrueToKTag
+Loading kTrueToKTag
+Loading pTrueToKTag
+Loading eTrueToKTag
+Loading gTrueToKTag
+Loading piTrueToPTag
+Loading kTrueToPTag
+Loading pTrueToPTag
+Loading eTrueToPTag
+Loading gTrueToPTag
+Loading piTrueToETag
+Loading kTrueToETag
+Loading pTrueToETag
+Loading eTrueToETag
+Loading gTrueToETag
+Loading piTrueToGTag
+Loading kTrueToGTag
+Loading pTrueToGTag
+Loading eTrueToGTag
+Loading gTrueToGTag
+Loading piTrueToMuTag
+Loading kTrueToMuTag
+Loading pTrueToMuTag
+Loading eTrueToMuTag
+Loading gTrueToMuTag
+All histograms loaded.
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9251  0.0441  0.0299  0.0025  0.3028
+  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000  0.0001  0.0000  0.0002
+  0.0011  0.0012  0.0020  0.2131  0.0064
+  0.0738  0.9546  0.9679  0.8022  0.6863
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9618  0.2100  0.1730  0.0497  0.5503
+  0.0006  0.0046  0.0040  0.0000  0.0000
+  0.0000  0.0000  0.0112  0.0000  0.0129
+  0.0325  0.0352  0.0449  0.4616  0.0800
+  0.2717  0.9770  0.9838  0.8956  0.8284
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9251  0.0441  0.0299  0.0025  0.3028
+  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000  0.0001  0.0000  0.0002
+  0.0011  0.0012  0.0020  0.2131  0.0064
+  0.0738  0.9546  0.9679  0.7845  0.6906
+Now unfolding...
+Iteration : 0
+Chi^2 of change 100030.7810
+Iteration : 1
+Chi^2 of change 14497.2645
+Iteration : 2
+Chi^2 of change 2370.3130
+Iteration : 3
+Chi^2 of change 685.4235
+Iteration : 4
+Chi^2 of change 337.8018
+Iteration : 5
+Chi^2 of change 214.0215
+Iteration : 6
+Chi^2 of change 148.2609
+Iteration : 7
+Chi^2 of change 106.8344
+Iteration : 8
+Chi^2 of change 78.9429
+Iteration : 9
+Chi^2 of change 59.4869
+Iteration : 10
+Chi^2 of change 45.5632
+Iteration : 11
+Chi^2 of change 35.3866
+Iteration : 12
+Chi^2 of change 27.8135
+Iteration : 13
+Chi^2 of change 22.0892
+Iteration : 14
+Chi^2 of change 17.7029
+Iteration : 15
+Chi^2 of change 14.3012
+Iteration : 16
+Chi^2 of change 11.6350
+Iteration : 17
+Chi^2 of change 9.5253
+Iteration : 18
+Chi^2 of change 7.8420
+Iteration : 19
+Chi^2 of change 6.4886
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.9251 * 0.7565 / 0.7284 = 0.9608
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0441 * 0.0182 / 0.7284 = 0.0011
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0299 * 0.0163 / 0.7284 = 0.0007
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0025 * 0.1199 / 0.7284 = 0.0004
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.3028 * 0.0890 / 0.7284 = 0.0370
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0000 * 0.7565 / 0.0000 = 0.2891
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.0000 * 0.0182 / 0.0000 = 0.4242
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0000 * 0.0163 / 0.0000 = 0.2867
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0000 * 0.1199 / 0.0000 = 0.0000
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0000 * 0.0890 / 0.0000 = 0.0000
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0000 * 0.7565 / 0.0000 = 0.0000
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0000 * 0.0182 / 0.0000 = 0.0000
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0001 * 0.0163 / 0.0000 = 0.1214
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0000 * 0.1199 / 0.0000 = 0.0000
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0002 * 0.0890 / 0.0000 = 0.8786
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0011 * 0.7565 / 0.0270 = 0.0297
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0012 * 0.0182 / 0.0270 = 0.0008
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0020 * 0.0163 / 0.0270 = 0.0012
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.2131 * 0.1199 / 0.0270 = 0.9471
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0064 * 0.0890 / 0.0270 = 0.0211
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0738 * 0.7565 / 0.2446 = 0.2284
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.9546 * 0.0182 / 0.2446 = 0.0712
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.9679 * 0.0163 / 0.2446 = 0.0645
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.7845 * 0.1199 / 0.2446 = 0.3846
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.6906 * 0.0890 / 0.2446 = 0.2513
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=1 y=1 z=1
+The yields are (top: tag; bot: true):
+ 260280.0000      0.0000      0.0000  10644.0000  85712.0000
+ 269804.9091   6507.8127   5815.0521  42765.7447  31742.4814
+The prior true probabilities are:
+  0.7565  0.0182  0.0163  0.1199  0.0890
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9251  0.0441  0.0299  0.0025  0.3028
+  0.0000  0.0000  0.0000  0.0000  0.0000
+  0.0000  0.0000  0.0001  0.0000  0.0002
+  0.0011  0.0012  0.0020  0.2131  0.0064
+  0.0738  0.9546  0.9679  0.7845  0.6906
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9608  0.2891  0.0000  0.0297  0.2284
+  0.0011  0.4242  0.0000  0.0008  0.0712
+  0.0007  0.2867  0.1214  0.0012  0.0645
+  0.0004  0.0000  0.0000  0.9471  0.3846
+  0.0370  0.0000  0.8786  0.0211  0.2513
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8407  0.0656  0.0505  0.0059  0.2746
+  0.0000  0.0001  0.0000  0.0000  0.0000
+  0.0000  0.0000  0.0001  0.0000  0.0001
+  0.0025  0.0027  0.0047  0.1862  0.0032
+  0.1568  0.9316  0.9446  0.8789  0.7184
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9169  0.2562  0.2247  0.0768  0.5240
+  0.0019  0.0073  0.0040  0.0000  0.0000
+  0.0011  0.0027  0.0122  0.0000  0.0089
+  0.0502  0.0520  0.0686  0.4315  0.0569
+  0.3960  0.9652  0.9719  0.9375  0.8476
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8407  0.0656  0.0505  0.0059  0.2746
+  0.0000  0.0001  0.0000  0.0000  0.0000
+  0.0000  0.0000  0.0001  0.0000  0.0001
+  0.0025  0.0027  0.0047  0.1862  0.0032
+  0.1568  0.9316  0.9446  0.8079  0.7221
+Now unfolding...
+Iteration : 0
+Chi^2 of change 26811.7368
+Iteration : 1
+Chi^2 of change 6019.8146
+Iteration : 2
+Chi^2 of change 1302.3528
+Iteration : 3
+Chi^2 of change 361.4266
+Iteration : 4
+Chi^2 of change 135.6763
+Iteration : 5
+Chi^2 of change 68.6903
+Iteration : 6
+Chi^2 of change 43.2123
+Iteration : 7
+Chi^2 of change 30.5785
+Iteration : 8
+Chi^2 of change 22.8681
+Iteration : 9
+Chi^2 of change 17.5636
+Iteration : 10
+Chi^2 of change 13.6930
+Iteration : 11
+Chi^2 of change 10.7848
+Iteration : 12
+Chi^2 of change 8.5628
+Iteration : 13
+Chi^2 of change 6.8451
+Iteration : 14
+Chi^2 of change 5.5048
+Iteration : 15
+Chi^2 of change 4.4507
+Iteration : 16
+Chi^2 of change 3.6156
+Iteration : 17
+Chi^2 of change 2.9497
+Iteration : 18
+Chi^2 of change 2.4158
+Iteration : 19
+Chi^2 of change 1.9854
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8407 * 0.7269 / 0.6445 = 0.9481
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0656 * 0.0359 / 0.6445 = 0.0037
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0505 * 0.0331 / 0.6445 = 0.0026
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0059 * 0.0991 / 0.6445 = 0.0009
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2746 * 0.1050 / 0.6445 = 0.0447
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0000 * 0.7269 / 0.0000 = 0.5136
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.0001 * 0.0359 / 0.0000 = 0.3819
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0000 * 0.0331 / 0.0000 = 0.1045
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0000 * 0.0991 / 0.0000 = 0.0000
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0000 * 0.1050 / 0.0000 = 0.0000
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0000 * 0.7269 / 0.0000 = 0.0560
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0000 * 0.0359 / 0.0000 = 0.0185
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0001 * 0.0331 / 0.0000 = 0.3444
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0000 * 0.0991 / 0.0000 = 0.0000
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0001 * 0.1050 / 0.0000 = 0.5812
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0025 * 0.7269 / 0.0209 = 0.0878
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0027 * 0.0359 / 0.0209 = 0.0047
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0047 * 0.0331 / 0.0209 = 0.0075
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.1862 * 0.0991 / 0.0209 = 0.8838
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0032 * 0.1050 / 0.0209 = 0.0163
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.1568 * 0.7269 / 0.3346 = 0.3407
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.9316 * 0.0359 / 0.3346 = 0.0999
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.9446 * 0.0331 / 0.3346 = 0.0934
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.8079 * 0.0991 / 0.3346 = 0.2393
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7221 * 0.1050 / 0.3346 = 0.2267
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=1 y=1 z=2
+The yields are (top: tag; bot: true):
+  98945.0000      0.0000      0.0000   3516.0000  50675.0000
+ 111319.0320   5492.3401   5063.6591  15176.6037  16084.3652
+The prior true probabilities are:
+  0.7269  0.0359  0.0331  0.0991  0.1050
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8407  0.0656  0.0505  0.0059  0.2746
+  0.0000  0.0001  0.0000  0.0000  0.0000
+  0.0000  0.0000  0.0001  0.0000  0.0001
+  0.0025  0.0027  0.0047  0.1862  0.0032
+  0.1568  0.9316  0.9446  0.8079  0.7221
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9481  0.5136  0.0560  0.0878  0.3407
+  0.0037  0.3819  0.0185  0.0047  0.0999
+  0.0026  0.1045  0.3444  0.0075  0.0934
+  0.0009  0.0000  0.0000  0.8838  0.2393
+  0.0447  0.0000  0.5812  0.0163  0.2267
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8559  0.1750  0.1675  0.0000  0.2092
+  0.0001  0.0008  0.0002  0.0000  0.0000
+  0.0000  0.0000  0.0011  0.0000  0.0000
+  0.0032  0.0021  0.0081  0.0000  0.0088
+  0.1408  0.8229  0.8233  0.0000  0.7779
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9252  0.4183  0.4093  0.0000  0.4574
+  0.0076  0.0289  0.0129  0.0000  0.0000
+  0.0000  0.0063  0.0339  0.0000  0.0000
+  0.0568  0.0456  0.0898  0.0000  0.0940
+  0.3752  0.9071  0.9073  0.0000  0.8820
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8559  0.1750  0.1675  0.0000  0.2092
+  0.0001  0.0008  0.0002  0.0000  0.0000
+  0.0000  0.0000  0.0011  0.0000  0.0000
+  0.0032  0.0021  0.0081  0.0000  0.0088
+  0.1408  0.8221  0.8231  1.0000  0.7820
+Now unfolding...
+Iteration : 0
+Chi^2 of change 3293.2689
+Iteration : 1
+Chi^2 of change 1142.0555
+Iteration : 2
+Chi^2 of change 320.1554
+Iteration : 3
+Chi^2 of change 89.7657
+Iteration : 4
+Chi^2 of change 29.6153
+Iteration : 5
+Chi^2 of change 13.7636
+Iteration : 6
+Chi^2 of change 9.3986
+Iteration : 7
+Chi^2 of change 8.0526
+Iteration : 8
+Chi^2 of change 7.5109
+Iteration : 9
+Chi^2 of change 7.1874
+Iteration : 10
+Chi^2 of change 6.9259
+Iteration : 11
+Chi^2 of change 6.6848
+Iteration : 12
+Chi^2 of change 6.4533
+Iteration : 13
+Chi^2 of change 6.2286
+Iteration : 14
+Chi^2 of change 6.0102
+Iteration : 15
+Chi^2 of change 5.7980
+Iteration : 16
+Chi^2 of change 5.5920
+Iteration : 17
+Chi^2 of change 5.3921
+Iteration : 18
+Chi^2 of change 5.1984
+Iteration : 19
+Chi^2 of change 5.0109
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8559 * 0.5266 / 0.5344 = 0.8435
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.1750 * 0.0734 / 0.5344 = 0.0240
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.1675 * 0.1616 / 0.5344 = 0.0507
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0000 * 0.0293 / 0.5344 = 0.0000
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2092 * 0.2090 / 0.5344 = 0.0818
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0001 * 0.5266 / 0.0001 = 0.2573
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.0008 * 0.0734 / 0.0001 = 0.5176
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0002 * 0.1616 / 0.0001 = 0.2251
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0000 * 0.0293 / 0.0001 = 0.0000
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0000 * 0.2090 / 0.0001 = 0.0000
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0000 * 0.5266 / 0.0002 = 0.0000
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0000 * 0.0734 / 0.0002 = 0.0157
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0011 * 0.1616 / 0.0002 = 0.9843
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0000 * 0.0293 / 0.0002 = 0.0000
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0000 * 0.2090 / 0.0002 = 0.0000
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0032 * 0.5266 / 0.0050 = 0.3397
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0021 * 0.0734 / 0.0050 = 0.0305
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0081 * 0.1616 / 0.0050 = 0.2605
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.0000 * 0.0293 / 0.0050 = 0.0000
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0088 * 0.2090 / 0.0050 = 0.3692
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.1408 * 0.5266 / 0.4603 = 0.1611
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.8221 * 0.0734 / 0.4603 = 0.1311
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.8231 * 0.1616 / 0.4603 = 0.2890
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 1.0000 * 0.0293 / 0.4603 = 0.0637
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7820 * 0.2090 / 0.4603 = 0.3551
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=1 y=2 z=1
+The yields are (top: tag; bot: true):
+  28970.0000      0.0000      0.0000   1944.0000  24219.0000
+  29034.0760   4047.1133   8911.7399   1616.6684  11523.4023
+The prior true probabilities are:
+  0.5266  0.0734  0.1616  0.0293  0.2090
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8559  0.1750  0.1675  0.0000  0.2092
+  0.0001  0.0008  0.0002  0.0000  0.0000
+  0.0000  0.0000  0.0011  0.0000  0.0000
+  0.0032  0.0021  0.0081  0.0000  0.0088
+  0.1408  0.8221  0.8231  1.0000  0.7820
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.8435  0.2573  0.0000  0.3397  0.1611
+  0.0240  0.5176  0.0157  0.0305  0.1311
+  0.0507  0.2251  0.9843  0.2605  0.2890
+  0.0000  0.0000  0.0000  0.0000  0.0637
+  0.0818  0.0000  0.0000  0.3692  0.3551
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7168  0.1893  0.3337  0.0000  0.2417
+  0.0003  0.0017  0.0027  0.0000  0.0000
+  0.0002  0.0000  0.0070  0.0000  0.0000
+  0.0066  0.0099  0.0228  0.0000  0.0018
+  0.2761  0.7991  0.6339  0.0000  0.7528
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.8466  0.4350  0.5777  0.0000  0.4917
+  0.0180  0.0415  0.0515  0.0000  0.0000
+  0.0152  0.0026  0.0838  0.0000  0.0000
+  0.0812  0.0997  0.1509  0.0000  0.0429
+  0.5255  0.8939  0.7962  0.0000  0.8677
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7168  0.1893  0.3337  0.0000  0.2417
+  0.0003  0.0017  0.0027  0.0000  0.0000
+  0.0002  0.0000  0.0070  0.0000  0.0000
+  0.0066  0.0099  0.0228  0.0000  0.0018
+  0.2761  0.7991  0.6339  1.0000  0.7564
+Now unfolding...
+Iteration : 0
+Chi^2 of change 200.6942
+Iteration : 1
+Chi^2 of change 102.8962
+Iteration : 2
+Chi^2 of change 53.1930
+Iteration : 3
+Chi^2 of change 27.9202
+Iteration : 4
+Chi^2 of change 15.0171
+Iteration : 5
+Chi^2 of change 8.3830
+Iteration : 6
+Chi^2 of change 4.9415
+Iteration : 7
+Chi^2 of change 3.1372
+Iteration : 8
+Chi^2 of change 2.1787
+Iteration : 9
+Chi^2 of change 1.6602
+Iteration : 10
+Chi^2 of change 1.3722
+Iteration : 11
+Chi^2 of change 1.2059
+Iteration : 12
+Chi^2 of change 1.1042
+Iteration : 13
+Chi^2 of change 1.0371
+Iteration : 14
+Chi^2 of change 0.9889
+Iteration : 15
+Chi^2 of change 0.9511
+Iteration : 16
+Chi^2 of change 0.9192
+Iteration : 17
+Chi^2 of change 0.8909
+Iteration : 18
+Chi^2 of change 0.8647
+Iteration : 19
+Chi^2 of change 0.8400
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.7168 * 0.3429 / 0.4005 = 0.6137
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.1893 * 0.1620 / 0.4005 = 0.0765
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.3337 * 0.2711 / 0.4005 = 0.2259
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0000 * 0.0849 / 0.4005 = 0.0000
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2417 * 0.1391 / 0.4005 = 0.0839
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0003 * 0.3429 / 0.0011 = 0.1001
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.0017 * 0.1620 / 0.0011 = 0.2513
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0027 * 0.2711 / 0.0011 = 0.6485
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0000 * 0.0849 / 0.0011 = 0.0000
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0000 * 0.1391 / 0.0011 = 0.0000
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0002 * 0.3429 / 0.0020 = 0.0401
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0000 * 0.1620 / 0.0020 = 0.0005
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0070 * 0.2711 / 0.0020 = 0.9594
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0000 * 0.0849 / 0.0020 = 0.0000
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0000 * 0.1391 / 0.0020 = 0.0000
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0066 * 0.3429 / 0.0103 = 0.2193
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0099 * 0.1620 / 0.0103 = 0.1566
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0228 * 0.2711 / 0.0103 = 0.5993
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.0000 * 0.0849 / 0.0103 = 0.0000
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0018 * 0.1391 / 0.0103 = 0.0249
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.2761 * 0.3429 / 0.5861 = 0.1615
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.7991 * 0.1620 / 0.5861 = 0.2209
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.6339 * 0.2711 / 0.5861 = 0.2932
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 1.0000 * 0.0849 / 0.5861 = 0.1449
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7564 * 0.1391 / 0.5861 = 0.1795
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=1 y=2 z=2
+The yields are (top: tag; bot: true):
+  10681.0000      0.0000      0.0000    673.0000  15647.0000
+   9259.1045   4374.0339   7319.7770   2292.9465   3755.1381
+The prior true probabilities are:
+  0.3429  0.1620  0.2711  0.0849  0.1391
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7168  0.1893  0.3337  0.0000  0.2417
+  0.0003  0.0017  0.0027  0.0000  0.0000
+  0.0002  0.0000  0.0070  0.0000  0.0000
+  0.0066  0.0099  0.0228  0.0000  0.0018
+  0.2761  0.7991  0.6339  1.0000  0.7564
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.6137  0.1001  0.0401  0.2193  0.1615
+  0.0765  0.2513  0.0005  0.1566  0.2209
+  0.2259  0.6485  0.9594  0.5993  0.2932
+  0.0000  0.0000  0.0000  0.0000  0.1449
+  0.0839  0.0000  0.0000  0.0249  0.1795
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9264  0.0137  0.0147  0.0036  0.2855
+  0.0030  0.1498  0.1000  0.0006  0.0010
+  0.0013  0.0061  0.0340  0.0007  0.0001
+  0.0046  0.0008  0.0011  0.4018  0.0063
+  0.0647  0.8296  0.8502  0.5957  0.7023
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9625  0.1172  0.1213  0.0604  0.5344
+  0.0548  0.3871  0.3162  0.0242  0.0314
+  0.0364  0.0778  0.1845  0.0264  0.0094
+  0.0675  0.0275  0.0330  0.6339  0.0795
+  0.2543  0.9108  0.9220  0.7718  0.8380
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9264  0.0137  0.0147  0.0036  0.2855
+  0.0030  0.1498  0.1000  0.0006  0.0010
+  0.0013  0.0061  0.0340  0.0007  0.0001
+  0.0046  0.0008  0.0011  0.4018  0.0063
+  0.0647  0.8296  0.8502  0.5932  0.7071
+Now unfolding...
+Iteration : 0
+Chi^2 of change 128015.8312
+Iteration : 1
+Chi^2 of change 14000.9904
+Iteration : 2
+Chi^2 of change 2146.4230
+Iteration : 3
+Chi^2 of change 563.5380
+Iteration : 4
+Chi^2 of change 227.6492
+Iteration : 5
+Chi^2 of change 115.0811
+Iteration : 6
+Chi^2 of change 65.0193
+Iteration : 7
+Chi^2 of change 39.6619
+Iteration : 8
+Chi^2 of change 25.9424
+Iteration : 9
+Chi^2 of change 18.1640
+Iteration : 10
+Chi^2 of change 13.5575
+Iteration : 11
+Chi^2 of change 10.7010
+Iteration : 12
+Chi^2 of change 8.8383
+Iteration : 13
+Chi^2 of change 7.5566
+Iteration : 14
+Chi^2 of change 6.6258
+Iteration : 15
+Chi^2 of change 5.9147
+Iteration : 16
+Chi^2 of change 5.3471
+Iteration : 17
+Chi^2 of change 4.8779
+Iteration : 18
+Chi^2 of change 4.4793
+Iteration : 19
+Chi^2 of change 4.1339
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.9264 * 0.7478 / 0.7218 = 0.9598
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0137 * 0.0346 / 0.7218 = 0.0007
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0147 * 0.0199 / 0.7218 = 0.0004
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0036 * 0.1000 / 0.7218 = 0.0005
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2855 * 0.0976 / 0.7218 = 0.0386
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0030 * 0.7478 / 0.0096 = 0.2344
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.1498 * 0.0346 / 0.0096 = 0.5420
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.1000 * 0.0199 / 0.0096 = 0.2075
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0006 * 0.1000 / 0.0096 = 0.0061
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0010 * 0.0976 / 0.0096 = 0.0100
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0013 * 0.7478 / 0.0020 = 0.5068
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0061 * 0.0346 / 0.0020 = 0.1073
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0340 * 0.0199 / 0.0020 = 0.3458
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0007 * 0.1000 / 0.0020 = 0.0357
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0001 * 0.0976 / 0.0020 = 0.0044
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0046 * 0.7478 / 0.0443 = 0.0769
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0008 * 0.0346 / 0.0443 = 0.0006
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0011 * 0.0199 / 0.0443 = 0.0005
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.4018 * 0.1000 / 0.0443 = 0.9081
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0063 * 0.0976 / 0.0443 = 0.0139
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0647 * 0.7478 / 0.2224 = 0.2175
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.8296 * 0.0346 / 0.2224 = 0.1292
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.8502 * 0.0199 / 0.2224 = 0.0760
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.5932 * 0.1000 / 0.2224 = 0.2669
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7071 * 0.0976 / 0.2224 = 0.3103
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=2 y=1 z=1
+The yields are (top: tag; bot: true):
+ 292833.0000   4673.0000    298.0000  18358.0000  88958.0000
+ 302964.9322  14034.2192   8050.6898  40528.6503  39541.5085
+The prior true probabilities are:
+  0.7478  0.0346  0.0199  0.1000  0.0976
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9264  0.0137  0.0147  0.0036  0.2855
+  0.0030  0.1498  0.1000  0.0006  0.0010
+  0.0013  0.0061  0.0340  0.0007  0.0001
+  0.0046  0.0008  0.0011  0.4018  0.0063
+  0.0647  0.8296  0.8502  0.5932  0.7071
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9598  0.2344  0.5068  0.0769  0.2175
+  0.0007  0.5420  0.1073  0.0006  0.1292
+  0.0004  0.2075  0.3458  0.0005  0.0760
+  0.0005  0.0061  0.0357  0.9081  0.2669
+  0.0386  0.0100  0.0044  0.0139  0.3103
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8548  0.0223  0.0250  0.0040  0.2382
+  0.0057  0.1390  0.0983  0.0035  0.0006
+  0.0014  0.0052  0.0194  0.0005  0.0001
+  0.0073  0.0017  0.0021  0.3098  0.0034
+  0.1308  0.8318  0.8553  0.6982  0.7541
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9246  0.1495  0.1581  0.0629  0.4881
+  0.0757  0.3728  0.3135  0.0590  0.0238
+  0.0375  0.0723  0.1391  0.0234  0.0081
+  0.0855  0.0408  0.0454  0.5566  0.0584
+  0.3616  0.9120  0.9248  0.8356  0.8684
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8548  0.0223  0.0250  0.0040  0.2382
+  0.0057  0.1390  0.0983  0.0035  0.0006
+  0.0014  0.0052  0.0194  0.0005  0.0001
+  0.0073  0.0017  0.0021  0.3098  0.0034
+  0.1308  0.8318  0.8553  0.6822  0.7578
+Now unfolding...
+Iteration : 0
+Chi^2 of change 41855.8825
+Iteration : 1
+Chi^2 of change 6355.5107
+Iteration : 2
+Chi^2 of change 1156.9572
+Iteration : 3
+Chi^2 of change 308.2678
+Iteration : 4
+Chi^2 of change 117.1688
+Iteration : 5
+Chi^2 of change 58.5096
+Iteration : 6
+Chi^2 of change 34.2478
+Iteration : 7
+Chi^2 of change 21.6692
+Iteration : 8
+Chi^2 of change 14.2489
+Iteration : 9
+Chi^2 of change 9.5832
+Iteration : 10
+Chi^2 of change 6.5527
+Iteration : 11
+Chi^2 of change 4.5464
+Iteration : 12
+Chi^2 of change 3.2001
+Iteration : 13
+Chi^2 of change 2.2870
+Iteration : 14
+Chi^2 of change 1.6620
+Iteration : 15
+Chi^2 of change 1.2306
+Iteration : 16
+Chi^2 of change 0.9307
+Iteration : 17
+Chi^2 of change 0.7205
+Iteration : 18
+Chi^2 of change 0.5722
+Iteration : 19
+Chi^2 of change 0.4666
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8548 * 0.7413 / 0.6602 = 0.9598
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0223 * 0.0299 / 0.6602 = 0.0010
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0250 * 0.0259 / 0.6602 = 0.0010
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0040 * 0.0986 / 0.6602 = 0.0006
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2382 * 0.1043 / 0.6602 = 0.0376
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0057 * 0.7413 / 0.0114 = 0.3739
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.1390 * 0.0299 / 0.0114 = 0.3661
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0983 * 0.0259 / 0.0114 = 0.2247
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0035 * 0.0986 / 0.0114 = 0.0302
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0006 * 0.1043 / 0.0114 = 0.0052
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0014 * 0.7413 / 0.0018 = 0.5911
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0052 * 0.0299 / 0.0018 = 0.0888
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0194 * 0.0259 / 0.0018 = 0.2854
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0005 * 0.0986 / 0.0018 = 0.0308
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0001 * 0.1043 / 0.0018 = 0.0039
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0073 * 0.7413 / 0.0364 = 0.1489
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0017 * 0.0299 / 0.0364 = 0.0014
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0021 * 0.0259 / 0.0364 = 0.0015
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.3098 * 0.0986 / 0.0364 = 0.8386
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0034 * 0.1043 / 0.0364 = 0.0097
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.1308 * 0.7413 / 0.2903 = 0.3339
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.8318 * 0.0299 / 0.2903 = 0.0857
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.8553 * 0.0259 / 0.2903 = 0.0764
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.6822 * 0.0986 / 0.2903 = 0.2317
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7578 * 0.1043 / 0.2903 = 0.2722
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=2 y=1 z=2
+The yields are (top: tag; bot: true):
+ 114070.0000   2118.0000    129.0000   6426.0000  49807.0000
+ 127906.7829   5158.6022   4476.9931  17012.6513  17994.9705
+The prior true probabilities are:
+  0.7413  0.0299  0.0259  0.0986  0.1043
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8548  0.0223  0.0250  0.0040  0.2382
+  0.0057  0.1390  0.0983  0.0035  0.0006
+  0.0014  0.0052  0.0194  0.0005  0.0001
+  0.0073  0.0017  0.0021  0.3098  0.0034
+  0.1308  0.8318  0.8553  0.6822  0.7578
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9598  0.3739  0.5911  0.1489  0.3339
+  0.0010  0.3661  0.0888  0.0014  0.0857
+  0.0010  0.2247  0.2854  0.0015  0.0764
+  0.0006  0.0302  0.0308  0.8386  0.2317
+  0.0376  0.0052  0.0039  0.0097  0.2722
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8533  0.1109  0.1731  0.0045  0.2005
+  0.0069  0.1434  0.0875  0.1922  0.0014
+  0.0006  0.0040  0.0127  0.0000  0.0001
+  0.0033  0.0025  0.0057  0.4116  0.0182
+  0.1360  0.7392  0.7211  0.1359  0.7762
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9237  0.3330  0.4160  0.0672  0.4478
+  0.0828  0.3787  0.2958  0.4384  0.0369
+  0.0254  0.0631  0.1125  0.0000  0.0093
+  0.0572  0.0500  0.0753  0.6416  0.1349
+  0.3687  0.8597  0.8492  0.3687  0.8810
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8533  0.1109  0.1731  0.0045  0.2005
+  0.0069  0.1434  0.0875  0.1922  0.0014
+  0.0006  0.0040  0.0127  0.0000  0.0001
+  0.0033  0.0025  0.0057  0.4116  0.0182
+  0.1360  0.7392  0.7211  0.3917  0.7798
+Now unfolding...
+Iteration : 0
+Chi^2 of change 10555.5388
+Iteration : 1
+Chi^2 of change 3029.1212
+Iteration : 2
+Chi^2 of change 760.1189
+Iteration : 3
+Chi^2 of change 225.4025
+Iteration : 4
+Chi^2 of change 90.2460
+Iteration : 5
+Chi^2 of change 49.7667
+Iteration : 6
+Chi^2 of change 35.2588
+Iteration : 7
+Chi^2 of change 29.1289
+Iteration : 8
+Chi^2 of change 26.0788
+Iteration : 9
+Chi^2 of change 24.2507
+Iteration : 10
+Chi^2 of change 22.9175
+Iteration : 11
+Chi^2 of change 21.7778
+Iteration : 12
+Chi^2 of change 20.7067
+Iteration : 13
+Chi^2 of change 19.6563
+Iteration : 14
+Chi^2 of change 18.6121
+Iteration : 15
+Chi^2 of change 17.5745
+Iteration : 16
+Chi^2 of change 16.5496
+Iteration : 17
+Chi^2 of change 15.5450
+Iteration : 18
+Chi^2 of change 14.5679
+Iteration : 19
+Chi^2 of change 13.6247
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8533 * 0.6534 / 0.6119 = 0.9111
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.1109 * 0.0181 / 0.6119 = 0.0033
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.1731 * 0.0468 / 0.6119 = 0.0132
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0045 * 0.0624 / 0.6119 = 0.0005
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2005 * 0.2193 / 0.6119 = 0.0719
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0069 * 0.6534 / 0.0235 = 0.1908
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.1434 * 0.0181 / 0.0235 = 0.1109
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0875 * 0.0468 / 0.0235 = 0.1744
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.1922 * 0.0624 / 0.0235 = 0.5111
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0014 * 0.2193 / 0.0235 = 0.0128
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0006 * 0.6534 / 0.0011 = 0.3808
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0040 * 0.0181 / 0.0011 = 0.0654
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0127 * 0.0468 / 0.0011 = 0.5368
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0000 * 0.0624 / 0.0011 = 0.0000
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0001 * 0.2193 / 0.0011 = 0.0171
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0033 * 0.6534 / 0.0321 = 0.0665
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0025 * 0.0181 / 0.0321 = 0.0014
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0057 * 0.0468 / 0.0321 = 0.0082
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.4116 * 0.0624 / 0.0321 = 0.7996
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0182 * 0.2193 / 0.0321 = 0.1242
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.1360 * 0.6534 / 0.3314 = 0.2680
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.7392 * 0.0181 / 0.3314 = 0.0405
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.7211 * 0.0468 / 0.3314 = 0.1018
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.3917 * 0.0624 / 0.3314 = 0.0737
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7798 * 0.2193 / 0.3314 = 0.5160
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=2 y=2 z=1
+The yields are (top: tag; bot: true):
+  52912.0000    754.0000     46.0000   3531.0000  29210.0000
+  56485.3369   1568.1736   4044.6686   5393.9511  18960.8698
+The prior true probabilities are:
+  0.6534  0.0181  0.0468  0.0624  0.2193
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8533  0.1109  0.1731  0.0045  0.2005
+  0.0069  0.1434  0.0875  0.1922  0.0014
+  0.0006  0.0040  0.0127  0.0000  0.0001
+  0.0033  0.0025  0.0057  0.4116  0.0182
+  0.1360  0.7392  0.7211  0.3917  0.7798
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9111  0.1908  0.3808  0.0665  0.2680
+  0.0033  0.1109  0.0654  0.0014  0.0405
+  0.0132  0.1744  0.5368  0.0082  0.1018
+  0.0005  0.5111  0.0000  0.7996  0.0737
+  0.0719  0.0128  0.0171  0.1242  0.5160
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7279  0.1431  0.2033  0.0047  0.2055
+  0.0115  0.1135  0.0697  0.0000  0.0007
+  0.0012  0.0031  0.0058  0.0844  0.0000
+  0.0051  0.0039  0.0071  0.3863  0.0111
+  0.2542  0.7364  0.7140  0.6811  0.7794
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.8532  0.3782  0.4509  0.0682  0.4533
+  0.1073  0.3369  0.2641  0.0000  0.0257
+  0.0344  0.0556  0.0762  0.2906  0.0061
+  0.0717  0.0624  0.0840  0.6215  0.1052
+  0.5042  0.8581  0.8450  0.8253  0.8829
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7279  0.1431  0.2033  0.0047  0.2055
+  0.0115  0.1135  0.0697  0.0000  0.0007
+  0.0012  0.0031  0.0058  0.0844  0.0000
+  0.0051  0.0039  0.0071  0.3863  0.0111
+  0.2542  0.7364  0.7140  0.5246  0.7827
+Now unfolding...
+Iteration : 0
+Chi^2 of change 2384.5264
+Iteration : 1
+Chi^2 of change 913.4157
+Iteration : 2
+Chi^2 of change 356.5628
+Iteration : 3
+Chi^2 of change 150.6503
+Iteration : 4
+Chi^2 of change 70.5960
+Iteration : 5
+Chi^2 of change 37.1353
+Iteration : 6
+Chi^2 of change 22.0733
+Iteration : 7
+Chi^2 of change 14.7926
+Iteration : 8
+Chi^2 of change 11.0267
+Iteration : 9
+Chi^2 of change 8.9475
+Iteration : 10
+Chi^2 of change 7.7214
+Iteration : 11
+Chi^2 of change 6.9456
+Iteration : 12
+Chi^2 of change 6.4148
+Iteration : 13
+Chi^2 of change 6.0200
+Iteration : 14
+Chi^2 of change 5.7017
+Iteration : 15
+Chi^2 of change 5.4264
+Iteration : 16
+Chi^2 of change 5.1756
+Iteration : 17
+Chi^2 of change 4.9390
+Iteration : 18
+Chi^2 of change 4.7111
+Iteration : 19
+Chi^2 of change 4.4892
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.7279 * 0.6164 / 0.5150 = 0.8712
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.1431 * 0.0377 / 0.5150 = 0.0105
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.2033 * 0.0785 / 0.5150 = 0.0310
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0047 * 0.0498 / 0.5150 = 0.0005
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2055 * 0.2176 / 0.5150 = 0.0868
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0115 * 0.6164 / 0.0170 = 0.4175
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.1135 * 0.0377 / 0.0170 = 0.2518
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0697 * 0.0785 / 0.0170 = 0.3223
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0000 * 0.0498 / 0.0170 = 0.0000
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0007 * 0.2176 / 0.0170 = 0.0084
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0012 * 0.6164 / 0.0055 = 0.1323
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0031 * 0.0377 / 0.0055 = 0.0211
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.0058 * 0.0785 / 0.0055 = 0.0827
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0844 * 0.0498 / 0.0055 = 0.7624
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0000 * 0.2176 / 0.0055 = 0.0015
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0051 * 0.6164 / 0.0255 = 0.1242
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0039 * 0.0377 / 0.0255 = 0.0057
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0071 * 0.0785 / 0.0255 = 0.0217
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.3863 * 0.0498 / 0.0255 = 0.7539
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0111 * 0.2176 / 0.0255 = 0.0944
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.2542 * 0.6164 / 0.4370 = 0.3586
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.7364 * 0.0377 / 0.4370 = 0.0635
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.7140 * 0.0785 / 0.4370 = 0.1284
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.5246 * 0.0498 / 0.4370 = 0.0598
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7827 * 0.2176 / 0.4370 = 0.3897
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=2 y=2 z=2
+The yields are (top: tag; bot: true):
+  19802.0000    296.0000     19.0000   1139.0000  17205.0000
+  23706.8985   1449.7270   3021.0397   1915.0333   8368.3014
+The prior true probabilities are:
+  0.6164  0.0377  0.0785  0.0498  0.2176
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7279  0.1431  0.2033  0.0047  0.2055
+  0.0115  0.1135  0.0697  0.0000  0.0007
+  0.0012  0.0031  0.0058  0.0844  0.0000
+  0.0051  0.0039  0.0071  0.3863  0.0111
+  0.2542  0.7364  0.7140  0.5246  0.7827
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.8712  0.4175  0.1323  0.1242  0.3586
+  0.0105  0.2518  0.0211  0.0057  0.0635
+  0.0310  0.3223  0.0827  0.0217  0.1284
+  0.0005  0.0000  0.7624  0.7539  0.0598
+  0.0868  0.0084  0.0015  0.0944  0.3897
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9111  0.0049  0.0050  0.0152  0.2566
+  0.0050  0.8869  0.0907  0.0038  0.0346
+  0.0248  0.0318  0.7781  0.0089  0.0059
+  0.0179  0.0003  0.0006  0.7358  0.0125
+  0.0411  0.0762  0.1256  0.2363  0.6854
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9545  0.0699  0.0708  0.1234  0.5065
+  0.0709  0.9417  0.3012  0.0620  0.1860
+  0.1576  0.1784  0.8821  0.0942  0.0769
+  0.1338  0.0167  0.0236  0.8578  0.1119
+  0.2028  0.2760  0.3544  0.4861  0.8279
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9111  0.0049  0.0050  0.0152  0.2566
+  0.0050  0.8869  0.0907  0.0038  0.0346
+  0.0248  0.0318  0.7781  0.0089  0.0059
+  0.0179  0.0003  0.0006  0.7358  0.0125
+  0.0411  0.0762  0.1256  0.2363  0.6904
+Now unfolding...
+Iteration : 0
+Chi^2 of change 104182.0501
+Iteration : 1
+Chi^2 of change 11210.3880
+Iteration : 2
+Chi^2 of change 3009.9168
+Iteration : 3
+Chi^2 of change 1119.1854
+Iteration : 4
+Chi^2 of change 495.7020
+Iteration : 5
+Chi^2 of change 247.0497
+Iteration : 6
+Chi^2 of change 133.7760
+Iteration : 7
+Chi^2 of change 76.9742
+Iteration : 8
+Chi^2 of change 46.3768
+Iteration : 9
+Chi^2 of change 28.9596
+Iteration : 10
+Chi^2 of change 18.6035
+Iteration : 11
+Chi^2 of change 12.2268
+Iteration : 12
+Chi^2 of change 8.1870
+Iteration : 13
+Chi^2 of change 5.5672
+Iteration : 14
+Chi^2 of change 3.8351
+Iteration : 15
+Chi^2 of change 2.6710
+Iteration : 16
+Chi^2 of change 1.8780
+Iteration : 17
+Chi^2 of change 1.3313
+Iteration : 18
+Chi^2 of change 0.9507
+Iteration : 19
+Chi^2 of change 0.6833
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.9111 * 0.7308 / 0.6776 = 0.9826
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0049 * 0.1142 / 0.6776 = 0.0008
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0050 * 0.0051 / 0.6776 = 0.0000
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0152 * 0.1128 / 0.6776 = 0.0025
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.2566 * 0.0371 / 0.6776 = 0.0140
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0050 * 0.7308 / 0.1071 = 0.0343
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.8869 * 0.1142 / 0.1071 = 0.9453
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0907 * 0.0051 / 0.1071 = 0.0043
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0038 * 0.1128 / 0.1071 = 0.0041
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0346 * 0.0371 / 0.1071 = 0.0120
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0248 * 0.7308 / 0.0270 = 0.6731
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0318 * 0.1142 / 0.0270 = 0.1347
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.7781 * 0.0051 / 0.0270 = 0.1470
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0089 * 0.1128 / 0.0270 = 0.0371
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0059 * 0.0371 / 0.0270 = 0.0081
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0179 * 0.7308 / 0.0966 = 0.1355
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0003 * 0.1142 / 0.0966 = 0.0003
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0006 * 0.0051 / 0.0966 = 0.0000
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.7358 * 0.1128 / 0.0966 = 0.8594
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0125 * 0.0371 / 0.0966 = 0.0048
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0411 * 0.7308 / 0.0916 = 0.3280
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0762 * 0.1142 / 0.0916 = 0.0949
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.1256 * 0.0051 / 0.0916 = 0.0070
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.2363 * 0.1128 / 0.0916 = 0.2909
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.6904 * 0.0371 / 0.0916 = 0.2793
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=3 y=1 z=1
+The yields are (top: tag; bot: true):
+ 242116.0000  38312.0000   9479.0000  34635.0000  32371.0000
+ 260837.4868  40759.7126   1818.4852  40267.0154  13230.2999
+The prior true probabilities are:
+  0.7308  0.1142  0.0051  0.1128  0.0371
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9111  0.0049  0.0050  0.0152  0.2566
+  0.0050  0.8869  0.0907  0.0038  0.0346
+  0.0248  0.0318  0.7781  0.0089  0.0059
+  0.0179  0.0003  0.0006  0.7358  0.0125
+  0.0411  0.0762  0.1256  0.2363  0.6904
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9826  0.0343  0.6731  0.1355  0.3280
+  0.0008  0.9453  0.1347  0.0003  0.0949
+  0.0000  0.0043  0.1470  0.0000  0.0070
+  0.0025  0.0041  0.0371  0.8594  0.2909
+  0.0140  0.0120  0.0081  0.0048  0.2793
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8423  0.0077  0.0092  0.0059  0.1920
+  0.0115  0.8096  0.1282  0.0064  0.0175
+  0.0372  0.0513  0.6542  0.0157  0.0035
+  0.0216  0.0005  0.0011  0.6775  0.0060
+  0.0874  0.1310  0.2073  0.2969  0.7776
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9178  0.0875  0.0960  0.0765  0.4382
+  0.1072  0.8998  0.3580  0.0802  0.1323
+  0.1929  0.2265  0.8088  0.1254  0.0594
+  0.1469  0.0217  0.0330  0.8231  0.0773
+  0.2956  0.3619  0.4553  0.5449  0.8818
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8423  0.0077  0.0092  0.0059  0.1920
+  0.0115  0.8096  0.1282  0.0064  0.0175
+  0.0372  0.0513  0.6542  0.0157  0.0035
+  0.0216  0.0005  0.0011  0.6775  0.0060
+  0.0874  0.1310  0.2073  0.2945  0.7810
+Now unfolding...
+Iteration : 0
+Chi^2 of change 37524.6703
+Iteration : 1
+Chi^2 of change 4409.3649
+Iteration : 2
+Chi^2 of change 1071.1562
+Iteration : 3
+Chi^2 of change 404.5394
+Iteration : 4
+Chi^2 of change 189.5461
+Iteration : 5
+Chi^2 of change 100.6133
+Iteration : 6
+Chi^2 of change 58.0471
+Iteration : 7
+Chi^2 of change 35.6142
+Iteration : 8
+Chi^2 of change 22.9450
+Iteration : 9
+Chi^2 of change 15.3995
+Iteration : 10
+Chi^2 of change 10.7083
+Iteration : 11
+Chi^2 of change 7.6846
+Iteration : 12
+Chi^2 of change 5.6738
+Iteration : 13
+Chi^2 of change 4.2988
+Iteration : 14
+Chi^2 of change 3.3345
+Iteration : 15
+Chi^2 of change 2.6423
+Iteration : 16
+Chi^2 of change 2.1345
+Iteration : 17
+Chi^2 of change 1.7542
+Iteration : 18
+Chi^2 of change 1.4639
+Iteration : 19
+Chi^2 of change 1.2384
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8423 * 0.7198 / 0.6189 = 0.9796
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0077 * 0.1168 / 0.6189 = 0.0014
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0092 * 0.0032 / 0.6189 = 0.0000
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0059 * 0.1023 / 0.6189 = 0.0010
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1920 * 0.0579 / 0.6189 = 0.0180
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0115 * 0.7198 / 0.1049 = 0.0788
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.8096 * 0.1168 / 0.1049 = 0.9013
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.1282 * 0.0032 / 0.1049 = 0.0039
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0064 * 0.1023 / 0.1049 = 0.0063
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0175 * 0.0579 / 0.1049 = 0.0097
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0372 * 0.7198 / 0.0367 = 0.7301
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0513 * 0.1168 / 0.0367 = 0.1634
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.6542 * 0.0032 / 0.0367 = 0.0572
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0157 * 0.1023 / 0.0367 = 0.0438
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0035 * 0.0579 / 0.0367 = 0.0056
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0216 * 0.7198 / 0.0852 = 0.1822
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0005 * 0.1168 / 0.0852 = 0.0006
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0011 * 0.0032 / 0.0852 = 0.0000
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.6775 * 0.1023 / 0.0852 = 0.8130
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0060 * 0.0579 / 0.0852 = 0.0041
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0874 * 0.7198 / 0.1542 = 0.4078
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.1310 * 0.1168 / 0.1542 = 0.0992
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.2073 * 0.0032 / 0.1542 = 0.0043
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.2945 * 0.1023 / 0.1542 = 0.1953
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7810 * 0.0579 / 0.1542 = 0.2934
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=3 y=1 z=2
+The yields are (top: tag; bot: true):
+  94061.0000  15993.0000   5013.0000  12956.0000  23209.0000
+ 108850.7480  17667.1220    485.3943  15466.0527   8762.6830
+The prior true probabilities are:
+  0.7198  0.1168  0.0032  0.1023  0.0579
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8423  0.0077  0.0092  0.0059  0.1920
+  0.0115  0.8096  0.1282  0.0064  0.0175
+  0.0372  0.0513  0.6542  0.0157  0.0035
+  0.0216  0.0005  0.0011  0.6775  0.0060
+  0.0874  0.1310  0.2073  0.2945  0.7810
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9796  0.0788  0.7301  0.1822  0.4078
+  0.0014  0.9013  0.1634  0.0006  0.0992
+  0.0000  0.0039  0.0572  0.0000  0.0043
+  0.0010  0.0063  0.0438  0.8130  0.1953
+  0.0180  0.0097  0.0056  0.0041  0.2934
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8799  0.0444  0.0895  0.0279  0.1835
+  0.0195  0.7285  0.2261  0.0099  0.0201
+  0.0195  0.0675  0.3654  0.0243  0.0032
+  0.0055  0.0014  0.0026  0.6302  0.0293
+  0.0756  0.1584  0.3164  0.3156  0.7604
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9380  0.2106  0.2991  0.1671  0.4284
+  0.1396  0.8535  0.4755  0.0993  0.1417
+  0.1398  0.2597  0.6045  0.1559  0.0569
+  0.0739  0.0369  0.0514  0.7938  0.1713
+  0.2750  0.3979  0.5625  0.5618  0.8720
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8799  0.0444  0.0895  0.0279  0.1835
+  0.0195  0.7285  0.2261  0.0099  0.0201
+  0.0195  0.0675  0.3654  0.0243  0.0032
+  0.0055  0.0014  0.0026  0.6302  0.0293
+  0.0756  0.1584  0.3164  0.3077  0.7638
+Now unfolding...
+Iteration : 0
+Chi^2 of change 20755.0916
+Iteration : 1
+Chi^2 of change 4273.4698
+Iteration : 2
+Chi^2 of change 662.8400
+Iteration : 3
+Chi^2 of change 161.7662
+Iteration : 4
+Chi^2 of change 66.5449
+Iteration : 5
+Chi^2 of change 38.3516
+Iteration : 6
+Chi^2 of change 25.7541
+Iteration : 7
+Chi^2 of change 18.5159
+Iteration : 8
+Chi^2 of change 13.8347
+Iteration : 9
+Chi^2 of change 10.6247
+Iteration : 10
+Chi^2 of change 8.3398
+Iteration : 11
+Chi^2 of change 6.6653
+Iteration : 12
+Chi^2 of change 5.4077
+Iteration : 13
+Chi^2 of change 4.4433
+Iteration : 14
+Chi^2 of change 3.6905
+Iteration : 15
+Chi^2 of change 3.0941
+Iteration : 16
+Chi^2 of change 2.6158
+Iteration : 17
+Chi^2 of change 2.2279
+Iteration : 18
+Chi^2 of change 1.9104
+Iteration : 19
+Chi^2 of change 1.6483
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8799 * 0.7183 / 0.6602 = 0.9572
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0444 * 0.0692 / 0.6602 = 0.0046
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0895 * 0.0115 / 0.6602 = 0.0016
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0279 * 0.0821 / 0.6602 = 0.0035
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1835 * 0.1190 / 0.6602 = 0.0331
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0195 * 0.7183 / 0.0702 = 0.1995
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.7285 * 0.0692 / 0.0702 = 0.7179
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.2261 * 0.0115 / 0.0702 = 0.0370
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0099 * 0.0821 / 0.0702 = 0.0115
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0201 * 0.1190 / 0.0702 = 0.0340
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0195 * 0.7183 / 0.0253 = 0.5551
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0675 * 0.0692 / 0.0253 = 0.1846
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.3654 * 0.0115 / 0.0253 = 0.1662
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0243 * 0.0821 / 0.0253 = 0.0789
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0032 * 0.1190 / 0.0253 = 0.0153
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0055 * 0.7183 / 0.0593 = 0.0662
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0014 * 0.0692 / 0.0593 = 0.0016
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0026 * 0.0115 / 0.0593 = 0.0005
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.6302 * 0.0821 / 0.0593 = 0.8728
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0293 * 0.1190 / 0.0593 = 0.0589
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0756 * 0.7183 / 0.1851 = 0.2936
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.1584 * 0.0692 / 0.1851 = 0.0592
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.3164 * 0.0115 / 0.1851 = 0.0197
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.3077 * 0.0821 / 0.1851 = 0.1365
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7638 * 0.1190 / 0.1851 = 0.4910
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=3 y=2 z=1
+The yields are (top: tag; bot: true):
+  67157.0000   7249.0000   2196.0000   6039.0000  18796.0000
+  72859.8233   7017.6221   1166.4749   8325.1966  12067.8832
+The prior true probabilities are:
+  0.7183  0.0692  0.0115  0.0821  0.1190
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8799  0.0444  0.0895  0.0279  0.1835
+  0.0195  0.7285  0.2261  0.0099  0.0201
+  0.0195  0.0675  0.3654  0.0243  0.0032
+  0.0055  0.0014  0.0026  0.6302  0.0293
+  0.0756  0.1584  0.3164  0.3077  0.7638
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9572  0.1995  0.5551  0.0662  0.2936
+  0.0046  0.7179  0.1846  0.0016  0.0592
+  0.0016  0.0370  0.1662  0.0005  0.0197
+  0.0035  0.0115  0.0789  0.8728  0.1365
+  0.0331  0.0340  0.0153  0.0589  0.4910
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7841  0.0744  0.1325  0.0550  0.1617
+  0.0290  0.5882  0.2044  0.0278  0.0180
+  0.0383  0.1041  0.2833  0.0188  0.0025
+  0.0074  0.0022  0.0042  0.5654  0.0178
+  0.1412  0.2310  0.3756  0.3701  0.7971
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.8855  0.2729  0.3640  0.2345  0.4022
+  0.1703  0.7669  0.4521  0.1666  0.1342
+  0.1958  0.3227  0.5322  0.1372  0.0498
+  0.0859  0.0473  0.0646  0.7519  0.1334
+  0.3757  0.4807  0.6129  0.6083  0.8928
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7841  0.0744  0.1325  0.0550  0.1617
+  0.0290  0.5882  0.2044  0.0278  0.0180
+  0.0383  0.1041  0.2833  0.0188  0.0025
+  0.0074  0.0022  0.0042  0.5654  0.0178
+  0.1412  0.2310  0.3756  0.3330  0.8000
+Now unfolding...
+Iteration : 0
+Chi^2 of change 5103.9808
+Iteration : 1
+Chi^2 of change 1861.3024
+Iteration : 2
+Chi^2 of change 494.8501
+Iteration : 3
+Chi^2 of change 147.7642
+Iteration : 4
+Chi^2 of change 54.7454
+Iteration : 5
+Chi^2 of change 25.6667
+Iteration : 6
+Chi^2 of change 15.0318
+Iteration : 7
+Chi^2 of change 10.4867
+Iteration : 8
+Chi^2 of change 8.1991
+Iteration : 9
+Chi^2 of change 6.8371
+Iteration : 10
+Chi^2 of change 5.8956
+Iteration : 11
+Chi^2 of change 5.1700
+Iteration : 12
+Chi^2 of change 4.5728
+Iteration : 13
+Chi^2 of change 4.0638
+Iteration : 14
+Chi^2 of change 3.6226
+Iteration : 15
+Chi^2 of change 3.2372
+Iteration : 16
+Chi^2 of change 2.8993
+Iteration : 17
+Chi^2 of change 2.6023
+Iteration : 18
+Chi^2 of change 2.3408
+Iteration : 19
+Chi^2 of change 2.1103
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.7841 * 0.6970 / 0.5825 = 0.9382
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0744 * 0.0589 / 0.5825 = 0.0075
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.1325 * 0.0159 / 0.5825 = 0.0036
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0550 * 0.0696 / 0.5825 = 0.0066
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1617 * 0.1586 / 0.5825 = 0.0440
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0290 * 0.6970 / 0.0629 = 0.3213
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.5882 * 0.0589 / 0.0629 = 0.5509
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.2044 * 0.0159 / 0.0629 = 0.0517
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0278 * 0.0696 / 0.0629 = 0.0307
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0180 * 0.1586 / 0.0629 = 0.0454
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0383 * 0.6970 / 0.0391 = 0.6840
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.1041 * 0.0589 / 0.0391 = 0.1570
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.2833 * 0.0159 / 0.0391 = 0.1153
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0188 * 0.0696 / 0.0391 = 0.0335
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0025 * 0.1586 / 0.0391 = 0.0101
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0074 * 0.6970 / 0.0475 = 0.1083
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0022 * 0.0589 / 0.0475 = 0.0028
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0042 * 0.0159 / 0.0475 = 0.0014
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.5654 * 0.0696 / 0.0475 = 0.8281
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0178 * 0.1586 / 0.0475 = 0.0594
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.1412 * 0.6970 / 0.2681 = 0.3671
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.2310 * 0.0589 / 0.2681 = 0.0508
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.3756 * 0.0159 / 0.2681 = 0.0223
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.3330 * 0.0696 / 0.2681 = 0.0865
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.8000 * 0.1586 / 0.2681 = 0.4734
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=3 y=2 z=2
+The yields are (top: tag; bot: true):
+  26045.0000   2969.0000   1207.0000   2109.0000  11839.0000
+  30784.2720   2602.2334    702.3317   3073.7609   7006.4020
+The prior true probabilities are:
+  0.6970  0.0589  0.0159  0.0696  0.1586
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7841  0.0744  0.1325  0.0550  0.1617
+  0.0290  0.5882  0.2044  0.0278  0.0180
+  0.0383  0.1041  0.2833  0.0188  0.0025
+  0.0074  0.0022  0.0042  0.5654  0.0178
+  0.1412  0.2310  0.3756  0.3330  0.8000
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9382  0.3213  0.6840  0.1083  0.3671
+  0.0075  0.5509  0.1570  0.0028  0.0508
+  0.0036  0.0517  0.1153  0.0014  0.0223
+  0.0066  0.0307  0.0335  0.8281  0.0865
+  0.0440  0.0454  0.0101  0.0594  0.4734
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9189  0.0022  0.0037  0.0212  0.1967
+  0.0032  0.9473  0.0077  0.0014  0.0530
+  0.0190  0.0209  0.9460  0.0051  0.0276
+  0.0282  0.0001  0.0004  0.8502  0.0090
+  0.0307  0.0295  0.0421  0.1222  0.7094
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9586  0.0465  0.0611  0.1457  0.4435
+  0.0568  0.9733  0.0878  0.0371  0.2303
+  0.1377  0.1444  0.9726  0.0712  0.1661
+  0.1680  0.0106  0.0202  0.9221  0.0947
+  0.1753  0.1718  0.2053  0.3496  0.8423
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9189  0.0022  0.0037  0.0212  0.1967
+  0.0032  0.9473  0.0077  0.0014  0.0530
+  0.0190  0.0209  0.9460  0.0051  0.0276
+  0.0282  0.0001  0.0004  0.8502  0.0090
+  0.0307  0.0295  0.0421  0.1221  0.7137
+Now unfolding...
+Iteration : 0
+Chi^2 of change 95524.9129
+Iteration : 1
+Chi^2 of change 9098.9318
+Iteration : 2
+Chi^2 of change 1898.5565
+Iteration : 3
+Chi^2 of change 538.1624
+Iteration : 4
+Chi^2 of change 184.9272
+Iteration : 5
+Chi^2 of change 72.2157
+Iteration : 6
+Chi^2 of change 30.6597
+Iteration : 7
+Chi^2 of change 13.7580
+Iteration : 8
+Chi^2 of change 6.4078
+Iteration : 9
+Chi^2 of change 3.0606
+Iteration : 10
+Chi^2 of change 1.4872
+Iteration : 11
+Chi^2 of change 0.7312
+Iteration : 12
+Chi^2 of change 0.3624
+Iteration : 13
+Chi^2 of change 0.1806
+Iteration : 14
+Chi^2 of change 0.0904
+Iteration : 15
+Chi^2 of change 0.0453
+Iteration : 16
+Chi^2 of change 0.0228
+Iteration : 17
+Chi^2 of change 0.0115
+Iteration : 18
+Chi^2 of change 0.0058
+Iteration : 19
+Chi^2 of change 0.0029
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.9189 * 0.6839 / 0.6405 = 0.9810
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0022 * 0.1307 / 0.6405 = 0.0004
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0037 * 0.0180 / 0.6405 = 0.0001
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0212 * 0.1203 / 0.6405 = 0.0040
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1967 * 0.0471 / 0.6405 = 0.0145
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0032 * 0.6839 / 0.1289 = 0.0171
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.9473 * 0.1307 / 0.1289 = 0.9612
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0077 * 0.0180 / 0.1289 = 0.0011
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0014 * 0.1203 / 0.1289 = 0.0013
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0530 * 0.0471 / 0.1289 = 0.0194
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0190 * 0.6839 / 0.0346 = 0.3747
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0209 * 0.1307 / 0.0346 = 0.0788
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.9460 * 0.0180 / 0.0346 = 0.4912
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0051 * 0.1203 / 0.0346 = 0.0176
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0276 * 0.0471 / 0.0346 = 0.0376
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0282 * 0.6839 / 0.1221 = 0.1582
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0001 * 0.1307 / 0.1221 = 0.0001
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0004 * 0.0180 / 0.1221 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.8502 * 0.1203 / 0.1221 = 0.8382
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0090 * 0.0471 / 0.1221 = 0.0035
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0307 * 0.6839 / 0.0740 = 0.2843
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0295 * 0.1307 / 0.0740 = 0.0522
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.0421 * 0.0180 / 0.0740 = 0.0102
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1221 * 0.1203 / 0.0740 = 0.1987
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7137 * 0.0471 / 0.0740 = 0.4546
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=4 y=1 z=1
+The yields are (top: tag; bot: true):
+ 216059.0000  43469.0000  11667.0000  41174.0000  24929.0000
+ 230665.0995  44101.4350   6057.7738  40585.1383  15888.5532
+The prior true probabilities are:
+  0.6839  0.1307  0.0180  0.1203  0.0471
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.9189  0.0022  0.0037  0.0212  0.1967
+  0.0032  0.9473  0.0077  0.0014  0.0530
+  0.0190  0.0209  0.9460  0.0051  0.0276
+  0.0282  0.0001  0.0004  0.8502  0.0090
+  0.0307  0.0295  0.0421  0.1221  0.7137
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9810  0.0171  0.3747  0.1582  0.2843
+  0.0004  0.9612  0.0788  0.0001  0.0522
+  0.0001  0.0011  0.4912  0.0001  0.0102
+  0.0040  0.0013  0.0176  0.8382  0.1987
+  0.0145  0.0194  0.0376  0.0035  0.4546
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8600  0.0031  0.0052  0.0276  0.1438
+  0.0065  0.8832  0.0146  0.0016  0.0267
+  0.0364  0.0431  0.8885  0.0122  0.0151
+  0.0283  0.0002  0.0006  0.7738  0.0049
+  0.0688  0.0704  0.0910  0.1858  0.8075
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9274  0.0553  0.0724  0.1660  0.3792
+  0.0807  0.9398  0.1207  0.0398  0.1633
+  0.1907  0.2075  0.9426  0.1104  0.1231
+  0.1681  0.0147  0.0254  0.8797  0.0702
+  0.2623  0.2654  0.3017  0.4310  0.8986
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8600  0.0031  0.0052  0.0276  0.1438
+  0.0065  0.8832  0.0146  0.0016  0.0267
+  0.0364  0.0431  0.8885  0.0122  0.0151
+  0.0283  0.0002  0.0006  0.7738  0.0049
+  0.0688  0.0704  0.0910  0.1849  0.8095
+Now unfolding...
+Iteration : 0
+Chi^2 of change 34139.5255
+Iteration : 1
+Chi^2 of change 3568.1265
+Iteration : 2
+Chi^2 of change 708.7992
+Iteration : 3
+Chi^2 of change 212.3339
+Iteration : 4
+Chi^2 of change 80.0643
+Iteration : 5
+Chi^2 of change 34.4338
+Iteration : 6
+Chi^2 of change 16.0148
+Iteration : 7
+Chi^2 of change 7.8268
+Iteration : 8
+Chi^2 of change 3.9543
+Iteration : 9
+Chi^2 of change 2.0445
+Iteration : 10
+Chi^2 of change 1.0747
+Iteration : 11
+Chi^2 of change 0.5717
+Iteration : 12
+Chi^2 of change 0.3068
+Iteration : 13
+Chi^2 of change 0.1657
+Iteration : 14
+Chi^2 of change 0.0899
+Iteration : 15
+Chi^2 of change 0.0490
+Iteration : 16
+Chi^2 of change 0.0268
+Iteration : 17
+Chi^2 of change 0.0146
+Iteration : 18
+Chi^2 of change 0.0080
+Iteration : 19
+Chi^2 of change 0.0044
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8600 * 0.6799 / 0.5965 = 0.9802
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0031 * 0.1323 / 0.5965 = 0.0007
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0052 * 0.0161 / 0.5965 = 0.0001
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0276 * 0.1150 / 0.5965 = 0.0053
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1438 * 0.0568 / 0.5965 = 0.0137
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0065 * 0.6799 / 0.1232 = 0.0360
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.8832 * 0.1323 / 0.1232 = 0.9484
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0146 * 0.0161 / 0.1232 = 0.0019
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0016 * 0.1150 / 0.1232 = 0.0015
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0267 * 0.0568 / 0.1232 = 0.0123
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0364 * 0.6799 / 0.0470 = 0.5262
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0431 * 0.1323 / 0.0470 = 0.1212
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.8885 * 0.0161 / 0.0470 = 0.3044
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0122 * 0.1150 / 0.0470 = 0.0298
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0151 * 0.0568 / 0.0470 = 0.0183
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0283 * 0.6799 / 0.1085 = 0.1771
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0002 * 0.1323 / 0.1085 = 0.0003
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0006 * 0.0161 / 0.1085 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.7738 * 0.1150 / 0.1085 = 0.8199
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0049 * 0.0568 / 0.1085 = 0.0026
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0688 * 0.6799 / 0.1248 = 0.3748
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0704 * 0.1323 / 0.1248 = 0.0747
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.0910 * 0.0161 / 0.1248 = 0.0117
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1849 * 0.1150 / 0.1248 = 0.1703
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.8095 * 0.0568 / 0.1248 = 0.3684
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=4 y=1 z=2
+The yields are (top: tag; bot: true):
+  83757.0000  17299.0000   6595.0000  15237.0000  17502.0000
+  95445.0143  18571.9829   2260.4966  16139.7786   7972.7276
+The prior true probabilities are:
+  0.6799  0.1323  0.0161  0.1150  0.0568
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8600  0.0031  0.0052  0.0276  0.1438
+  0.0065  0.8832  0.0146  0.0016  0.0267
+  0.0364  0.0431  0.8885  0.0122  0.0151
+  0.0283  0.0002  0.0006  0.7738  0.0049
+  0.0688  0.0704  0.0910  0.1849  0.8095
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9802  0.0360  0.5262  0.1771  0.3748
+  0.0007  0.9484  0.1212  0.0003  0.0747
+  0.0001  0.0019  0.3044  0.0001  0.0117
+  0.0053  0.0015  0.0298  0.8199  0.1703
+  0.0137  0.0123  0.0183  0.0026  0.3684
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8920  0.0175  0.0565  0.0677  0.1888
+  0.0159  0.8521  0.1604  0.0023  0.0247
+  0.0325  0.0582  0.6186  0.0066  0.0111
+  0.0102  0.0004  0.0012  0.7332  0.0267
+  0.0494  0.0719  0.1633  0.1939  0.7460
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9445  0.1322  0.2376  0.2603  0.4345
+  0.1262  0.9231  0.4005  0.0482  0.1572
+  0.1802  0.2412  0.7865  0.0813  0.1053
+  0.1010  0.0203  0.0343  0.8563  0.1634
+  0.2222  0.2681  0.4041  0.4403  0.8637
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8920  0.0175  0.0565  0.0677  0.1888
+  0.0159  0.8521  0.1604  0.0023  0.0247
+  0.0325  0.0582  0.6186  0.0066  0.0111
+  0.0102  0.0004  0.0012  0.7332  0.0267
+  0.0494  0.0719  0.1633  0.1902  0.7487
+Now unfolding...
+Iteration : 0
+Chi^2 of change 27764.7783
+Iteration : 1
+Chi^2 of change 5306.3787
+Iteration : 2
+Chi^2 of change 946.1404
+Iteration : 3
+Chi^2 of change 270.5502
+Iteration : 4
+Chi^2 of change 105.8407
+Iteration : 5
+Chi^2 of change 48.1613
+Iteration : 6
+Chi^2 of change 23.8755
+Iteration : 7
+Chi^2 of change 12.5971
+Iteration : 8
+Chi^2 of change 7.0012
+Iteration : 9
+Chi^2 of change 4.0726
+Iteration : 10
+Chi^2 of change 2.4662
+Iteration : 11
+Chi^2 of change 1.5466
+Iteration : 12
+Chi^2 of change 0.9991
+Iteration : 13
+Chi^2 of change 0.6615
+Iteration : 14
+Chi^2 of change 0.4468
+Iteration : 15
+Chi^2 of change 0.3066
+Iteration : 16
+Chi^2 of change 0.2131
+Iteration : 17
+Chi^2 of change 0.1495
+Iteration : 18
+Chi^2 of change 0.1057
+Iteration : 19
+Chi^2 of change 0.0752
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8920 * 0.7131 / 0.6587 = 0.9657
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0175 * 0.1087 / 0.6587 = 0.0029
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0565 * 0.0186 / 0.6587 = 0.0016
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0677 * 0.0865 / 0.6587 = 0.0089
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1888 * 0.0731 / 0.6587 = 0.0210
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0159 * 0.7131 / 0.1090 = 0.1042
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.8521 * 0.1087 / 0.1090 = 0.8501
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.1604 * 0.0186 / 0.1090 = 0.0273
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0023 * 0.0865 / 0.1090 = 0.0018
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0247 * 0.0731 / 0.1090 = 0.0166
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0325 * 0.7131 / 0.0423 = 0.5468
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0582 * 0.1087 / 0.0423 = 0.1493
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.6186 * 0.0186 / 0.0423 = 0.2712
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0066 * 0.0865 / 0.0423 = 0.0135
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0111 * 0.0731 / 0.0423 = 0.0192
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0102 * 0.7131 / 0.0727 = 0.1001
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0004 * 0.1087 / 0.0727 = 0.0006
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0012 * 0.0186 / 0.0727 = 0.0003
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.7332 * 0.0865 / 0.0727 = 0.8722
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0267 * 0.0731 / 0.0727 = 0.0268
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0494 * 0.7131 / 0.1173 = 0.3004
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0719 * 0.1087 / 0.1173 = 0.0666
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.1633 * 0.0186 / 0.1173 = 0.0259
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1902 * 0.0865 / 0.1173 = 0.1403
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7487 * 0.0731 / 0.1173 = 0.4669
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=4 y=2 z=1
+The yields are (top: tag; bot: true):
+  90211.0000  14935.0000   5735.0000   9956.0000  16057.0000
+  97617.1609  14881.8094   2541.6769  11843.4591  10009.8938
+The prior true probabilities are:
+  0.7131  0.1087  0.0186  0.0865  0.0731
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8920  0.0175  0.0565  0.0677  0.1888
+  0.0159  0.8521  0.1604  0.0023  0.0247
+  0.0325  0.0582  0.6186  0.0066  0.0111
+  0.0102  0.0004  0.0012  0.7332  0.0267
+  0.0494  0.0719  0.1633  0.1902  0.7487
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9657  0.1042  0.5468  0.1001  0.3004
+  0.0029  0.8501  0.1493  0.0006  0.0666
+  0.0016  0.0273  0.2712  0.0003  0.0259
+  0.0089  0.0018  0.0135  0.8722  0.1403
+  0.0210  0.0166  0.0192  0.0268  0.4669
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8154  0.0330  0.0930  0.0808  0.1620
+  0.0263  0.7489  0.1866  0.0058  0.0219
+  0.0525  0.0920  0.4944  0.0185  0.0067
+  0.0110  0.0008  0.0020  0.6397  0.0145
+  0.0947  0.1253  0.2240  0.2604  0.7933
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9030  0.1816  0.3050  0.2842  0.4025
+  0.1623  0.8654  0.4320  0.0764  0.1480
+  0.2291  0.3033  0.7031  0.1359  0.0816
+  0.1050  0.0284  0.0447  0.7998  0.1203
+  0.3077  0.3539  0.4733  0.5103  0.8907
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8154  0.0330  0.0930  0.0808  0.1620
+  0.0263  0.7489  0.1866  0.0058  0.0219
+  0.0525  0.0920  0.4944  0.0185  0.0067
+  0.0110  0.0008  0.0020  0.6397  0.0145
+  0.0947  0.1253  0.2240  0.2552  0.7949
+Now unfolding...
+Iteration : 0
+Chi^2 of change 7762.4960
+Iteration : 1
+Chi^2 of change 2236.4627
+Iteration : 2
+Chi^2 of change 502.3871
+Iteration : 3
+Chi^2 of change 154.7730
+Iteration : 4
+Chi^2 of change 68.4794
+Iteration : 5
+Chi^2 of change 38.2591
+Iteration : 6
+Chi^2 of change 24.1362
+Iteration : 7
+Chi^2 of change 16.3084
+Iteration : 8
+Chi^2 of change 11.5538
+Iteration : 9
+Chi^2 of change 8.4964
+Iteration : 10
+Chi^2 of change 6.4429
+Iteration : 11
+Chi^2 of change 5.0123
+Iteration : 12
+Chi^2 of change 3.9831
+Iteration : 13
+Chi^2 of change 3.2221
+Iteration : 14
+Chi^2 of change 2.6457
+Iteration : 15
+Chi^2 of change 2.2003
+Iteration : 16
+Chi^2 of change 1.8500
+Iteration : 17
+Chi^2 of change 1.5705
+Iteration : 18
+Chi^2 of change 1.3445
+Iteration : 19
+Chi^2 of change 1.1597
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8154 * 0.7031 / 0.5997 = 0.9561
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0330 * 0.1116 / 0.5997 = 0.0061
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0930 * 0.0122 / 0.5997 = 0.0019
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0808 * 0.0803 / 0.5997 = 0.0108
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1620 * 0.0928 / 0.5997 = 0.0251
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0263 * 0.7031 / 0.1069 = 0.1733
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.7489 * 0.1116 / 0.1069 = 0.7820
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.1866 * 0.0122 / 0.1069 = 0.0213
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0058 * 0.0803 / 0.1069 = 0.0044
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0219 * 0.0928 / 0.1069 = 0.0190
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0525 * 0.7031 / 0.0553 = 0.6672
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0920 * 0.1116 / 0.0553 = 0.1856
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.4944 * 0.0122 / 0.0553 = 0.1092
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0185 * 0.0803 / 0.0553 = 0.0268
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0067 * 0.0928 / 0.0553 = 0.0112
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0110 * 0.7031 / 0.0606 = 0.1280
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0008 * 0.1116 / 0.0606 = 0.0015
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0020 * 0.0122 / 0.0606 = 0.0004
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.6397 * 0.0803 / 0.0606 = 0.8479
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0145 * 0.0928 / 0.0606 = 0.0222
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0947 * 0.7031 / 0.1776 = 0.3750
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.1253 * 0.1116 / 0.1776 = 0.0787
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.2240 * 0.0122 / 0.1776 = 0.0154
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.2552 * 0.0803 / 0.1776 = 0.1154
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7949 * 0.0928 / 0.1776 = 0.4154
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=4 y=2 z=2
+The yields are (top: tag; bot: true):
+  34546.0000   6215.0000   2804.0000   3472.0000  10159.0000
+  40215.8806   6382.2953    699.0395   4591.7024   5307.0821
+The prior true probabilities are:
+  0.7031  0.1116  0.0122  0.0803  0.0928
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8154  0.0330  0.0930  0.0808  0.1620
+  0.0263  0.7489  0.1866  0.0058  0.0219
+  0.0525  0.0920  0.4944  0.0185  0.0067
+  0.0110  0.0008  0.0020  0.6397  0.0145
+  0.0947  0.1253  0.2240  0.2552  0.7949
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9561  0.1733  0.6672  0.1280  0.3750
+  0.0061  0.7820  0.1856  0.0015  0.0787
+  0.0019  0.0213  0.1092  0.0004  0.0154
+  0.0108  0.0044  0.0268  0.8479  0.1154
+  0.0251  0.0190  0.0112  0.0222  0.4154
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8938  0.0210  0.0031  0.0207  0.1370
+  0.0468  0.9461  0.0042  0.0039  0.0569
+  0.0065  0.0084  0.9506  0.0013  0.0376
+  0.0336  0.0019  0.0003  0.8927  0.0050
+  0.0193  0.0227  0.0418  0.0814  0.7587
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9454  0.1449  0.0559  0.1437  0.3701
+  0.2164  0.9727  0.0649  0.0627  0.2386
+  0.0806  0.0915  0.9750  0.0365  0.1938
+  0.1834  0.0432  0.0166  0.9448  0.0704
+  0.1388  0.1505  0.2044  0.2853  0.8711
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8938  0.0210  0.0031  0.0207  0.1370
+  0.0468  0.9461  0.0042  0.0039  0.0569
+  0.0065  0.0084  0.9506  0.0013  0.0376
+  0.0336  0.0019  0.0003  0.8927  0.0050
+  0.0193  0.0227  0.0418  0.0814  0.7636
+Now unfolding...
+Iteration : 0
+Chi^2 of change 59551.2269
+Iteration : 1
+Chi^2 of change 5422.2736
+Iteration : 2
+Chi^2 of change 760.3137
+Iteration : 3
+Chi^2 of change 160.3094
+Iteration : 4
+Chi^2 of change 45.0848
+Iteration : 5
+Chi^2 of change 14.6216
+Iteration : 6
+Chi^2 of change 5.0719
+Iteration : 7
+Chi^2 of change 1.8216
+Iteration : 8
+Chi^2 of change 0.6672
+Iteration : 9
+Chi^2 of change 0.2472
+Iteration : 10
+Chi^2 of change 0.0922
+Iteration : 11
+Chi^2 of change 0.0346
+Iteration : 12
+Chi^2 of change 0.0130
+Iteration : 13
+Chi^2 of change 0.0049
+Iteration : 14
+Chi^2 of change 0.0018
+Iteration : 15
+Chi^2 of change 0.0007
+Iteration : 16
+Chi^2 of change 0.0003
+Iteration : 17
+Chi^2 of change 0.0001
+Iteration : 18
+Chi^2 of change 0.0000
+Iteration : 19
+Chi^2 of change 0.0000
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8938 * 0.6314 / 0.5770 = 0.9780
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0210 * 0.1289 / 0.5770 = 0.0047
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0031 * 0.0264 / 0.5770 = 0.0001
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0207 * 0.1662 / 0.5770 = 0.0059
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1370 * 0.0472 / 0.5770 = 0.0112
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0468 * 0.6314 / 0.1549 = 0.1907
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.9461 * 0.1289 / 0.1549 = 0.7870
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0042 * 0.0264 / 0.1549 = 0.0007
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0039 * 0.1662 / 0.1549 = 0.0042
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0569 * 0.0472 / 0.1549 = 0.0173
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0065 * 0.6314 / 0.0322 = 0.1273
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0084 * 0.1289 / 0.0322 = 0.0335
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.9506 * 0.0264 / 0.0322 = 0.7773
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0013 * 0.1662 / 0.0322 = 0.0069
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0376 * 0.0472 / 0.0322 = 0.0550
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0336 * 0.6314 / 0.1700 = 0.1248
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0019 * 0.1289 / 0.1700 = 0.0014
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0003 * 0.0264 / 0.1700 = 0.0000
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.8927 * 0.1662 / 0.1700 = 0.8723
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0050 * 0.0472 / 0.1700 = 0.0014
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0193 * 0.6314 / 0.0657 = 0.1849
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0227 * 0.1289 / 0.0657 = 0.0444
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.0418 * 0.0264 / 0.0657 = 0.0167
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.0814 * 0.1662 / 0.0657 = 0.2058
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7636 * 0.0472 / 0.0657 = 0.5482
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=5 y=1 z=1
+The yields are (top: tag; bot: true):
+ 133244.0000  35778.0000   7441.0000  39266.0000  15180.0000
+ 145795.7038  29759.6362   6084.6342  38370.7144  10898.3113
+The prior true probabilities are:
+  0.6314  0.1289  0.0264  0.1662  0.0472
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8938  0.0210  0.0031  0.0207  0.1370
+  0.0468  0.9461  0.0042  0.0039  0.0569
+  0.0065  0.0084  0.9506  0.0013  0.0376
+  0.0336  0.0019  0.0003  0.8927  0.0050
+  0.0193  0.0227  0.0418  0.0814  0.7636
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9780  0.1907  0.1273  0.1248  0.1849
+  0.0047  0.7870  0.0335  0.0014  0.0444
+  0.0001  0.0007  0.7773  0.0000  0.0167
+  0.0059  0.0042  0.0069  0.8723  0.2058
+  0.0112  0.0173  0.0550  0.0014  0.5482
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8551  0.0234  0.0044  0.0253  0.1030
+  0.0525  0.9035  0.0067  0.0041  0.0317
+  0.0141  0.0158  0.9035  0.0033  0.0216
+  0.0306  0.0021  0.0004  0.8309  0.0030
+  0.0477  0.0553  0.0850  0.1364  0.8383
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9247  0.1529  0.0664  0.1590  0.3209
+  0.2292  0.9505  0.0818  0.0644  0.1781
+  0.1187  0.1257  0.9505  0.0578  0.1470
+  0.1749  0.0457  0.0193  0.9115  0.0546
+  0.2185  0.2351  0.2915  0.3693  0.9156
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8551  0.0234  0.0044  0.0253  0.1030
+  0.0525  0.9035  0.0067  0.0041  0.0317
+  0.0141  0.0158  0.9035  0.0033  0.0216
+  0.0306  0.0021  0.0004  0.8309  0.0030
+  0.0477  0.0553  0.0850  0.1364  0.8407
+Now unfolding...
+Iteration : 0
+Chi^2 of change 21607.6003
+Iteration : 1
+Chi^2 of change 2012.2764
+Iteration : 2
+Chi^2 of change 298.7241
+Iteration : 3
+Chi^2 of change 70.1659
+Iteration : 4
+Chi^2 of change 22.6837
+Iteration : 5
+Chi^2 of change 8.8049
+Iteration : 6
+Chi^2 of change 3.7598
+Iteration : 7
+Chi^2 of change 1.6896
+Iteration : 8
+Chi^2 of change 0.7821
+Iteration : 9
+Chi^2 of change 0.3688
+Iteration : 10
+Chi^2 of change 0.1761
+Iteration : 11
+Chi^2 of change 0.0847
+Iteration : 12
+Chi^2 of change 0.0410
+Iteration : 13
+Chi^2 of change 0.0199
+Iteration : 14
+Chi^2 of change 0.0097
+Iteration : 15
+Chi^2 of change 0.0047
+Iteration : 16
+Chi^2 of change 0.0023
+Iteration : 17
+Chi^2 of change 0.0011
+Iteration : 18
+Chi^2 of change 0.0006
+Iteration : 19
+Chi^2 of change 0.0003
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8551 * 0.6274 / 0.5489 = 0.9773
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0234 * 0.1357 / 0.5489 = 0.0058
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0044 * 0.0267 / 0.5489 = 0.0002
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0253 * 0.1607 / 0.5489 = 0.0074
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1030 * 0.0496 / 0.5489 = 0.0093
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0525 * 0.6274 / 0.1580 = 0.2087
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.9035 * 0.1357 / 0.1580 = 0.7760
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0067 * 0.0267 / 0.1580 = 0.0011
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0041 * 0.1607 / 0.1580 = 0.0042
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0317 * 0.0496 / 0.1580 = 0.0099
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0141 * 0.6274 / 0.0367 = 0.2411
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0158 * 0.1357 / 0.0367 = 0.0585
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.9035 * 0.0267 / 0.0367 = 0.6566
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0033 * 0.1607 / 0.0367 = 0.0147
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0216 * 0.0496 / 0.0367 = 0.0292
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0306 * 0.6274 / 0.1532 = 0.1253
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0021 * 0.1357 / 0.1532 = 0.0018
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0004 * 0.0267 / 0.1532 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.8309 * 0.1607 / 0.1532 = 0.8718
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0030 * 0.0496 / 0.1532 = 0.0010
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0477 * 0.6274 / 0.1033 = 0.2900
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0553 * 0.1357 / 0.1033 = 0.0726
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.0850 * 0.0267 / 0.1033 = 0.0219
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1364 * 0.1607 / 0.1033 = 0.2122
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.8407 * 0.0496 / 0.1033 = 0.4034
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=5 y=1 z=2
+The yields are (top: tag; bot: true):
+  51138.0000  14716.0000   3417.0000  14269.0000   9619.0000
+  58448.2735  12640.1540   2482.8306  14971.4874   4616.2545
+The prior true probabilities are:
+  0.6274  0.1357  0.0267  0.1607  0.0496
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8551  0.0234  0.0044  0.0253  0.1030
+  0.0525  0.9035  0.0067  0.0041  0.0317
+  0.0141  0.0158  0.9035  0.0033  0.0216
+  0.0306  0.0021  0.0004  0.8309  0.0030
+  0.0477  0.0553  0.0850  0.1364  0.8407
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9773  0.2087  0.2411  0.1253  0.2900
+  0.0058  0.7760  0.0585  0.0018  0.0726
+  0.0002  0.0011  0.6566  0.0001  0.0219
+  0.0074  0.0042  0.0147  0.8718  0.2122
+  0.0093  0.0099  0.0292  0.0010  0.4034
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8808  0.0248  0.0179  0.0570  0.1786
+  0.0440  0.9084  0.0305  0.0095  0.0375
+  0.0318  0.0285  0.8779  0.0079  0.0287
+  0.0143  0.0007  0.0004  0.7910  0.0141
+  0.0291  0.0376  0.0733  0.1345  0.7385
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9385  0.1576  0.1339  0.2388  0.4227
+  0.2097  0.9531  0.1747  0.0976  0.1937
+  0.1783  0.1688  0.9370  0.0891  0.1693
+  0.1196  0.0264  0.0189  0.8894  0.1188
+  0.1706  0.1939  0.2707  0.3668  0.8594
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8808  0.0248  0.0179  0.0570  0.1786
+  0.0440  0.9084  0.0305  0.0095  0.0375
+  0.0318  0.0285  0.8779  0.0079  0.0287
+  0.0143  0.0007  0.0004  0.7910  0.0141
+  0.0291  0.0376  0.0733  0.1345  0.7410
+Now unfolding...
+Iteration : 0
+Chi^2 of change 33552.7077
+Iteration : 1
+Chi^2 of change 5402.1223
+Iteration : 2
+Chi^2 of change 882.6176
+Iteration : 3
+Chi^2 of change 190.8939
+Iteration : 4
+Chi^2 of change 52.3238
+Iteration : 5
+Chi^2 of change 16.6555
+Iteration : 6
+Chi^2 of change 5.7783
+Iteration : 7
+Chi^2 of change 2.1107
+Iteration : 8
+Chi^2 of change 0.7974
+Iteration : 9
+Chi^2 of change 0.3086
+Iteration : 10
+Chi^2 of change 0.1215
+Iteration : 11
+Chi^2 of change 0.0485
+Iteration : 12
+Chi^2 of change 0.0195
+Iteration : 13
+Chi^2 of change 0.0079
+Iteration : 14
+Chi^2 of change 0.0032
+Iteration : 15
+Chi^2 of change 0.0013
+Iteration : 16
+Chi^2 of change 0.0005
+Iteration : 17
+Chi^2 of change 0.0002
+Iteration : 18
+Chi^2 of change 0.0001
+Iteration : 19
+Chi^2 of change 0.0000
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8808 * 0.6731 / 0.6140 = 0.9656
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0248 * 0.1336 / 0.6140 = 0.0054
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0179 * 0.0323 / 0.6140 = 0.0009
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0570 * 0.0949 / 0.6140 = 0.0088
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1786 * 0.0661 / 0.6140 = 0.0192
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0440 * 0.6731 / 0.1554 = 0.1906
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.9084 * 0.1336 / 0.1554 = 0.7813
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0305 * 0.0323 / 0.1554 = 0.0063
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0095 * 0.0949 / 0.1554 = 0.0058
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0375 * 0.0661 / 0.1554 = 0.0160
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0318 * 0.6731 / 0.0562 = 0.3809
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0285 * 0.1336 / 0.0562 = 0.0677
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.8779 * 0.0323 / 0.0562 = 0.5043
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0079 * 0.0949 / 0.0562 = 0.0134
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0287 * 0.0661 / 0.0562 = 0.0337
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0143 * 0.6731 / 0.0857 = 0.1124
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0007 * 0.1336 / 0.0857 = 0.0011
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0004 * 0.0323 / 0.0857 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.7910 * 0.0949 / 0.0857 = 0.8755
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0141 * 0.0661 / 0.0857 = 0.0109
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0291 * 0.6731 / 0.0887 = 0.2208
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0376 * 0.1336 / 0.0887 = 0.0566
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.0733 * 0.0323 / 0.0887 = 0.0267
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1345 * 0.0949 / 0.0887 = 0.1439
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7410 * 0.0661 / 0.0887 = 0.5520
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=5 y=2 z=1
+The yields are (top: tag; bot: true):
+ 102569.0000  25953.0000   9388.0000  14320.0000  14816.0000
+ 112446.8324  22321.0529   5392.2748  15849.2310  11036.6088
+The prior true probabilities are:
+  0.6731  0.1336  0.0323  0.0949  0.0661
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8808  0.0248  0.0179  0.0570  0.1786
+  0.0440  0.9084  0.0305  0.0095  0.0375
+  0.0318  0.0285  0.8779  0.0079  0.0287
+  0.0143  0.0007  0.0004  0.7910  0.0141
+  0.0291  0.0376  0.0733  0.1345  0.7410
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9656  0.1906  0.3809  0.1124  0.2208
+  0.0054  0.7813  0.0677  0.0011  0.0566
+  0.0009  0.0063  0.5043  0.0001  0.0267
+  0.0088  0.0058  0.0134  0.8755  0.1439
+  0.0192  0.0160  0.0337  0.0109  0.5520
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8178  0.0361  0.0355  0.0679  0.1474
+  0.0595  0.8460  0.0576  0.0240  0.0341
+  0.0485  0.0428  0.7743  0.0185  0.0172
+  0.0133  0.0011  0.0007  0.6969  0.0077
+  0.0609  0.0740  0.1319  0.1926  0.7920
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.9043  0.1899  0.1884  0.2606  0.3840
+  0.2439  0.9198  0.2400  0.1550  0.1846
+  0.2201  0.2070  0.8799  0.1359  0.1313
+  0.1153  0.0329  0.0265  0.8348  0.0878
+  0.2468  0.2721  0.3632  0.4389  0.8900
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8178  0.0361  0.0355  0.0679  0.1474
+  0.0595  0.8460  0.0576  0.0240  0.0341
+  0.0485  0.0428  0.7743  0.0185  0.0172
+  0.0133  0.0011  0.0007  0.6969  0.0077
+  0.0609  0.0740  0.1319  0.1926  0.7935
+Now unfolding...
+Iteration : 0
+Chi^2 of change 10069.8499
+Iteration : 1
+Chi^2 of change 2304.4741
+Iteration : 2
+Chi^2 of change 451.0660
+Iteration : 3
+Chi^2 of change 114.5229
+Iteration : 4
+Chi^2 of change 36.9701
+Iteration : 5
+Chi^2 of change 14.0830
+Iteration : 6
+Chi^2 of change 5.9386
+Iteration : 7
+Chi^2 of change 2.6593
+Iteration : 8
+Chi^2 of change 1.2348
+Iteration : 9
+Chi^2 of change 0.5867
+Iteration : 10
+Chi^2 of change 0.2831
+Iteration : 11
+Chi^2 of change 0.1382
+Iteration : 12
+Chi^2 of change 0.0680
+Iteration : 13
+Chi^2 of change 0.0337
+Iteration : 14
+Chi^2 of change 0.0168
+Iteration : 15
+Chi^2 of change 0.0084
+Iteration : 16
+Chi^2 of change 0.0042
+Iteration : 17
+Chi^2 of change 0.0021
+Iteration : 18
+Chi^2 of change 0.0011
+Iteration : 19
+Chi^2 of change 0.0006
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.8178 * 0.6765 / 0.5758 = 0.9609
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0361 * 0.1311 / 0.5758 = 0.0082
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0355 * 0.0299 / 0.5758 = 0.0018
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0679 * 0.0910 / 0.5758 = 0.0107
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1474 * 0.0714 / 0.5758 = 0.0183
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.0595 * 0.6765 / 0.1575 = 0.2555
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.8460 * 0.1311 / 0.1575 = 0.7043
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0576 * 0.0299 / 0.1575 = 0.0109
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0240 * 0.0910 / 0.1575 = 0.0139
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0341 * 0.0714 / 0.1575 = 0.0155
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0485 * 0.6765 / 0.0644 = 0.5087
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0428 * 0.1311 / 0.0644 = 0.0872
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.7743 * 0.0299 / 0.0644 = 0.3589
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0185 * 0.0910 / 0.0644 = 0.0261
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0172 * 0.0714 / 0.0644 = 0.0191
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0133 * 0.6765 / 0.0731 = 0.1230
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0011 * 0.1311 / 0.0731 = 0.0019
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0007 * 0.0299 / 0.0731 = 0.0003
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.6969 * 0.0910 / 0.0731 = 0.8672
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0077 * 0.0714 / 0.0731 = 0.0075
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0609 * 0.6765 / 0.1291 = 0.3193
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0740 * 0.1311 / 0.1291 = 0.0752
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.1319 * 0.0299 / 0.1291 = 0.0305
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1926 * 0.0910 / 0.1291 = 0.1358
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7935 * 0.0714 / 0.1291 = 0.4391
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=5 y=2 z=2
+The yields are (top: tag; bot: true):
+  38101.0000  10425.0000   4262.0000   4840.0000   8539.0000
+  44764.6193   8677.6589   1976.5573   6021.8657   4726.2988
+The prior true probabilities are:
+  0.6765  0.1311  0.0299  0.0910  0.0714
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.8178  0.0361  0.0355  0.0679  0.1474
+  0.0595  0.8460  0.0576  0.0240  0.0341
+  0.0485  0.0428  0.7743  0.0185  0.0172
+  0.0133  0.0011  0.0007  0.6969  0.0077
+  0.0609  0.0740  0.1319  0.1926  0.7935
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9609  0.2555  0.5087  0.1230  0.3193
+  0.0082  0.7043  0.0872  0.0019  0.0752
+  0.0018  0.0109  0.3589  0.0003  0.0305
+  0.0107  0.0139  0.0261  0.8672  0.1358
+  0.0183  0.0155  0.0191  0.0075  0.4391
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7839  0.0933  0.0071  0.0246  0.1044
+  0.1443  0.8341  0.0157  0.0085  0.0348
+  0.0174  0.0315  0.9125  0.0057  0.0172
+  0.0234  0.0051  0.0005  0.8949  0.0022
+  0.0309  0.0360  0.0641  0.0663  0.8380
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.8854  0.3055  0.0842  0.1568  0.3232
+  0.3798  0.9133  0.1255  0.0920  0.1866
+  0.1321  0.1774  0.9553  0.0757  0.1311
+  0.1530  0.0711  0.0220  0.9460  0.0465
+  0.1758  0.1898  0.2533  0.2575  0.9154
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7839  0.0933  0.0071  0.0246  0.1044
+  0.1443  0.8341  0.0157  0.0085  0.0348
+  0.0174  0.0315  0.9125  0.0057  0.0172
+  0.0234  0.0051  0.0005  0.8949  0.0022
+  0.0309  0.0360  0.0641  0.0663  0.8414
+Now unfolding...
+Iteration : 0
+Chi^2 of change 7482.9291
+Iteration : 1
+Chi^2 of change 950.9011
+Iteration : 2
+Chi^2 of change 197.6650
+Iteration : 3
+Chi^2 of change 53.1198
+Iteration : 4
+Chi^2 of change 16.8617
+Iteration : 5
+Chi^2 of change 5.9095
+Iteration : 6
+Chi^2 of change 2.1945
+Iteration : 7
+Chi^2 of change 0.8430
+Iteration : 8
+Chi^2 of change 0.3304
+Iteration : 9
+Chi^2 of change 0.1311
+Iteration : 10
+Chi^2 of change 0.0524
+Iteration : 11
+Chi^2 of change 0.0211
+Iteration : 12
+Chi^2 of change 0.0085
+Iteration : 13
+Chi^2 of change 0.0034
+Iteration : 14
+Chi^2 of change 0.0014
+Iteration : 15
+Chi^2 of change 0.0006
+Iteration : 16
+Chi^2 of change 0.0002
+Iteration : 17
+Chi^2 of change 0.0001
+Iteration : 18
+Chi^2 of change 0.0000
+Iteration : 19
+Chi^2 of change 0.0000
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.7839 * 0.5560 / 0.4581 = 0.9515
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.0933 * 0.1208 / 0.4581 = 0.0246
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0071 * 0.0306 / 0.4581 = 0.0005
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0246 * 0.2482 / 0.4581 = 0.0133
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1044 * 0.0444 / 0.4581 = 0.0101
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.1443 * 0.5560 / 0.1851 = 0.4334
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.8341 * 0.1208 / 0.1851 = 0.5443
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0157 * 0.0306 / 0.1851 = 0.0026
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0085 * 0.2482 / 0.1851 = 0.0113
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0348 * 0.0444 / 0.1851 = 0.0084
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0174 * 0.5560 / 0.0436 = 0.2223
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0315 * 0.1208 / 0.0436 = 0.0872
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.9125 * 0.0306 / 0.0436 = 0.6404
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0057 * 0.2482 / 0.0436 = 0.0326
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0172 * 0.0444 / 0.0436 = 0.0175
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0234 * 0.5560 / 0.2358 = 0.0552
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0051 * 0.1208 / 0.2358 = 0.0026
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0005 * 0.0306 / 0.2358 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.8949 * 0.2482 / 0.2358 = 0.9417
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0022 * 0.0444 / 0.2358 = 0.0004
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0309 * 0.5560 / 0.0773 = 0.2223
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0360 * 0.1208 / 0.0773 = 0.0563
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.0641 * 0.0306 / 0.0773 = 0.0254
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.0663 * 0.2482 / 0.0773 = 0.2128
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.8414 * 0.0444 / 0.0773 = 0.4832
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=6 y=1 z=1
+The yields are (top: tag; bot: true):
+  19603.0000   7920.0000   1867.0000  10091.0000   3309.0000
+  23791.8014   5168.6861   1310.2008  10618.7914   1900.5203
+The prior true probabilities are:
+  0.5560  0.1208  0.0306  0.2482  0.0444
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7839  0.0933  0.0071  0.0246  0.1044
+  0.1443  0.8341  0.0157  0.0085  0.0348
+  0.0174  0.0315  0.9125  0.0057  0.0172
+  0.0234  0.0051  0.0005  0.8949  0.0022
+  0.0309  0.0360  0.0641  0.0663  0.8414
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9515  0.4334  0.2223  0.0552  0.2223
+  0.0246  0.5443  0.0872  0.0026  0.0563
+  0.0005  0.0026  0.6404  0.0001  0.0254
+  0.0133  0.0113  0.0326  0.9417  0.2128
+  0.0101  0.0084  0.0175  0.0004  0.4832
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7306  0.1037  0.0098  0.0327  0.0892
+  0.1603  0.7819  0.0209  0.0073  0.0414
+  0.0262  0.0411  0.8561  0.0074  0.0110
+  0.0219  0.0057  0.0007  0.8257  0.0011
+  0.0611  0.0677  0.1125  0.1269  0.8546
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.8547  0.3220  0.0988  0.1810  0.2987
+  0.4003  0.8843  0.1445  0.0854  0.2035
+  0.1619  0.2027  0.9252  0.0860  0.1051
+  0.1480  0.0753  0.0271  0.9087  0.0332
+  0.2471  0.2601  0.3355  0.3563  0.9245
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7306  0.1037  0.0098  0.0327  0.0892
+  0.1603  0.7819  0.0209  0.0073  0.0414
+  0.0262  0.0411  0.8561  0.0074  0.0110
+  0.0219  0.0057  0.0007  0.8257  0.0011
+  0.0611  0.0677  0.1125  0.1268  0.8572
+Now unfolding...
+Iteration : 0
+Chi^2 of change 2418.8228
+Iteration : 1
+Chi^2 of change 365.2323
+Iteration : 2
+Chi^2 of change 92.6010
+Iteration : 3
+Chi^2 of change 30.2719
+Iteration : 4
+Chi^2 of change 11.4821
+Iteration : 5
+Chi^2 of change 4.7870
+Iteration : 6
+Chi^2 of change 2.1271
+Iteration : 7
+Chi^2 of change 0.9883
+Iteration : 8
+Chi^2 of change 0.4741
+Iteration : 9
+Chi^2 of change 0.2327
+Iteration : 10
+Chi^2 of change 0.1162
+Iteration : 11
+Chi^2 of change 0.0587
+Iteration : 12
+Chi^2 of change 0.0299
+Iteration : 13
+Chi^2 of change 0.0154
+Iteration : 14
+Chi^2 of change 0.0079
+Iteration : 15
+Chi^2 of change 0.0041
+Iteration : 16
+Chi^2 of change 0.0021
+Iteration : 17
+Chi^2 of change 0.0011
+Iteration : 18
+Chi^2 of change 0.0006
+Iteration : 19
+Chi^2 of change 0.0003
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.7306 * 0.5597 / 0.4340 = 0.9422
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.1037 * 0.1204 / 0.4340 = 0.0288
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0098 * 0.0249 / 0.4340 = 0.0006
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0327 * 0.2472 / 0.4340 = 0.0186
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.0892 * 0.0477 / 0.4340 = 0.0098
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.1603 * 0.5597 / 0.1882 = 0.4768
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.7819 * 0.1204 / 0.1882 = 0.5004
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0209 * 0.0249 / 0.1882 = 0.0028
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0073 * 0.2472 / 0.1882 = 0.0096
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0414 * 0.0477 / 0.1882 = 0.0105
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0262 * 0.5597 / 0.0433 = 0.3387
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0411 * 0.1204 / 0.0433 = 0.1142
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.8561 * 0.0249 / 0.0433 = 0.4927
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0074 * 0.2472 / 0.0433 = 0.0422
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0110 * 0.0477 / 0.0433 = 0.0122
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0219 * 0.5597 / 0.2171 = 0.0565
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0057 * 0.1204 / 0.2171 = 0.0031
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0007 * 0.0249 / 0.2171 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.8257 * 0.2472 / 0.2171 = 0.9401
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0011 * 0.0477 / 0.2171 = 0.0002
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0611 * 0.5597 / 0.1174 = 0.2911
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0677 * 0.1204 / 0.1174 = 0.0694
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.1125 * 0.0249 / 0.1174 = 0.0239
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1268 * 0.2472 / 0.1174 = 0.2671
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.8572 * 0.0477 / 0.1174 = 0.3485
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=6 y=1 z=2
+The yields are (top: tag; bot: true):
+   7181.0000   3112.0000    717.0000   3592.0000   1941.0000
+   9259.9425   1991.9513    412.5783   4088.9449    789.5830
+The prior true probabilities are:
+  0.5597  0.1204  0.0249  0.2472  0.0477
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7306  0.1037  0.0098  0.0327  0.0892
+  0.1603  0.7819  0.0209  0.0073  0.0414
+  0.0262  0.0411  0.8561  0.0074  0.0110
+  0.0219  0.0057  0.0007  0.8257  0.0011
+  0.0611  0.0677  0.1125  0.1268  0.8572
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9422  0.4768  0.3387  0.0565  0.2911
+  0.0288  0.5004  0.1142  0.0031  0.0694
+  0.0006  0.0028  0.4927  0.0001  0.0239
+  0.0186  0.0096  0.0422  0.9401  0.2671
+  0.0098  0.0105  0.0122  0.0002  0.3485
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7466  0.1284  0.0116  0.0398  0.1538
+  0.1594  0.7747  0.0259  0.0151  0.0824
+  0.0345  0.0409  0.8934  0.0085  0.0352
+  0.0167  0.0037  0.0004  0.8337  0.0041
+  0.0428  0.0523  0.0687  0.1030  0.7219
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.8640  0.3583  0.1079  0.1994  0.3921
+  0.3993  0.8802  0.1610  0.1227  0.2871
+  0.1859  0.2021  0.9452  0.0923  0.1876
+  0.1292  0.0611  0.0189  0.9131  0.0636
+  0.2068  0.2287  0.2620  0.3209  0.8496
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7466  0.1284  0.0116  0.0398  0.1538
+  0.1594  0.7747  0.0259  0.0151  0.0824
+  0.0345  0.0409  0.8934  0.0085  0.0352
+  0.0167  0.0037  0.0004  0.8337  0.0041
+  0.0428  0.0523  0.0687  0.1030  0.7246
+Now unfolding...
+Iteration : 0
+Chi^2 of change 8260.7529
+Iteration : 1
+Chi^2 of change 1540.0044
+Iteration : 2
+Chi^2 of change 423.9969
+Iteration : 3
+Chi^2 of change 140.5890
+Iteration : 4
+Chi^2 of change 52.4782
+Iteration : 5
+Chi^2 of change 21.2675
+Iteration : 6
+Chi^2 of change 9.1373
+Iteration : 7
+Chi^2 of change 4.0954
+Iteration : 8
+Chi^2 of change 1.8936
+Iteration : 9
+Chi^2 of change 0.8961
+Iteration : 10
+Chi^2 of change 0.4316
+Iteration : 11
+Chi^2 of change 0.2107
+Iteration : 12
+Chi^2 of change 0.1040
+Iteration : 13
+Chi^2 of change 0.0517
+Iteration : 14
+Chi^2 of change 0.0259
+Iteration : 15
+Chi^2 of change 0.0131
+Iteration : 16
+Chi^2 of change 0.0066
+Iteration : 17
+Chi^2 of change 0.0034
+Iteration : 18
+Chi^2 of change 0.0017
+Iteration : 19
+Chi^2 of change 0.0009
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.7466 * 0.6490 / 0.5177 = 0.9360
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.1284 * 0.1370 / 0.5177 = 0.0340
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0116 * 0.0354 / 0.5177 = 0.0008
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0398 * 0.1081 / 0.5177 = 0.0083
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1538 * 0.0705 / 0.5177 = 0.0209
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.1594 * 0.6490 / 0.2180 = 0.4747
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.7747 * 0.1370 / 0.2180 = 0.4869
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0259 * 0.0354 / 0.2180 = 0.0042
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0151 * 0.1081 / 0.2180 = 0.0075
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0824 * 0.0705 / 0.2180 = 0.0267
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0345 * 0.6490 / 0.0631 = 0.3554
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0409 * 0.1370 / 0.0631 = 0.0887
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.8934 * 0.0354 / 0.0631 = 0.5020
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0085 * 0.1081 / 0.0631 = 0.0146
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0352 * 0.0705 / 0.0631 = 0.0393
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0167 * 0.6490 / 0.1017 = 0.1066
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0037 * 0.1370 / 0.1017 = 0.0050
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0004 * 0.0354 / 0.1017 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.8337 * 0.1081 / 0.1017 = 0.8855
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0041 * 0.0705 / 0.1017 = 0.0028
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0428 * 0.6490 / 0.0995 = 0.2788
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0523 * 0.1370 / 0.0995 = 0.0720
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.0687 * 0.0354 / 0.0995 = 0.0245
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1030 * 0.1081 / 0.0995 = 0.1118
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7246 * 0.0705 / 0.0995 = 0.5129
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=6 y=2 z=1
+The yields are (top: tag; bot: true):
+  29739.0000  12514.0000   3624.0000   5843.0000   5717.0000
+  37278.9597   7868.3854   2035.9753   6206.1259   4047.5538
+The prior true probabilities are:
+  0.6490  0.1370  0.0354  0.1081  0.0705
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.7466  0.1284  0.0116  0.0398  0.1538
+  0.1594  0.7747  0.0259  0.0151  0.0824
+  0.0345  0.0409  0.8934  0.0085  0.0352
+  0.0167  0.0037  0.0004  0.8337  0.0041
+  0.0428  0.0523  0.0687  0.1030  0.7246
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9360  0.4747  0.3554  0.1066  0.2788
+  0.0340  0.4869  0.0887  0.0050  0.0720
+  0.0008  0.0042  0.5020  0.0001  0.0245
+  0.0083  0.0075  0.0146  0.8855  0.1118
+  0.0209  0.0267  0.0393  0.0028  0.5129
+------
+The raw true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.6840  0.1390  0.0168  0.0656  0.1267
+  0.1769  0.7158  0.0346  0.0136  0.0658
+  0.0526  0.0564  0.8345  0.0163  0.0249
+  0.0125  0.0030  0.0004  0.7403  0.0024
+  0.0741  0.0857  0.1137  0.1644  0.7783
+The raw true -> tag matrix error is (row: fixed tag; col: fixed true):
+  0.8270  0.3729  0.1297  0.2562  0.3559
+  0.4206  0.8460  0.1859  0.1167  0.2565
+  0.2293  0.2375  0.9135  0.1276  0.1578
+  0.1117  0.0551  0.0204  0.8604  0.0492
+  0.2722  0.2928  0.3372  0.4054  0.8822
+The fixed true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.6840  0.1390  0.0168  0.0656  0.1267
+  0.1769  0.7158  0.0346  0.0136  0.0658
+  0.0526  0.0564  0.8345  0.0163  0.0249
+  0.0125  0.0030  0.0004  0.7403  0.0024
+  0.0741  0.0857  0.1137  0.1642  0.7803
+Now unfolding...
+Iteration : 0
+Chi^2 of change 2407.7043
+Iteration : 1
+Chi^2 of change 573.0366
+Iteration : 2
+Chi^2 of change 176.1923
+Iteration : 3
+Chi^2 of change 67.2607
+Iteration : 4
+Chi^2 of change 29.2586
+Iteration : 5
+Chi^2 of change 13.8057
+Iteration : 6
+Chi^2 of change 6.8804
+Iteration : 7
+Chi^2 of change 3.5661
+Iteration : 8
+Chi^2 of change 1.9036
+Iteration : 9
+Chi^2 of change 1.0398
+Iteration : 10
+Chi^2 of change 0.5785
+Iteration : 11
+Chi^2 of change 0.3268
+Iteration : 12
+Chi^2 of change 0.1869
+Iteration : 13
+Chi^2 of change 0.1080
+Iteration : 14
+Chi^2 of change 0.0630
+Iteration : 15
+Chi^2 of change 0.0370
+Iteration : 16
+Chi^2 of change 0.0219
+Iteration : 17
+Chi^2 of change 0.0130
+Iteration : 18
+Chi^2 of change 0.0078
+Iteration : 19
+Chi^2 of change 0.0047
+Calculating covariances due to number of measured events
+Writing unfolded yield to D0__piTrue
+Writing unfolded yield to D0__kTrue
+Writing unfolded yield to D0__pTrue
+Writing unfolded yield to D0__eTrue
+Writing unfolded yield to D0__gTrue
+  idxTrue: 0 idxTag: 0
+  prob = piTrueToPiTag * D0__piTrue / D0__piTag
+       = 0.6840 * 0.6537 / 0.4827 = 0.9264
+  idxTrue: 1 idxTag: 0
+  prob = kTrueToPiTag * D0__kTrue / D0__piTag
+       = 0.1390 * 0.1367 / 0.4827 = 0.0394
+  idxTrue: 2 idxTag: 0
+  prob = pTrueToPiTag * D0__pTrue / D0__piTag
+       = 0.0168 * 0.0303 / 0.4827 = 0.0011
+  idxTrue: 3 idxTag: 0
+  prob = eTrueToPiTag * D0__eTrue / D0__piTag
+       = 0.0656 * 0.1100 / 0.4827 = 0.0150
+  idxTrue: 4 idxTag: 0
+  prob = gTrueToPiTag * D0__gTrue / D0__piTag
+       = 0.1267 * 0.0692 / 0.4827 = 0.0182
+Writing final contracted efficiency to D0__piTagToMuTag
+  idxTrue: 0 idxTag: 1
+  prob = piTrueToKTag * D0__piTrue / D0__kTag
+       = 0.1769 * 0.6537 / 0.2206 = 0.5241
+  idxTrue: 1 idxTag: 1
+  prob = kTrueToKTag * D0__kTrue / D0__kTag
+       = 0.7158 * 0.1367 / 0.2206 = 0.4437
+  idxTrue: 2 idxTag: 1
+  prob = pTrueToKTag * D0__pTrue / D0__kTag
+       = 0.0346 * 0.0303 / 0.2206 = 0.0047
+  idxTrue: 3 idxTag: 1
+  prob = eTrueToKTag * D0__eTrue / D0__kTag
+       = 0.0136 * 0.1100 / 0.2206 = 0.0068
+  idxTrue: 4 idxTag: 1
+  prob = gTrueToKTag * D0__gTrue / D0__kTag
+       = 0.0658 * 0.0692 / 0.2206 = 0.0206
+Writing final contracted efficiency to D0__kTagToMuTag
+  idxTrue: 0 idxTag: 2
+  prob = piTrueToPTag * D0__piTrue / D0__pTag
+       = 0.0526 * 0.6537 / 0.0709 = 0.4849
+  idxTrue: 1 idxTag: 2
+  prob = kTrueToPTag * D0__kTrue / D0__pTag
+       = 0.0564 * 0.1367 / 0.0709 = 0.1089
+  idxTrue: 2 idxTag: 2
+  prob = pTrueToPTag * D0__pTrue / D0__pTag
+       = 0.8345 * 0.0303 / 0.0709 = 0.3566
+  idxTrue: 3 idxTag: 2
+  prob = eTrueToPTag * D0__eTrue / D0__pTag
+       = 0.0163 * 0.1100 / 0.0709 = 0.0253
+  idxTrue: 4 idxTag: 2
+  prob = gTrueToPTag * D0__gTrue / D0__pTag
+       = 0.0249 * 0.0692 / 0.0709 = 0.0243
+Writing final contracted efficiency to D0__pTagToMuTag
+  idxTrue: 0 idxTag: 3
+  prob = piTrueToETag * D0__piTrue / D0__eTag
+       = 0.0125 * 0.6537 / 0.0902 = 0.0904
+  idxTrue: 1 idxTag: 3
+  prob = kTrueToETag * D0__kTrue / D0__eTag
+       = 0.0030 * 0.1367 / 0.0902 = 0.0046
+  idxTrue: 2 idxTag: 3
+  prob = pTrueToETag * D0__pTrue / D0__eTag
+       = 0.0004 * 0.0303 / 0.0902 = 0.0001
+  idxTrue: 3 idxTag: 3
+  prob = eTrueToETag * D0__eTrue / D0__eTag
+       = 0.7403 * 0.1100 / 0.0902 = 0.9030
+  idxTrue: 4 idxTag: 3
+  prob = gTrueToETag * D0__gTrue / D0__eTag
+       = 0.0024 * 0.0692 / 0.0902 = 0.0019
+Writing final contracted efficiency to D0__eTagToMuTag
+  idxTrue: 0 idxTag: 4
+  prob = piTrueToGTag * D0__piTrue / D0__gTag
+       = 0.0741 * 0.6537 / 0.1357 = 0.3570
+  idxTrue: 1 idxTag: 4
+  prob = kTrueToGTag * D0__kTrue / D0__gTag
+       = 0.0857 * 0.1367 / 0.1357 = 0.0864
+  idxTrue: 2 idxTag: 4
+  prob = pTrueToGTag * D0__pTrue / D0__gTag
+       = 0.1137 * 0.0303 / 0.1357 = 0.0254
+  idxTrue: 3 idxTag: 4
+  prob = eTrueToGTag * D0__eTrue / D0__gTag
+       = 0.1642 * 0.1100 / 0.1357 = 0.1332
+  idxTrue: 4 idxTag: 4
+  prob = gTrueToGTag * D0__gTrue / D0__gTag
+       = 0.7803 * 0.0692 / 0.1357 = 0.3981
+Writing final contracted efficiency to D0__gTagToMuTag
+Bin index: x=6 y=2 z=2
+The yields are (top: tag; bot: true):
+  10369.0000   4726.0000   1521.0000   1936.0000   2911.0000
+  14030.8919   2934.8183    649.9217   2361.4317   1485.9364
+The prior true probabilities are:
+  0.6537  0.1367  0.0303  0.1100  0.0692
+The true -> tag matrix is (row: fixed tag; col: fixed true):
+  0.6840  0.1390  0.0168  0.0656  0.1267
+  0.1769  0.7158  0.0346  0.0136  0.0658
+  0.0526  0.0564  0.8345  0.0163  0.0249
+  0.0125  0.0030  0.0004  0.7403  0.0024
+  0.0741  0.0857  0.1137  0.1642  0.7803
+The tag -> true efficiency matrix is (row: fixed true; col: fixed tag):
+  0.9264  0.5241  0.4849  0.0904  0.3570
+  0.0394  0.4437  0.1089  0.0046  0.0864
+  0.0011  0.0047  0.3566  0.0001  0.0254
+  0.0150  0.0068  0.0253  0.9030  0.1332
+  0.0182  0.0206  0.0243  0.0019  0.3981
+------
