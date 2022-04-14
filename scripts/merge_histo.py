@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 13, 2022 at 11:07 PM -0400
+# Last Change: Wed Apr 13, 2022 at 11:16 PM -0400
 #
 # Description: histogram merger (M)
 
@@ -24,7 +24,7 @@ ROOT.PyConfig.DisableRootLogon = True  # Don't read .rootlogon.py
 ################
 
 HISTO_NAME = 'merged.root'
-BAD_ERROR_THRESH = 0.25
+BAD_ERROR_THRESH = 0.2
 
 
 #######################
@@ -220,9 +220,10 @@ def fix_bad_bins_in_histo(histo, bad_err_thresh=0.2):
 
     indices_ranges = [list(range(1, n+1)) for n in histo_axis_nbins]
     for idx in itertools.product(*indices_ranges):
+        mean = histo.GetBinContent(*idx)
         error = histo.GetBinError(*idx)
         if abs(error) > BAD_ERROR_THRESH:
-            print(f'  FIX: bin {idx} has large uncertainties of {error:.7f}, replace w/ weighted average of nearby bins')
+            print(f'  FIX: bin {idx} = {mean:.7f} ± {error:.7f} has a large error, replace w/ weighted average of nearby bins')
 
             means = []
             stds = []
@@ -239,8 +240,8 @@ def fix_bad_bins_in_histo(histo, bad_err_thresh=0.2):
                     print(f'    mean = {bin_mean:.7f} < 0, skipping...')
                     continue
                 if bin_std == 0.0:
-                    print('    std = 0.0, replacing it with std = 0.01...')
-                    bin_std = 0.01
+                    print('    std = 0.0, perhaps the sample does not cover this bin, skipping...')
+                    continue
 
                 means.append(bin_mean)
                 stds.append(bin_std)
