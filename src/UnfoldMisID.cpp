@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Apr 14, 2022 at 12:19 AM -0400
+// Last Change: Fri Apr 15, 2022 at 01:03 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -300,9 +300,9 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
                           totSize);  // conceptually inverted matrix of histRes
   auto histProb = new TH1D("histProb", "histProb", totSize, 0, totSize);
 
-  // This is used to provide dimension info for response matrix
-  auto histTrue = new TH1D("histTrue", "histTrue", totSize, 0, totSize);
-  for (int i = 1; i <= totSize; i++) histTrue->SetBinContent(i, 1);
+  // This is used to provide dimension info for response matrix only
+  auto histDim = new TH1D("histDim", "histDim", totSize, 0, totSize);
+  for (int i = 1; i <= totSize; i++) histDim->SetBinContent(i, 1);
 
   // Figure out binning from one of the input histograms
   vector<int> nbins{};
@@ -326,18 +326,31 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           }
 
           // build response matrix (2D matrix)
+          // NOTE: for a 2D array, the indexing is this:
+          //         array[x][y]
+          //       In our case, true -> tag translates to:
+          //         true -> y index
+          //         tag  -> x index
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
-              auto histo = loadSingleHisto(histoIn, nameEff[idxTag][idxTrue]);
+              auto name  = nameEff[idxTag][idxTrue];
+              auto histo = loadSingleHisto(histoIn, name);
               auto eff   = histo->GetBinContent(x, y, z);
+              auto err   = histo->GetBinError(x, y, z);
+
+              if (debug)
+                cout << "  Loading efficiency from " << name << ", got " << eff
+                     << endl;
               if (isnan(eff) || isinf(eff)) eff = 0.0;
+
               histRes->SetBinContent(idxTag + 1, idxTrue + 1, abs(eff));
+              histRes->SetBinError(idxTag + 1, idxTrue + 1, err);
             }
           }
           ensureUnitarity(histRes);
 
           // perform unfolding to get unfolded ("true") yield
-          RooUnfoldResponse resp(nullptr, histTrue, histRes);
+          RooUnfoldResponse resp(nullptr, histDim, histRes);
           RooUnfoldBayes    unfoldWorker(&resp, histMea, numOfIter);
           auto              histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
 
@@ -346,7 +359,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             auto name = nameUnfYld[idxPref][idx];
             auto yld  = histUnf->GetBinContent(idx + 1);
             if (isnan(yld) || isinf(yld)) {
-              cout << "Warning: naN or inf detected for " << name << endl;
+              cout << "WARNING: naN or inf detected for " << name << endl;
               yld = 0;
             }
             auto histo = loadSingleHisto(histoOut, name);
@@ -359,9 +372,10 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           auto probTrue = histoToProb(histUnf);
 
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
-            auto wtTagToMuTag    = 1.0;
+            auto wtTagToMuTag    = 0.0;
             auto probTrueNormFac = 0.0;
 
+            // Compute the shared normalization factor
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++)
               probTrueNormFac +=
                   probTrue[idxTrue] *
@@ -383,7 +397,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
                      << endl;
                 cout << "  prob = " << nameEff[idxTag][idxTrue] << " * "
                      << nameUnfYld[idxPref][idxTrue] << " / "
-                     << nameMeaYld[idxPref][idxTag] << endl;
+                     << "normalization" << endl;
                 cout << "       = " << probTrueToTag << " * "
                      << probTrue[idxTrue] << " / " << probTrueNormFac << " = "
                      << probTagToTrue << endl;
@@ -392,16 +406,25 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 
               // now contract with the mu misID eff (true -> mu tag)
               auto histo = loadSingleHisto(histoIn, nameMuEff[idxTrue]);
-              auto probTrueToMuTag = histo->GetBinContent(x, y, z);
-              if (isnan(probTrueToMuTag)) probTrueToMuTag = 0.0;
-              wtTagToMuTag += probTagToTrue * probTrueToMuTag;
+              auto effTrueToMuTag = histo->GetBinContent(x, y, z);
+              if (isnan(effTrueToMuTag)) effTrueToMuTag = 0.0;
+              auto wtTagToMuTagElem = probTagToTrue * effTrueToMuTag;
+              if (debug) {
+                cout << "  A term in transfer factor = " << probTagToTrue
+                     << " * " << effTrueToMuTag << endl;
+                cout << "                            = " << wtTagToMuTagElem
+                     << endl;
+              }
+              wtTagToMuTag += wtTagToMuTagElem;
             }
 
             // we use idxTag as the second index, which checks out
             auto name  = nameUnfEff[idxPref][idxTag];
             auto histo = loadSingleHisto(histoOut, name);
-            cout << "Writing final contracted efficiency to " << name << endl;
             histo->SetBinContent(x, y, z, wtTagToMuTag);
+            if (debug)
+              cout << "Writing final contracted transfer factor = "
+                   << wtTagToMuTag << " to " << name << endl;
           }
 
           if (debug) {
@@ -442,7 +465,7 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
   delete histMea;
   delete histRes;
   delete histInv;
-  delete histTrue;
+  delete histDim;
 }
 
 void unfoldDryRun(vStr ptcl, vStrStr nameMeaYld, vStrStr nameUnfYld,
