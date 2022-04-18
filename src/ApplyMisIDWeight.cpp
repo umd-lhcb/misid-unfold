@@ -1,14 +1,16 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sun Apr 17, 2022 at 08:13 PM -0400
+// Last Change: Mon Apr 18, 2022 at 07:47 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <tuple>
 #include <vector>
 
+#include <TMath.h>
 #include <ROOT/RDataFrame.hxx>
 
 #include <yaml-cpp/yaml.h>
@@ -39,13 +41,22 @@ static vPStrStr BRANCH_ALIASES{
     {"DLLd", "PIDd"},
     {"IsMuon", "isMuon"},
     {"P", "P"},
+    {"PZ", "PZ"},
     {"InMuonAcc", "InMuonAcc"}};
 
-static vector<string> DEFAULT_TREES{"tree"};
+/////////////////////
+// General helpers //
+/////////////////////
 
-/////////////////////
-// Aliases helpers //
-/////////////////////
+string absDirPath(string pathRaw) {
+  auto path    = filesystem::path(pathRaw);
+  auto dirPath = path.parent_path();
+  return filesystem::absolute(dirPath).string();
+}
+
+////////////////////////////
+// Helpers for event loop //
+////////////////////////////
 
 // Idea stolen from:
 // https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
@@ -57,10 +68,6 @@ auto setBranchAlias(RNode df, string particle = "mu",
       df.Alias(rules[idx].first, particle + "_" + rules[idx].second), particle,
       rules, idx + 1);
 }
-
-/////////////////////////////////
-// Helpers for event selection //
-/////////////////////////////////
 
 //////////
 // Main //
@@ -74,14 +81,13 @@ int main(int argc, char** argv) {
   argOpts.add_options()
     // general
     ("h,help", "print help")
+    ("Y,year", "sample year",
+     cxxopts::value<string>()->default_value("2016"))
     // I/O
-    ("h,histo", "specify ntuple containing transfer factor histos.",
-     cxxopts::value<string>())
     ("i,input", "specify input ntuple", cxxopts::value<string>())
-    ("o,input", "specify output ntuple", cxxopts::value<string>())
-    // flags
-    ("t,trees", "specify trees to process.",
-     cxxopts::value<vector<string>>())
+    ("o,output", "specify output ntuple", cxxopts::value<string>())
+    ("c,config", "specify input YAML config file",
+     cxxopts::value<string>())
     // flags (typically don't change these)
     ("a,alias", "apply aliases.",
      cxxopts::value<bool>()->default_value("false"))
@@ -96,16 +102,42 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  auto ntpIn  = parsedArgs["input"].as<string>();
-  auto ntpOut = parsedArgs["output"].as<string>();
-  auto ntpFac = parsedArgs["histo"].as<string>();
+  // get options
+  auto ntpIn      = parsedArgs["input"].as<string>();
+  auto ntpOut     = parsedArgs["output"].as<string>();
+  auto particle   = parsedArgs["particle"].as<string>();
+  auto applyAlias = parsedArgs["alias"].as<bool>();
 
-  auto trees = DEFAULT_TREES;
-  if (parsedArgs.count("trees"))
-    trees = parsedArgs["trees"].as<vector<string>>();
+  // parse YAML config
+  auto ymlFile    = parsedArgs["config"].as<string>();
+  auto ymlConfig  = YAML::LoadFile(ymlFile);
+  auto year       = parsedArgs["year"].as<string>();
+  auto ymlDirPath = absDirPath(parsedArgs["config"].as<string>());
+  auto weightBrs  = ymlConfig["weight_brs"][year];
+  auto filePrefix = absDirPath(ymlFile);
 
-  for (const auto t : trees) {
-    cout << "Handling tree " << t << endl;
-    auto dfInit = RDataFrame(t, ntpIn);
+  for (auto it = weightBrs.begin(); it != weightBrs.end(); it++) {
+    auto histoPrefix  = it->first.as<string>();
+    auto histoFile    = it->second["file"].as<string>();
+    auto treeName     = it->second["tree"].as<string>();
+    auto weightBrName = it->second["name"].as<string>();
+    histoFile         = filePrefix + "/" + histoFile;
+
+    cout << "Handling tree " << treeName << " with output branch name "
+         << weightBrName << " from histos of prefix " << histoPrefix
+         << " from file " << histoFile << endl;
+
+    auto dfInit = RDataFrame(treeName, ntpIn);
+
+    RNode df = static_cast<RNode>(dfInit);
+    if (applyAlias) df = setBranchAlias(dfInit, particle);
+
+    // compute ETA
+    if (applyAlias)
+      df = df.Define("ETA",
+                     [](double& p, double& pz) {
+                       return 0.5 * TMath::Log((p + pz) / (p - pz));
+                     },
+                     {"P", "PZ"});
   }
 }
