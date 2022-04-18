@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Apr 17, 2022 at 08:15 PM -0400
+# Last Change: Mon Apr 18, 2022 at 07:46 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -56,6 +56,15 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 		-y ./histos/rdx-22_04_12_14_03-tag-2016/tagged.root \
 		-o $(OUT_DIR) \
 		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+
+build-rdx-weights-2016: $(BINPATH)/ApplyMisIDWeight.exe
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
+	@mkdir -p $(OUT_DIR)
+	$< -Y 2016 \
+		-i ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root \
+		-c ./spec/rdx-run2.yml \
+		-o .$(OUT_DIR)/D0-md.root
+
 
 plot-rdx-2016:
 	./scripts/plot_histo.py -o $(GENPATH) \
