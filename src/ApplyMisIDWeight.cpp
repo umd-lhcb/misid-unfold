@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 18, 2022 at 09:11 PM -0400
+// Last Change: Mon Apr 18, 2022 at 10:55 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -163,6 +163,7 @@ int main(int argc, char** argv) {
     auto  dfInit       = RDataFrame(treeName, ntpIn);
     RNode df           = static_cast<RNode>(dfInit);
     vector<string> outputBrNames{"runNumber", "eventNumber"};
+
     if (applyAlias) {
       df = defineBranch(dfInit, particle);
       // compute ETA
@@ -183,9 +184,9 @@ int main(int argc, char** argv) {
       outputBrNames.emplace_back(brName);
       cout << "  Generating " << brName << "..." << endl;
       df = df.Define(brName,
-                     [&histoWt](double x, double y, double z) {
-                       cout << histoWt->GetBin(x, y, z) << endl;
-                       return histoWt->GetBinContent(histoWt->GetBin(x, y, z));
+                     [histoWt](double x, double y, double z) {
+                       auto binIdx = histoWt->FindFixBin(x, y, z);
+                       return histoWt->GetBinContent(binIdx);
                      },
                      {"P", "ETA", "nTracks"});
     }
@@ -197,6 +198,7 @@ int main(int argc, char** argv) {
     } else
       df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
 
+    // cleanups
     for (auto& h : histos) delete h;
     delete ntpHisto;
   }
