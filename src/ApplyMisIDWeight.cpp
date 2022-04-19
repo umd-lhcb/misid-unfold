@@ -1,11 +1,12 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 18, 2022 at 10:55 PM -0400
+// Last Change: Tue Apr 19, 2022 at 02:33 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
 #include <filesystem>
 #include <iostream>
+#include <regex>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -28,6 +29,7 @@ using ROOT::RDF::RNode;
 ///////////////////
 
 typedef vector<pair<string, string>> vPStrStr;
+typedef vector<pair<regex, string>>  vPRegStr;
 
 static vPStrStr MU_BRANCH_DEFS{
     // simple name, complex name
@@ -46,6 +48,8 @@ static vPStrStr MU_BRANCH_DEFS{
     {"P", "P"},
     {"PZ", "PZ"},
     {"InMuonAcc", "InMuonAcc"}};
+
+static vPRegStr CUT_REPLACE_RULES{{regex("&"), "&&"}, {regex("\\|"), "||"}};
 
 /////////////////////
 // General helpers //
@@ -83,8 +87,8 @@ vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
 
 // Idea stolen from:
 // https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
-auto defineBranch(RNode df, string particle = "mu",
-                  const vPStrStr& rules = MU_BRANCH_DEFS, int idx = 0) {
+RNode defineBranch(RNode df, string particle = "mu",
+                   const vPStrStr& rules = MU_BRANCH_DEFS, int idx = 0) {
   // auto df = init_df.Alias(alias, particle+"_"+raw);
   if (rules.size() == idx) return df;
 
@@ -93,6 +97,48 @@ auto defineBranch(RNode df, string particle = "mu",
 
   return defineBranch(df.Define(rules[idx].first, inputBrName), particle, rules,
                       idx + 1);
+}
+
+pair<vPStrStr, vector<string>> genCutDirective(YAML::Node       node,
+                                               vector<TString>& histoNames,
+                                               string           wtPrefix = "wt",
+                                               string brPrefix = "is_misid_") {
+  vPStrStr       directives{};
+  vector<string> outputBrs{};
+
+  vector<string> particles{};
+  // first find particles and cuts
+  for (auto it = node["tags"].begin(); it != node["tags"].end(); it++) {
+    particles.emplace_back(it->first.as<string>());
+    auto cut = it->second.as<string>();
+    for (auto reg = CUT_REPLACE_RULES.begin(); reg != CUT_REPLACE_RULES.end();
+         reg++) {
+      cut = regex_replace(cut, reg->first, reg->second);
+    }
+    directives.emplace_back(pair{it->first.as<string>(), cut});
+  }
+
+  // generate the alias for output cut branches
+  for (auto idx = 0; idx != particles.size(); idx++) {
+    outputBrs.emplace_back(brPrefix + particles[idx]);
+    directives.emplace_back(pair{brPrefix + particles[idx], particles[idx]});
+  }
+
+  // generate the automatic weight for each event based on the species of the
+  // event
+
+  auto expr  = ""s;
+  auto first = true;
+  for (auto idx = 0; idx != histoNames.size(); idx++) {
+    auto wtBrName = wtPrefix + "_" + string(histoNames[idx]);
+    if (!first) expr += " + ";
+    first = false;
+    expr += brPrefix + particles[idx] + "*" + wtBrName;
+  }
+  outputBrs.emplace_back(wtPrefix);
+  directives.emplace_back(pair{wtPrefix, expr});
+
+  return {directives, outputBrs};
 }
 
 //////////
@@ -163,6 +209,7 @@ int main(int argc, char** argv) {
     auto  dfInit       = RDataFrame(treeName, ntpIn);
     RNode df           = static_cast<RNode>(dfInit);
     vector<string> outputBrNames{"runNumber", "eventNumber"};
+    vector<string> weightTagBrNames{};
 
     if (applyAlias) {
       df = defineBranch(dfInit, particle);
@@ -174,6 +221,7 @@ int main(int argc, char** argv) {
                      {"P", "PZ"});
     }
 
+    // generate weights for each species
     for (const auto h : histoWtNames) {
       auto histoName = histoPrefix + "__" + h;
       auto histoWt   = static_cast<TH3D*>(ntpHisto->Get(histoName));
@@ -181,7 +229,7 @@ int main(int argc, char** argv) {
       cout << "  Loading histo " << histoName << endl;
 
       auto brName = weightBrName + "_" + string(h);
-      outputBrNames.emplace_back(brName);
+      weightTagBrNames.emplace_back(brName);
       cout << "  Generating " << brName << "..." << endl;
       df = df.Define(brName,
                      [histoWt](double x, double y, double z) {
@@ -189,7 +237,14 @@ int main(int argc, char** argv) {
                        return histoWt->GetBinContent(binIdx);
                      },
                      {"P", "ETA", "nTracks"});
+      outputBrNames.emplace_back(brName);
     }
+
+    // apply tagged species cuts
+    auto [directives, addOutputBrs] =
+        genCutDirective(ymlConfig, histoWtNames, weightBrName);
+    df = defineBranch(df, ""s, directives);
+    for (auto br : addOutputBrs) outputBrNames.emplace_back(br);
 
     cout << "Writing to " << ntpOut << endl;
     if (firstTree) {
