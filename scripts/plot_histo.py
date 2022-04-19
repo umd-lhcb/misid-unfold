@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-#  Author: Yipeng Sun
-#  License: GPLv3
-#  Last Change: Wed Apr 13, 2022 at 09:14 AM -0400
+# Author: Yipeng Sun
+# License: BSD 2-clause
+# Last Change: Tue Apr 19, 2022 at 03:32 PM -0400
 #
 # Description: histogram plotter (for this project)
 

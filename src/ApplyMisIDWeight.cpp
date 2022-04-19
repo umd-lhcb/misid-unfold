@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 19, 2022 at 03:06 AM -0400
+// Last Change: Tue Apr 19, 2022 at 04:33 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -100,10 +100,9 @@ RNode defineBranch(RNode df, string particle = "mu",
                       idx + 1);
 }
 
-pair<vPStrStr, vector<string>> genCutDirective(YAML::Node       node,
-                                               vector<TString>& histoNames,
-                                               string           wtPrefix = "wt",
-                                               string brPrefix = "is_misid_") {
+pair<vPStrStr, vector<string>> genCutDirective(
+    YAML::Node node, const vector<TString>& histoNames, string wtPrefix = "wt",
+    string brPrefix = "is_misid_") {
   vPStrStr       directives{};
   vector<string> outputBrs{};
 
@@ -243,7 +242,7 @@ int main(int argc, char** argv) {
       weightTagBrNames.emplace_back(brName);
       cout << "  Generating " << brName << "..." << endl;
       df = df.Define(brName,
-                     [histoWt](double x, double y, double z) {
+                     [histoWt](double& x, double& y, double& z) {
                        auto binIdx = histoWt->FindFixBin(x, y, z);
                        return histoWt->GetBinContent(binIdx);
                      },
