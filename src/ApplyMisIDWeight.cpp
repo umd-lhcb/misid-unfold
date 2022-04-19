@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 19, 2022 at 02:33 AM -0400
+// Last Change: Tue Apr 19, 2022 at 03:06 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -15,6 +15,7 @@
 #include <TH3D.h>
 #include <TMath.h>
 #include <TString.h>
+#include <TTree.h>
 #include <ROOT/RDataFrame.hxx>
 
 #include <yaml-cpp/yaml.h>
@@ -194,12 +195,22 @@ int main(int argc, char** argv) {
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
   bool firstTree  = true;
-  for (auto it = weightBrs.begin(); it != weightBrs.end(); it++) {
-    auto histoPrefix  = TString(it->first.as<string>());
-    auto histoFile    = it->second["file"].as<string>();
-    auto treeName     = it->second["tree"].as<string>();
-    auto weightBrName = it->second["name"].as<string>();
+  for (auto entry : weightBrs) {
+    auto histoPrefix  = TString(entry["prefix"].as<string>());
+    auto histoFile    = entry["file"].as<string>();
+    auto treeName     = entry["tree"].as<string>();
+    auto weightBrName = entry["name"].as<string>();
     histoFile         = filePrefix + "/" + histoFile;
+
+    auto ntpInTest = new TFile(TString(ntpIn));
+    auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(TString(treeName)));
+    if (treeTest == nullptr) {
+      cout << treeName << " doesn't exist in " << ntpIn << " skipping..."
+           << endl;
+      continue;
+    }
+    delete treeTest;
+    delete ntpInTest;
 
     cout << "Handling tree " << treeName << " from histos of prefix "
          << histoPrefix << " from file " << histoFile << endl;
