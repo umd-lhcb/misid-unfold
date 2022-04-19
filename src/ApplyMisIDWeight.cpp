@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 18, 2022 at 07:47 PM -0400
+// Last Change: Mon Apr 18, 2022 at 09:01 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -10,7 +10,10 @@
 #include <tuple>
 #include <vector>
 
+#include <TFile.h>
+#include <TH3D.h>
 #include <TMath.h>
+#include <TString.h>
 #include <ROOT/RDataFrame.hxx>
 
 #include <yaml-cpp/yaml.h>
@@ -26,7 +29,7 @@ using ROOT::RDF::RNode;
 
 typedef vector<pair<string, string>> vPStrStr;
 
-static vPStrStr BRANCH_ALIASES{
+static vPStrStr MU_BRANCH_DEFS{
     // simple name, complex name
     {"MC15TuneV1_ProbNNpi", "MC15TuneV1_ProbNNpi"},
     {"MC15TuneV1_ProbNNk", "MC15TuneV1_ProbNNk"},
@@ -54,19 +57,42 @@ string absDirPath(string pathRaw) {
   return filesystem::absolute(dirPath).string();
 }
 
+string capitalize(string str) {
+  for (auto& s : str) {
+    s = toupper(s);
+    break;
+  }
+  return str;
+}
+
+vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
+  vector<TString> result{};
+
+  for (auto it = node.begin(); it != node.end(); it++) {
+    auto srcPtcl = it->first.as<string>();
+    auto name    = srcPtcl + "To" + capitalize(targetParticle);
+    result.emplace_back(name);
+  }
+
+  return result;
+}
+
 ////////////////////////////
 // Helpers for event loop //
 ////////////////////////////
 
 // Idea stolen from:
 // https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
-auto setBranchAlias(RNode df, string particle = "mu",
-                    const vPStrStr& rules = BRANCH_ALIASES, int idx = 0) {
+auto defineBranch(RNode df, string particle = "mu",
+                  const vPStrStr& rules = MU_BRANCH_DEFS, int idx = 0) {
   // auto df = init_df.Alias(alias, particle+"_"+raw);
   if (rules.size() == idx) return df;
-  return setBranchAlias(
-      df.Alias(rules[idx].first, particle + "_" + rules[idx].second), particle,
-      rules, idx + 1);
+
+  auto inputBrName = rules[idx].second;
+  if (particle != ""s) inputBrName = particle + "_" + inputBrName;
+
+  return defineBranch(df.Define(rules[idx].first, inputBrName), particle, rules,
+                      idx + 1);
 }
 
 //////////
@@ -116,8 +142,14 @@ int main(int argc, char** argv) {
   auto weightBrs  = ymlConfig["weight_brs"][year];
   auto filePrefix = absDirPath(ymlFile);
 
+  TFile* ntpHisto;
+  TH3D*  histoWt;
+  // snapshot option
+  auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
+  writeOpts.fMode = "UPDATE";
+  bool firstTree  = true;
   for (auto it = weightBrs.begin(); it != weightBrs.end(); it++) {
-    auto histoPrefix  = it->first.as<string>();
+    auto histoPrefix  = TString(it->first.as<string>());
     auto histoFile    = it->second["file"].as<string>();
     auto treeName     = it->second["tree"].as<string>();
     auto weightBrName = it->second["name"].as<string>();
@@ -127,17 +159,43 @@ int main(int argc, char** argv) {
          << weightBrName << " from histos of prefix " << histoPrefix
          << " from file " << histoFile << endl;
 
-    auto dfInit = RDataFrame(treeName, ntpIn);
-
-    RNode df = static_cast<RNode>(dfInit);
-    if (applyAlias) df = setBranchAlias(dfInit, particle);
-
-    // compute ETA
-    if (applyAlias)
+    ntpHisto           = new TFile(TString(histoFile), "READ");
+    auto  histoWtNames = buildHistoWtNames(particle, ymlConfig["tags"]);
+    auto  dfInit       = RDataFrame(treeName, ntpIn);
+    RNode df           = static_cast<RNode>(dfInit);
+    vector<string> outputBrNames{"runNumber", "eventNumber"};
+    if (applyAlias) {
+      df = defineBranch(dfInit, particle);
+      // compute ETA
       df = df.Define("ETA",
                      [](double& p, double& pz) {
                        return 0.5 * TMath::Log((p + pz) / (p - pz));
                      },
                      {"P", "PZ"});
+    }
+
+    for (const auto h : histoWtNames) {
+      histoWt = static_cast<TH3D*>(ntpHisto->Get(histoPrefix + "__" + h));
+
+      auto brName = weightBrName + "_" + string(h);
+      outputBrNames.emplace_back(brName);
+      cout << "  Generating " << brName << "..." << endl;
+      df = df.Define(brName,
+                     [&histoWt](double x, double y, double z) {
+                       return histoWt->GetBinContent(histoWt->GetBin(x, y, z));
+                     },
+                     {"P", "ETA", "nTracks"});
+
+      delete histoWt;
+    }
+
+    cout << "Writing to " << ntpOut << endl;
+    if (firstTree) {
+      df.Snapshot(treeName, ntpOut, outputBrNames);
+      firstTree = false;
+    } else
+      df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
+
+    delete ntpHisto;
   }
 }

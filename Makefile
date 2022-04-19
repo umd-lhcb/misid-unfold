@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 18, 2022 at 07:46 PM -0400
+# Last Change: Mon Apr 18, 2022 at 09:00 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -63,7 +63,7 @@ build-rdx-weights-2016: $(BINPATH)/ApplyMisIDWeight.exe
 	$< -Y 2016 \
 		-i ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root \
 		-c ./spec/rdx-run2.yml \
-		-o .$(OUT_DIR)/D0-md.root
+		-o $(OUT_DIR)/D0-md.root
 
 
 plot-rdx-2016:
