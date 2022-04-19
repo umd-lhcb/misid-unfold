@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 18, 2022 at 09:01 PM -0400
+// Last Change: Mon Apr 18, 2022 at 09:11 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -70,7 +70,7 @@ vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
 
   for (auto it = node.begin(); it != node.end(); it++) {
     auto srcPtcl = it->first.as<string>();
-    auto name    = srcPtcl + "To" + capitalize(targetParticle);
+    auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag";
     result.emplace_back(name);
   }
 
@@ -142,8 +142,8 @@ int main(int argc, char** argv) {
   auto weightBrs  = ymlConfig["weight_brs"][year];
   auto filePrefix = absDirPath(ymlFile);
 
-  TFile* ntpHisto;
-  TH3D*  histoWt;
+  TFile*        ntpHisto;
+  vector<TH3D*> histos;
   // snapshot option
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
@@ -155,9 +155,8 @@ int main(int argc, char** argv) {
     auto weightBrName = it->second["name"].as<string>();
     histoFile         = filePrefix + "/" + histoFile;
 
-    cout << "Handling tree " << treeName << " with output branch name "
-         << weightBrName << " from histos of prefix " << histoPrefix
-         << " from file " << histoFile << endl;
+    cout << "Handling tree " << treeName << " from histos of prefix "
+         << histoPrefix << " from file " << histoFile << endl;
 
     ntpHisto           = new TFile(TString(histoFile), "READ");
     auto  histoWtNames = buildHistoWtNames(particle, ymlConfig["tags"]);
@@ -175,18 +174,20 @@ int main(int argc, char** argv) {
     }
 
     for (const auto h : histoWtNames) {
-      histoWt = static_cast<TH3D*>(ntpHisto->Get(histoPrefix + "__" + h));
+      auto histoName = histoPrefix + "__" + h;
+      auto histoWt   = static_cast<TH3D*>(ntpHisto->Get(histoName));
+      histos.emplace_back(histoWt);
+      cout << "  Loading histo " << histoName << endl;
 
       auto brName = weightBrName + "_" + string(h);
       outputBrNames.emplace_back(brName);
       cout << "  Generating " << brName << "..." << endl;
       df = df.Define(brName,
                      [&histoWt](double x, double y, double z) {
+                       cout << histoWt->GetBin(x, y, z) << endl;
                        return histoWt->GetBinContent(histoWt->GetBin(x, y, z));
                      },
                      {"P", "ETA", "nTracks"});
-
-      delete histoWt;
     }
 
     cout << "Writing to " << ntpOut << endl;
@@ -196,6 +197,7 @@ int main(int argc, char** argv) {
     } else
       df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
 
+    for (auto& h : histos) delete h;
     delete ntpHisto;
   }
 }
