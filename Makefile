@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 20, 2022 at 02:07 AM -0400
+# Last Change: Wed Apr 20, 2022 at 04:30 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -87,7 +87,7 @@ plot-rdx-bin_vars-ana-2016:
 		--show-title 0 1 0 --show-legend 1 0 0
 	./scripts/plot_histo.py -o $(OUT_DIR) \
 		-i ./histos/rdx-22_04_15_01_04-unfolded-2016/unfolded.root \
-		--show-title 0 1 0 --show-legend 0 0 0
+		--show-title 0 1 0 --show-legend 1 0 0
 
 
 plot-rdx-fit_vars-2016: \
