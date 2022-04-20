@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 20, 2022 at 02:08 AM -0400
+# Last Change: Wed Apr 20, 2022 at 02:12 AM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -142,13 +142,9 @@ def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
                 lambda fig, ax, b=bins, h=hist+bot, add=add_args: plot_histo(
                     b, h, add, figure=fig, axis=ax, show_legend=False))
 
-            if show_title:
-                fig, ax, _ = plot_prepare(
-                    xlabel=bin_names[idx], title=title_gen(prefix),
-                    show_legend=False)
-            else:
-                fig, ax, _ = plot_prepare(
-                    xlabel=bin_names[idx], show_legend=False)
+            title = title_gen(prefix) if show_title else '   '
+            fig, ax, _ = plot_prepare(
+                xlabel=bin_names[idx], title=title, show_legend=False)
 
             for p in plotters:
                 p(fig, ax)
