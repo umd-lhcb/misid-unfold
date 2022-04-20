@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 19, 2022 at 09:18 PM -0400
+# Last Change: Tue Apr 19, 2022 at 09:33 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -13,7 +13,7 @@ import numpy as np
 from argparse import ArgumentParser
 from pyTuplingUtils.utils import gen_histo_stacked_baseline
 from pyTuplingUtils.plot import (
-    plot_top, plot_histo, ax_add_args_histo
+    plot_prepare, plot_histo, ax_add_args_histo
 )
 
 
@@ -131,10 +131,18 @@ def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
                 lambda fig, ax, b=bins, h=hist+bot, add=add_args: plot_histo(
                     b, h, add, figure=fig, axis=ax, show_legend=False))
 
-        plot_top(plotters, f'{output_dir}/{prefix}_{v}.{suffix}',
-                 xlabel=bin_names[idx], title=title_gen(prefix),
-                 legend_add_args={
-                     'numpoints': 1, 'loc': 'best', 'frameon': 'true'})
+            fig, ax, _ = plot_prepare(
+                xlabel=bin_names[idx], title=title_gen(prefix),
+                show_legend=False)
+
+            for p in plotters:
+                p(fig, ax)
+
+            handles, leg_lbls = ax.get_legend_handles_labels()
+            ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1, loc='best',
+                      frameon='true')
+
+            fig.savefig(f'{output_dir}/{prefix}_{v}.{suffix}')
 
 
 ########
