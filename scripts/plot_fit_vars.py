@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 19, 2022 at 09:07 PM -0400
+# Last Change: Tue Apr 19, 2022 at 09:40 PM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
@@ -11,7 +11,7 @@ import uproot
 from argparse import ArgumentParser
 from pyTuplingUtils.utils import gen_histo_stacked_baseline, gen_histo
 from pyTuplingUtils.plot import (
-    plot_top, plot_histo, ax_add_args_histo
+    plot_prepare, plot_histo, ax_add_args_histo
 )
 
 
@@ -19,12 +19,17 @@ from pyTuplingUtils.plot import (
 # Configurable #
 ################
 
-DEFAULT_COLORS = ['#93003a', '#d15d5f', '#8bd189', '#00429d', '#5585b7']
+DEFAULT_COLORS = ['#00429d', '#5585b7', '#8bd189', '#d15d5f', '#93003a']
+LEGEND_LOC = {
+    'q2': 'upper left',
+    'mm2': 'upper left',
+    'el': 'upper right'
+}
 
 MISID_WTS = ['wmis_norm']
 MISID_TAGS = {
-    'is_misid_k': r'$K$ tag',
     'is_misid_pi': r'$\pi$ tag',
+    'is_misid_k': r'$K$ tag',
     'is_misid_p': r'$p$ tag',
     'is_misid_e': r'$e$ tag',
     'is_misid_g': r'ghost tag',
@@ -85,7 +90,7 @@ def load_vars(ntp, tree, variables):
 
 
 def plot(histos, legends, title, xlabel, ylabel, output_dir, output_filename,
-         suffix='pdf', colors=DEFAULT_COLORS):
+         legend_loc='upper left', suffix='pdf', colors=DEFAULT_COLORS):
     data = [h[0] for h in histos]
     binspecs = [h[1] for h in histos]
     baselines = gen_histo_stacked_baseline(data)
@@ -98,10 +103,16 @@ def plot(histos, legends, title, xlabel, ylabel, output_dir, output_filename,
             lambda fig, ax, b=bins, h=hist+bot, add=add_args: plot_histo(
                 b, h, add, figure=fig, axis=ax, show_legend=False))
 
-    plot_top(plotters, f'{output_dir}/{output_filename}.{suffix}',
-             xlabel=xlabel, ylabel=ylabel, title=title,
-             legend_add_args={
-                 'numpoints': 1, 'loc': 'best', 'frameon': 'true'})
+    fig, ax, _ = plot_prepare(xlabel=xlabel, ylabel=ylabel, title=title,
+                              show_legend=False)
+    for p in plotters:
+        p(fig, ax)
+
+    handles, leg_lbls = ax.get_legend_handles_labels()
+    ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
+              loc=legend_loc, frameon='true')
+
+    fig.savefig(f'{output_dir}/{output_filename}.{suffix}')
 
 
 ########
@@ -144,8 +155,10 @@ if __name__ == '__main__':
             plot(histos_tags, MISID_TAGS.values(),
                  f'{args.title} (tags)',
                  xlabel, args.ylabel, args.output,
-                 f'{args.prefix}_{misid_wt}_{v}_tags')
+                 f'{args.prefix}_{misid_wt}_{v}_tags',
+                 legend_loc=LEGEND_LOC[v])
             plot(histos_misid, MISID_TAGS.values(),
                  f'{args.title} (misID weighted)',
                  xlabel, args.ylabel, args.output,
-                 f'{args.prefix}_{misid_wt}_{v}_misid')
+                 f'{args.prefix}_{misid_wt}_{v}_misid',
+                 legend_loc=LEGEND_LOC[v])
