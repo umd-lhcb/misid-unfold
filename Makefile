@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 18, 2022 at 09:00 PM -0400
+# Last Change: Tue Apr 19, 2022 at 08:25 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -66,11 +66,25 @@ build-rdx-weights-2016: $(BINPATH)/ApplyMisIDWeight.exe
 		-o $(OUT_DIR)/D0-md.root
 
 
-plot-rdx-2016:
-	./scripts/plot_histo.py -o $(GENPATH) \
+############
+# RDX plot #
+############
+.PHONY: plot-rdx-bin_vars-2016 plot-rdx-fit_vars-2016
+
+plot-rdx-bin_vars-2016:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-2016)
+	@mkdir -p $(OUT_DIR)
+	./scripts/plot_histo.py -o $(OUT_DIR) \
 		-i ./histos/rdx-22_04_15_01_04-unfolded-2016/unfolded.root
-	./scripts/plot_histo.py -o $(GENPATH) -s Tag \
+	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
 		-i ./histos/rdx-22_04_12_14_03-tag-2016/tagged.root
+
+plot-rdx-fit_vars-2016:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-fit_vars-2016)
+	@mkdir -p $(OUT_DIR)
+	./scripts/plot_fit_vars.py -o $(OUT_DIR) \
+		-i ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root \
+		-a ./gen/rdx-22_04_19_04_33-weights-2016/D0-md.root
 
 
 ########
