@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 19, 2022 at 11:31 PM -0400
+# Last Change: Wed Apr 20, 2022 at 12:38 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -63,8 +63,7 @@ build-rdx-weights-2016: \
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
-	$< -Y 2016 -i $(word 2, $^) -o $(OUT_DIR)/$(AUX_NTP) \
-		-c ./spec/rdx-run2.yml \
+	$< -Y 2016 -i $(word 2, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml
 
 
 ############
@@ -80,12 +79,12 @@ plot-rdx-bin_vars-2016:
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
 		-i ./histos/rdx-22_04_12_14_03-tag-2016/tagged.root
 
-plot-rdx-fit_vars-2016:
+plot-rdx-fit_vars-2016: \
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-fit_vars-2016)
+	$(eval AUX_NTP	:=	$(basename $<)--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
-	./scripts/plot_fit_vars.py -o $(OUT_DIR) \
-		-i ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root \
-		-a ./gen/rdx-22_04_19_04_33-weights-2016/D0-md.root
+	./scripts/plot_fit_vars.py -o $(OUT_DIR) -i $< -a $(AUX_NTP)
 
 
 ########
