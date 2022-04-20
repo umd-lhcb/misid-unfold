@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 19, 2022 at 03:32 PM -0400
+# Last Change: Tue Apr 19, 2022 at 09:18 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -24,7 +24,7 @@ from pyTuplingUtils.plot import (
 # generated w/ https://gka.github.io/palettes of the input colors:
 #   #00429d, #96ffea, #8bd189
 #   #8bd189, #ff005e, #93003a
-DEFAULT_COLORS = ['#93003a', '#d15d5f', '#8bd189', '#00429d', '#5585b7']
+DEFAULT_COLORS = ['#00429d', '#5585b7', '#8bd189', '#d15d5f', '#93003a']
 
 KNOWN_PARTICLES = {
     'd0': r'$D^0$',
@@ -35,6 +35,8 @@ KNOWN_PARTICLES = {
     'g': 'ghost',
     'mu': r'$\mu$',
 }
+
+TAG_ORDERING = ['pi', 'k', 'p', 'e', 'g']
 
 GET_PARTICLE = lambda x: KNOWN_PARTICLES[x.lower()] \
     if x.lower() in KNOWN_PARTICLES else x
@@ -109,12 +111,11 @@ def title_gen(name, known=KNOWN_PARTICLES):
 # Plot #
 ########
 
-def plot(histo_spec, bin_vars, bin_names, output_dir,
+def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
          colors=DEFAULT_COLORS, suffix='pdf'):
     prefix = prefix_gen(histo_spec)
 
     for idx, v in enumerate(bin_vars):
-        ordering = sorted(histo_spec)
         labels = [label_gen(i) for i in ordering]
         histos = [np.sum(histo_spec[i][0],
                          axis=tuple(x for x in range(3) if x!= idx))
@@ -151,4 +152,5 @@ if __name__ == '__main__':
                   if find_key(k, args.prefix) and
                   name_cleanup(k).endswith(args.suffix)}
 
-        plot(histos, args.vars, args.labels, args.output)
+        ordering = [f'{pref}__{p}{args.suffix}' for p in TAG_ORDERING]
+        plot(histos, args.vars, args.labels, args.output, ordering)
