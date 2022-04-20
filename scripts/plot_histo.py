@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 19, 2022 at 09:33 PM -0400
+# Last Change: Wed Apr 20, 2022 at 02:08 AM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -67,6 +67,14 @@ def parse_input():
                         default=[r'$p$ [MeV]', r'$\eta$', r'nTracks'],
                         help='specify histo binning variables in displayed format.')
 
+    parser.add_argument('--show-title', nargs='+', type=int,
+                        default=[1, 1, 1],
+                        help='control display of title for each individual plot.')
+
+    parser.add_argument('--show-legend', nargs='+', type=int,
+                        default=[1, 1, 1],
+                        help='control display of legend for each individual plot.')
+
     return parser.parse_args()
 
 
@@ -112,6 +120,7 @@ def title_gen(name, known=KNOWN_PARTICLES):
 ########
 
 def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
+         show_title_lst, show_legend_lst,
          colors=DEFAULT_COLORS, suffix='pdf'):
     prefix = prefix_gen(histo_spec)
 
@@ -122,6 +131,8 @@ def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
                   for i in ordering]
         binspecs = [histo_spec[i][1+idx] for i in ordering]
         baselines = gen_histo_stacked_baseline(histos)
+        show_title = show_title_lst[idx]
+        show_legend = show_legend_lst[idx]
 
         plotters = []
         for lbl, hist, bins, bot, clr in \
@@ -131,16 +142,21 @@ def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
                 lambda fig, ax, b=bins, h=hist+bot, add=add_args: plot_histo(
                     b, h, add, figure=fig, axis=ax, show_legend=False))
 
-            fig, ax, _ = plot_prepare(
-                xlabel=bin_names[idx], title=title_gen(prefix),
-                show_legend=False)
+            if show_title:
+                fig, ax, _ = plot_prepare(
+                    xlabel=bin_names[idx], title=title_gen(prefix),
+                    show_legend=False)
+            else:
+                fig, ax, _ = plot_prepare(
+                    xlabel=bin_names[idx], show_legend=False)
 
             for p in plotters:
                 p(fig, ax)
 
-            handles, leg_lbls = ax.get_legend_handles_labels()
-            ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1, loc='best',
-                      frameon='true')
+            if show_legend:
+                handles, leg_lbls = ax.get_legend_handles_labels()
+                ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
+                          loc='best', frameon='true')
 
             fig.savefig(f'{output_dir}/{prefix}_{v}.{suffix}')
 
@@ -161,4 +177,5 @@ if __name__ == '__main__':
                   name_cleanup(k).endswith(args.suffix)}
 
         ordering = [f'{pref}__{p}{args.suffix}' for p in TAG_ORDERING]
-        plot(histos, args.vars, args.labels, args.output, ordering)
+        plot(histos, args.vars, args.labels, args.output, ordering,
+             args.show_title, args.show_legend)
