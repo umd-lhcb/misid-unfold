@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 19, 2022 at 08:25 PM -0400
+# Last Change: Tue Apr 19, 2022 at 11:21 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -97,6 +97,16 @@ test-pidcalib2-wrapper:
 
 test-unfold: $(BINPATH)/UnfoldMisID.exe
 	./bin/UnfoldMisID.exe -c ./spec/rdx-run2.yml --dryRun
+
+test-gen-aux-filename: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
+	$(eval AUX_NTP	:=	$(basename $(notdir $^))--aux_misid.root)
+	@echo $(AUX_NTP)
+
+test-get-particle-name: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
+	$(eval NTP_NAME	:=	$(basename $(notdir $^)))
+	$(eval PARTICLE	:=	$(word 1, $(subst --, ,$(NTP_NAME))))
+	@echo $(NTP_NAME)
+	@echo $(PARTICLE)
 
 
 ###############
