@@ -1,12 +1,12 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 20, 2022 at 04:30 AM -0400
+# Last Change: Wed Apr 20, 2022 at 08:52 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
 VPATH := include:src:docs
 CPP_FILES	:=	$(wildcard src/*.cpp)
-EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%.exe,$(CPP_FILES))
+EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%,$(CPP_FILES))
 TEX_FILES	:=	$(wildcard docs/*.tex)
 PDF_FILES	:=	$(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
 
@@ -48,7 +48,7 @@ build-rdx-merged-2016:
 	@mkdir -p $(OUT_DIR)
 	./scripts/merge_histo.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
 
-build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
+build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 20 \
@@ -58,7 +58,7 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID.exe
 		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
 build-rdx-weights-2016: \
-	$(BINPATH)/ApplyMisIDWeight.exe \
+	$(BINPATH)/ApplyMisIDWeight \
 	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
@@ -106,8 +106,8 @@ plot-rdx-fit_vars-2016: \
 test-pidcalib2-wrapper:
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run
 
-test-unfold: $(BINPATH)/UnfoldMisID.exe
-	./bin/UnfoldMisID.exe -c ./spec/rdx-run2.yml --dryRun
+test-unfold: $(BINPATH)/UnfoldMisID
+	$< -c ./spec/rdx-run2.yml --dryRun
 
 test-gen-aux-filename: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
 	$(eval AUX_NTP	:=	$(basename $(notdir $^))--aux_misid.root)
@@ -124,7 +124,7 @@ test-get-particle-name: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-st
 # Compile C++ #
 ###############
 
-$(BINPATH)/%.exe: %.cpp
+$(BINPATH)/%: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)
 
 
