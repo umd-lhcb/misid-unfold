@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 20, 2022 at 08:52 PM -0400
+# Last Change: Thu Apr 21, 2022 at 05:18 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -64,6 +64,13 @@ build-rdx-weights-2016: \
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
 	$< -Y 2016 -i $(word 2, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml
+
+build-generic-dif-smearing:
+	$(eval OUT_DIR	:=	$(GENPATH)/generic-$(TIME_STAMP)-dif_smearing)
+	@mkdir -p $(OUT_DIR)
+	./scripts/build_histo_dif.py --plot -o $(OUT_DIR) \
+		-k ./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
+		-p ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
 
 
 ############
