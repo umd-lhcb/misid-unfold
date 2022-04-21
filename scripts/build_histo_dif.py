@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Thu Apr 21, 2022 at 05:19 PM -0400
+# Last Change: Thu Apr 21, 2022 at 05:26 PM -0400
 #
 # Description: build decay-in-flight histos
 
 import numpy as np
 import uproot
+import mplhep
 
 from argparse import ArgumentParser
 
@@ -18,6 +19,11 @@ from pyTuplingUtils.plot import plot_histo, ax_add_args_histo
 ################
 # Configurable #
 ################
+
+PLOT_RANGE = {
+    'kSmearing': (0.8, 1.2),
+    'piSmearing': (0.5, 1.1)
+}
 
 HISTO_NAME = 'dif.root'
 PARTICLES = {
@@ -61,11 +67,11 @@ def parse_input():
 # Helpers #
 ###########
 
-def plot(br, title, filename, nbins=40):
-    histo, bins = gen_histo(br, bins=nbins)
+def plot(br, title, filename, nbins=40, plot_range=(0, 1)):
+    histo, bins = gen_histo(br, bins=nbins, data_range=plot_range)
     plot_histo(bins, histo,
                ax_add_args_histo(label='ratio', color='cornflowerblue'),
-               output = filename, title=title)
+               output = filename, title=title, show_legend=False)
 
 
 ########
@@ -73,6 +79,7 @@ def plot(br, title, filename, nbins=40):
 ########
 
 if __name__ == '__main__':
+    mplhep.style.use('LHCb2')
     args = parse_input()
 
     ntps = [args.input_K, args.input_pi]
@@ -97,4 +104,5 @@ if __name__ == '__main__':
             if args.plot:
                 title = f'{particle}: {RECO_P_BRS[i]} / {TRUE_P_BRS[i]}'
                 filename = f'{args.output}/{particle}_{RECO_P_BRS[i]}_{TRUE_P_BRS[i]}.png'
-                plot(ratio, title, filename)
+                plot_range = PLOT_RANGE[histo]
+                plot(ratio, title, filename, plot_range=plot_range)
