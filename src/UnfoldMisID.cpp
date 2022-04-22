@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 05:00 PM -0400
+// Last Change: Fri Apr 22, 2022 at 05:16 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -94,6 +94,12 @@ vStrStr getYldHistoNames(const vStr& ptcl, const vStr& prefix,
 string getHistoName(const string& prefix, const string& ptclTag,
                     string descr = "Tag") {
   return ""s + prefix + "__" + ptclTag + descr;
+}
+
+string getHistoEffName(const string& ptcl1, const string& ptcl2,
+                       const string& descr1 = "True",
+                       const string& descr2 = "Tag") {
+  return ""s + ptcl1 + descr1 + "To" + capitalize(ptcl2) + descr2;
 }
 
 // These are a mess
@@ -547,24 +553,40 @@ void unfoldDryRun(vStr prefix, vStr ptcls, vector<vector<float>> binnings,
       cout << "  " << name << endl;
       histoOutGetter(name);
     }
+
+    cout << pref
+         << ": The response matrix will be built from these histos:" << endl;
+    for (const auto& pTag : ptcls) {
+      cout << "  ";
+      for (const auto& pTrue : ptcls) {
+        auto name = getHistoEffName(pTrue, pTag);
+        cout << setw(16) << name;
+        histoOutGetter(name);
+      }
+      cout << endl;
+    }
+
+    cout << pref
+         << ": The unfolded efficiencies will be stored in these histos:"
+         << endl;
+    for (const auto& pTrue : ptcls) {
+      cout << "  ";
+      for (const auto& pTag : ptcls) {
+        auto name = getHistoEffName(pTag, pTrue);
+        cout << setw(16) << name;
+        histoOutGetter(name);
+      }
+      cout << endl;
+    }
+
+    cout << pref
+         << ": The Mu efficiencies will be loaded from these histos:" << endl;
+    for (const auto& pTrue : ptcls) {
+      auto name = getHistoEffName(pTrue, "mu", "True", "Tag");
+      cout << "  " << name << endl;
+      histoOutGetter(name);
+    }
   }
-
-  // cout << "The unfolded efficiencies will be stored in these histos:" <<
-  // endl; for (const auto& row : nameUnfEff) {
-  //   cout << "  ";
-  //   for (const auto& elem : row) cout << setw(19) << elem;
-  //   cout << endl;
-  // }
-
-  // cout << "The response matrix will be built from these histos:" << endl;
-  // for (const auto& row : nameEff) {
-  //   cout << "  ";
-  //   for (const auto& elem : row) cout << setw(16) << elem;
-  //   cout << endl;
-  // }
-
-  // cout << "The Mu efficiencies will be loaded from these histos:" << endl;
-  // for (const auto& h : nameMuEff) cout << "  " << h << endl;
 
   cout << "The binning is defined as:" << endl;
   for (const auto& row : binnings) {

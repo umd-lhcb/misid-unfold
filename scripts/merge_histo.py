@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 13, 2022 at 11:16 PM -0400
+# Last Change: Fri Apr 22, 2022 at 12:31 AM -0400
 #
 # Description: histogram merger (M)
 
@@ -332,6 +332,11 @@ if __name__ == '__main__':
 
     output_ntp = ROOT.TFile(f'{args.output}/{HISTO_NAME}', 'RECREATE')
     for mode, params in config['input_histos'][int(args.year)].items():
+        if mode not in KNOWN_MERGERS:
+            print(f'WARNING: Unknown mode: "{mode}". Skipping...')
+            continue
+
         print(f'Merging {mode}...')
         KNOWN_MERGERS[mode](output_ntp, path_prefix, params, config)
+
     output_ntp.Close()
