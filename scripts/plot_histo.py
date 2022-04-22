@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Thu Apr 21, 2022 at 08:35 PM -0400
+# Last Change: Fri Apr 22, 2022 at 07:46 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -28,12 +28,15 @@ DEFAULT_COLORS = ['#00429d', '#5585b7', '#8bd189', '#d15d5f', '#93003a']
 
 KNOWN_PARTICLES = {
     'd0': r'$D^0$',
+    'dst': r'$D^*$',
     'e': r'$e$',
     'pi': r'$\pi$',
     'p': r'$p$',
     'k': r'$K$',
     'g': 'ghost',
     'mu': r'$\mu$',
+    'd0_usb': r'$D^0$ (USB)',
+    'dst_usb': r'$D^*$ (USB)',
 }
 
 TAG_ORDERING = ['pi', 'k', 'p', 'e', 'g']
@@ -53,7 +56,7 @@ def parse_input():
 
     parser.add_argument('-o', '--output', help='specify output folder.')
 
-    parser.add_argument('-p', '--prefix', action='append', default=['D0'],
+    parser.add_argument('-p', '--prefix', nargs='+', default=['D0'],
                         help='specify histo prefixes to plot.')
 
     parser.add_argument('-s', '--suffix', default='True',
@@ -75,6 +78,9 @@ def parse_input():
                         default=[1, 1, 1],
                         help='control display of legend for each individual plot.')
 
+    parser.add_argument('--extension', default='png',
+                        help='specify output file extension.')
+
     return parser.parse_args()
 
 
@@ -82,11 +88,10 @@ def parse_input():
 # Helpers #
 ###########
 
-def find_key(name, list_of_keys, suffix, sep='__'):
-    for k in list_of_keys:
-        for p in TAG_ORDERING:
-            if k + sep + p + suffix in name:
-                return True
+def find_key(name, pref, suffix, sep='__'):
+    for p in TAG_ORDERING:
+        if pref + sep + p + suffix in name:
+            return True
     return False
 
 
@@ -102,7 +107,7 @@ def prefix_gen(histo_spec):
         mod = 'true'
     elif 'tag' in descr.lower():
         mod = 'tag'
-    return f'{ptcl}_{mod}'
+    return f'{ptcl}-{mod}'
 
 
 def label_gen(name, known=KNOWN_PARTICLES):
@@ -112,8 +117,8 @@ def label_gen(name, known=KNOWN_PARTICLES):
 
 
 def title_gen(name, known=KNOWN_PARTICLES):
-    ptcl, descr = name.split('_')
-    return f'{GET_PARTICLE(ptcl)} {descr.lower()}'
+    ptcl, descr = name.split('-')
+    return f'{GET_PARTICLE(ptcl)}, {descr.lower()}'
 
 
 ########
@@ -122,7 +127,7 @@ def title_gen(name, known=KNOWN_PARTICLES):
 
 def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
          show_title_lst, show_legend_lst,
-         colors=DEFAULT_COLORS, suffix='pdf'):
+         colors=DEFAULT_COLORS, ext='pdf'):
     prefix = prefix_gen(histo_spec)
 
     for idx, v in enumerate(bin_vars):
@@ -155,7 +160,7 @@ def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
                 ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
                           loc='best', frameon='true')
 
-            fig.savefig(f'{output_dir}/{prefix}_{v}.{suffix}')
+            fig.savefig(f'{output_dir}/{prefix}_{v}.{ext}')
 
 
 ########
@@ -171,7 +176,7 @@ if __name__ == '__main__':
     for pref in args.prefix:
         histos = {
             name: ntp[k].to_numpy() for k in ntp
-            if find_key(name := name_cleanup(k), args.prefix, args.suffix)}
+            if find_key(name := name_cleanup(k), pref, args.suffix)}
 
         print('Histos to plot:')
         for h in histos:
@@ -179,4 +184,4 @@ if __name__ == '__main__':
 
         ordering = [f'{pref}__{p}{args.suffix}' for p in TAG_ORDERING]
         plot(histos, args.vars, args.labels, args.output, ordering,
-             args.show_title, args.show_legend)
+             args.show_title, args.show_legend, ext=args.extension)

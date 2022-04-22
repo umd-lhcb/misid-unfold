@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Apr 22, 2022 at 07:19 PM -0400
+# Last Change: Fri Apr 22, 2022 at 07:29 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -81,19 +81,21 @@ build-generic-dif-smearing:
 plot-rdx-bin_vars-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/plot_histo.py -o $(OUT_DIR) \
-		-i ./histos/rdx-22_04_15_01_04-unfolded-2016/unfolded.root
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
-		-i ./histos/rdx-22_04_12_14_03-tag-2016/tagged.root
+		-i ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
+		-p D0 D0_usb Dst Dst_usb
+	./scripts/plot_histo.py -o $(OUT_DIR) \
+		-i ./histos/rdx-22_04_22_19_19-unfolded-2016/unfolded.root \
+		-p D0 D0_usb Dst Dst_usb
 
 plot-rdx-bin_vars-ana-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-ana-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
-		-i ./histos/rdx-22_04_12_14_03-tag-2016/tagged.root \
+	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag --extension pdf \
+		-i ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
 		--show-title 0 1 0 --show-legend 1 0 0
-	./scripts/plot_histo.py -o $(OUT_DIR) \
-		-i ./histos/rdx-22_04_15_01_04-unfolded-2016/unfolded.root \
+	./scripts/plot_histo.py -o $(OUT_DIR) --extension pdf \
+		-i ./histos/rdx-22_04_22_19_19-unfolded-2016/unfolded.root \
 		--show-title 0 1 0 --show-legend 1 0 0
 
 
