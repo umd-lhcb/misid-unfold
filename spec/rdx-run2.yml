@@ -58,6 +58,7 @@ pidcalib_config:
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
+            ubdt_cut: "BDTmu > 0.25"  # FIXME: Not implemented yet
 
 
 # specify additional source of histograms
@@ -74,6 +75,16 @@ input_histos:
                 H2H_Ghost_TO_e: gTrueToETag
                 H2H_Ghost_TO_Ghost: gTrueToGTag
                 H2H_Ghost_TO_Mu: gTrueToMuTag
+        product:
+            # FIXME: Not implemented. Reserved for electron UBDT efficiency product
+            #        This means that the final eTrue -> Tag efficiency would be:
+            #          eTrueTo_Tag (from PIDCalib) * eTrueTo_TagUBDT
+            "/dev/null":
+                eTrueToPiTag: eTrueToPiTag_BDTmu
+                eTrueToKTag: eTrueToKTag_BDTmu
+                eTrueToPTag: eTrueToPTag_BDTmu
+                eTrueToETag: eTrueToETag_BDTmu
+                eTrueToGTag: eTrueToGTag_BDTmu
 
 
 # building tagged histograms, used by (T), and (U)
