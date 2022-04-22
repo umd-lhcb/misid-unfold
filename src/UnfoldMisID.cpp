@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 07:10 PM -0400
+// Last Change: Fri Apr 22, 2022 at 07:16 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -174,7 +174,7 @@ auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
       if (histo == nullptr) {
         cout << "Histogram " << key << " doesn't exist! terminate now..."
              << endl;
-        exit(1);
+        terminate();
       }
 
       auto histoPtr = shared_ptr<TH3D>(histo);
@@ -366,12 +366,9 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
               if (isnan(effTrueToMuTag)) effTrueToMuTag = 0.0;
               auto wtTagToMuTagElem = probTagToTrue * effTrueToMuTag;
 
-              if (debug) {
-                cout << "  A term in transfer factor = " << probTagToTrue
-                     << " * " << effTrueToMuTag << endl;
-                cout << "                            = " << wtTagToMuTagElem
-                     << endl;
-              }
+              if (debug)
+                cout << "  trans. fac. = " << probTagToTrue << " * "
+                     << effTrueToMuTag << " = " << wtTagToMuTagElem << endl;
               wtTagToMuTag += wtTagToMuTagElem;
             }
 
