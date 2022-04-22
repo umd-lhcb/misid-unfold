@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 15, 2022 at 01:03 AM -0400
+// Last Change: Fri Apr 22, 2022 at 04:43 AM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -64,6 +65,7 @@ vector<double> histoToProb(const TH1D* histo) {
 ////////////////////
 // Config helpers //
 ////////////////////
+// ptcl: particle
 
 vStr getKeyNames(YAML::Node node, string prefix = "", string suffix = "") {
   vStr result{};
@@ -87,6 +89,10 @@ vStrStr getYldHistoNames(const vStr& ptcl, const vStr& prefix,
   }
 
   return result;
+}
+
+string getHistoYldName(const string& prefix, const string& ptclTag) {
+  return ""s + prefix + "__" + ptclTag + "Tag";
 }
 
 // These are a mess
@@ -214,6 +220,36 @@ map<string, TH3D*> prepOutHisto(const vStrStr&         names,
 
   cout << "All output histos prepared." << endl;
   return result;  // in principle these pointers need deleting
+}
+
+auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
+  auto mapHisto = make_shared<map<string, shared_ptr<TH3D>>>();
+
+  // NOTE: We have to capture by copy, s.t. the memory is not deallocated at
+  //       after the wrapper function finishes executing
+  return [=](string key) {
+    if (!mapHisto->count(key)) {
+      TH3D* histo;
+      if (key.find("__") != key.npos)
+        // this is a yld histo
+        histo = static_cast<TH3D*>(ntpYld->Get(key.data()));
+      else
+        histo = static_cast<TH3D*>(ntpEff->Get(key.data()));
+
+      if (histo == nullptr) {
+        cout << "Histogram " << key << " doesn't exist! terminate now..."
+             << endl;
+        exit(1);
+      }
+
+      auto histoPtr = shared_ptr<TH3D>(histo);
+      mapHisto->emplace(key, histoPtr);
+      return histoPtr;
+    }
+
+    // the key already exists
+    return mapHisto->at(key);
+  };
 }
 
 map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
@@ -468,42 +504,48 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
   delete histDim;
 }
 
-void unfoldDryRun(vStr ptcl, vStrStr nameMeaYld, vStrStr nameUnfYld,
-                  vStrStr nameEff, vStrStr nameUnfEff, vStr nameMuEff,
-                  vector<vector<float>> binnings, vector<int> nbins) {
-  cout << "The tagged species are:" << endl;
-  for (const auto& p : ptcl) cout << "  " << p << endl;
-
-  cout << "The measured yields are stored in these histos:" << endl;
-  for (const auto& row : nameMeaYld) {
-    cout << "  ";
-    for (const auto& elem : row) cout << setw(12) << elem;
-    cout << endl;
+template <typename F1>
+void unfoldDryRun(vStr prefix, vStr ptcls, vector<vector<float>> binnings,
+                  vector<int> nbins, F1& histoInGetter) {
+  for (const auto& pref : prefix) {
+    cout << pref << ": The tagged species are:" << endl;
+    for (const auto& pTag : ptcls) {
+      auto name = getHistoYldName(pref, pTag);
+      cout << "  " << name << endl;
+      histoInGetter(name);
+    }
   }
 
-  cout << "The unfolded yields will be stored in these histos:" << endl;
-  for (const auto& row : nameUnfYld) {
-    cout << "  ";
-    for (const auto& elem : row) cout << setw(12) << elem;
-    cout << endl;
-  }
+  // cout << "The measured yields are stored in these histos:" << endl;
+  // for (const auto& row : nameMeaYld) {
+  //   cout << "  ";
+  //   for (const auto& elem : row) cout << setw(12) << elem;
+  //   cout << endl;
+  // }
 
-  cout << "The unfolded efficiencies will be stored in these histos:" << endl;
-  for (const auto& row : nameUnfEff) {
-    cout << "  ";
-    for (const auto& elem : row) cout << setw(19) << elem;
-    cout << endl;
-  }
+  // cout << "The unfolded yields will be stored in these histos:" << endl;
+  // for (const auto& row : nameUnfYld) {
+  //   cout << "  ";
+  //   for (const auto& elem : row) cout << setw(12) << elem;
+  //   cout << endl;
+  // }
 
-  cout << "The response matrix will be built from these histos:" << endl;
-  for (const auto& row : nameEff) {
-    cout << "  ";
-    for (const auto& elem : row) cout << setw(16) << elem;
-    cout << endl;
-  }
+  // cout << "The unfolded efficiencies will be stored in these histos:" <<
+  // endl; for (const auto& row : nameUnfEff) {
+  //   cout << "  ";
+  //   for (const auto& elem : row) cout << setw(19) << elem;
+  //   cout << endl;
+  // }
 
-  cout << "The Mu efficiencies will be loaded from these histos:" << endl;
-  for (const auto& h : nameMuEff) cout << "  " << h << endl;
+  // cout << "The response matrix will be built from these histos:" << endl;
+  // for (const auto& row : nameEff) {
+  //   cout << "  ";
+  //   for (const auto& elem : row) cout << setw(16) << elem;
+  //   cout << endl;
+  // }
+
+  // cout << "The Mu efficiencies will be loaded from these histos:" << endl;
+  // for (const auto& h : nameMuEff) cout << "  " << h << endl;
 
   cout << "The binning is defined as:" << endl;
   for (const auto& row : binnings) {
@@ -579,16 +621,17 @@ int main(int argc, char** argv) {
     histoNameUnfEff.emplace_back(
         getEffHistoNames(ptclList, ptclTarget, "Tag", "Tag", pref + "__"));
 
-  // dry run
-  if (parsedArgs["dryRun"].as<bool>()) {
-    unfoldDryRun(ptclList, histoNameMeaYld, histoNameUnfYld, histoNameEff,
-                 histoNameUnfEff, histoNameMuEff, histoBinSpec, histoBinSize);
-    return 0;
-  }
-
   // open ntuples
   auto ntpYld = new TFile(parsedArgs["yldHisto"].as<string>().data());
   auto ntpEff = new TFile(parsedArgs["effHisto"].as<string>().data());
+
+  auto histoInGetter = getHistoInHelper(ntpYld, ntpEff);
+
+  // dry run
+  if (parsedArgs["dryRun"].as<bool>()) {
+    unfoldDryRun(prefix, ptclList, histoBinSpec, histoBinSize, histoInGetter);
+    return 0;
+  }
 
   auto outputFilename = parsedArgs["output"].as<string>() + "/" +
                         parsedArgs["outputHisto"].as<string>();

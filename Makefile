@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Thu Apr 21, 2022 at 05:18 PM -0400
+# Last Change: Fri Apr 22, 2022 at 04:46 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -114,7 +114,9 @@ test-pidcalib2-wrapper:
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run
 
 test-unfold: $(BINPATH)/UnfoldMisID
-	$< -c ./spec/rdx-run2.yml --dryRun
+	$< -c ./spec/rdx-run2.yml --dryRun \
+        -y ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
+        -e ./histos/rdx-22_04_12_14_03-merged-2016/merged.root
 
 test-gen-aux-filename: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
 	$(eval AUX_NTP	:=	$(basename $(notdir $^))--aux_misid.root)
