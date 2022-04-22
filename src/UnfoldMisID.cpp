@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 04:43 AM -0400
+// Last Change: Fri Apr 22, 2022 at 05:00 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -91,8 +91,9 @@ vStrStr getYldHistoNames(const vStr& ptcl, const vStr& prefix,
   return result;
 }
 
-string getHistoYldName(const string& prefix, const string& ptclTag) {
-  return ""s + prefix + "__" + ptclTag + "Tag";
+string getHistoName(const string& prefix, const string& ptclTag,
+                    string descr = "Tag") {
+  return ""s + prefix + "__" + ptclTag + descr;
 }
 
 // These are a mess
@@ -243,6 +244,30 @@ auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
       }
 
       auto histoPtr = shared_ptr<TH3D>(histo);
+      mapHisto->emplace(key, histoPtr);
+      return histoPtr;
+    }
+
+    // the key already exists
+    return mapHisto->at(key);
+  };
+}
+
+auto getHistoOutHelper(vector<vector<float>>& binnings) {
+  auto mapHisto = make_shared<map<string, shared_ptr<TH3D>>>();
+
+  return [=](string key) {
+    if (!mapHisto->count(key)) {
+      auto nbinsX = binnings[0].size() - 1;
+      auto nbinsY = binnings[1].size() - 1;
+      auto nbinsZ = binnings[2].size() - 1;
+
+      auto xBins = binnings[0].data();
+      auto yBins = binnings[1].data();
+      auto zBins = binnings[2].data();
+
+      auto histoPtr = make_shared<TH3D>(TH3D(
+          key.data(), key.data(), nbinsX, xBins, nbinsY, yBins, nbinsZ, zBins));
       mapHisto->emplace(key, histoPtr);
       return histoPtr;
     }
@@ -504,31 +529,25 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
   delete histDim;
 }
 
-template <typename F1>
+template <typename F1, typename F2>
 void unfoldDryRun(vStr prefix, vStr ptcls, vector<vector<float>> binnings,
-                  vector<int> nbins, F1& histoInGetter) {
+                  vector<int> nbins, F1& histoInGetter, F2& histoOutGetter) {
   for (const auto& pref : prefix) {
-    cout << pref << ": The tagged species are:" << endl;
+    cout << pref << ": The measured yields are stored in these histos:" << endl;
     for (const auto& pTag : ptcls) {
-      auto name = getHistoYldName(pref, pTag);
+      auto name = getHistoName(pref, pTag);
       cout << "  " << name << endl;
       histoInGetter(name);
     }
+
+    cout << pref
+         << ": The unfolded yields will be stored in these histos:" << endl;
+    for (const auto& pTag : ptcls) {
+      auto name = getHistoName(pref, pTag, "True");
+      cout << "  " << name << endl;
+      histoOutGetter(name);
+    }
   }
-
-  // cout << "The measured yields are stored in these histos:" << endl;
-  // for (const auto& row : nameMeaYld) {
-  //   cout << "  ";
-  //   for (const auto& elem : row) cout << setw(12) << elem;
-  //   cout << endl;
-  // }
-
-  // cout << "The unfolded yields will be stored in these histos:" << endl;
-  // for (const auto& row : nameUnfYld) {
-  //   cout << "  ";
-  //   for (const auto& elem : row) cout << setw(12) << elem;
-  //   cout << endl;
-  // }
 
   // cout << "The unfolded efficiencies will be stored in these histos:" <<
   // endl; for (const auto& row : nameUnfEff) {
@@ -625,11 +644,13 @@ int main(int argc, char** argv) {
   auto ntpYld = new TFile(parsedArgs["yldHisto"].as<string>().data());
   auto ntpEff = new TFile(parsedArgs["effHisto"].as<string>().data());
 
-  auto histoInGetter = getHistoInHelper(ntpYld, ntpEff);
+  auto histoInGetter  = getHistoInHelper(ntpYld, ntpEff);
+  auto histoOutGetter = getHistoOutHelper(histoBinSpec);
 
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
-    unfoldDryRun(prefix, ptclList, histoBinSpec, histoBinSize, histoInGetter);
+    unfoldDryRun(prefix, ptclList, histoBinSpec, histoBinSize, histoInGetter,
+                 histoOutGetter);
     return 0;
   }
 
