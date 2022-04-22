@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 07:16 PM -0400
+// Last Change: Fri Apr 22, 2022 at 07:22 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -420,6 +420,7 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
   delete histMea;
   delete histRes;
   delete histInv;
+  delete histProb;
   delete histDim;
 }
 
