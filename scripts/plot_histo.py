@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 20, 2022 at 02:12 AM -0400
+# Last Change: Thu Apr 21, 2022 at 08:35 PM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -82,10 +82,11 @@ def parse_input():
 # Helpers #
 ###########
 
-def find_key(name, list_of_keys, sep='__'):
+def find_key(name, list_of_keys, suffix, sep='__'):
     for k in list_of_keys:
-        if k + sep in name:
-            return True
+        for p in TAG_ORDERING:
+            if k + sep + p + suffix in name:
+                return True
     return False
 
 
@@ -168,9 +169,13 @@ if __name__ == '__main__':
 
     # group histograms
     for pref in args.prefix:
-        histos = {name_cleanup(k): ntp[k].to_numpy() for k in ntp
-                  if find_key(k, args.prefix) and
-                  name_cleanup(k).endswith(args.suffix)}
+        histos = {
+            name: ntp[k].to_numpy() for k in ntp
+            if find_key(name := name_cleanup(k), args.prefix, args.suffix)}
+
+        print('Histos to plot:')
+        for h in histos:
+            print(f'  {h}')
 
         ordering = [f'{pref}__{p}{args.suffix}' for p in TAG_ORDERING]
         plot(histos, args.vars, args.labels, args.output, ordering,
