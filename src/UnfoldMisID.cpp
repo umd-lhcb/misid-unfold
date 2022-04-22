@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 05:16 PM -0400
+// Last Change: Fri Apr 22, 2022 at 05:22 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -78,6 +78,18 @@ vStr getKeyNames(YAML::Node node, string prefix = "", string suffix = "") {
   return result;
 }
 
+string getHistoName(const string& prefix, const string& ptclTag,
+                    string descr = "Tag") {
+  return ""s + prefix + "__" + ptclTag + descr;
+}
+
+string getHistoEffName(const string& ptcl1, const string& ptcl2,
+                       const string& descr1 = "True",
+                       const string& descr2 = "Tag") {
+  return ""s + ptcl1 + descr1 + "To" + capitalize(ptcl2) + descr2;
+}
+
+// Deprecated, will remove soon
 vStrStr getYldHistoNames(const vStr& ptcl, const vStr& prefix,
                          string suffix = "Tag") {
   vStrStr result{};
@@ -91,18 +103,6 @@ vStrStr getYldHistoNames(const vStr& ptcl, const vStr& prefix,
   return result;
 }
 
-string getHistoName(const string& prefix, const string& ptclTag,
-                    string descr = "Tag") {
-  return ""s + prefix + "__" + ptclTag + descr;
-}
-
-string getHistoEffName(const string& ptcl1, const string& ptcl2,
-                       const string& descr1 = "True",
-                       const string& descr2 = "Tag") {
-  return ""s + ptcl1 + descr1 + "To" + capitalize(ptcl2) + descr2;
-}
-
-// These are a mess
 vStr getEffHistoNames(const string ptcl1, const vStr& ptcl2,
                       string spc1 = "True", string spc2 = "Tag",
                       string prefix = "") {
@@ -202,33 +202,6 @@ void printResErr(const TH2D* res) {
   printResGeneric(res, getter);
 }
 
-map<string, TH3D*> prepOutHisto(const vStrStr&         names,
-                                vector<vector<float>>& bins) {
-  map<string, TH3D*> result{};
-
-  for (const auto vec : names) {
-    for (const auto n : vec) {
-      cout << "Preparing output histo: " << n << endl;
-      auto histoName = n.data();
-
-      auto nbinsX = bins[0].size() - 1;
-      auto nbinsY = bins[1].size() - 1;
-      auto nbinsZ = bins[2].size() - 1;
-
-      auto xBins = bins[0].data();
-      auto yBins = bins[1].data();
-      auto zBins = bins[2].data();
-
-      auto histo = new TH3D(histoName, histoName, nbinsX, xBins, nbinsY, yBins,
-                            nbinsZ, zBins);
-      result[histoName] = histo;
-    }
-  }
-
-  cout << "All output histos prepared." << endl;
-  return result;  // in principle these pointers need deleting
-}
-
 auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
   auto mapHisto = make_shared<map<string, shared_ptr<TH3D>>>();
 
@@ -236,6 +209,7 @@ auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
   //       after the wrapper function finishes executing
   return [=](string key) {
     if (!mapHisto->count(key)) {
+      cout << "Loading histo: " << key << endl;
       TH3D* histo;
       if (key.find("__") != key.npos)
         // this is a yld histo
@@ -264,6 +238,7 @@ auto getHistoOutHelper(vector<vector<float>>& binnings) {
 
   return [=](string key) {
     if (!mapHisto->count(key)) {
+      cout << "Preparing output histo: " << key << endl;
       auto nbinsX = binnings[0].size() - 1;
       auto nbinsY = binnings[1].size() - 1;
       auto nbinsZ = binnings[2].size() - 1;
@@ -281,6 +256,34 @@ auto getHistoOutHelper(vector<vector<float>>& binnings) {
     // the key already exists
     return mapHisto->at(key);
   };
+}
+
+// Deprecated, will remove soon
+map<string, TH3D*> prepOutHisto(const vStrStr&         names,
+                                vector<vector<float>>& bins) {
+  map<string, TH3D*> result{};
+
+  for (const auto vec : names) {
+    for (const auto n : vec) {
+      cout << "Preparing output histo: " << n << endl;
+      auto histoName = n.data();
+
+      auto nbinsX = bins[0].size() - 1;
+      auto nbinsY = bins[1].size() - 1;
+      auto nbinsZ = bins[2].size() - 1;
+
+      auto xBins = bins[0].data();
+      auto yBins = bins[1].data();
+      auto zBins = bins[2].data();
+
+      auto histo = new TH3D(histoName, histoName, nbinsX, xBins, nbinsY, yBins,
+                            nbinsZ, zBins);
+      result[histoName] = histo;
+    }
+  }
+
+  cout << "All output histos prepared." << endl;
+  return result;  // in principle these pointers need deleting
 }
 
 map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
@@ -315,6 +318,7 @@ TH3D* loadSingleHisto(map<string, TH3D*>& mapHisto, string nameHisto) {
   }
   return mapHisto[nameHisto];
 }
+//
 
 ////////////
 // Unfold //
