@@ -95,8 +95,35 @@ input_ntps:
     2016:
         # each entry should be a key-list pair, where list provides path to ntuples, with tree names
         D0:
-            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--*.root:tree"
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_20--mu_misid--data--2016--*.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_usb:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        D0_ws_Mu:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0_ws_Mu--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_ws_Mu_usb:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0_ws_Mu--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_usb:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Mu:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_usb:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Pi:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_usb:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_20--mu_misid--data--2016--*.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
 
 
 # Used by (A)
