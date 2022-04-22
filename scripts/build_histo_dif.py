@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Thu Apr 21, 2022 at 08:09 PM -0400
+# Last Change: Thu Apr 21, 2022 at 08:12 PM -0400
 #
 # Description: build decay-in-flight histos
 
@@ -27,9 +27,9 @@ DATA_RANGE = {
         ((0.95, 1.05), 100),
     ],
     'pi_smr': [
-        ((0.55, 1.05), 100),
-        ((0.55, 1.05), 100),
-        ((0.57, 1.03), 100),
+        ((0.55, 1.1), 100),
+        ((0.55, 1.1), 100),
+        ((0.7, 1.05), 100),
     ],
 }
 
