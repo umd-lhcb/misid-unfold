@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 05:22 PM -0400
+// Last Change: Fri Apr 22, 2022 at 07:10 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -34,8 +34,8 @@ using namespace std;
 // Typedefs //
 //////////////
 
-typedef vector<string>         vStr;
-typedef vector<vector<string>> vStrStr;
+typedef vector<string>        vStr;
+typedef vector<vector<float>> vFltFlt;
 
 /////////////////////
 // General helpers //
@@ -78,9 +78,9 @@ vStr getKeyNames(YAML::Node node, string prefix = "", string suffix = "") {
   return result;
 }
 
-string getHistoName(const string& prefix, const string& ptclTag,
+string getHistoName(const string& prefix, const string& ptcl,
                     string descr = "Tag") {
-  return ""s + prefix + "__" + ptclTag + descr;
+  return ""s + prefix + "__" + ptcl + descr;
 }
 
 string getHistoEffName(const string& ptcl1, const string& ptcl2,
@@ -89,60 +89,15 @@ string getHistoEffName(const string& ptcl1, const string& ptcl2,
   return ""s + ptcl1 + descr1 + "To" + capitalize(ptcl2) + descr2;
 }
 
-// Deprecated, will remove soon
-vStrStr getYldHistoNames(const vStr& ptcl, const vStr& prefix,
-                         string suffix = "Tag") {
-  vStrStr result{};
-
-  for (auto pref : prefix) {
-    vStr row{};
-    for (const auto& pt : ptcl) row.emplace_back(pref + "__" + pt + suffix);
-    result.emplace_back(row);
-  }
-
-  return result;
+string getHistoEffName(const string& prefix, const string& ptcl1,
+                       const string& ptcl2, const string& descr1,
+                       const string& descr2) {
+  return ""s + prefix + "__" + getHistoEffName(ptcl1, ptcl2, descr1, descr2);
 }
 
-vStr getEffHistoNames(const string ptcl1, const vStr& ptcl2,
-                      string spc1 = "True", string spc2 = "Tag",
-                      string prefix = "") {
-  vStr result{};
-  // e.g. muTrueToPiTag, with mu fixed
-  for (auto p2 : ptcl2)
-    result.emplace_back(prefix + ptcl1 + spc1 + "To" + capitalize(p2) + spc2);
-  return result;
-}
-
-vStr getEffHistoNames(const vStr& ptcl1, const string ptcl2,
-                      string spc1 = "True", string spc2 = "Tag",
-                      string prefix = "") {
-  vStr result{};
-  // e.g. muTrueToPiTag, with Pi fixed
-  for (auto p1 : ptcl1)
-    result.emplace_back(prefix + p1 + spc1 + "To" + capitalize(ptcl2) + spc2);
-  return result;
-}
-
-vStrStr getEffHistoNames(const vStr& ptcl1, const vStr& ptcl2,
-                         string spc1 = "True", string spc2 = "Tag",
-                         string prefix = "") {
-  vStrStr result{};
-
-  // Here we (indirectly) define the rows and columns of the response matrix, be
-  // careful!
-  for (auto p2 : ptcl2) {  // w/ default values, we are looping over Tag
-    // for each row, we hold tag unchanged
-    auto row = getEffHistoNames(ptcl1, p2, spc1, spc2, prefix);
-    result.emplace_back(row);
-  }
-
-  return result;
-}
-// end of mess
-
-tuple<vector<vector<float>>, vector<int>> getBins(YAML::Node cfgBinning) {
-  vector<vector<float>> binnings{};
-  vector<int>           nbins{};
+tuple<vFltFlt, vector<int>> getBins(YAML::Node cfgBinning) {
+  vFltFlt     binnings{};
+  vector<int> nbins{};
 
   for (auto it = cfgBinning.begin(); it != cfgBinning.end(); it++) {
     vector<float> binEdges{};
@@ -155,7 +110,7 @@ tuple<vector<vector<float>>, vector<int>> getBins(YAML::Node cfgBinning) {
     nbins.emplace_back(counter);
   }
 
-  return tuple<vector<vector<float>>, vector<int>>{binnings, nbins};
+  return tuple<vFltFlt, vector<int>>{binnings, nbins};
 }
 
 ///////////////////
@@ -209,7 +164,6 @@ auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
   //       after the wrapper function finishes executing
   return [=](string key) {
     if (!mapHisto->count(key)) {
-      cout << "Loading histo: " << key << endl;
       TH3D* histo;
       if (key.find("__") != key.npos)
         // this is a yld histo
@@ -233,12 +187,10 @@ auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
   };
 }
 
-auto getHistoOutHelper(vector<vector<float>>& binnings) {
-  auto mapHisto = make_shared<map<string, shared_ptr<TH3D>>>();
-
+auto getHistoOutHelper(map<string, shared_ptr<TH3D>>* mapHisto,
+                       vFltFlt&                       binnings) {
   return [=](string key) {
     if (!mapHisto->count(key)) {
-      cout << "Preparing output histo: " << key << endl;
       auto nbinsX = binnings[0].size() - 1;
       auto nbinsY = binnings[1].size() - 1;
       auto nbinsZ = binnings[2].size() - 1;
@@ -257,68 +209,6 @@ auto getHistoOutHelper(vector<vector<float>>& binnings) {
     return mapHisto->at(key);
   };
 }
-
-// Deprecated, will remove soon
-map<string, TH3D*> prepOutHisto(const vStrStr&         names,
-                                vector<vector<float>>& bins) {
-  map<string, TH3D*> result{};
-
-  for (const auto vec : names) {
-    for (const auto n : vec) {
-      cout << "Preparing output histo: " << n << endl;
-      auto histoName = n.data();
-
-      auto nbinsX = bins[0].size() - 1;
-      auto nbinsY = bins[1].size() - 1;
-      auto nbinsZ = bins[2].size() - 1;
-
-      auto xBins = bins[0].data();
-      auto yBins = bins[1].data();
-      auto zBins = bins[2].data();
-
-      auto histo = new TH3D(histoName, histoName, nbinsX, xBins, nbinsY, yBins,
-                            nbinsZ, zBins);
-      result[histoName] = histo;
-    }
-  }
-
-  cout << "All output histos prepared." << endl;
-  return result;  // in principle these pointers need deleting
-}
-
-map<string, TH3D*> loadHisto(const map<TFile*, vStrStr>& directive) {
-  map<string, TH3D*> result{};
-
-  for (const auto& [ntp, val] : directive) {
-    for (const auto& row : val) {
-      for (const auto& n : row) {
-        cout << "Loading " << n << endl;
-
-        auto histo = static_cast<TH3D*>(ntp->Get(n.data()));
-        if (!histo) {
-          cout << "Histogram " << n << " doesn't exist! terminate now..."
-               << endl;
-          exit(1);
-        }
-
-        result[n] = histo;
-      }
-    }
-  }
-
-  cout << "All histograms loaded." << endl;
-  return result;
-}
-
-TH3D* loadSingleHisto(map<string, TH3D*>& mapHisto, string nameHisto) {
-  if (mapHisto.find(nameHisto) == mapHisto.end()) {
-    cout << "Histo " << nameHisto << " is not defined! Terminate now..."
-         << endl;
-    terminate();  // this is serious!
-  }
-  return mapHisto[nameHisto];
-}
-//
 
 ////////////
 // Unfold //
@@ -356,11 +246,10 @@ void ensureUnitarity(TH2D* res, bool debug = true) {
   }
 }
 
-void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
-            vStrStr nameMeaYld, vStrStr nameEff, vStr nameMuEff,
-            vStrStr nameUnfYld, vStrStr nameUnfEff, bool debug = false,
-            int numOfIter = 4) {
-  int totSize = nameMeaYld[0].size();
+template <typename F1, typename F2>
+void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
+            F2& histoOutGetter, bool debug = false, int numOfIter = 4) {
+  int totSize = ptcls.size();
 
   // These are used to stored measured yields (a vector) and response matrix (a
   // 2D matrix)
@@ -375,24 +264,15 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
   auto histDim = new TH1D("histDim", "histDim", totSize, 0, totSize);
   for (int i = 1; i <= totSize; i++) histDim->SetBinContent(i, 1);
 
-  // Figure out binning from one of the input histograms
-  vector<int> nbins{};
-  for (const auto pair : histoIn) {
-    auto ntp = pair.second;
-    nbins.emplace_back(ntp->GetNbinsX());
-    nbins.emplace_back(ntp->GetNbinsY());
-    nbins.emplace_back(ntp->GetNbinsZ());
-    break;
-  }
-
   // Main unfolding procedure
   for (int x = 1; x <= nbins[0]; x++) {
     for (int y = 1; y <= nbins[1]; y++) {
       for (int z = 1; z <= nbins[2]; z++) {
-        for (int idxPref = 0; idxPref != nameMeaYld.size(); idxPref++) {
+        for (auto& pref : prefix) {
           // build yield vector
           for (int idx = 0; idx != totSize; idx++) {
-            auto histo = loadSingleHisto(histoIn, nameMeaYld[idxPref][idx]);
+            auto name  = getHistoName(pref, ptcls[idx]);
+            auto histo = histoInGetter(name);
             histMea->SetBinContent(idx + 1, histo->GetBinContent(x, y, z));
           }
 
@@ -404,8 +284,8 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
           //         tag  -> x index
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
-              auto name  = nameEff[idxTag][idxTrue];
-              auto histo = loadSingleHisto(histoIn, name);
+              auto name  = getHistoEffName(ptcls[idxTrue], ptcls[idxTag]);
+              auto histo = histoInGetter(name);
               auto eff   = histo->GetBinContent(x, y, z);
               auto err   = histo->GetBinError(x, y, z);
 
@@ -427,13 +307,13 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 
           // Save unfolded yields
           for (int idx = 0; idx != totSize; idx++) {
-            auto name = nameUnfYld[idxPref][idx];
+            auto name = getHistoName(pref, ptcls[idx], "True");
             auto yld  = histUnf->GetBinContent(idx + 1);
             if (isnan(yld) || isinf(yld)) {
               cout << "WARNING: naN or inf detected for " << name << endl;
               yld = 0;
             }
-            auto histo = loadSingleHisto(histoOut, name);
+            auto histo = histoOutGetter(name);
             cout << "Writing unfolded yield to " << name << endl;
             ;
             histo->SetBinContent(x, y, z, yld);
@@ -462,12 +342,15 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               auto probTagToTrue =
                   probTrueToTag * probTrue[idxTrue] / probTrueNormFac;
               if (isnan(probTagToTrue)) probTagToTrue = 0.0;
+              auto nameTagToTrue = getHistoEffName(
+                  pref, ptcls[idxTag], ptcls[idxTrue], "Tag", "True");
 
               if (debug) {
                 cout << "  idxTrue: " << idxTrue << " idxTag: " << idxTag
                      << endl;
-                cout << "  prob = " << nameEff[idxTag][idxTrue] << " * "
-                     << nameUnfYld[idxPref][idxTrue] << " / "
+                cout << "  prob = "
+                     << getHistoEffName(ptcls[idxTrue], ptcls[idxTag]) << " * "
+                     << getHistoName(pref, ptcls[idxTrue]) << " / "
                      << "normalization" << endl;
                 cout << "       = " << probTrueToTag << " * "
                      << probTrue[idxTrue] << " / " << probTrueNormFac << " = "
@@ -476,10 +359,13 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
               histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTagToTrue);
 
               // now contract with the mu misID eff (true -> mu tag)
-              auto histo = loadSingleHisto(histoIn, nameMuEff[idxTrue]);
-              auto effTrueToMuTag = histo->GetBinContent(x, y, z);
+              auto nameTrueToMuTag = getHistoEffName(ptcls[idxTrue], "Mu");
+              auto histo           = histoInGetter(nameTrueToMuTag);
+              auto effTrueToMuTag  = histo->GetBinContent(x, y, z);
+
               if (isnan(effTrueToMuTag)) effTrueToMuTag = 0.0;
               auto wtTagToMuTagElem = probTagToTrue * effTrueToMuTag;
+
               if (debug) {
                 cout << "  A term in transfer factor = " << probTagToTrue
                      << " * " << effTrueToMuTag << endl;
@@ -490,8 +376,9 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
             }
 
             // we use idxTag as the second index, which checks out
-            auto name  = nameUnfEff[idxPref][idxTag];
-            auto histo = loadSingleHisto(histoOut, name);
+            auto name =
+                getHistoEffName(pref, ptcls[idxTag], "Mu", "Tag", "Tag");
+            auto histo = histoOutGetter(name);
             histo->SetBinContent(x, y, z, wtTagToMuTag);
             if (debug)
               cout << "Writing final contracted transfer factor = "
@@ -540,8 +427,8 @@ void unfold(map<string, TH3D*> histoIn, map<string, TH3D*> histoOut,
 }
 
 template <typename F1, typename F2>
-void unfoldDryRun(vStr prefix, vStr ptcls, vector<vector<float>> binnings,
-                  vector<int> nbins, F1& histoInGetter, F2& histoOutGetter) {
+void unfoldDryRun(vStr& prefix, vStr& ptcls, vFltFlt& binnings,
+                  vector<int>& nbins, F1& histoInGetter, F2& histoOutGetter) {
   for (const auto& pref : prefix) {
     cout << pref << ": The measured yields are stored in these histos:" << endl;
     for (const auto& pTag : ptcls) {
@@ -653,25 +540,15 @@ int main(int argc, char** argv) {
   auto ptclList   = getKeyNames(ymlConfig["tags"]);
   auto year       = parsedArgs["year"].as<string>();
   auto prefix     = getKeyNames(ymlConfig["input_ntps"][year]);
-
-  auto histoNameMeaYld = getYldHistoNames(ptclList, prefix);
-  auto histoNameUnfYld = getYldHistoNames(ptclList, prefix, "True");
-  auto histoNameEff    = getEffHistoNames(ptclList, ptclList);
-  auto histoNameMuEff  = getEffHistoNames(
-      ptclList, ptclTarget);  // e.g. kTrueToMuTag, where Mu is fixed
   auto [histoBinSpec, histoBinSize] = getBins(ymlConfig["binning"]);
 
-  vStrStr histoNameUnfEff{};
-  for (auto pref : prefix)
-    histoNameUnfEff.emplace_back(
-        getEffHistoNames(ptclList, ptclTarget, "Tag", "Tag", pref + "__"));
+  // input ntuples
+  auto ntpYld = make_unique<TFile>(parsedArgs["yldHisto"].as<string>().data());
+  auto ntpEff = make_unique<TFile>(parsedArgs["effHisto"].as<string>().data());
 
-  // open ntuples
-  auto ntpYld = new TFile(parsedArgs["yldHisto"].as<string>().data());
-  auto ntpEff = new TFile(parsedArgs["effHisto"].as<string>().data());
-
-  auto histoInGetter  = getHistoInHelper(ntpYld, ntpEff);
-  auto histoOutGetter = getHistoOutHelper(histoBinSpec);
+  auto histoOut       = map<string, shared_ptr<TH3D>>{};
+  auto histoInGetter  = getHistoInHelper(ntpYld.get(), ntpEff.get());
+  auto histoOutGetter = getHistoOutHelper(&histoOut, histoBinSpec);
 
   // dry run
   if (parsedArgs["dryRun"].as<bool>()) {
@@ -680,40 +557,19 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  auto outputFilename = parsedArgs["output"].as<string>() + "/" +
-                        parsedArgs["outputHisto"].as<string>();
-  auto ntpOut = new TFile(outputFilename.data(), "RECREATE");
-
-  // prepare histograms
-  vStrStr histoNameOut{};
-  set_union(histoNameUnfYld.begin(), histoNameUnfYld.end(),
-            histoNameUnfEff.begin(), histoNameUnfEff.end(),
-            back_inserter(histoNameOut));
-  auto histoOut = prepOutHisto(histoNameOut, histoBinSpec);
-
-  vStrStr histoNameEffComb(histoNameEff);
-  histoNameEffComb.emplace_back(histoNameMuEff);
-  auto histoIn =
-      loadHisto({{ntpYld, histoNameMeaYld}, {ntpEff, histoNameEffComb}});
-  // ^^the argumnets are maps of TFile* -> vStrStr, so we have to combine names
-  // from the same file!
-
   // unfold
   auto debug     = parsedArgs["debug"].as<bool>();
   auto numOfIter = parsedArgs["iteration"].as<int>();
-  unfold(histoIn, histoOut, histoNameMeaYld, histoNameEff, histoNameMuEff,
-         histoNameUnfYld, histoNameUnfEff, debug, numOfIter);
+  unfold(prefix, ptclList, histoBinSize, histoInGetter, histoOutGetter, debug,
+         numOfIter);
 
   // save output
-  for (const auto& pair : histoOut)
-    ntpOut->WriteObject(pair.second, pair.first.data());
+  auto outputFilename = parsedArgs["output"].as<string>() + "/" +
+                        parsedArgs["outputHisto"].as<string>();
+  auto ntpOut = make_unique<TFile>(outputFilename.data(), "RECREATE");
 
-  // cleanup
-  for (auto& h : histoOut) delete h.second;
-  for (auto& h : histoIn) delete h.second;
-  delete ntpOut;
-  delete ntpYld;
-  delete ntpEff;
+  for (const auto& [key, h] : histoOut)
+    ntpOut->WriteObject(h.get(), key.data());
 
   return 0;
 }
