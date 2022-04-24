@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sat Apr 23, 2022 at 11:00 PM -0400
+// Last Change: Sun Apr 24, 2022 at 05:30 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -21,6 +21,8 @@
 #include <yaml-cpp/yaml.h>
 #include <boost/range/join.hpp>
 #include <cxxopts.hpp>
+
+#include "utils.h"
 
 using namespace std;
 using ROOT::RDataFrame;
@@ -61,14 +63,6 @@ string absDirPath(string pathRaw) {
   auto path    = filesystem::path(pathRaw);
   auto dirPath = path.parent_path();
   return filesystem::absolute(dirPath).string();
-}
-
-string capitalize(string str) {
-  for (auto& s : str) {
-    s = toupper(s);
-    break;
-  }
-  return str;
 }
 
 vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {

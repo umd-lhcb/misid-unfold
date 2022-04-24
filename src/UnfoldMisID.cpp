@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 11:40 PM -0400
+// Last Change: Sun Apr 24, 2022 at 05:30 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -26,6 +26,8 @@
 #include <yaml-cpp/yaml.h>
 #include <cxxopts.hpp>
 
+#include "utils.h"
+
 #define DEBUG_OUT cout << __LINE__ << endl;
 
 using namespace std;
@@ -40,14 +42,6 @@ typedef vector<vector<float>> vFltFlt;
 /////////////////////
 // General helpers //
 /////////////////////
-
-string capitalize(string str) {
-  for (auto& s : str) {
-    s = toupper(s);
-    break;
-  }
-  return str;
-}
 
 vector<double> histoToProb(const TH1D* histo) {
   vector<double> result{};

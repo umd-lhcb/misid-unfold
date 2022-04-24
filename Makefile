@@ -1,10 +1,10 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Apr 23, 2022 at 10:46 PM -0400
+# Last Change: Sun Apr 24, 2022 at 05:20 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
-VPATH := include:src:docs
+VPATH := src:docs
 CPP_FILES	:=	$(wildcard src/*.cpp)
 EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%,$(CPP_FILES))
 TEX_FILES	:=	$(wildcard docs/*.tex)
@@ -13,7 +13,7 @@ PDF_FILES	:=	$(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
 COMPILER	:=	$(shell root-config --cxx)
-CXXFLAGS	:=	$(shell root-config --cflags)
+CXXFLAGS	:=	$(shell root-config --cflags) -Iinclude
 LINKFLAGS	:=	$(shell root-config --libs)
 ADDCXXFLAGS	:=	-O2 -march=native -mtune=native
 ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
