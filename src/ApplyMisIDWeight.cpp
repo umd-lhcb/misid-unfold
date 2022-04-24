@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sat Apr 23, 2022 at 10:52 PM -0400
+// Last Change: Sat Apr 23, 2022 at 11:00 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -145,6 +145,7 @@ pair<vPStrStr, vector<string>> genCutDirective(YAML::Node    node,
   // event
   auto expr  = ""s;
   auto first = true;
+
   for (const auto& p : particles) {
     auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle;
     if (!first) expr += " + ";
@@ -158,20 +159,32 @@ pair<vPStrStr, vector<string>> genCutDirective(YAML::Node    node,
   // generate the DiF smearing weight for each event
   vector<string> brSmrNames{};
   for (const auto& tgt : wtSmrParticles) {
-    auto exprSmr = ""s;
-    first        = true;
+    expr  = ""s;
+    first = true;
     for (const auto& p : particles) {
       auto wtBrName = wtPrefix + "_" + p + "TagTo" + capitalize(tgt) + "True";
-      if (!first) exprSmr += " + ";
+      if (!first) expr += " + ";
       first = false;
-      exprSmr += brPrefix + p + "*" + wtBrName;
+      expr += brPrefix + p + "*" + wtBrName;
     }
 
     auto outputBr = wtPrefix + "_" + tgt + "_smr";
+    brSmrNames.push_back(outputBr);
     outputBrs.emplace_back(outputBr);
-    directives.emplace_back(pair{outputBr, exprSmr});
-    cout << "  " << outputBr << " = " << exprSmr << endl;
+    directives.emplace_back(pair{outputBr, expr});
+    cout << "  " << outputBr << " = " << expr << endl;
   }
+
+  // generate the DiF no smearing weight
+  auto brNoSmr = wtPrefix + "_no_smr";
+  outputBrs.emplace_back(wtPrefix + "_no_smr");
+
+  expr = "1.0"s;
+  for (const auto& smr : brSmrNames) {
+    expr += " - " + smr;
+  }
+  cout << "  " << brNoSmr << " = " << expr << endl;
+  directives.emplace_back(pair{brNoSmr, expr});
 
   return {directives, outputBrs};
 }
