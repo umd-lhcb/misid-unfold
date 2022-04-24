@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Apr 23, 2022 at 09:21 PM -0400
+# Last Change: Sat Apr 23, 2022 at 10:46 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -66,7 +66,7 @@ build-generic-dif-smearing:
 
 build-rdx-weights-2016: \
 	$(BINPATH)/ApplyMisIDWeight \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_20--mu_misid--data--2016--md.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)

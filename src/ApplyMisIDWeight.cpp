@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sat Apr 23, 2022 at 10:43 PM -0400
+// Last Change: Sat Apr 23, 2022 at 10:52 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -162,15 +162,15 @@ pair<vPStrStr, vector<string>> genCutDirective(YAML::Node    node,
     first        = true;
     for (const auto& p : particles) {
       auto wtBrName = wtPrefix + "_" + p + "TagTo" + capitalize(tgt) + "True";
-      if (!first) expr += " + ";
+      if (!first) exprSmr += " + ";
       first = false;
-      expr += brPrefix + p + "*" + wtBrName;
+      exprSmr += brPrefix + p + "*" + wtBrName;
     }
 
     auto outputBr = wtPrefix + "_" + tgt + "_smr";
     outputBrs.emplace_back(outputBr);
-    directives.emplace_back(pair{outputBr, expr});
-    cout << "  " << outputBr << " = " << expr << endl;
+    directives.emplace_back(pair{outputBr, exprSmr});
+    cout << "  " << outputBr << " = " << exprSmr << endl;
   }
 
   return {directives, outputBrs};
