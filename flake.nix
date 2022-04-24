@@ -32,6 +32,7 @@
             roounfold
             cxxopts
             libyamlcpp
+            boost
 
             # Python stack
             virtualenvwrapper

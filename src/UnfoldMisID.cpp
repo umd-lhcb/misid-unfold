@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Apr 22, 2022 at 07:22 PM -0400
+// Last Change: Fri Apr 22, 2022 at 11:40 PM -0400
 //
 // Description: unfolding efficiency calculator (U)
 
@@ -234,9 +234,9 @@ void ensureUnitarity(TH2D* res, bool debug = true) {
   for (int y = 1; y <= nbinsY; y++) {
     double prob = 0.0;
     for (int x = 1; x < nbinsX; x++) {
-      prob += res->GetBinContent(res->GetBin(x, y));
+      prob += res->GetBinContent(x, y);
     }
-    res->SetBinContent(res->GetBin(nbinsX, y), 1 - prob);
+    res->SetBinContent(nbinsX, y, 1 - prob);
   }
 
   if (debug) {
@@ -344,6 +344,8 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
               if (isnan(probTagToTrue)) probTagToTrue = 0.0;
               auto nameTagToTrue = getHistoEffName(
                   pref, ptcls[idxTag], ptcls[idxTrue], "Tag", "True");
+              auto histoTagToTrue = histoOutGetter(nameTagToTrue);
+              histoTagToTrue->SetBinContent(x, y, z, probTagToTrue);
 
               if (debug) {
                 cout << "  idxTrue: " << idxTrue << " idxTag: " << idxTag
