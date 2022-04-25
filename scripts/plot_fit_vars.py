@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 04:01 AM -0400
+# Last Change: Mon Apr 25, 2022 at 05:46 PM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
@@ -12,7 +12,7 @@ import numpy as np
 from argparse import ArgumentParser
 from pyTuplingUtils.utils import gen_histo_stacked_baseline, gen_histo
 from pyTuplingUtils.plot import (
-    plot_prepare, plot_histo, ax_add_args_histo
+    plot_prepare, plot_histo, ax_add_args_histo, plot_step, ax_add_args_step
 )
 
 
@@ -21,6 +21,7 @@ from pyTuplingUtils.plot import (
 ################
 
 DEFAULT_COLORS = ['#00429d', '#5585b7', '#8bd189', '#d15d5f', '#93003a']
+DEFAULT_OVERALL_COLORS = ['black', 'red']
 LEGEND_LOC = {
     'q2': 'upper left',
     'mm2': 'upper left',
@@ -94,8 +95,9 @@ def load_vars(ntp, tree, variables):
     return ntp[tree].arrays(variables_to_load, library='np')
 
 
-def plot(histos, legends, title, xlabel, ylabel, output_dir, output_filename,
-         legend_loc='upper left', suffix='pdf', colors=DEFAULT_COLORS):
+def plot_comp(histos, legends, title, xlabel, ylabel, output_dir,
+              output_filename,
+              legend_loc='upper left', suffix='pdf', colors=DEFAULT_COLORS):
     data = [h[0] for h in histos]
     binspecs = [h[1] for h in histos]
     baselines = gen_histo_stacked_baseline(data)
@@ -106,6 +108,33 @@ def plot(histos, legends, title, xlabel, ylabel, output_dir, output_filename,
         add_args = ax_add_args_histo(lbl, clr, baseline=bot)
         plotters.append(
             lambda fig, ax, b=bins, h=hist+bot, add=add_args: plot_histo(
+                b, h, add, figure=fig, axis=ax, show_legend=False))
+
+    fig, ax, _ = plot_prepare(xlabel=xlabel, ylabel=ylabel, title=title,
+                              show_legend=False)
+    for p in plotters:
+        p(fig, ax)
+
+    handles, leg_lbls = ax.get_legend_handles_labels()
+    ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
+              loc=legend_loc, frameon='true')
+
+    fig.savefig(f'{output_dir}/{output_filename}.{suffix}')
+
+
+def plot_overall(histos, legends, title, xlabel, ylabel, output_dir,
+                 output_filename,
+                 legend_loc='upper left', suffix='pdf',
+                 colors=DEFAULT_OVERALL_COLORS):
+    data = [h[0] for h in histos]
+    binspecs = [h[1] for h in histos]
+
+    plotters = []
+    for lbl, hist, bins, clr in \
+            zip(legends, data, binspecs, colors):
+        add_args = ax_add_args_step(lbl, clr)
+        plotters.append(
+            lambda fig, ax, b=bins, h=hist, add=add_args: plot_step(
                 b, h, add, figure=fig, axis=ax, show_legend=False))
 
     fig, ax, _ = plot_prepare(xlabel=xlabel, ylabel=ylabel, title=title,
@@ -173,22 +202,41 @@ if __name__ == '__main__':
 
             xlabel = PLOT_VARS[v]
             # raw data, just taggged
-            plot(histos_tags, MISID_TAGS.values(),
+            plot_comp(histos_tags, MISID_TAGS.values(),
                  f'{args.title} (tags)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_tags',
                  legend_loc=LEGEND_LOC[v])
 
             # unsmeared, w/ misID weights
-            plot(histos_misid, MISID_TAGS.values(),
+            plot_comp(histos_misid, MISID_TAGS.values(),
                  f'{args.title} (misID weighted)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_misid',
                  legend_loc=LEGEND_LOC[v])
 
             # smeared, w/ misID weights
-            plot(histos_smr, MISID_TAGS.values(),
+            plot_comp(histos_smr, MISID_TAGS.values(),
                  f'{args.title} (misID weighted smeared)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_smr',
                  legend_loc=LEGEND_LOC[v])
+
+            # shape comparison
+            # NOTE: The overall number of event is NOT guaranteed to conserve,
+            #       as after smearing, some of the events might fall out of the
+            #       fit variable acceptance cut
+            merged_histo_misid = (
+                np.add.reduce([h[0] for h in histos_misid]),
+                histos_misid[0][1]
+            )
+            merged_histo_smr = (
+                np.add.reduce([h[0] for h in histos_smr]),
+                histos_smr[0][1]
+            )
+            plot_overall([merged_histo_misid, merged_histo_smr],
+                         ['unsmeared', 'smeared'],
+                         f'{args.title} (misID unsmeared/smeared comparison)',
+                         xlabel, args.ylabel, args.output,
+                         f'{args.prefix}_{misid_wt}_{v}_comp',
+                         legend_loc=LEGEND_LOC[v])
