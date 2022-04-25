@@ -1,6 +1,6 @@
 // Author: Yipeng Sun, Svede Braun
 // License: BSD 2-clause
-// Last Change: Sun Apr 24, 2022 at 08:51 PM -0400
+// Last Change: Mon Apr 25, 2022 at 01:23 AM -0400
 
 #pragma once
 
@@ -69,19 +69,18 @@ PxPyPzEVector estB4Mom(LorentzVector<T1>         v4BReco,
                        TMath::Sqrt(pBMag * pBMag + mBRef * mBRef));
 }
 
-template <typename T>
-Double_t m2Miss(LorentzVector<T> v4BEst, LorentzVector<T> v4BReco) {
-  return (v4BEst - v4BReco).M2();
+// all in GeV(^2)!
+// also removed all template parameters because RDataFrame doesn't like them.
+Double_t m2Miss(PxPyPzEVector v4BEst, XYZVector v4BReco) {
+  return (v4BEst - v4BReco).M2() / 1000 / 1000;
 }
 
-template <typename T>
-Double_t el(LorentzVector<T> v4BEst, LorentzVector<T> v4Mu) {
+Double_t el(PxPyPzEVector v4BEst, PxPyPzEVector v4Mu) {
   auto boost    = v4BEst.BoostToCM();
   auto v4MuRest = ROOT::Math::VectorUtil::boost(v4Mu, boost);
-  return v4MuRest.E();
+  return v4MuRest.E() / 1000;
 }
 
-template <typename T>
-Double_t q2(LorentzVector<T> v4BEst, LorentzVector<T> v4D) {
-  return (v4BEst - v4D).M2();
+Double_t q2(PxPyPzEVector v4BEst, PxPyPzEVector v4D) {
+  return (v4BEst - v4D).M2() / 1000 / 1000;
 }

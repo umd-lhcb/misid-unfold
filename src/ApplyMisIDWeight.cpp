@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sun Apr 24, 2022 at 09:31 PM -0400
+// Last Change: Mon Apr 25, 2022 at 01:24 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -222,34 +222,62 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
       setBrPrefix(prefix + "_smr", {"x", "y", "z"}));
 }
 
-pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree) {
+template <typename F>
+RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
+                     string suffix, vector<string>& outputBrs) {
+  vector<double> smr               = randGetter();
+  auto           rebuildMu4MomHypo = [&](PxPyPzEVector v4Mu) {
+    return rebuildMu4Mom(v4Mu, smr, mMuHypo);
+  };
+  auto estB4MomHypo = [&](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
+    return estB4Mom(v4BReco, v3BFlight, mB);
+  };
+
+  outputBrs.emplace_back("mm2" + suffix);
+  outputBrs.emplace_back("q2" + suffix);
+  outputBrs.emplace_back("el" + suffix);
+
+  // FIXME: Not sure if 'el' is defined this way, as we probably don't have a
+  // lepton at all.
+  return df.Define("v4_mu" + suffix, &rebuildMu4MomHypo, {"v4_mu"})
+      .Define("v4_b_reco" + suffix, "v4_mu" + suffix + " + v4_d")
+      .Define("v4_b_est" + suffix, &estB4MomHypo,
+              {"v4_b_reco" + suffix, "v3_b_dir"})
+      .Define("mm2" + suffix, &m2Miss,
+              {"v4_b_est" + suffix, "v4_b_reco" + suffix})
+      .Define("q2" + suffix, &q2, {"v4_b_reco" + suffix, "v4_d"})
+      .Define("el" + suffix, &el, {"v4_b_reco" + suffix, "v4_mu" + suffix});
+}
+
+template <typename F1, typename F2>
+pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
+                                             F1& randKGetter,
+                                             F2& randPiGetter) {
   vector<string> outputBrs{};
   string         dMeson = ""s;
   string         bMeson = ""s;
+  double         mB;
 
   if (branchExists(tree, DST_TEST_BR)) {
     dMeson = DST_BR_PREFIX;
     bMeson = B0_BR_PREFIX;
+    mB     = B0_M;
   } else if (branchExists(tree, D0_TEST_BR)) {
     dMeson = D0_BR_PREFIX;
     bMeson = B_BR_PREFIX;
+    mB     = B_M;
   } else {
     cout << "No known branch found for D0 nor D*. Exit now..." << endl;
     exit(1);
   }
 
+  // Basic vectors that we use and not going to change
   df = df.Define(
              "v4_d",
              [](double px, double py, double pz, double e) {
                return PxPyPzEVector(px, py, pz, e);
              },
              setBrPrefix(dMeson, {"PX", "PY", "PZ", "PE"}))
-           .Define(
-               "v4_b_reco",
-               [](double px, double py, double pz, double e) {
-                 return PxPyPzEVector(px, py, pz, e);
-               },
-               setBrPrefix(bMeson, {"PX", "PY", "PZ", "PE"}))
            .Define(
                "v4_mu",
                [](double px, double py, double pz, double e) {
@@ -260,11 +288,9 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree) {
                    setBrPrefix(bMeson, {"ENDVERTEX_X", "OWNPV_X", "ENDVERTEX_Y",
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
-  // Replace mass hypo: Mu -> Pi
-  // df2.Define("v4_mu_pi", &rebuildMu4Mom, {"v4_mu"});
-
-  // Do RFA
-  // df.Define("v4_b_est", )
+  // Replace mass hypo: Mu -> Pi and compute fit vars
+  df = computeFitVars(df, randPiGetter, PI_M, mB, "_smr_pi", outputBrs);
+  df = computeFitVars(df, randKGetter, K_M, mB, "_smr_k", outputBrs);
 
   return {df, outputBrs};
 }
@@ -338,8 +364,6 @@ int main(int argc, char** argv) {
            << endl;
       continue;
     }
-    delete treeTest;
-    delete ntpInTest;
 
     cout << "Handling tree " << treeName << " from histos of prefix "
          << histoPrefix << " from file " << histoFile << endl;
@@ -398,15 +422,23 @@ int main(int argc, char** argv) {
     auto randSmrFacK  = getRandSmrHelper(smrFacK);
     auto randSmrFacPi = getRandSmrHelper(smrFacPi);
 
+    // Recompute fit vars
+    auto [dfOut, moreOutputBrs] =
+        defRestFrameVars(df, treeTest, randSmrFacK, randSmrFacPi);
+    for (auto br : moreOutputBrs) outputBrNames.emplace_back(br);
+
     cout << "Writing to " << ntpOut << endl;
     if (firstTree) {
-      df.Snapshot(treeName, ntpOut, outputBrNames);
+      dfOut.Snapshot(treeName, ntpOut, outputBrNames);
       firstTree = false;
     } else
-      df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
+      dfOut.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
 
     // cleanups
     for (auto& h : histos) delete h;
     delete ntpHisto;
+
+    delete treeTest;
+    delete ntpInTest;
   }
 }
