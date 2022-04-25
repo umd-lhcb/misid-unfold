@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 25, 2022 at 01:24 AM -0400
+// Last Change: Mon Apr 25, 2022 at 01:52 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -225,11 +225,13 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
 template <typename F>
 RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
                      string suffix, vector<string>& outputBrs) {
+  // we probably did some unnecessary copies here, but deducing those nested
+  // lambdas can be quite hard so I'm just being lazy here.
   vector<double> smr               = randGetter();
-  auto           rebuildMu4MomHypo = [&](PxPyPzEVector v4Mu) {
+  auto           rebuildMu4MomHypo = [=](PxPyPzEVector v4Mu) {
     return rebuildMu4Mom(v4Mu, smr, mMuHypo);
   };
-  auto estB4MomHypo = [&](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
+  auto estB4MomHypo = [=](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
     return estB4Mom(v4BReco, v3BFlight, mB);
   };
 
@@ -239,14 +241,14 @@ RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
 
   // FIXME: Not sure if 'el' is defined this way, as we probably don't have a
   // lepton at all.
-  return df.Define("v4_mu" + suffix, &rebuildMu4MomHypo, {"v4_mu"})
+  return df.Define("v4_mu" + suffix, rebuildMu4MomHypo, {"v4_mu"})
       .Define("v4_b_reco" + suffix, "v4_mu" + suffix + " + v4_d")
-      .Define("v4_b_est" + suffix, &estB4MomHypo,
+      .Define("v4_b_est" + suffix, estB4MomHypo,
               {"v4_b_reco" + suffix, "v3_b_dir"})
-      .Define("mm2" + suffix, &m2Miss,
+      .Define("mm2" + suffix, m2Miss,
               {"v4_b_est" + suffix, "v4_b_reco" + suffix})
-      .Define("q2" + suffix, &q2, {"v4_b_reco" + suffix, "v4_d"})
-      .Define("el" + suffix, &el, {"v4_b_reco" + suffix, "v4_mu" + suffix});
+      .Define("q2" + suffix, q2, {"v4_b_reco" + suffix, "v4_d"})
+      .Define("el" + suffix, el, {"v4_b_reco" + suffix, "v4_mu" + suffix});
 }
 
 template <typename F1, typename F2>
@@ -288,7 +290,7 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                    setBrPrefix(bMeson, {"ENDVERTEX_X", "OWNPV_X", "ENDVERTEX_Y",
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
-  // Replace mass hypo: Mu -> Pi and compute fit vars
+  // Replace mass hypo and compute fit vars
   df = computeFitVars(df, randPiGetter, PI_M, mB, "_smr_pi", outputBrs);
   df = computeFitVars(df, randKGetter, K_M, mB, "_smr_k", outputBrs);
 

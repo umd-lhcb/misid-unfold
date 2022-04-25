@@ -1,6 +1,6 @@
 // Author: Yipeng Sun, Svede Braun
 // License: BSD 2-clause
-// Last Change: Mon Apr 25, 2022 at 01:23 AM -0400
+// Last Change: Mon Apr 25, 2022 at 01:50 AM -0400
 
 #pragma once
 
@@ -31,17 +31,16 @@ using ROOT::Math::XYZVector;
 // Rebuild momentum //
 //////////////////////
 
-template <typename T>
-PxPyPzEVector rebuildMu4Mom(LorentzVector<T> v4Mu, vector<double> smrFac,
+PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac,
                             double m = PI_M) {
-  auto vec = PxPyPzEVector{};
+  auto vec = PxPyPzMVector{};
 
   vec.SetPx(v4Mu.Px() * smrFac[0]);
   vec.SetPy(v4Mu.Py() * smrFac[1]);
   vec.SetPz(v4Mu.Pz() * smrFac[2]);
   vec.SetM(m);
 
-  return vec;
+  return PxPyPzEVector(vec);
 }
 
 XYZVector buildBFlightDir(double endVtxX, double ownPvX, double endVtxY,
@@ -53,10 +52,8 @@ XYZVector buildBFlightDir(double endVtxX, double ownPvX, double endVtxY,
 // Rest frame approximation //
 //////////////////////////////
 
-template <typename T1, typename T2>
-PxPyPzEVector estB4Mom(LorentzVector<T1>         v4BReco,
-                       DisplacementVector3D<T2>& v3BFlight,
-                       double                    mBRef = B_M) {
+PxPyPzEVector estB4Mom(PxPyPzEVector v4BReco, XYZVector v3BFlight,
+                       double mBRef = B_M) {
   auto mB  = v4BReco.M();
   auto pzB = v4BReco.Pz();
 
@@ -71,16 +68,16 @@ PxPyPzEVector estB4Mom(LorentzVector<T1>         v4BReco,
 
 // all in GeV(^2)!
 // also removed all template parameters because RDataFrame doesn't like them.
-Double_t m2Miss(PxPyPzEVector v4BEst, XYZVector v4BReco) {
+Double_t m2Miss(PxPyPzEVector& v4BEst, PxPyPzEVector& v4BReco) {
   return (v4BEst - v4BReco).M2() / 1000 / 1000;
 }
 
-Double_t el(PxPyPzEVector v4BEst, PxPyPzEVector v4Mu) {
+Double_t el(PxPyPzEVector& v4BEst, PxPyPzEVector& v4Mu) {
   auto boost    = v4BEst.BoostToCM();
   auto v4MuRest = ROOT::Math::VectorUtil::boost(v4Mu, boost);
   return v4MuRest.E() / 1000;
 }
 
-Double_t q2(PxPyPzEVector v4BEst, PxPyPzEVector v4D) {
+Double_t q2(PxPyPzEVector& v4BEst, PxPyPzEVector& v4D) {
   return (v4BEst - v4D).M2() / 1000 / 1000;
 }
