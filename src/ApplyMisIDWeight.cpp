@@ -1,10 +1,9 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sun Apr 24, 2022 at 05:30 PM -0400
+// Last Change: Sun Apr 24, 2022 at 08:21 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
-#include <filesystem>
 #include <iostream>
 #include <regex>
 #include <string>
@@ -55,15 +54,9 @@ static vPStrStr MU_BRANCH_DEFS{
 
 static vPRegStr CUT_REPLACE_RULES{{regex("&"), "&&"}, {regex("\\|"), "||"}};
 
-/////////////////////
-// General helpers //
-/////////////////////
-
-string absDirPath(string pathRaw) {
-  auto path    = filesystem::path(pathRaw);
-  auto dirPath = path.parent_path();
-  return filesystem::absolute(dirPath).string();
-}
+///////////////////
+// Histo helpers //
+///////////////////
 
 vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
   vector<TString> result{};
@@ -182,6 +175,10 @@ pair<vPStrStr, vector<string>> genCutDirective(YAML::Node    node,
 
   return {directives, outputBrs};
 }
+
+/////////////////////////////////
+// Rest frame variable helpers //
+/////////////////////////////////
 
 //////////
 // Main //
