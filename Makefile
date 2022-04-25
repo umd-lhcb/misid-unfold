@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 03:11 AM -0400
+# Last Change: Mon Apr 25, 2022 at 03:24 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -101,7 +101,7 @@ plot-rdx-bin_vars-ana-2016:
 
 
 plot-rdx-fit_vars-2016: \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-fit_vars-2016)
 	$(eval AUX_NTP	:=	$(basename $<)--aux_misid.root)
 	@mkdir -p $(OUT_DIR)

@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 19, 2022 at 09:40 PM -0400
+# Last Change: Mon Apr 25, 2022 at 04:01 AM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
 import mplhep
 import uproot
+import numpy as np
 
 from argparse import ArgumentParser
 from pyTuplingUtils.utils import gen_histo_stacked_baseline, gen_histo
@@ -36,7 +37,7 @@ MISID_TAGS = {
 }
 PLOT_VARS = {
     'q2': r'$q^2$ [GeV$^2$]',
-    'mm2': r'$m_{miss}^2 [GeV$^2$]',
+    'mm2': r'$m_{miss}^2$ [GeV$^2$]',
     'el': r'$E_l$ [GeV]'
 }
 PLOT_RANGE = {
@@ -44,6 +45,10 @@ PLOT_RANGE = {
     'mm2': [-2.0, 10.9],
     'el': [0.1, 2.65]
 }
+SMR_WTS = [
+    ['', '_smr_pi', '_smr_k'],
+    ['_no_smr', '_pi_smr', '_k_smr']
+]
 
 
 #######################
@@ -64,7 +69,7 @@ def parse_input():
                         default='tree')
 
     parser.add_argument('--bins', help='specify number of bins.', type=int,
-                        default=40)
+                        default=300)
 
     parser.add_argument('-p', '--prefix', help='specify plot filename prefix.',
                         default='D0')
@@ -125,7 +130,9 @@ if __name__ == '__main__':
     ntp_main = uproot.open(args.input)
     ntp_aux = uproot.open(args.aux)
 
-    all_vars = list(PLOT_VARS.keys()) + MISID_WTS + list(MISID_TAGS.keys())
+    all_vars = list(PLOT_VARS.keys()) + MISID_WTS + list(MISID_TAGS.keys()) + \
+        [v + s for v in PLOT_VARS for s in SMR_WTS[0]] + \
+        [w + s for w in MISID_WTS for s in SMR_WTS[1]]
 
     brs = load_vars(ntp_main, args.tree, all_vars)
     brs.update(load_vars(ntp_aux, args.tree, all_vars))
@@ -133,14 +140,18 @@ if __name__ == '__main__':
     for misid_wt in MISID_WTS:
         wt_tags = []
         wt_misid = []
-
         for tag_cut in MISID_TAGS:
             wt_tags.append(brs[tag_cut].astype(float))
             wt_misid.append(brs[misid_wt]*brs[tag_cut])
 
+        wt_smr = []
+        for smr_suf in SMR_WTS[1]:
+            wt_smr.append(brs[misid_wt+smr_suf])
+
         for v in PLOT_VARS:
             histos_tags = []
             histos_misid = []
+            histos_smr = []
             data_range = PLOT_RANGE[v]
 
             for w in wt_tags:
@@ -151,14 +162,33 @@ if __name__ == '__main__':
                 histos_misid.append(gen_histo(
                     brs[v], args.bins, data_range=data_range, weights=w))
 
+            for w in wt_misid:
+                tmp_histos = []
+                for v_suffix, w_smr in zip(SMR_WTS[0], wt_smr):
+                    tmp_histos.append(gen_histo(
+                        brs[v+v_suffix], args.bins, data_range=data_range,
+                        weights=w_smr*w))
+                merged_tmp_histo = np.add.reduce([h[0] for h in tmp_histos])
+                histos_smr.append((merged_tmp_histo, tmp_histos[0][1]))
+
             xlabel = PLOT_VARS[v]
+            # raw data, just taggged
             plot(histos_tags, MISID_TAGS.values(),
                  f'{args.title} (tags)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_tags',
                  legend_loc=LEGEND_LOC[v])
+
+            # unsmeared, w/ misID weights
             plot(histos_misid, MISID_TAGS.values(),
                  f'{args.title} (misID weighted)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_misid',
+                 legend_loc=LEGEND_LOC[v])
+
+            # smeared, w/ misID weights
+            plot(histos_smr, MISID_TAGS.values(),
+                 f'{args.title} (misID weighted smeared)',
+                 xlabel, args.ylabel, args.output,
+                 f'{args.prefix}_{misid_wt}_{v}_smr',
                  legend_loc=LEGEND_LOC[v])
