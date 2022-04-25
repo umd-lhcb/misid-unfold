@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 25, 2022 at 01:52 AM -0400
+// Last Change: Mon Apr 25, 2022 at 03:16 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -227,8 +227,8 @@ RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
                      string suffix, vector<string>& outputBrs) {
   // we probably did some unnecessary copies here, but deducing those nested
   // lambdas can be quite hard so I'm just being lazy here.
-  vector<double> smr               = randGetter();
-  auto           rebuildMu4MomHypo = [=](PxPyPzEVector v4Mu) {
+  auto rebuildMu4MomHypo = [=, &randGetter](PxPyPzEVector v4Mu) {
+    vector<double> smr = randGetter();
     return rebuildMu4Mom(v4Mu, smr, mMuHypo);
   };
   auto estB4MomHypo = [=](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
@@ -286,7 +286,7 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                  return PxPyPzEVector(px, py, pz, e);
                },
                setBrPrefix(MU_BR_PREFIX, {"PX", "PY", "PZ", "PE"}))
-           .Define("v3_b_dir", &buildBFlightDir,
+           .Define("v3_b_dir", buildBFlightDir,
                    setBrPrefix(bMeson, {"ENDVERTEX_X", "OWNPV_X", "ENDVERTEX_Y",
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
