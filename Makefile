@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 03:24 AM -0400
+# Last Change: Mon Apr 25, 2022 at 07:17 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -33,7 +33,7 @@ clean:
 #######
 # RDX #
 #######
-.PHONY: build-tagged-histo build-rdx-true-to-tag-2016 plot-rdx-2016
+.PHONY: build-tagged-histo build-rdx-true-to-tag-2016 build-rdx-weights-2016
 
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
@@ -64,9 +64,21 @@ build-generic-dif-smearing:
 		-k ./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
 		-p ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
 
-build-rdx-weights-2016: \
+
+build-rdx-weights-2016: build-rdx-weights-2016-md build-rdx-weights-2016-mu
+
+build-rdx-weights-2016-md: \
 	$(BINPATH)/ApplyMisIDWeight \
 	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root \
+	./histos/generic-22_04_21_20_12-dif_smearing/dif.root
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
+	@mkdir -p $(OUT_DIR)
+	$< -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+
+build-rdx-weights-2016-mu: \
+	$(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--mu.root \
 	./histos/generic-22_04_21_20_12-dif_smearing/dif.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
@@ -101,11 +113,13 @@ plot-rdx-bin_vars-ana-2016:
 
 
 plot-rdx-fit_vars-2016: \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root \
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--mu.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-fit_vars-2016)
-	$(eval AUX_NTP	:=	$(basename $<)--aux_misid.root)
+	$(eval AUX_NTP_MD	:=	$(basename $<)--aux_misid.root)
+	$(eval AUX_NTP_MU	:=	$(basename $(word 2, $^))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
-	./scripts/plot_fit_vars.py -o $(OUT_DIR) -i $< -a $(AUX_NTP)
+	./scripts/plot_fit_vars.py -o $(OUT_DIR) -i $< $(word 2, $^) -a $(AUX_NTP_MD) $(AUX_NTP_MU)
 
 
 ########

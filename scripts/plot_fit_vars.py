@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 05:46 PM -0400
+# Last Change: Mon Apr 25, 2022 at 07:24 PM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
@@ -14,6 +14,7 @@ from pyTuplingUtils.utils import gen_histo_stacked_baseline, gen_histo
 from pyTuplingUtils.plot import (
     plot_prepare, plot_histo, ax_add_args_histo, plot_step, ax_add_args_step
 )
+from pyTuplingUtils.io import read_branches_dict
 
 
 ################
@@ -60,9 +61,11 @@ def parse_input():
     parser = ArgumentParser(
         description='plot fit variables w/ w/o decay-in-flight smearing.')
 
-    parser.add_argument('-i', '--input', help='specify main input ntuple.')
+    parser.add_argument('-i', '--input', nargs='+',
+                        help='specify main input ntuple.')
 
-    parser.add_argument('-a', '--aux', help='specify auxilliary ntuple containing misID weights.')
+    parser.add_argument('-a', '--aux', nargs='+',
+                        help='specify auxilliary ntuple containing misID weights.')
 
     parser.add_argument('-o', '--output', help='specify output folder.')
 
@@ -88,11 +91,13 @@ def parse_input():
 # Helpers #
 ###########
 
-def load_vars(ntp, tree, variables):
-    variables_to_load = [v for v in variables if v in ntp[tree]]
+def load_vars(ntps, tree, variables):
+    variables_to_load = [v for v in variables
+                         for n in [uproot.open(x) for x in ntps]
+                         if v in n[tree]]
     for v in variables_to_load:
         print(f'  Loading {v}')
-    return ntp[tree].arrays(variables_to_load, library='np')
+    return read_branches_dict(ntps, tree, variables_to_load)
 
 
 def plot_comp(histos, legends, title, xlabel, ylabel, output_dir,
@@ -156,8 +161,8 @@ def plot_overall(histos, legends, title, xlabel, ylabel, output_dir,
 if __name__ == '__main__':
     mplhep.style.use('LHCb2')
     args = parse_input()
-    ntp_main = uproot.open(args.input)
-    ntp_aux = uproot.open(args.aux)
+    ntp_main = args.input
+    ntp_aux = args.aux
 
     all_vars = list(PLOT_VARS.keys()) + MISID_WTS + list(MISID_TAGS.keys()) + \
         [v + s for v in PLOT_VARS for s in SMR_WTS[0]] + \
