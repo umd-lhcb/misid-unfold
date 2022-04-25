@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 25, 2022 at 03:16 AM -0400
+// Last Change: Mon Apr 25, 2022 at 05:23 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -247,8 +247,8 @@ RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
               {"v4_b_reco" + suffix, "v3_b_dir"})
       .Define("mm2" + suffix, m2Miss,
               {"v4_b_est" + suffix, "v4_b_reco" + suffix})
-      .Define("q2" + suffix, q2, {"v4_b_reco" + suffix, "v4_d"})
-      .Define("el" + suffix, el, {"v4_b_reco" + suffix, "v4_mu" + suffix});
+      .Define("q2" + suffix, q2, {"v4_b_est" + suffix, "v4_d"})
+      .Define("el" + suffix, el, {"v4_b_est" + suffix, "v4_mu" + suffix});
 }
 
 template <typename F1, typename F2>
