@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sun Apr 24, 2022 at 08:21 PM -0400
+// Last Change: Sun Apr 24, 2022 at 09:31 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -10,9 +10,14 @@
 #include <tuple>
 #include <vector>
 
+#include <Math/Vector3D.h>
+#include <Math/Vector4D.h>
+#include <Math/VectorUtil.h>
 #include <TFile.h>
 #include <TH3D.h>
 #include <TMath.h>
+#include <TRandom.h>
+#include <TRandomGen.h>
 #include <TString.h>
 #include <TTree.h>
 #include <ROOT/RDataFrame.hxx>
@@ -21,10 +26,15 @@
 #include <boost/range/join.hpp>
 #include <cxxopts.hpp>
 
+#include "kinematic.h"
 #include "utils.h"
+
+#define RAND_SEED 42
 
 using namespace std;
 using ROOT::RDataFrame;
+using ROOT::Math::PxPyPzEVector;
+using ROOT::Math::XYZVector;
 using ROOT::RDF::RNode;
 
 ///////////////////
@@ -34,7 +44,7 @@ using ROOT::RDF::RNode;
 typedef vector<pair<string, string>> vPStrStr;
 typedef vector<pair<regex, string>>  vPRegStr;
 
-static vPStrStr MU_BRANCH_DEFS{
+static const vPStrStr MU_BRANCH_DEFS{
     // simple name, complex name
     {"MC15TuneV1_ProbNNpi", "MC15TuneV1_ProbNNpi"},
     {"MC15TuneV1_ProbNNk", "MC15TuneV1_ProbNNk"},
@@ -52,11 +62,21 @@ static vPStrStr MU_BRANCH_DEFS{
     {"PZ", "PZ"},
     {"InMuonAcc", "InMuonAcc"}};
 
-static vPRegStr CUT_REPLACE_RULES{{regex("&"), "&&"}, {regex("\\|"), "||"}};
+static const vPRegStr CUT_REPLACE_RULES{{regex("&"), "&&"},
+                                        {regex("\\|"), "||"}};
 
-///////////////////
-// Histo helpers //
-///////////////////
+static const string DST_BR_PREFIX = "dst";
+static const string D0_BR_PREFIX  = "d0";
+static const string B0_BR_PREFIX  = "b0";
+static const string B_BR_PREFIX   = "b";
+static const string MU_BR_PREFIX  = "mu";
+
+static const string DST_TEST_BR = "dst_PX";
+static const string D0_TEST_BR  = "d0_PX";
+
+////////////////////////////////////
+// Helpers for weight computation //
+////////////////////////////////////
 
 vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
   vector<TString> result{};
@@ -84,10 +104,6 @@ vector<TString> buildHistoSmrWtnames(YAML::Node node) {
   return result;
 }
 
-////////////////////////////
-// Helpers for event loop //
-////////////////////////////
-
 // Idea stolen from:
 //   https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
 RNode defineBranch(RNode df, string particle = "mu",
@@ -107,8 +123,8 @@ pair<vPStrStr, vector<string>> genCutDirective(YAML::Node    node,
                                                string brPrefix = "is_misid_") {
   vPStrStr       directives{};
   vector<string> outputBrs{};
-  auto           wtTargetParticle = "MuTag";
-  auto           wtSmrParticles   = {"k", "pi"};
+  const auto     wtTargetParticle = "MuTag";
+  const auto     wtSmrParticles   = {"k", "pi"};
 
   vector<string> particles{};
   // first find particles and cuts
@@ -180,6 +196,79 @@ pair<vPStrStr, vector<string>> genCutDirective(YAML::Node    node,
 // Rest frame variable helpers //
 /////////////////////////////////
 
+auto getRandSmrHelper(vector<vector<double>>& smr) {
+  auto size = make_shared<unsigned long>(smr.size());
+  auto rng  = make_shared<TRandomMixMax256>(42);
+
+  return [&smr, size, rng] {
+    unsigned long rand = rng->Uniform(0, *(size.get()));
+    return smr[rand];
+  };
+}
+
+vector<string> setBrPrefix(const string prefix, const vector<string> vars) {
+  vector<string> result{};
+  for (const auto& v : vars) result.emplace_back(prefix + "_" + v);
+  return result;
+}
+
+void getSmrFac(vector<vector<double>>& result, string auxFile,
+               string prefix = "k") {
+  auto df = RDataFrame(prefix + "_smr", auxFile);
+  df.Foreach(
+      [&](double x, double y, double z) {
+        result.emplace_back(vector<double>{x, y, z});
+      },
+      setBrPrefix(prefix + "_smr", {"x", "y", "z"}));
+}
+
+pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree) {
+  vector<string> outputBrs{};
+  string         dMeson = ""s;
+  string         bMeson = ""s;
+
+  if (branchExists(tree, DST_TEST_BR)) {
+    dMeson = DST_BR_PREFIX;
+    bMeson = B0_BR_PREFIX;
+  } else if (branchExists(tree, D0_TEST_BR)) {
+    dMeson = D0_BR_PREFIX;
+    bMeson = B_BR_PREFIX;
+  } else {
+    cout << "No known branch found for D0 nor D*. Exit now..." << endl;
+    exit(1);
+  }
+
+  df = df.Define(
+             "v4_d",
+             [](double px, double py, double pz, double e) {
+               return PxPyPzEVector(px, py, pz, e);
+             },
+             setBrPrefix(dMeson, {"PX", "PY", "PZ", "PE"}))
+           .Define(
+               "v4_b_reco",
+               [](double px, double py, double pz, double e) {
+                 return PxPyPzEVector(px, py, pz, e);
+               },
+               setBrPrefix(bMeson, {"PX", "PY", "PZ", "PE"}))
+           .Define(
+               "v4_mu",
+               [](double px, double py, double pz, double e) {
+                 return PxPyPzEVector(px, py, pz, e);
+               },
+               setBrPrefix(MU_BR_PREFIX, {"PX", "PY", "PZ", "PE"}))
+           .Define("v3_b_dir", &buildBFlightDir,
+                   setBrPrefix(bMeson, {"ENDVERTEX_X", "OWNPV_X", "ENDVERTEX_Y",
+                                        "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
+
+  // Replace mass hypo: Mu -> Pi
+  // df2.Define("v4_mu_pi", &rebuildMu4Mom, {"v4_mu"});
+
+  // Do RFA
+  // df.Define("v4_b_est", )
+
+  return {df, outputBrs};
+}
+
 //////////
 // Main //
 //////////
@@ -196,6 +285,7 @@ int main(int argc, char** argv) {
      cxxopts::value<string>()->default_value("2016"))
     // I/O
     ("i,input", "specify input ntuple", cxxopts::value<string>())
+    ("x,aux", "specify auxiliary ntuple", cxxopts::value<string>())
     ("o,output", "specify output ntuple", cxxopts::value<string>())
     ("c,config", "specify input YAML config file",
      cxxopts::value<string>())
@@ -216,6 +306,7 @@ int main(int argc, char** argv) {
   // get options
   auto ntpIn      = parsedArgs["input"].as<string>();
   auto ntpOut     = parsedArgs["output"].as<string>();
+  auto ntpAux     = parsedArgs["aux"].as<string>();
   auto particle   = parsedArgs["particle"].as<string>();
   auto applyAlias = parsedArgs["alias"].as<bool>();
 
@@ -296,6 +387,16 @@ int main(int argc, char** argv) {
         genCutDirective(ymlConfig["tags"], weightBrPrefix);
     df = defineBranch(df, ""s, directives);
     for (auto br : addOutputBrs) outputBrNames.emplace_back(br);
+
+    // read smearing factors from aux ntuple
+    auto smrFacK  = vector<vector<double>>{};
+    auto smrFacPi = vector<vector<double>>{};
+    getSmrFac(smrFacK, ntpAux);
+    getSmrFac(smrFacPi, ntpAux, "pi");
+
+    // we can call these functions directly to get random smearing factors
+    auto randSmrFacK  = getRandSmrHelper(smrFacK);
+    auto randSmrFacPi = getRandSmrHelper(smrFacPi);
 
     cout << "Writing to " << ntpOut << endl;
     if (firstTree) {
