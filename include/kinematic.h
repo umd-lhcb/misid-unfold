@@ -1,6 +1,6 @@
 // Author: Yipeng Sun, Svede Braun
 // License: BSD 2-clause
-// Last Change: Sun Apr 24, 2022 at 08:12 PM -0400
+// Last Change: Sun Apr 24, 2022 at 08:51 PM -0400
 
 #pragma once
 
@@ -31,13 +31,14 @@ using ROOT::Math::XYZVector;
 // Rebuild momentum //
 //////////////////////
 
-PxPyPzEVector rebuildMu4Mom(double px, double py, double pz,
-                            vector<double> smrFac, double m = PI_M) {
+template <typename T>
+PxPyPzEVector rebuildMu4Mom(LorentzVector<T> v4Mu, vector<double> smrFac,
+                            double m = PI_M) {
   auto vec = PxPyPzEVector{};
 
-  vec.SetPx(px * smrFac[0]);
-  vec.SetPy(py * smrFac[1]);
-  vec.SetPz(pz * smrFac[2]);
+  vec.SetPx(v4Mu.Px() * smrFac[0]);
+  vec.SetPy(v4Mu.Py() * smrFac[1]);
+  vec.SetPz(v4Mu.Pz() * smrFac[2]);
   vec.SetM(m);
 
   return vec;
