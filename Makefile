@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 08:34 PM -0400
+# Last Change: Mon Apr 25, 2022 at 09:12 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -142,8 +142,9 @@ test-pidcalib2-wrapper:
 
 test-unfold: $(BINPATH)/UnfoldMisID
 	$< -c ./spec/rdx-run2.yml --dryRun \
-        -y ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
-        -e ./histos/rdx-22_04_12_14_03-merged-2016/merged.root
+		-y ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
+		-e ./histos/rdx-22_04_12_14_03-merged-2016/merged.root
+
 
 test-gen-aux-filename: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
 	$(eval AUX_NTP	:=	$(basename $(notdir $^))--aux_misid.root)
@@ -154,6 +155,16 @@ test-get-particle-name: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-st
 	$(eval PARTICLE	:=	$(word 1, $(subst --, ,$(NTP_NAME))))
 	@echo $(NTP_NAME)
 	@echo $(PARTICLE)
+
+
+test-rdx-weights: \
+	$(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
+	./histos/generic-22_04_21_20_12-dif_smearing/dif.root
+	$(eval OUT_DIR	:=	$(GENPATH)/test-rdx-weights)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
+	@mkdir -p $(OUT_DIR)
+	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
 
 ###############
