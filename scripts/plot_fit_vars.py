@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 11:29 PM -0400
+# Last Change: Tue Apr 26, 2022 at 04:11 PM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
@@ -21,6 +21,7 @@ from pyTuplingUtils.io import read_branches_dict
 # Configurable #
 ################
 
+GLOBAL_CUTS = ['b_m_ok', 'dx_m_ok', 'in_fit_range']
 DEFAULT_COLORS = ['#00429d', '#5585b7', '#8bd189', '#d15d5f', '#93003a']
 DEFAULT_OVERALL_COLORS = ['black', 'red']
 LEGEND_LOC = {
@@ -179,10 +180,12 @@ if __name__ == '__main__':
 
     all_vars = list(PLOT_VARS.keys()) + MISID_WTS + list(MISID_TAGS.keys()) + \
         [v + s for v in PLOT_VARS for s in SMR_WTS[0]] + \
-        [w + s for w in MISID_WTS for s in SMR_WTS[1]]
+        [w + s for w in MISID_WTS for s in SMR_WTS[1]] + GLOBAL_CUTS
 
     brs = load_vars(ntp_main, args.tree, all_vars)
     brs.update(load_vars(ntp_aux, args.tree, all_vars))
+    global_cuts = np.multiply.reduce(
+        [brs[i] for i in GLOBAL_CUTS]).astype(float)
 
     for misid_wt in MISID_WTS:
         wt_tags = []
@@ -204,18 +207,21 @@ if __name__ == '__main__':
 
             for w in wt_tags:
                 histos_tags.append(gen_histo(
-                    brs[v], args.bins, data_range=data_range, weights=w))
+                    brs[v], args.bins, data_range=data_range,
+                    weights=w*global_cuts))
 
             for w in wt_misid:
+                # unsmeared
                 histos_misid.append(gen_histo(
-                    brs[v], args.bins, data_range=data_range, weights=w))
+                    brs[v], args.bins, data_range=data_range,
+                    weights=w*global_cuts))
 
-            for w in wt_misid:
+                # smeared
                 tmp_histos = []
                 for v_suffix, w_smr in zip(SMR_WTS[0], wt_smr):
                     tmp_histos.append(gen_histo(
                         brs[v+v_suffix], args.bins, data_range=data_range,
-                        weights=w_smr*w))
+                        weights=w_smr*w*global_cuts))
                 merged_tmp_histo = np.add.reduce([h[0] for h in tmp_histos])
                 histos_smr.append((merged_tmp_histo, tmp_histos[0][1]))
 
