@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 09:12 PM -0400
+# Last Change: Mon Apr 25, 2022 at 11:22 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -130,6 +130,16 @@ plot-rdx-fit_vars-2016: \
 	$(eval AUX_NTP_MU	:=	$(basename $(word 2, $^))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_fit_vars.py -o $(OUT_DIR) -i $< $(word 2, $^) -a $(AUX_NTP_MD) $(AUX_NTP_MU)
+
+plot-rdx-fit_vars-ana-2016: \
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root \
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--mu.root
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-fit_vars-ana-2016)
+	$(eval AUX_NTP_MD	:=	$(basename $<)--aux_misid.root)
+	$(eval AUX_NTP_MU	:=	$(basename $(word 2, $^))--aux_misid.root)
+	@mkdir -p $(OUT_DIR)
+	./scripts/plot_fit_vars.py -o $(OUT_DIR) -i $< $(word 2, $^) -a $(AUX_NTP_MD) $(AUX_NTP_MU) \
+        --show-title 1 0 0 --show-legend 1 0 0
 
 
 ########

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 07:24 PM -0400
+# Last Change: Mon Apr 25, 2022 at 11:29 PM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
@@ -38,8 +38,8 @@ MISID_TAGS = {
     'is_misid_g': r'ghost tag',
 }
 PLOT_VARS = {
-    'q2': r'$q^2$ [GeV$^2$]',
     'mm2': r'$m_{miss}^2$ [GeV$^2$]',
+    'q2': r'$q^2$ [GeV$^2$]',
     'el': r'$E_l$ [GeV]'
 }
 PLOT_RANGE = {
@@ -84,6 +84,14 @@ def parse_input():
     parser.add_argument('--ylabel', help='specify plot y label.',
                         default='Number of events')
 
+    parser.add_argument('--show-title', nargs='+', type=int,
+                        default=[1, 1, 1],
+                        help='control display of title for each individual plot.')
+
+    parser.add_argument('--show-legend', nargs='+', type=int,
+                        default=[1, 1, 1],
+                        help='control display of legend for each individual plot.')
+
     return parser.parse_args()
 
 
@@ -102,7 +110,8 @@ def load_vars(ntps, tree, variables):
 
 def plot_comp(histos, legends, title, xlabel, ylabel, output_dir,
               output_filename,
-              legend_loc='upper left', suffix='pdf', colors=DEFAULT_COLORS):
+              legend_loc='upper left', show_title=True, show_legend=True,
+              suffix='pdf', colors=DEFAULT_COLORS):
     data = [h[0] for h in histos]
     binspecs = [h[1] for h in histos]
     baselines = gen_histo_stacked_baseline(data)
@@ -115,22 +124,24 @@ def plot_comp(histos, legends, title, xlabel, ylabel, output_dir,
             lambda fig, ax, b=bins, h=hist+bot, add=add_args: plot_histo(
                 b, h, add, figure=fig, axis=ax, show_legend=False))
 
+    title = title if show_title else '    '
     fig, ax, _ = plot_prepare(xlabel=xlabel, ylabel=ylabel, title=title,
                               show_legend=False)
     for p in plotters:
         p(fig, ax)
 
-    handles, leg_lbls = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
-              loc=legend_loc, frameon='true')
+    if show_legend:
+        handles, leg_lbls = ax.get_legend_handles_labels()
+        ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
+                  loc=legend_loc, frameon='true')
 
     fig.savefig(f'{output_dir}/{output_filename}.{suffix}')
 
 
 def plot_overall(histos, legends, title, xlabel, ylabel, output_dir,
                  output_filename,
-                 legend_loc='upper left', suffix='pdf',
-                 colors=DEFAULT_OVERALL_COLORS):
+                 legend_loc='upper left', show_title=True, show_legend=True,
+                 suffix='pdf', colors=DEFAULT_OVERALL_COLORS):
     data = [h[0] for h in histos]
     binspecs = [h[1] for h in histos]
 
@@ -142,14 +153,16 @@ def plot_overall(histos, legends, title, xlabel, ylabel, output_dir,
             lambda fig, ax, b=bins, h=hist, add=add_args: plot_step(
                 b, h, add, figure=fig, axis=ax, show_legend=False))
 
+    title = title if show_title else '    '
     fig, ax, _ = plot_prepare(xlabel=xlabel, ylabel=ylabel, title=title,
                               show_legend=False)
     for p in plotters:
         p(fig, ax)
 
-    handles, leg_lbls = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
-              loc=legend_loc, frameon='true')
+    if show_legend:
+        handles, leg_lbls = ax.get_legend_handles_labels()
+        ax.legend(handles[::-1], leg_lbls[::-1], numpoints=1,
+                  loc=legend_loc, frameon='true')
 
     fig.savefig(f'{output_dir}/{output_filename}.{suffix}')
 
@@ -182,7 +195,8 @@ if __name__ == '__main__':
         for smr_suf in SMR_WTS[1]:
             wt_smr.append(brs[misid_wt+smr_suf])
 
-        for v in PLOT_VARS:
+        for v, show_title, show_legend in \
+                zip(PLOT_VARS, args.show_title, args.show_legend):
             histos_tags = []
             histos_misid = []
             histos_smr = []
@@ -211,21 +225,24 @@ if __name__ == '__main__':
                  f'{args.title} (tags)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_tags',
-                 legend_loc=LEGEND_LOC[v])
+                 legend_loc=LEGEND_LOC[v],
+                 show_title=show_title, show_legend=show_legend)
 
             # unsmeared, w/ misID weights
             plot_comp(histos_misid, MISID_TAGS.values(),
                  f'{args.title} (misID weighted)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_misid',
-                 legend_loc=LEGEND_LOC[v])
+                 legend_loc=LEGEND_LOC[v],
+                 show_title=show_title, show_legend=show_legend)
 
             # smeared, w/ misID weights
             plot_comp(histos_smr, MISID_TAGS.values(),
                  f'{args.title} (misID weighted smeared)',
                  xlabel, args.ylabel, args.output,
                  f'{args.prefix}_{misid_wt}_{v}_smr',
-                 legend_loc=LEGEND_LOC[v])
+                 legend_loc=LEGEND_LOC[v],
+                 show_title=show_title, show_legend=show_legend)
 
             # shape comparison
             # NOTE: The overall number of event is NOT guaranteed to conserve,
@@ -244,4 +261,5 @@ if __name__ == '__main__':
                          f'{args.title} (misID unsmeared/smeared comparison)',
                          xlabel, args.ylabel, args.output,
                          f'{args.prefix}_{misid_wt}_{v}_comp',
-                         legend_loc=LEGEND_LOC[v])
+                         legend_loc=LEGEND_LOC[v],
+                         show_title=show_title, show_legend=show_legend)
