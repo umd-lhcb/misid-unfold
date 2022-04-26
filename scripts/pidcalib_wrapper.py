@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Apr 06, 2022 at 07:04 PM -0400
+# Last Change: Mon Apr 25, 2022 at 08:34 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -165,7 +165,7 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity='down'):
             break
 
         for p_tag, subconfig in config['pidcalib_config']['tags_addon'].items():
-            for sub_tag in subconfig:
+            for sub_tag in ['nom', 'denom']:
                 cut = subconfig[sub_tag]['cut']
                 pid_cut = subconfig[sub_tag]['pid_cut']
                 pkl_name = f'{p_true}TrueTo{p_tag.capitalize()}Tag_{sub_tag}'
