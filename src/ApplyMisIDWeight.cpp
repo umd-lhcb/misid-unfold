@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Mon Apr 25, 2022 at 05:23 PM -0400
+// Last Change: Tue Apr 26, 2022 at 03:30 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -229,7 +229,7 @@ RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
   // lambdas can be quite hard so I'm just being lazy here.
   auto rebuildMu4MomHypo = [=, &randGetter](PxPyPzEVector v4Mu) {
     vector<double> smr = randGetter();
-    return rebuildMu4Mom(v4Mu, smr, mMuHypo);
+    return rebuildMu4Mom(v4Mu, smr);
   };
   auto estB4MomHypo = [=](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
     return estB4Mom(v4BReco, v3BFlight, mB);
