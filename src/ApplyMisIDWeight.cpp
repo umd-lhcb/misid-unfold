@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Apr 26, 2022 at 03:30 PM -0400
+// Last Change: Thu Apr 28, 2022 at 01:16 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -346,21 +346,23 @@ int main(int argc, char** argv) {
   auto weightBrs  = ymlConfig["weight_brs"][year];
   auto filePrefix = absDirPath(ymlFile);
 
-  TFile*        ntpHisto;
-  vector<TH3D*> histos;
+  TFile* ntpHisto;
   // snapshot option
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
   bool firstTree  = true;
-  for (auto entry : weightBrs) {
-    auto histoPrefix    = TString(entry["prefix"].as<string>());
-    auto histoFile      = entry["file"].as<string>();
-    auto treeName       = entry["tree"].as<string>();
-    auto weightBrPrefix = entry["name"].as<string>();
-    histoFile           = filePrefix + "/" + histoFile;
 
-    auto ntpInTest = new TFile(TString(ntpIn));
-    auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(TString(treeName)));
+  for (auto entry : weightBrs) {
+    auto          histoPrefix    = TString(entry["prefix"].as<string>());
+    auto          histoFile      = entry["file"].as<string>();
+    auto          treeName       = entry["tree"].as<string>();
+    auto          weightBrPrefix = entry["name"].as<string>();
+    vector<TH3D*> histos{};
+    histoFile = filePrefix + "/" + histoFile;
+
+    cout << "--------" << endl;
+    auto ntpInTest = new TFile(ntpIn.data());
+    auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
     if (treeTest == nullptr) {
       cout << treeName << " doesn't exist in " << ntpIn << " skipping..."
            << endl;
