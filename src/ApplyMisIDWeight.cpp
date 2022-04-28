@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Apr 28, 2022 at 01:16 AM -0400
+// Last Change: Thu Apr 28, 2022 at 03:40 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -118,9 +118,9 @@ RNode defineBranch(RNode df, string particle = "mu",
                       idx + 1);
 }
 
-pair<vPStrStr, vector<string>> genCutDirective(YAML::Node    node,
-                                               const string& wtPrefix,
-                                               string brPrefix = "is_misid_") {
+pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
+                                              const string& wtPrefix,
+                                              string brPrefix = "is_misid_") {
   vPStrStr       directives{};
   vector<string> outputBrs{};
   const auto     wtTargetParticle = "MuTag";
@@ -223,15 +223,15 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
 }
 
 template <typename F>
-RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
-                     string suffix, vector<string>& outputBrs) {
+RNode computeFitVars(RNode df, F& randGetter, double mB, string suffix,
+                     vector<string>& outputBrs) {
   // we probably did some unnecessary copies here, but deducing those nested
   // lambdas can be quite hard so I'm just being lazy here.
-  auto rebuildMu4MomHypo = [=, &randGetter](PxPyPzEVector v4Mu) {
+  auto rebuildMu4MomPartial = [=, &randGetter](PxPyPzEVector v4Mu) {
     vector<double> smr = randGetter();
     return rebuildMu4Mom(v4Mu, smr);
   };
-  auto estB4MomHypo = [=](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
+  auto estB4MomPartial = [=](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
     return estB4Mom(v4BReco, v3BFlight, mB);
   };
 
@@ -241,9 +241,9 @@ RNode computeFitVars(RNode df, F& randGetter, double mMuHypo, double mB,
 
   // FIXME: Not sure if 'el' is defined this way, as we probably don't have a
   // lepton at all.
-  return df.Define("v4_mu" + suffix, rebuildMu4MomHypo, {"v4_mu"})
+  return df.Define("v4_mu" + suffix, rebuildMu4MomPartial, {"v4_mu"})
       .Define("v4_b_reco" + suffix, "v4_mu" + suffix + " + v4_d")
-      .Define("v4_b_est" + suffix, estB4MomHypo,
+      .Define("v4_b_est" + suffix, estB4MomPartial,
               {"v4_b_reco" + suffix, "v3_b_dir"})
       .Define("mm2" + suffix, m2Miss,
               {"v4_b_est" + suffix, "v4_b_reco" + suffix})
@@ -291,8 +291,8 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
   // Replace mass hypo and compute fit vars
-  df = computeFitVars(df, randPiGetter, PI_M, mB, "_smr_pi", outputBrs);
-  df = computeFitVars(df, randKGetter, K_M, mB, "_smr_k", outputBrs);
+  df = computeFitVars(df, randPiGetter, mB, "_smr_pi", outputBrs);
+  df = computeFitVars(df, randKGetter, mB, "_smr_k", outputBrs);
 
   return {df, outputBrs};
 }
@@ -410,9 +410,9 @@ int main(int argc, char** argv) {
       outputBrNames.emplace_back(brName);
     }
 
-    // apply tagged species cuts
+    // output tagged species cuts and generate misID weights
     auto [directives, addOutputBrs] =
-        genCutDirective(ymlConfig["tags"], weightBrPrefix);
+        genWtDirective(ymlConfig["tags"], weightBrPrefix);
     df = defineBranch(df, ""s, directives);
     for (auto br : addOutputBrs) outputBrNames.emplace_back(br);
 
