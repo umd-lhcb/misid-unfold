@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Apr 28, 2022 at 02:28 PM -0400
+// Last Change: Thu Apr 28, 2022 at 02:35 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -306,16 +306,16 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
   vector<string> outputBrs{};
   string         dMeson = ""s;
   string         bMeson = ""s;
-  double         mB;
+  double         mBRef;
 
   if (branchExists(tree, DST_TEST_BR)) {
     dMeson = DST_BR_PREFIX;
     bMeson = B0_BR_PREFIX;
-    mB     = B0_M;
+    mBRef  = B0_M;
   } else if (branchExists(tree, D0_TEST_BR)) {
     dMeson = D0_BR_PREFIX;
     bMeson = B_BR_PREFIX;
-    mB     = B_M;
+    mBRef  = B_M;
   } else {
     cout << "No known branch found for D0 nor D*. Exit now..." << endl;
     exit(1);
@@ -339,8 +339,8 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
   // Replace mass hypo and compute fit vars
-  df = computeFitVars(df, randPiGetter, mB, "_smr_pi", outputBrs);
-  df = computeFitVars(df, randKGetter, mB, "_smr_k", outputBrs);
+  df = computeFitVars(df, randPiGetter, mBRef, "_smr_pi", outputBrs);
+  df = computeFitVars(df, randKGetter, mBRef, "_smr_k", outputBrs);
 
   return {df, outputBrs};
 }
@@ -400,11 +400,13 @@ int main(int argc, char** argv) {
 
   for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
     cout << "--------" << endl;
-    auto treeName  = it->first.as<string>();
-    auto ntpInTest = new TFile(ntpIn.data());
-    auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
+    auto treeName    = it->first.as<string>();
+    auto ntpInTest   = new TFile(ntpIn.data());
+    auto ntpsToClean = vector<TFile*>{ntpInTest};
+
+    auto treeTest = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
     if (treeTest == nullptr) {
-      cout << treeName << " doesn't exist in " << ntpIn << "skipping... "
+      cout << treeName << " doesn't exist in " << ntpIn << ". skipping..."
            << endl;
       continue;
     }
@@ -455,7 +457,9 @@ int main(int argc, char** argv) {
            << histoPrefix << " from file " << histoFile << endl;
 
       // add weights required by misID weights
-      auto ntpHisto        = new TFile(histoFile.data(), "READ");
+      auto ntpHisto = new TFile(histoFile.data(), "READ");
+      ntpsToClean.emplace_back(ntpHisto);
+
       auto histoWtNames    = buildHistoWtNames(particle, ymlConfig["tags"]);
       auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
       cout << "Generate transfer factors/DiF smearing wieghts for all species"
@@ -470,15 +474,10 @@ int main(int argc, char** argv) {
           genWtDirective(ymlConfig["tags"], weightBrPrefix);
       df = defineBranch(dfHistos, ""s, directives);
       for (auto br : outputBrsWts) outputBrNames.emplace_back(br);
-
-      // cleanups
-      // for (auto& h : histos) delete h;
-      // delete ntpHisto;
     }
     cout << "Writing to " << ntpOut << endl;
     df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
 
-    delete treeTest;
-    delete ntpInTest;
+    for (auto& n : ntpsToClean) delete n;
   }
 }
