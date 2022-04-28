@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Apr 28, 2022 at 02:13 PM -0400
+// Last Change: Thu Apr 28, 2022 at 02:28 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -397,46 +397,62 @@ int main(int argc, char** argv) {
   // snapshot option
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
-  bool firstTree  = true;
 
   for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
-    auto treeName = it->first.as<string>();
+    cout << "--------" << endl;
+    auto treeName  = it->first.as<string>();
+    auto ntpInTest = new TFile(ntpIn.data());
+    auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
+    if (treeTest == nullptr) {
+      cout << treeName << " doesn't exist in " << ntpIn << "skipping... "
+           << endl;
+      continue;
+    }
+
+    // build a dataframe from input ntuple
+    auto           df = static_cast<RNode>(RDataFrame(treeName, ntpIn));
+    vector<string> outputBrNames{"runNumber", "eventNumber"};
+    if (applyAlias) {
+      df = defineBranch(df, particle);
+      // compute ETA
+      df = df.Define("ETA",
+                     [](double& p, double& pz) {
+                       return 0.5 * TMath::Log((p + pz) / (p - pz));
+                     },
+                     {"P", "PZ"});
+    }
+
+    // read smearing factors from aux ntuple
+    auto smrFacK  = vector<vector<double>>{};
+    auto smrFacPi = vector<vector<double>>{};
+    getSmrFac(smrFacK, ntpAux);
+    getSmrFac(smrFacPi, ntpAux, "pi");
+
+    // we can call these functions directly to get random smearing factors
+    auto randSmrFacK  = getRandSmrHelper(smrFacK);
+    auto randSmrFacPi = getRandSmrHelper(smrFacPi);
+
+    // Recompute fit vars
+    auto [dfOut, outputBrsFitVars] =
+        defRestFrameVars(df, treeTest, randSmrFacK, randSmrFacPi);
+    for (auto br : outputBrsFitVars) outputBrNames.emplace_back(br);
+    df = dfOut;
+
+    // add species tags
+    auto [directivesTags, outputBrsTags] =
+        genTaggedCutDirective(ymlConfig["tags"]);
+    df = defineBranch(df, ""s, directivesTags);
+    for (const auto& br : outputBrsTags) outputBrNames.emplace_back(br);
+
+    // add all kinds of weights
     for (auto entry : it->second) {
       auto histoPrefix    = entry["prefix"].as<string>();
       auto histoFile      = entry["file"].as<string>();
       auto weightBrPrefix = entry["name"].as<string>();
       histoFile           = filePrefix + "/" + histoFile;
 
-      cout << "--------" << endl;
-      auto ntpInTest = new TFile(ntpIn.data());
-      auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
-      if (treeTest == nullptr) {
-        cout << treeName << " doesn't exist in " << ntpIn << "skipping... "
-             << endl;
-        continue;
-      }
-
       cout << "Handling tree " << treeName << " from histos of prefix "
            << histoPrefix << " from file " << histoFile << endl;
-
-      auto           df = static_cast<RNode>(RDataFrame(treeName, ntpIn));
-      vector<string> outputBrNames{"runNumber", "eventNumber"};
-
-      if (applyAlias) {
-        df = defineBranch(df, particle);
-        // compute ETA
-        df = df.Define("ETA",
-                       [](double& p, double& pz) {
-                         return 0.5 * TMath::Log((p + pz) / (p - pz));
-                       },
-                       {"P", "PZ"});
-      }
-
-      // add species tags
-      auto [directivesTags, outputBrsTags] =
-          genTaggedCutDirective(ymlConfig["tags"]);
-      df = defineBranch(df, ""s, directivesTags);
-      for (const auto& br : outputBrsTags) outputBrNames.emplace_back(br);
 
       // add weights required by misID weights
       auto ntpHisto        = new TFile(histoFile.data(), "READ");
@@ -455,34 +471,14 @@ int main(int argc, char** argv) {
       df = defineBranch(dfHistos, ""s, directives);
       for (auto br : outputBrsWts) outputBrNames.emplace_back(br);
 
-      // read smearing factors from aux ntuple
-      auto smrFacK  = vector<vector<double>>{};
-      auto smrFacPi = vector<vector<double>>{};
-      getSmrFac(smrFacK, ntpAux);
-      getSmrFac(smrFacPi, ntpAux, "pi");
-
-      // we can call these functions directly to get random smearing factors
-      auto randSmrFacK  = getRandSmrHelper(smrFacK);
-      auto randSmrFacPi = getRandSmrHelper(smrFacPi);
-
-      // Recompute fit vars
-      auto [dfOut, outputBrsFitVars] =
-          defRestFrameVars(df, treeTest, randSmrFacK, randSmrFacPi);
-      for (auto br : outputBrsFitVars) outputBrNames.emplace_back(br);
-
-      cout << "Writing to " << ntpOut << endl;
-      if (firstTree) {
-        dfOut.Snapshot(treeName, ntpOut, outputBrNames);
-        firstTree = false;
-      } else
-        dfOut.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
-
       // cleanups
-      for (auto& h : histos) delete h;
-      delete ntpHisto;
-
-      delete treeTest;
-      delete ntpInTest;
+      // for (auto& h : histos) delete h;
+      // delete ntpHisto;
     }
+    cout << "Writing to " << ntpOut << endl;
+    df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
+
+    delete treeTest;
+    delete ntpInTest;
   }
 }
