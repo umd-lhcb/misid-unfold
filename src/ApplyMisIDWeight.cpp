@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Apr 28, 2022 at 03:40 AM -0400
+// Last Change: Thu Apr 28, 2022 at 02:13 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -74,6 +74,54 @@ static const string MU_BR_PREFIX  = "mu";
 static const string DST_TEST_BR = "dst_PX";
 static const string D0_TEST_BR  = "d0_PX";
 
+////////////////////////
+// RDataFrame helpers //
+////////////////////////
+
+// Idea stolen from:
+//   https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
+RNode defineBranch(RNode df, string particle = "mu",
+                   const vPStrStr& rules = MU_BRANCH_DEFS, int idx = 0) {
+  // auto df = init_df.Alias(alias, particle+"_"+raw);
+  if (rules.size() == idx) return df;
+
+  auto inputBrName = rules[idx].second;
+  if (particle != ""s) inputBrName = particle + "_" + inputBrName;
+
+  return defineBranch(df.Define(rules[idx].first, inputBrName), particle, rules,
+                      idx + 1);
+}
+
+///////////////////////////////////////////
+// Helpers for apply tagged species cuts //
+///////////////////////////////////////////
+
+pair<vPStrStr, vector<string>> genTaggedCutDirective(
+    YAML::Node node, const string& brPrefix = "is_misid_") {
+  vPStrStr       directives{};
+  vector<string> outputBrs{};
+
+  vector<string> particles{};
+  // find particles and cuts
+  for (auto it = node.begin(); it != node.end(); it++) {
+    particles.emplace_back(it->first.as<string>());
+    auto cut = it->second.as<string>();
+    for (auto reg = CUT_REPLACE_RULES.begin(); reg != CUT_REPLACE_RULES.end();
+         reg++) {
+      cut = regex_replace(cut, reg->first, reg->second);
+    }
+    directives.emplace_back(pair{it->first.as<string>(), cut});
+  }
+
+  // generate the alias for output cut branches
+  for (auto idx = 0; idx != particles.size(); idx++) {
+    outputBrs.emplace_back(brPrefix + particles[idx]);
+    directives.emplace_back(pair{brPrefix + particles[idx], particles[idx]});
+  }
+
+  return {directives, outputBrs};
+}
+
 ////////////////////////////////////
 // Helpers for weight computation //
 ////////////////////////////////////
@@ -104,18 +152,31 @@ vector<TString> buildHistoSmrWtnames(YAML::Node node) {
   return result;
 }
 
-// Idea stolen from:
-//   https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
-RNode defineBranch(RNode df, string particle = "mu",
-                   const vPStrStr& rules = MU_BRANCH_DEFS, int idx = 0) {
-  // auto df = init_df.Alias(alias, particle+"_"+raw);
-  if (rules.size() == idx) return df;
+template <typename T, typename C = decay_t<decltype(*begin(declval<T>()))>>
+tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
+    RNode df, TFile* ntpHisto, string histoPrefix, string weightBrPrefix,
+    T iterable) {
+  auto outputBrs = vector<string>{};
+  auto histos    = vector<TH3D*>{};
 
-  auto inputBrName = rules[idx].second;
-  if (particle != ""s) inputBrName = particle + "_" + inputBrName;
+  for (const auto& h : iterable) {
+    auto histoName = string(histoPrefix + "__" + h);
+    auto histoWt   = static_cast<TH3D*>(ntpHisto->Get(histoName.data()));
+    histos.emplace_back(histoWt);
+    cout << "  Loading histo " << histoName << endl;
 
-  return defineBranch(df.Define(rules[idx].first, inputBrName), particle, rules,
-                      idx + 1);
+    auto brName = weightBrPrefix + "_" + h;
+    cout << "  Generating " << brName << "..." << endl;
+    df = df.Define(brName,
+                   [histoWt](double& x, double& y, double& z) {
+                     auto binIdx = histoWt->FindFixBin(x, y, z);
+                     return histoWt->GetBinContent(binIdx);
+                   },
+                   {"P", "ETA", "nTracks"});
+    outputBrs.emplace_back(brName);
+  }
+
+  return {df, outputBrs, histos};
 }
 
 pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
@@ -127,22 +188,9 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
   const auto     wtSmrParticles   = {"k", "pi"};
 
   vector<string> particles{};
-  // first find particles and cuts
-  for (auto it = node.begin(); it != node.end(); it++) {
+  // first find particles
+  for (auto it = node.begin(); it != node.end(); it++)
     particles.emplace_back(it->first.as<string>());
-    auto cut = it->second.as<string>();
-    for (auto reg = CUT_REPLACE_RULES.begin(); reg != CUT_REPLACE_RULES.end();
-         reg++) {
-      cut = regex_replace(cut, reg->first, reg->second);
-    }
-    directives.emplace_back(pair{it->first.as<string>(), cut});
-  }
-
-  // generate the alias for output cut branches
-  for (auto idx = 0; idx != particles.size(); idx++) {
-    outputBrs.emplace_back(brPrefix + particles[idx]);
-    directives.emplace_back(pair{brPrefix + particles[idx], particles[idx]});
-  }
 
   // generate the automatic weight for each event based on the species of the
   // event
@@ -171,7 +219,7 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
       expr += brPrefix + p + "*" + wtBrName;
     }
 
-    auto outputBr = wtPrefix + "_" + tgt + "_smr";
+    auto outputBr = wtPrefix + "_smr_" + tgt;
     brSmrNames.push_back(outputBr);
     outputBrs.emplace_back(outputBr);
     directives.emplace_back(pair{outputBr, expr});
@@ -339,110 +387,102 @@ int main(int argc, char** argv) {
   auto applyAlias = parsedArgs["alias"].as<bool>();
 
   // parse YAML config
-  auto ymlFile    = parsedArgs["config"].as<string>();
-  auto ymlConfig  = YAML::LoadFile(ymlFile);
-  auto year       = parsedArgs["year"].as<string>();
-  auto ymlDirPath = absDirPath(parsedArgs["config"].as<string>());
-  auto weightBrs  = ymlConfig["weight_brs"][year];
-  auto filePrefix = absDirPath(ymlFile);
+  auto ymlFile         = parsedArgs["config"].as<string>();
+  auto ymlConfig       = YAML::LoadFile(ymlFile);
+  auto year            = parsedArgs["year"].as<string>();
+  auto ymlDirPath      = absDirPath(parsedArgs["config"].as<string>());
+  auto outputDirective = ymlConfig["weight_brs"][year];
+  auto filePrefix      = absDirPath(ymlFile);
 
-  TFile* ntpHisto;
   // snapshot option
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
   bool firstTree  = true;
 
-  for (auto entry : weightBrs) {
-    auto          histoPrefix    = TString(entry["prefix"].as<string>());
-    auto          histoFile      = entry["file"].as<string>();
-    auto          treeName       = entry["tree"].as<string>();
-    auto          weightBrPrefix = entry["name"].as<string>();
-    vector<TH3D*> histos{};
-    histoFile = filePrefix + "/" + histoFile;
+  for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
+    auto treeName = it->first.as<string>();
+    for (auto entry : it->second) {
+      auto histoPrefix    = entry["prefix"].as<string>();
+      auto histoFile      = entry["file"].as<string>();
+      auto weightBrPrefix = entry["name"].as<string>();
+      histoFile           = filePrefix + "/" + histoFile;
 
-    cout << "--------" << endl;
-    auto ntpInTest = new TFile(ntpIn.data());
-    auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
-    if (treeTest == nullptr) {
-      cout << treeName << " doesn't exist in " << ntpIn << " skipping..."
+      cout << "--------" << endl;
+      auto ntpInTest = new TFile(ntpIn.data());
+      auto treeTest  = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
+      if (treeTest == nullptr) {
+        cout << treeName << " doesn't exist in " << ntpIn << "skipping... "
+             << endl;
+        continue;
+      }
+
+      cout << "Handling tree " << treeName << " from histos of prefix "
+           << histoPrefix << " from file " << histoFile << endl;
+
+      auto           df = static_cast<RNode>(RDataFrame(treeName, ntpIn));
+      vector<string> outputBrNames{"runNumber", "eventNumber"};
+
+      if (applyAlias) {
+        df = defineBranch(df, particle);
+        // compute ETA
+        df = df.Define("ETA",
+                       [](double& p, double& pz) {
+                         return 0.5 * TMath::Log((p + pz) / (p - pz));
+                       },
+                       {"P", "PZ"});
+      }
+
+      // add species tags
+      auto [directivesTags, outputBrsTags] =
+          genTaggedCutDirective(ymlConfig["tags"]);
+      df = defineBranch(df, ""s, directivesTags);
+      for (const auto& br : outputBrsTags) outputBrNames.emplace_back(br);
+
+      // add weights required by misID weights
+      auto ntpHisto        = new TFile(histoFile.data(), "READ");
+      auto histoWtNames    = buildHistoWtNames(particle, ymlConfig["tags"]);
+      auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
+      cout << "Generate transfer factors/DiF smearing wieghts for all species"
            << endl;
-      continue;
+      auto [dfHistos, outputBrsHistos, histos] =
+          applyWtFromHistos(df, ntpHisto, histoPrefix, weightBrPrefix,
+                            boost::join(histoWtNames, histoSmrWtNames));
+      for (auto br : outputBrsHistos) outputBrNames.emplace_back(br);
+
+      // add the actual misID weights
+      auto [directives, outputBrsWts] =
+          genWtDirective(ymlConfig["tags"], weightBrPrefix);
+      df = defineBranch(dfHistos, ""s, directives);
+      for (auto br : outputBrsWts) outputBrNames.emplace_back(br);
+
+      // read smearing factors from aux ntuple
+      auto smrFacK  = vector<vector<double>>{};
+      auto smrFacPi = vector<vector<double>>{};
+      getSmrFac(smrFacK, ntpAux);
+      getSmrFac(smrFacPi, ntpAux, "pi");
+
+      // we can call these functions directly to get random smearing factors
+      auto randSmrFacK  = getRandSmrHelper(smrFacK);
+      auto randSmrFacPi = getRandSmrHelper(smrFacPi);
+
+      // Recompute fit vars
+      auto [dfOut, outputBrsFitVars] =
+          defRestFrameVars(df, treeTest, randSmrFacK, randSmrFacPi);
+      for (auto br : outputBrsFitVars) outputBrNames.emplace_back(br);
+
+      cout << "Writing to " << ntpOut << endl;
+      if (firstTree) {
+        dfOut.Snapshot(treeName, ntpOut, outputBrNames);
+        firstTree = false;
+      } else
+        dfOut.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
+
+      // cleanups
+      for (auto& h : histos) delete h;
+      delete ntpHisto;
+
+      delete treeTest;
+      delete ntpInTest;
     }
-
-    cout << "Handling tree " << treeName << " from histos of prefix "
-         << histoPrefix << " from file " << histoFile << endl;
-
-    ntpHisto              = new TFile(TString(histoFile), "READ");
-    auto           dfInit = RDataFrame(treeName, ntpIn);
-    RNode          df     = static_cast<RNode>(dfInit);
-    vector<string> outputBrNames{"runNumber", "eventNumber"};
-    vector<string> weightTagBrNames{};
-
-    if (applyAlias) {
-      df = defineBranch(dfInit, particle);
-      // compute ETA
-      df = df.Define("ETA",
-                     [](double& p, double& pz) {
-                       return 0.5 * TMath::Log((p + pz) / (p - pz));
-                     },
-                     {"P", "PZ"});
-    }
-
-    auto histoWtNames    = buildHistoWtNames(particle, ymlConfig["tags"]);
-    auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
-    cout << "Generate transfer factors/DiF smearing wieghts for all species"
-         << endl;
-    for (const auto h : boost::join(histoWtNames, histoSmrWtNames)) {
-      auto histoName = histoPrefix + "__" + h;
-      auto histoWt   = static_cast<TH3D*>(ntpHisto->Get(histoName));
-      histos.emplace_back(histoWt);
-      cout << "  Loading histo " << histoName << endl;
-
-      auto brName = weightBrPrefix + "_" + string(h);
-      weightTagBrNames.emplace_back(brName);
-      cout << "  Generating " << brName << "..." << endl;
-      df = df.Define(brName,
-                     [histoWt](double& x, double& y, double& z) {
-                       auto binIdx = histoWt->FindFixBin(x, y, z);
-                       return histoWt->GetBinContent(binIdx);
-                     },
-                     {"P", "ETA", "nTracks"});
-      outputBrNames.emplace_back(brName);
-    }
-
-    // output tagged species cuts and generate misID weights
-    auto [directives, addOutputBrs] =
-        genWtDirective(ymlConfig["tags"], weightBrPrefix);
-    df = defineBranch(df, ""s, directives);
-    for (auto br : addOutputBrs) outputBrNames.emplace_back(br);
-
-    // read smearing factors from aux ntuple
-    auto smrFacK  = vector<vector<double>>{};
-    auto smrFacPi = vector<vector<double>>{};
-    getSmrFac(smrFacK, ntpAux);
-    getSmrFac(smrFacPi, ntpAux, "pi");
-
-    // we can call these functions directly to get random smearing factors
-    auto randSmrFacK  = getRandSmrHelper(smrFacK);
-    auto randSmrFacPi = getRandSmrHelper(smrFacPi);
-
-    // Recompute fit vars
-    auto [dfOut, moreOutputBrs] =
-        defRestFrameVars(df, treeTest, randSmrFacK, randSmrFacPi);
-    for (auto br : moreOutputBrs) outputBrNames.emplace_back(br);
-
-    cout << "Writing to " << ntpOut << endl;
-    if (firstTree) {
-      dfOut.Snapshot(treeName, ntpOut, outputBrNames);
-      firstTree = false;
-    } else
-      dfOut.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
-
-    // cleanups
-    for (auto& h : histos) delete h;
-    delete ntpHisto;
-
-    delete treeTest;
-    delete ntpInTest;
   }
 }

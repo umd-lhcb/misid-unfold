@@ -130,24 +130,25 @@ input_ntps:
 weight_brs:
     2016:
         # for specially postprocessed ntuple
-        - prefix: D0
-          file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
-          tree: tree
-          name: wmis_norm
+        tree:
+            - prefix: D0
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_norm
+            - prefix: D0_usb
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_usb
         # for step-1 ntuple
-        - prefix: D0
-          file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
-          tree: TupleBminus/DecayTree
-          name: wmis_norm
-        - prefix: D0_usb
-          file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
-          tree: TupleBminus/DecayTree
-          name: wmis_usb
-        - prefix: Dst
-          file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
-          tree: TupleB0/DecayTree
-          name: wmis_norm
-        - prefix: Dst_usb
-          file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
-          tree: TupleB0/DecayTree
-          name: wmis_usb
+        TupleBminus/DecayTree:
+            - prefix: D0
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_norm
+            - prefix: D0_usb
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_usb
+        TupleB0/DecayTree:
+            - prefix: Dst
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_norm
+            - prefix: Dst_usb
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_usb
