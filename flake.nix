@@ -8,12 +8,15 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, root-curated }:
+    {
+      overlay = import ./nix/overlay.nix;
+    } //
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
           config = { allowUnfree = true; };
-          overlays = [ root-curated.overlay ];
+          overlays = [ root-curated.overlay self.overlay ];
         };
         python = pkgs.python3;
         pythonPackages = python.pkgs;
@@ -21,6 +24,7 @@
       rec {
         packages = flake-utils.lib.flattenTree {
           dev-shell = devShell.inputDerivation;
+          inherit (pkgs) misid-unfold;
         };
         devShell = pkgs.mkShell rec {
           name = "misid-unfold-dev";
