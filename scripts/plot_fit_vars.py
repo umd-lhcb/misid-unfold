@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Apr 26, 2022 at 04:11 PM -0400
+# Last Change: Fri Apr 29, 2022 at 02:41 AM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
@@ -50,7 +50,7 @@ PLOT_RANGE = {
 }
 SMR_WTS = [
     ['', '_smr_pi', '_smr_k'],
-    ['_no_smr', '_pi_smr', '_k_smr']
+    ['_no_smr', '_smr_pi', '_smr_k']
 ]
 
 
