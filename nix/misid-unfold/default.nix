@@ -9,7 +9,7 @@
 
 stdenv.mkDerivation {
   pname = "misid-unfold";
-  version = "0.2.3";
+  version = "0.2.4";
 
   src = builtins.path { path = ./../..; name = "misid-unfold"; };
 
