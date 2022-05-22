@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 11:22 PM -0400
+# Last Change: Sun May 22, 2022 at 03:59 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -63,7 +63,7 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 30 \
 		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root \
-		-y ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
+		-y ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
 		-o $(OUT_DIR) \
 		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
@@ -105,20 +105,20 @@ plot-rdx-bin_vars-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-2016)
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
-		-i ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
-		-p D0 D0_usb Dst Dst_usb
+		-i ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
+		-p D0 D0_usb Dst Dst_usb Dst_comb_d Dst_comb_dsb
 	./scripts/plot_histo.py -o $(OUT_DIR) \
-		-i ./histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root \
-		-p D0 D0_usb Dst Dst_usb
+		-i ./histos/rdx-22_05_22_03_51-unfolded-2016/unfolded.root \
+		-p D0 D0_usb Dst Dst_usb Dst_comb_d Dst_comb_dsb
 
 plot-rdx-bin_vars-ana-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-ana-2016)
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag --extension pdf \
-		-i ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
+		-i ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
 		--show-title 0 1 0 --show-legend 1 0 0
 	./scripts/plot_histo.py -o $(OUT_DIR) --extension pdf \
-		-i ./histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root \
+		-i ./histos/rdx-22_05_22_03_51-unfolded-2016/unfolded.root \
 		--show-title 0 1 0 --show-legend 1 0 0
 
 
@@ -152,8 +152,8 @@ test-pidcalib2-wrapper:
 
 test-unfold: $(BINPATH)/UnfoldMisID
 	$< -c ./spec/rdx-run2.yml --dryRun \
-		-y ./histos/rdx-22_04_22_00_45-tag-2016/tagged.root \
-		-e ./histos/rdx-22_04_12_14_03-merged-2016/merged.root
+		-y ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
+		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root
 
 
 test-gen-aux-filename: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root

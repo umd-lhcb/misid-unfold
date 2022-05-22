@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Apr 22, 2022 at 07:46 PM -0400
+# Last Change: Sun May 22, 2022 at 04:10 AM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -37,6 +37,8 @@ KNOWN_PARTICLES = {
     'mu': r'$\mu$',
     'd0_usb': r'$D^0$ (USB)',
     'dst_usb': r'$D^*$ (USB)',
+    'dst_comb_d': r'$D^*$ ($D^*$ comb)',
+    'dst_comb_dsb': r'$D^*$ ($D^*$ comb SB)'
 }
 
 TAG_ORDERING = ['pi', 'k', 'p', 'e', 'g']
