@@ -100,30 +100,52 @@ input_ntps:
         D0_usb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
+        ####
         D0_ws_Mu:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         D0_ws_Mu_usb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
+        ####
         Dst:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_usb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
+        Dst_comb_d:  # D* comb, within deltaM window
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_24--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & dst_m_ok"
+        Dst_comb_dsb: # D* comb, outside deltaM window
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_24--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok"
+        ####
         Dst_ws_Mu:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Mu_usb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Mu_comb_d:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & dst_m_ok"
+        Dst_ws_Mu_usb_comb_dsb:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok"
+        ####
         Dst_ws_Pi:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Pi_usb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Pi_comb_d:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_24--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & dst_m_ok"
+        Dst_ws_Pi_comb_dsb:
+            files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_24--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok"
 
 
 # Used by (A)
@@ -152,3 +174,9 @@ weight_brs:
             - prefix: Dst_usb
               file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
               name: wmis_usb
+            - prefix: Dst_comb_d
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_comb_d
+            - prefix: Dst_comb_dsb
+              file: "../histos/rdx-22_04_22_23_33-unfolded-2016/unfolded.root"
+              name: wmis_comb_dsb
