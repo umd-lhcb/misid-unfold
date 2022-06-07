@@ -116,10 +116,10 @@ input_ntps:
             cuts: "dx_m_ok & b_m_sb"
         Dst_comb_d:  # D* comb, within deltaM window
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_24--mu_misid--data--2016--m?.root:tree"
-            cuts: "d0_m_ok & dst_m_ok"
+            cuts: "d0_m_ok & dst_m_ok & b_m_ok & in_fit_range"
         Dst_comb_dsb: # D* comb, outside deltaM window
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst--22_04_24--mu_misid--data--2016--m?.root:tree"
-            cuts: "d0_m_ok & !dst_m_ok"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         ####
         Dst_ws_Mu:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
@@ -127,12 +127,13 @@ input_ntps:
         Dst_ws_Mu_usb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
+        ######## These 2 are probably NOT needed
         Dst_ws_Mu_comb_d:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
-            cuts: "d0_m_ok & dst_m_ok"
-        Dst_ws_Mu_usb_comb_dsb:
+            cuts: "d0_m_ok & dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_comb_dsb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
-            cuts: "d0_m_ok & !dst_m_ok"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         ####
         Dst_ws_Pi:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_24--mu_misid--data--2016--m?.root:tree"
@@ -142,10 +143,10 @@ input_ntps:
             cuts: "dx_m_ok & b_m_sb"
         Dst_ws_Pi_comb_d:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_24--mu_misid--data--2016--m?.root:tree"
-            cuts: "d0_m_ok & dst_m_ok"
+            cuts: "d0_m_ok & dst_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Pi_comb_dsb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--22_04_24--mu_misid--data--2016--m?.root:tree"
-            cuts: "d0_m_ok & !dst_m_ok"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
 
 
 # Used by (A)
