@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Jun 14, 2022 at 01:01 AM -0400
+# Last Change: Tue Jun 14, 2022 at 01:10 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -22,7 +22,7 @@ ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 ###########
 # General #
 ###########
-.PHONY: exe applyer clean build-test build-test-lxplus plot-test
+.PHONY: exe applyer clean build-test build-test-lxplus build-test-nix plot-test
 
 exe: $(EXE_FILES)
 
@@ -32,11 +32,14 @@ clean:
 	@rm -rf $(GENPATH)/*
 
 build-test: \
-    build-rdx-tag-2016 test-pidcalib2-wrapper \
-    build-rdx-merged-2016 build-rdx-unfolded-2016 build-generic-dif-smearing \
-    build-rdx-weights-2016
+	build-rdx-tag-2016 test-pidcalib2-wrapper \
+	build-rdx-merged-2016 build-rdx-unfolded-2016 build-generic-dif-smearing \
+	build-rdx-weights-2016
 
 build-test-lxplus: build-rdx-true-to-tag-2016
+
+build-test-nix:
+	nix build ".#misid-unfold-applyer"
 
 plot-test: \
     plot-rdx-bin_vars-2016 plot-rdx-fit_vars-2016
