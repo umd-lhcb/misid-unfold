@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun May 22, 2022 at 03:59 AM -0400
+# Last Change: Tue Jun 14, 2022 at 01:01 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -22,9 +22,11 @@ ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 ###########
 # General #
 ###########
-.PHONY: exe clean build-test build-test-lxplus plot-test
+.PHONY: exe applyer clean build-test build-test-lxplus plot-test
 
 exe: $(EXE_FILES)
+
+applyer: $(BINPATH)/ApplyMisIDWeight
 
 clean:
 	@rm -rf $(GENPATH)/*
@@ -180,6 +182,9 @@ test-rdx-weights: \
 ###############
 # Compile C++ #
 ###############
+
+$(BINPATH)/ApplyMisIDWeight: ApplyMisIDWeight.cpp
+	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
 
 $(BINPATH)/%: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)

@@ -24,7 +24,10 @@
       rec {
         packages = flake-utils.lib.flattenTree {
           dev-shell = devShell.inputDerivation;
-          inherit (pkgs) misid-unfold;
+          inherit (pkgs)
+            misid-unfold
+            misid-unfold-applyer
+          ;
         };
         devShell = pkgs.mkShell rec {
           name = "misid-unfold-dev";

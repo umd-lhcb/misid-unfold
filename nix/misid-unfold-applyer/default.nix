@@ -1,19 +1,20 @@
 {
   stdenv
 , root
-, roounfold
 , cxxopts
 , libyamlcpp
 , boost
 }:
 
 stdenv.mkDerivation {
-  pname = "misid-unfold";
+  pname = "misid-unfold-applyer";
   version = "0.2.5";
 
   src = builtins.path { path = ./../..; name = "misid-unfold"; };
 
-  buildInputs = [ root roounfold cxxopts libyamlcpp boost ];
+  buildInputs = [ root cxxopts libyamlcpp boost ];
+
+  buildPhase = "make applyer";
 
   installPhase = ''
     mkdir -p $out/bin
