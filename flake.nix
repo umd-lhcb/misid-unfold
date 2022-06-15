@@ -77,7 +77,7 @@
 
           FONTCONFIG_FILE = pkgs.makeFontsConf {
             fontDirectories = with pkgs; [
-              corefonts
+              gyre-fonts
             ];
           };
 
