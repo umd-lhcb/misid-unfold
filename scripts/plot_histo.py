@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun May 22, 2022 at 04:10 AM -0400
+# Last Change: Wed Jun 15, 2022 at 10:34 AM -0400
 #
 # Description: histogram plotter (for this project)
 
@@ -9,6 +9,7 @@ import re
 import uproot
 import mplhep
 import numpy as np
+import matplotlib.pyplot as plt
 
 from argparse import ArgumentParser
 from pyTuplingUtils.utils import gen_histo_stacked_baseline
@@ -163,6 +164,7 @@ def plot(histo_spec, bin_vars, bin_names, output_dir, ordering,
                           loc='best', frameon='true')
 
             fig.savefig(f'{output_dir}/{prefix}_{v}.{ext}')
+            plt.close('all')
 
 
 ########
