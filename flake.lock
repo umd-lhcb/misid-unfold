@@ -15,6 +15,21 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1623875721,
+        "narHash": "sha256-A8BU7bjS5GirpAUv4QA+QnJ4CceLHkcXdRp4xITDB0s=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "f7e004a55b120c02ecb6219596820fcd32ca8772",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1625223284,
@@ -30,7 +45,22 @@
         "type": "indirect"
       }
     },
-    "root": {
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1625223284,
+        "narHash": "sha256-jjLcDSU1rRiJb+n3uez23XAa7kbnPcGZTa6jIKh1GMQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "357d2c8f6087685fe35cb1889a005a4dd4cce7b8",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixpkgs-unstable",
+        "type": "indirect"
+      }
+    },
+    "pyTuplingUtils": {
       "inputs": {
         "flake-utils": [
           "root-curated",
@@ -41,6 +71,33 @@
           "nixpkgs"
         ],
         "root-curated": "root-curated"
+      },
+      "locked": {
+        "lastModified": 1655282577,
+        "narHash": "sha256-zYz7SisftJSNfwxRcSZ2PpUbkY2BEa4+7TeOaIWBOUo=",
+        "owner": "umd-lhcb",
+        "repo": "pyTuplingUtils",
+        "rev": "c861457fbae77216bcbfd917cf29f77e9e487910",
+        "type": "github"
+      },
+      "original": {
+        "owner": "umd-lhcb",
+        "repo": "pyTuplingUtils",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": [
+          "root-curated",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "root-curated",
+          "nixpkgs"
+        ],
+        "pyTuplingUtils": "pyTuplingUtils",
+        "root-curated": "root-curated_2"
       }
     },
     "root-curated": {
@@ -49,11 +106,30 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1654899980,
-        "narHash": "sha256-7k7SfmhPs2YxoOQ/i+JNnsFH/3B0tEKUEjfOY7zld40=",
+        "lastModified": 1655280705,
+        "narHash": "sha256-tYDORRkXSaFTat4GotyJ3l6HTCkEoh8xx+zQuYgK8RI=",
         "owner": "umd-lhcb",
         "repo": "root-curated",
-        "rev": "4e2c19bc091578ab7aa69c554a343b2d79d0c1e1",
+        "rev": "349a831c3150af6d41fb8fa97648d75b902f2a09",
+        "type": "github"
+      },
+      "original": {
+        "owner": "umd-lhcb",
+        "repo": "root-curated",
+        "type": "github"
+      }
+    },
+    "root-curated_2": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1655280705,
+        "narHash": "sha256-tYDORRkXSaFTat4GotyJ3l6HTCkEoh8xx+zQuYgK8RI=",
+        "owner": "umd-lhcb",
+        "repo": "root-curated",
+        "rev": "349a831c3150af6d41fb8fa97648d75b902f2a09",
         "type": "github"
       },
       "original": {

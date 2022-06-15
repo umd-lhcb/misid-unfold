@@ -5,9 +5,10 @@
     root-curated.url = "github:umd-lhcb/root-curated";
     nixpkgs.follows = "root-curated/nixpkgs";
     flake-utils.follows = "root-curated/flake-utils";
+    pyTuplingUtils.url = "github:umd-lhcb/pyTuplingUtils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, root-curated }:
+  outputs = { self, nixpkgs, flake-utils, root-curated, pyTuplingUtils }:
     {
       overlay = import ./nix/overlay.nix;
     } //
@@ -16,7 +17,7 @@
         pkgs = import nixpkgs {
           inherit system;
           config = { allowUnfree = true; };
-          overlays = [ root-curated.overlay self.overlay ];
+          overlays = [ root-curated.overlay pyTuplingUtils.overlay self.overlay ];
         };
         python = pkgs.python3;
         pythonPackages = python.pkgs;
@@ -42,12 +43,12 @@
             boost
 
             # Python stack
-            virtualenvwrapper
             pylint
 
-            # Pinned Python dependencies
+            # Python dependencies
             numpy
-            scipy
+            pyyaml
+            pythonPackages.pyTuplingUtils  # naming clash with the input!
 
             # LaTeX
             (texlive.combine {
@@ -82,22 +83,6 @@
 
           shellHook = ''
             export PATH=$(pwd)/scripts:$(pwd)/bin:$PATH
-
-            # Allow the use of wheels.
-            SOURCE_DATE_EPOCH=$(date +%s)
-
-            VENV=./.virtualenv
-
-            if test ! -d $VENV; then
-              virtualenv $VENV
-            fi
-            source $VENV/bin/activate
-
-            # allow for the environment to pick up packages installed with virtualenv
-            export PYTHONPATH=$VENV/${python.sitePackages}/:$PYTHONPATH
-
-            # fix libstdc++.so not found error
-            export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH
           '';
         };
       });
