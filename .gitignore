@@ -1,4 +1,5 @@
 .virtualenv
 .lvimrc
+.matplotlib
 bin
 gen
