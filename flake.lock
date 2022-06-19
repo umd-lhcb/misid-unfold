@@ -63,10 +63,12 @@
     "pyTuplingUtils": {
       "inputs": {
         "flake-utils": [
+          "pyTuplingUtils",
           "root-curated",
           "flake-utils"
         ],
         "nixpkgs": [
+          "pyTuplingUtils",
           "root-curated",
           "nixpkgs"
         ],
