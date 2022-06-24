@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Jun 14, 2022 at 01:10 AM -0400
+# Last Change: Fri Jun 24, 2022 at 01:35 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -68,7 +68,7 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 30 \
 		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root \
-		-y ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
+		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
 		-o $(OUT_DIR) \
 		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
@@ -110,17 +110,17 @@ plot-rdx-bin_vars-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-2016)
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
-		-i ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
-		-p D0 D0_usb Dst Dst_usb Dst_comb_d Dst_comb_dsb
+		-i ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
+		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb
 	./scripts/plot_histo.py -o $(OUT_DIR) \
-		-i ./histos/rdx-22_05_22_03_51-unfolded-2016/unfolded.root \
-		-p D0 D0_usb Dst Dst_usb Dst_comb_d Dst_comb_dsb
+		-i ./histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root \
+		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb
 
 plot-rdx-bin_vars-ana-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-ana-2016)
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag --extension pdf \
-		-i ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
+		-i ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
 		--show-title 0 1 0 --show-legend 1 0 0
 	./scripts/plot_histo.py -o $(OUT_DIR) --extension pdf \
 		-i ./histos/rdx-22_05_22_03_51-unfolded-2016/unfolded.root \
@@ -157,7 +157,7 @@ test-pidcalib2-wrapper:
 
 test-unfold: $(BINPATH)/UnfoldMisID
 	$< -c ./spec/rdx-run2.yml --dryRun \
-		-y ./histos/rdx-22_05_22_03_46-tag-2016/tagged.root \
+		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
 		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root
 
 
