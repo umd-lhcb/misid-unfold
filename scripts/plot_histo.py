@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Jun 15, 2022 at 10:34 AM -0400
+# Last Change: Fri Jun 24, 2022 at 03:06 AM -0400
 #
 # Description: histogram plotter (for this project)
 
 import re
+import sys
 import uproot
 import mplhep
 import numpy as np
@@ -181,6 +182,10 @@ if __name__ == '__main__':
         histos = {
             name: ntp[k].to_numpy() for k in ntp
             if find_key(name := name_cleanup(k), pref, args.suffix)}
+
+        if len(histos) == 0:
+            print(f'No matching histo for prefix {pref}!')
+            sys.exit(1)
 
         print('Histos to plot:')
         for h in histos:
