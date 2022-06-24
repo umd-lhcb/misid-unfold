@@ -127,7 +127,6 @@ input_ntps:
         Dst_ws_Mu_bsb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
-        ######## These 2 are probably NOT needed
         Dst_ws_Mu_dsb:
             files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--22_04_24--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
@@ -159,7 +158,7 @@ weight_brs:
               name: wmis_norm
             - prefix: D0_bsb
               file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
-              name: wmis_dsb
+              name: wmis_bsb
         # for step-1 ntuple
         TupleBminus/DecayTree:
             - prefix: D0

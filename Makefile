@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Jun 24, 2022 at 01:35 AM -0400
+# Last Change: Fri Jun 24, 2022 at 03:07 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -111,10 +111,10 @@ plot-rdx-bin_vars-2016:
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
 		-i ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
-		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb
+		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 	./scripts/plot_histo.py -o $(OUT_DIR) \
 		-i ./histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root \
-		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb
+		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
 plot-rdx-bin_vars-ana-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-ana-2016)
