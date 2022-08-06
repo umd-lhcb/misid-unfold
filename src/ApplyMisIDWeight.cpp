@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Thu Apr 28, 2022 at 02:35 PM -0400
+// Last Change: Sat Aug 06, 2022 at 01:41 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -45,7 +45,7 @@ typedef vector<pair<string, string>> vPStrStr;
 typedef vector<pair<regex, string>>  vPRegStr;
 
 static const vPStrStr MU_BRANCH_DEFS{
-    // simple name, complex name
+    // PIDCalib name, DaVinci name
     {"MC15TuneV1_ProbNNpi", "MC15TuneV1_ProbNNpi"},
     {"MC15TuneV1_ProbNNk", "MC15TuneV1_ProbNNk"},
     {"MC15TuneV1_ProbNNp", "MC15TuneV1_ProbNNp"},
@@ -58,9 +58,27 @@ static const vPStrStr MU_BRANCH_DEFS{
     {"DLLmu", "PIDmu"},
     {"DLLd", "PIDd"},
     {"IsMuon", "isMuon"},
+    {"InMuonAcc", "InMuonAcc"},
+    {"MuonUnbiased", "L0MuonDecision_TIS"},  // not sure
+    {"Brunel_MC15TuneV1_ProbNNpi", "MC15TuneV1_ProbNNpi"},
+    {"Brunel_MC15TuneV1_ProbNNk", "MC15TuneV1_ProbNNk"},
+    {"Brunel_MC15TuneV1_ProbNNp", "MC15TuneV1_ProbNNp"},
+    {"Brunel_MC15TuneV1_ProbNNe", "MC15TuneV1_ProbNNe"},
+    {"Brunel_MC15TuneV1_ProbNNmu", "MC15TuneV1_ProbNNmu"},
+    {"Brunel_MC15TuneV1_ProbNNghost", "MC15TuneV1_ProbNNghost"},
+    {"Brunel_DLLK", "PIDK"},
+    {"Brunel_DLLp", "PIDp"},
+    {"Brunel_DLLe", "PIDe"},
+    {"Brunel_DLLmu", "PIDmu"},
+    {"Brunel_DLLd", "PIDd"},
+    {"Brunel_IsMuon", "isMuon"},
+    {"Brunel_P", "P"},
+    {"Brunel_InMuonAcc", "InMuonAcc"},
+    {"Brunel_MuonUnbiased", "L0MuonDecision_TIS"},  // not sure
+    // special aliases for compute eta
     {"P", "P"},
     {"PZ", "PZ"},
-    {"InMuonAcc", "InMuonAcc"}};
+};
 
 static const vPRegStr CUT_REPLACE_RULES{{regex("&"), "&&"},
                                         {regex("\\|"), "||"}};
