@@ -155,10 +155,7 @@ def decode_arguments(args):
     )
 
     parser.add_argument(
-        "-z",
-        "--pkl-name",
-        action="append",
-        help="specify output pkl filename"
+        "-z", "--pkl-name", action="append", help="specify output pkl filename"
     )
     parser.add_argument("-V", "--version", action="version", version=version)
     return parser.parse_args(args)
