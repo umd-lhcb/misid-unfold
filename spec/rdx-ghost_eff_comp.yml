@@ -3,7 +3,7 @@
 
 
 binning:
-    P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]  # the scific notation has to be written like this for PyYAML
+    P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]
     ETA: [1.7, 3.6, 5.0]
     nTracks: [0, 200, 600]
 
@@ -34,3 +34,11 @@ tags:
         (Brunel_DLLe - Brunel_DLLp) > -2.0 &
         Brunel_MC15TuneV1_ProbNNghost < 0.25
     g: "!pi & !k & !p & !e"  # ghost/uncategoried
+
+
+input_ntps:
+    2016:
+        ghost:
+            files: "../ntuples/0.9.7-rdx_production/Dst_D0-ghost-step2/*.root:tree"
+        # ghost_Jpsi:
+        #     files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--m?.root:tree"
