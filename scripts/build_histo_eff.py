@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Aug 08, 2022 at 04:18 AM -0400
+# Last Change: Mon Aug 08, 2022 at 01:25 PM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -64,7 +64,7 @@ def div_with_confint(num, denom):
     return ratio, err_bar
 
 
-def histo_builder(binning_scheme, ntps, cuts=None, tree="tree", name="eff"):
+def histo_builder(binning_scheme, df, cuts=None, tree="tree", name="eff"):
     bin_vars = []
     bin_nums = []
     bin_edges = []
@@ -79,11 +79,6 @@ def histo_builder(binning_scheme, ntps, cuts=None, tree="tree", name="eff"):
         bin_nums.append(nums)
         bin_edges.append(edges)
 
-    chain = TChain(tree)
-    for n in ntps:
-        chain.Add(n)
-
-    df = RDataFrame(chain)
     if cuts is not None:
         df = df.Filter(cuts)
 
@@ -123,7 +118,7 @@ def compute_efficiency(histo_all, histo_passed):
     return histo_eff
 
 
-def histo_name_gen(particle, tag, true="ghost"):
+def histo_name_gen(particle, tag, true="g"):
     return f"{particle}__{true}To{tag.capitalize()}Tag"
 
 
@@ -160,16 +155,21 @@ if __name__ == "__main__":
     for particle, subconfig in config["input_ntps"][int(args.year)].items():
         global_cut = subconfig["cuts"] if "cut" in subconfig else "true"
         ntps, tree = ntp_tree(subconfig["files"], config_dir_path)
-        print(f"Working on {particle}, with file {ntps} and tree {tree}...")
+
+        chain = TChain(tree)
+        for n in ntps:
+            chain.Add(n)
+        df = RDataFrame(chain)
 
         for sp, cut_expr in config["tags"].items():
             name = histo_name_gen(particle, sp)
             cuts = global_cut + " && " + cut_expr.replace("&", "&&")
             print(f"  specie {sp} has the following cuts: {cuts}")
+            df = df.Define(sp, cuts)
 
-            histo_all = histo_builder(binning_scheme, ntps, name=name + "_all")
+            histo_all = histo_builder(binning_scheme, df, name=name + "_all")
             histo_passed = histo_builder(
-                binning_scheme, ntps, cuts, name=name + "_passed"
+                binning_scheme, df, cuts, name=name + "_passed"
             )
 
             eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr())
