@@ -46,6 +46,7 @@
             pylint
 
             # Python dependencies
+            statsmodels
             numpy
             pyyaml
             pythonPackages.pyTuplingUtils  # naming clash with the input!
