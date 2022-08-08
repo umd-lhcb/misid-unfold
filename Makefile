@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Jun 24, 2022 at 03:07 AM -0400
+# Last Change: Mon Aug 08, 2022 at 03:19 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -50,6 +50,7 @@ plot-test: \
 #######
 .PHONY: build-tagged-histo build-rdx-true-to-tag-2016 build-rdx-weights-2016
 
+# Build the misID weights. Multi-step
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
 	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
@@ -80,6 +81,7 @@ build-generic-dif-smearing:
 		-p ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
 
 
+# Test application of misID weights
 build-rdx-weights-2016: build-rdx-weights-2016-md build-rdx-weights-2016-mu
 
 build-rdx-weights-2016-md: \
@@ -99,6 +101,16 @@ build-rdx-weights-2016-mu: \
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
 	$< -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+
+
+###############################
+# Ghost efficiency comparison #
+###############################
+.PHONY: ghost-eff-gen
+
+ghost-eff-gen:
+	$(eval OUT_DIR	:=	$(GENPATH)/ghost_eff-$(TIME_STAMP)-true_to_tag-2016)
+	./scripts/build_histo_eff.py -c ./spec/rdx-ghost_eff_comp.yml -o $(OUT_DIR) -y 2016
 
 
 ############

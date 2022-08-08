@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Aug 08, 2022 at 01:45 AM -0400
+# Last Change: Mon Aug 08, 2022 at 04:18 AM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -70,12 +70,12 @@ def histo_builder(binning_scheme, ntps, cuts=None, tree="tree", name="eff"):
     bin_edges = []
 
     for var_name, spec in binning_scheme.items():
-        bin_vars.append(var_name)
-        nums = 0
+        nums = -1
         edges = vector("double")()
         for s in spec:
             nums = nums + 1
             edges.push_back(s)
+        bin_vars.append(var_name)
         bin_nums.append(nums)
         bin_edges.append(edges)
 
@@ -84,7 +84,7 @@ def histo_builder(binning_scheme, ntps, cuts=None, tree="tree", name="eff"):
         chain.Add(n)
 
     df = RDataFrame(chain)
-    if cuts:
+    if cuts is not None:
         df = df.Filter(cuts)
 
     h3_model = TH3DModel(
@@ -97,7 +97,10 @@ def histo_builder(binning_scheme, ntps, cuts=None, tree="tree", name="eff"):
         bin_nums[2],
         bin_edges[2].data(),
     )
-    return df.Histo3D(h3_model, *bin_vars)  # this is a smart pointer
+
+    histo = df.Histo3D(h3_model, *bin_vars)  # this returns a pointer and is lazy
+    histo.GetTitle()  # make it execute
+    return histo
 
 
 def compute_efficiency(histo_all, histo_passed):
@@ -120,6 +123,10 @@ def compute_efficiency(histo_all, histo_passed):
     return histo_eff
 
 
+def histo_name_gen(particle, tag, true="ghost"):
+    return f"{particle}__{true}To{tag.capitalize()}Tag"
+
+
 ###############
 # Path helper #
 ###############
@@ -136,10 +143,6 @@ def ntp_tree(name, dir_abs_path=""):
     return ntps, tree
 
 
-def histo_name_gen(name):
-    return f"{name}Tag"
-
-
 ########
 # Main #
 ########
@@ -148,35 +151,28 @@ if __name__ == "__main__":
     args = parse_input()
     config_dir_path = abs_dir(args.config)
     makedirs(args.output, exist_ok=True)
-    ntp = uproot.recreate(f"{args.output}/{HISTO_NAME}")
 
     with open(args.config, "r") as f:
         config = safe_load(f)
+    binning_scheme = config["binning"]
 
+    ntp_out = TFile(f"{args.output}/{HISTO_NAME}", "recreate")
     for particle, subconfig in config["input_ntps"][int(args.year)].items():
-        print(f"Working on {particle}...")
-        evaluator = BooleanEvaluator(
-            *ntp_tree(subconfig["files"], dir_abs_path=config_dir_path)
-        )
-
-        # load branches needed to build histos
-        histo_brs = []
-        for br_name in config["binning"]:
-            histo_brs.append(evaluator.eval(br_name))
-
-        global_cut = evaluator.eval(subconfig["cuts"])
+        global_cut = subconfig["cuts"] if "cut" in subconfig else "true"
+        ntps, tree = ntp_tree(subconfig["files"], config_dir_path)
+        print(f"Working on {particle}, with file {ntps} and tree {tree}...")
 
         for sp, cut_expr in config["tags"].items():
-            print(f"  specie {histo_name_gen(sp)} has the following cuts: {cut_expr}")
-            cut = evaluator.eval(cut_expr)
+            name = histo_name_gen(particle, sp)
+            cuts = global_cut + " && " + cut_expr.replace("&", "&&")
+            print(f"  specie {sp} has the following cuts: {cuts}")
 
-            # Make sure the evaluator is aware of the new variable
-            evaluator.transformer.known_symb[sp] = cut
-            evaluator.transformer.cache[sp] = cut
-
-            # Now build histograms
-            ntp[f"{particle}__{histo_name_gen(sp)}"] = np.histogramdd(
-                histo_brs,
-                bins=list(config["binning"].values()),
-                weights=(cut & global_cut),
+            histo_all = histo_builder(binning_scheme, ntps, name=name + "_all")
+            histo_passed = histo_builder(
+                binning_scheme, ntps, cuts, name=name + "_passed"
             )
+
+            eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr())
+            eff.SetName(name)
+            eff.SetTitle(name)
+            eff.Write()
