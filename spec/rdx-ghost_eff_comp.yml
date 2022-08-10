@@ -39,6 +39,8 @@ tags:
 input_ntps:
     2016:
         ghost:
-            files: "../ntuples/0.9.7-rdx_production/Dst_D0-ghost-step2/*.root:tree"
-        # ghost_Jpsi:
-        #     files: "../ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.7-rdx_production/Dst_D0-ghost-step2/ghost*.root:tree"
+            cuts: Brunel_MuonUnbiased
+        ghost_Jpsi:
+            files: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/ghost*.root:tree"
+            cuts: Brunel_MuonUnbiased

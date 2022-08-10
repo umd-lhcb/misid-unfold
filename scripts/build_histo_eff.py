@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Aug 08, 2022 at 01:25 PM -0400
+# Last Change: Tue Aug 09, 2022 at 09:54 PM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
     ntp_out = TFile(f"{args.output}/{HISTO_NAME}", "recreate")
     for particle, subconfig in config["input_ntps"][int(args.year)].items():
-        global_cut = subconfig["cuts"] if "cut" in subconfig else "true"
+        global_cut = subconfig["cuts"] if "cuts" in subconfig else "true"
         ntps, tree = ntp_tree(subconfig["files"], config_dir_path)
 
         chain = TChain(tree)
