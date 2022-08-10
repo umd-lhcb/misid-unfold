@@ -32,6 +32,7 @@ def parse_input():
     parser.add_argument(
         "-t",
         "--threshold",
+        type=float,
         default=0.05,
         help="specify a threshold abs. diff. above which is considered bad.",
     )
