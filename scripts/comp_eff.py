@@ -16,9 +16,9 @@ from ROOT import TFile
 # Configurable #
 ################
 
-SPECIES = [f'gTrueTo{s}Tag' for s in ['Pi', 'K', 'P', 'E', 'G']]
-REF_PREFIX = 'ghost'
-COMP_PREFIX = 'ghost_Jpsi'
+SPECIES = [f"gTrueTo{s}Tag" for s in ["Pi", "K", "P", "E", "G"]]
+REF_PREFIX = "ghost"
+COMP_PREFIX = "ghost_Jpsi"
 
 
 #######################
@@ -48,8 +48,8 @@ if __name__ == "__main__":
     thresh = args.threshold
 
     for s in SPECIES:
-        name_ref = f'{REF_PREFIX}__{s}'
-        name_comp = f'{COMP_PREFIX}__{s}'
+        name_ref = f"{REF_PREFIX}__{s}"
+        name_comp = f"{COMP_PREFIX}__{s}"
 
         histo_ref = ntp.Get(name_ref)
         histo_comp = ntp.Get(name_comp)
@@ -83,8 +83,12 @@ if __name__ == "__main__":
             if diff > thresh:
                 bad_bins.append(((i, j, k), diff, val_ref, val_comp))
 
-        print(f'Comparing {s}...')
-        print(f'  chi2 = {chi2}, chi2ndof = {chi2/ndof}')
-        print(f'  These are the worst bins: (bin idx, abs. diff, RDX. val, RJpsi val)')
-        for idx, abs_diff, val_ref, val_comp in sorted(bad_bins, key=lambda x: x[1]):
-            print(f'    {idx}\t{abs_diff}\t{val_ref}\t{val_comp}')
+        print(f"Comparing {s}...")
+        print(f"  chi2 = {chi2}, ndof = {ndof}, chi2ndof = {chi2/ndof}")
+        print(
+            f"  These are the worst {len(bad_bins)} bins: (bin idx, abs. diff, RDX. val, RJpsi val)"
+        )
+        for idx, abs_diff, val_ref, val_comp in sorted(
+            bad_bins, key=lambda x: x[1], reverse=True
+        ):
+            print(f"    {idx}\t{abs_diff}\t{val_ref}\t{val_comp}")
