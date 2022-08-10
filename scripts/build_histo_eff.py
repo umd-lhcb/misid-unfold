@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Aug 09, 2022 at 09:54 PM -0400
+# Last Change: Tue Aug 09, 2022 at 11:34 PM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -37,7 +37,7 @@ HISTO_NAME = "eff.root"
 
 
 def parse_input():
-    parser = ArgumentParser(description="tagged histogram builder (T).")
+    parser = ArgumentParser(description="efficiency histogram builder (E).")
 
     parser.add_argument("-c", "--config", required=True, help="specify YAML config.")
 
