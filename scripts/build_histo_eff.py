@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Aug 09, 2022 at 11:34 PM -0400
+# Last Change: Wed Aug 10, 2022 at 12:03 AM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -119,7 +119,7 @@ def compute_efficiency(histo_all, histo_passed):
 
 
 def histo_name_gen(particle, tag, true="g"):
-    return f"{particle}__{true}To{tag.capitalize()}Tag"
+    return f"{particle}__{true}TrueTo{tag.capitalize()}Tag"
 
 
 ###############
