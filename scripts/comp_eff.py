@@ -93,7 +93,8 @@ if __name__ == "__main__":
                 continue
 
             chi2 = chi2 + diff**2 / err**2
-            if diff > thresh:
+            # if diff > thresh:
+            if diff > err_ref + err_comp:
                 bad_bins.append(((i, j, k), diff, val_ref, err_ref, val_comp, err_comp))
 
         print(f"Comparing {s}...")
