@@ -98,7 +98,9 @@ if __name__ == "__main__":
         print(f"  chi2 = {chi2}, ndof = {ndof}, chi2ndof = {chi2/ndof}")
 
         if forced_print:
-            f"These bins are requested: (bin idx, abs. diff, RDX. val, RJpsi val)"
+            print(
+                f"  These bins are requested: (bin idx, abs. diff, RDX. val, RJpsi val)"
+            )
             for idx, abs_diff, val_ref, val_comp in forced_print:
                 print(f"    {idx}\t{abs_diff}\t{val_ref}\t{val_comp}")
 
