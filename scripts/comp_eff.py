@@ -36,6 +36,9 @@ def parse_input():
         default=0.05,
         help="specify a threshold abs. diff. above which is considered bad.",
     )
+    parser.add_argument(
+        "-i", "--idx", nargs="+", default=None, help="specify idx to print."
+    )
     return parser.parse_args()
 
 
@@ -47,6 +50,9 @@ if __name__ == "__main__":
     args = parse_input()
     ntp = TFile.Open(args.ntp)
     thresh = args.threshold
+    idx_to_print = (
+        [tuple(int(i) for i in s.split(",")) for s in args.idx] if args.idx else []
+    )
 
     for s in SPECIES:
         name_ref = f"{REF_PREFIX}__{s}"
@@ -60,6 +66,7 @@ if __name__ == "__main__":
         zbins = histo_ref.GetNbinsZ()
         ndof = xbins * ybins * zbins
 
+        forced_print = []
         bad_bins = []
         chi2 = 0
 
@@ -77,6 +84,9 @@ if __name__ == "__main__":
             diff = abs(val_ref - val_comp)
             err = sqrt(err_ref**2 + err_comp**2)
 
+            if (i, j, k) in idx_to_print:
+                forced_print.append(((i, j, k), diff, val_ref, val_comp))
+
             if err < 1e-6:
                 continue
 
@@ -86,6 +96,12 @@ if __name__ == "__main__":
 
         print(f"Comparing {s}...")
         print(f"  chi2 = {chi2}, ndof = {ndof}, chi2ndof = {chi2/ndof}")
+
+        if forced_print:
+            f"These bins are requested: (bin idx, abs. diff, RDX. val, RJpsi val)"
+            for idx, abs_diff, val_ref, val_comp in forced_print:
+                print(f"    {idx}\t{abs_diff}\t{val_ref}\t{val_comp}")
+
         print(
             f"  These are the worst {len(bad_bins)} bins: (bin idx, abs. diff, RDX. val, RJpsi val)"
         )
