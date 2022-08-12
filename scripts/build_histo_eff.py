@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Wed Aug 10, 2022 at 12:03 AM -0400
+# Last Change: Fri Aug 12, 2022 at 04:25 AM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -160,6 +160,7 @@ if __name__ == "__main__":
         for n in ntps:
             chain.Add(n)
         df = RDataFrame(chain)
+        histo_all = histo_builder(binning_scheme, df, global_cut, "all")
 
         for sp, cut_expr in config["tags"].items():
             name = histo_name_gen(particle, sp)
@@ -167,7 +168,6 @@ if __name__ == "__main__":
             print(f"  specie {sp} has the following cuts: {cuts}")
             df = df.Define(sp, cuts)
 
-            histo_all = histo_builder(binning_scheme, df, name=name + "_all")
             histo_passed = histo_builder(
                 binning_scheme, df, cuts, name=name + "_passed"
             )
