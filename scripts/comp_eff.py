@@ -85,29 +85,35 @@ if __name__ == "__main__":
             err = sqrt(err_ref**2 + err_comp**2)
 
             if (i, j, k) in idx_to_print:
-                forced_print.append(((i, j, k), diff, val_ref, val_comp))
+                forced_print.append(
+                    ((i, j, k), diff, val_ref, err_ref, val_comp, err_comp)
+                )
 
             if err < 1e-6:
                 continue
 
             chi2 = chi2 + diff**2 / err**2
             if diff > thresh:
-                bad_bins.append(((i, j, k), diff, val_ref, val_comp))
+                bad_bins.append(((i, j, k), diff, val_ref, err_ref, val_comp, err_comp))
 
         print(f"Comparing {s}...")
-        print(f"  chi2 = {chi2}, ndof = {ndof}, chi2ndof = {chi2/ndof}")
+        print(f"  chi2 = {chi2:.3g}, ndof = {ndof}, chi2ndof = {chi2/ndof:.3g}")
 
         if forced_print:
             print(
                 f"  These bins are requested: (bin idx, abs. diff, RDX. val, RJpsi val)"
             )
-            for idx, abs_diff, val_ref, val_comp in forced_print:
-                print(f"    {idx}\t{abs_diff}\t{val_ref}\t{val_comp}")
+            for idx, abs_diff, val_ref, err_ref, val_comp, err_comp in forced_print:
+                print(
+                    f"    {idx}\t{abs_diff:.3f}\t{val_ref:.3f}±{err_ref:.3f}\t{val_comp:.3f}±{err_comp:.3f}"
+                )
 
         print(
             f"  These are the worst {len(bad_bins)} bins: (bin idx, abs. diff, RDX. val, RJpsi val)"
         )
-        for idx, abs_diff, val_ref, val_comp in sorted(
+        for idx, abs_diff, val_ref, err_ref, val_comp, err_comp in sorted(
             bad_bins, key=lambda x: x[1], reverse=True
         ):
-            print(f"    {idx}\t{abs_diff}\t{val_ref}\t{val_comp}")
+            print(
+                f"    {idx}\t{abs_diff:.3f}\t{val_ref:.3f}±{err_ref:.3f}\t{val_comp:.3f}±{err_comp:.3f}"
+            )
