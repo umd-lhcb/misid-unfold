@@ -50,3 +50,19 @@ git annex sync
 
     This apply misID weights and momentum smearing on misID control samples.
     It's typically not applied here. The rule here is for demo purpose only.
+
+
+## Apply misID and DiF smearing weights
+
+To apply these weight on some sample ntuple:
+
+```
+make test-rdx-weights
+```
+
+Some test plots including both the nominal region and the DSB region can be
+generated with:
+
+```
+make plot-rdx-fit_vars_dsb-ana-2016
+```
