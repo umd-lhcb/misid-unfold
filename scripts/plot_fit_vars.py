@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Apr 29, 2022 at 02:41 AM -0400
+# Last Change: Tue Sep 06, 2022 at 01:55 PM -0400
 #
 # Description: plot fit variables w/ w/o decay-in-flight smearing
 
@@ -25,7 +25,6 @@ from pyTuplingUtils.io import read_branches_dict
 # Configurable #
 ################
 
-GLOBAL_CUTS = ["b_m_ok", "dx_m_ok", "in_fit_range"]
 DEFAULT_COLORS = ["#00429d", "#5585b7", "#8bd189", "#d15d5f", "#93003a"]
 DEFAULT_OVERALL_COLORS = ["black", "red"]
 LEGEND_LOC = {"q2": "upper left", "mm2": "upper left", "el": "upper right"}
@@ -71,6 +70,14 @@ def parse_input():
     parser.add_argument("-t", "--tree", help="specify tree name.", default="tree")
 
     parser.add_argument("--bins", help="specify number of bins.", type=int, default=300)
+
+    parser.add_argument(
+        "-c",
+        "--cuts",
+        nargs="+",
+        default=["b_m_ok", "dx_m_ok", "in_fit_range"],
+        help="specify global cuts. Use a whitespace to separate each cut.",
+    )
 
     parser.add_argument(
         "-p", "--prefix", help="specify plot filename prefix.", default="D0"
@@ -218,12 +225,12 @@ if __name__ == "__main__":
         + list(MISID_TAGS.keys())
         + [v + s for v in PLOT_VARS for s in SMR_WTS[0]]
         + [w + s for w in MISID_WTS for s in SMR_WTS[1]]
-        + GLOBAL_CUTS
+        + args.cuts
     )
 
     brs = load_vars(ntp_main, args.tree, all_vars)
     brs.update(load_vars(ntp_aux, args.tree, all_vars))
-    global_cuts = np.multiply.reduce([brs[i] for i in GLOBAL_CUTS]).astype(float)
+    global_cuts = np.multiply.reduce([brs[i] for i in args.cuts]).astype(float)
 
     for misid_wt in MISID_WTS:
         wt_tags = []
