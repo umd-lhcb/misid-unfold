@@ -6,9 +6,10 @@
     nixpkgs.follows = "root-curated/nixpkgs";
     flake-utils.follows = "root-curated/flake-utils";
     pyTuplingUtils.url = "github:umd-lhcb/pyTuplingUtils";
+    pidcalib2.url = "github:umd-lhcb/pidcalib2";
   };
 
-  outputs = { self, nixpkgs, flake-utils, root-curated, pyTuplingUtils }:
+  outputs = { self, nixpkgs, flake-utils, root-curated, pyTuplingUtils, pidcalib2 }:
     {
       overlay = import ./nix/overlay.nix;
     } //
@@ -17,7 +18,7 @@
         pkgs = import nixpkgs {
           inherit system;
           config = { allowUnfree = true; };
-          overlays = [ root-curated.overlay pyTuplingUtils.overlay self.overlay ];
+          overlays = [ root-curated.overlay pyTuplingUtils.overlay pidcalib2.overlay self.overlay ];
         };
         python = pkgs.python3;
         pythonPackages = python.pkgs;
@@ -50,6 +51,7 @@
             numpy
             pyyaml
             pythonPackages.pyTuplingUtils  # naming clash with the input!
+            pythonPackages.pidcalib2
 
             # LaTeX
             (texlive.combine {
