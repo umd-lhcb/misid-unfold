@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Sep 09, 2022 at 05:42 PM -0400
+# Last Change: Fri Sep 09, 2022 at 07:05 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -147,7 +147,7 @@ def true_to_tag_gen(
 
     # Convert pkl -> root, rename and relocate
     for pkl in glob(f"{directive.folder_name}/*.pkl"):
-        run_cmd(f'lb-conda pidcalib pidcalib2.pklhisto2root "{pkl}"')
+        run_cmd(f'{cmd_prefix}pidcalib2.pklhisto2root "{pkl}"')
     for ntp in glob(f"{directive.folder_name}/*.root"):
         run_cmd(f'cp "{ntp}" ./{basename(ntp)}')
 
