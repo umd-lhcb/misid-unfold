@@ -49,16 +49,18 @@ pidcalib_config:
         p: P
         e: e_B_Jpsi
     tags:
-        cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased"
-    tags_addon:
+        cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0"
+        # here the pid_cut section is taken from the 'tagged' section, with the
+        # corresponding particle name (e.g. 'pi' -> 'tags'['pi'])
+    tags_addon:  # ad-hoc tags
         mu:
             nom:
-                cut: "TRACK_GHOSTPROB < 0.5"
+                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
+                add_pid_cut: "BDTmu > 0.25"
             denom:
-                cut: "TRACK_GHOSTPROB < 0.5"
+                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
-            ubdt_cut: "BDTmu > 0.25"
 
 
 # specify additional source of histograms
