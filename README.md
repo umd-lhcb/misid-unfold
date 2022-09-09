@@ -22,19 +22,20 @@ git annex sync
 
 Read `spec/rdx-run2.yml` to see all required inputs!
 
-### Generation of misID efficiencies
+### Generation of true to tag misID efficiencies
 
-1. **Update the **true -> tag** efficiencies with _modified_ `pidcalib` sample**:
+1. Update the **true to tag** efficiencies with _modified_ `pidcalib` sample:
 
      _modified_ refers to the `pidcalib` ntuples w/ UBDT branches, which are
      only available at `glacier`
 
     1. Clone this project on `glacier`
     2. Run `nix develop` in the project root
-    3. In the resulting shell
+    3. In the resulting shell, run `make build-rdx-true-to-tag-2016-glacier`
 
 
-**Remark on `cut` vs. `pid_cut` options in the YAML file**:
+#### Remark on `cut` vs. `pid_cut` options in the YAML file
+
 These names are consistent with `pidcalib2` naming scheme, that is:
 
 - `cut`: The cuts in the denominator
@@ -45,6 +46,15 @@ Therefore, the efficiency is defined as:
 $$
 \epsilon = \frac{\text{event passing cut and PID cut}}{\text{event passing cut}}
 $$
+
+#### Remark on test run
+
+One can test these rules with:
+
+- `make test-pidcalib2-wrapper-glacier`
+- `make test-pidcalib2-wrapper-lxplus`
+
+locally, without actually running the efficiency generation program.
 
 
 2. **If you want to update the **true -> tag** efficiencies with the official `pidcalib` sample**:

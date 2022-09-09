@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Sep 06, 2022 at 06:46 PM -0400
+# Last Change: Fri Sep 09, 2022 at 05:55 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -50,14 +50,22 @@ plot-test: \
 #######
 .PHONY: build-tagged-histo build-rdx-true-to-tag-2016 build-rdx-weights-2016
 
+# Generation of true to tag misID efficiency
+.PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2016-lxplus
+build-rdx-true-to-tag-2016-glacier:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 -m glacier
+
+build-rdx-true-to-tag-2016-lxplus:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 -m glacier
+
+
 # Build the misID weights. Multi-step
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
 	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
 
-build-rdx-true-to-tag-2016:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
 
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
@@ -176,10 +184,13 @@ plot-rdx-fit_vars_dsb-ana-2016: \
 ########
 # Test #
 ########
-.PHONY: test-pidcalib2-wrapper test-unfold
+.PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus test-unfold
 
-test-pidcalib2-wrapper:
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run
+test-pidcalib2-wrapper-glacier:
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run -m glacier
+
+test-pidcalib2-wrapper-lxplus:
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run -m lxplus
 
 test-unfold: $(BINPATH)/UnfoldMisID
 	$< -c ./spec/rdx-run2.yml --dryRun \
