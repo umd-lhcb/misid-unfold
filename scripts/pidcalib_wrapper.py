@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Apr 25, 2022 at 08:34 PM -0400
+# Last Change: Fri Sep 09, 2022 at 05:42 PM -0400
 #
 # Description: pidcalib2 wrapper (P)
 
@@ -27,6 +27,14 @@ BINNING_ALIAS = {
     "P": lambda sample: "Brunel_P",
     "ETA": lambda sample: "Brunel_ETA",
     "nTracks": lambda sample: "nTracks" if sample == "e_B_Jpsi" else "nTracks_Brunel",
+}
+
+MODES = {
+    "glacier": {"blocked_particles": ["e", "g"]},
+    "lxplus": {
+        "blocked_particles": ["pi", "k", "p", "g"],
+        "blocked_add_pid_cut_for_particle": ["e"],
+    },
 }
 
 
@@ -58,6 +66,10 @@ def parse_input():
 
     parser.add_argument(
         "-y", "--year", default="2016", help="specify year (format: 20XX)."
+    )
+
+    parser.add_argument(
+        "-m", "--mode", default="glacier", help="specify operation mode."
     )
 
     return parser.parse_args()
@@ -106,13 +118,17 @@ def run_cmd(cmd, dry_run=False):
             raise ValueError("Command execution failed.")
 
 
-def true_to_tag_gen(directive, dry_run=False, debug=False, polarity="down"):
+def true_to_tag_gen(
+    directive, dry_run=False, debug=False, polarity="down", mode="lxplus"
+):
     bin_vars = " " + " ".join(f"--bin-var {b}" for b in directive.bin_vars)
     cuts = ""
     for pc, nm in zip(directive.pid_cut_arr, directive.pkl_names):
         cuts += f' --pid-cut "{pc}" --pkl-name {nm}.pkl'
 
-    cmd = rf'''lb-conda pidcalib {CURR_DIR}/make_eff_histo_mod.py \
+    cmd_prefix = "lb-conda pidcalib " if mode == "lxplus" else ""
+
+    cmd = rf'''{cmd_prefix}{CURR_DIR}/make_eff_histo_mod.py \
     --output-dir {directive.folder_name} \
     --sample {directive.sample_file} --magnet {directive.polarity} \
     --particle {directive.sample_name} \
@@ -157,11 +173,21 @@ def cut_replacement(tagged):
     return result
 
 
-def true_to_tag_directive_gen(config, year, output_folder, polarity="down"):
+def true_to_tag_directive_gen(
+    config,
+    year,
+    output_folder,
+    blocked_particles=[],
+    blocked_add_pid_cut_for_particle=[],
+    polarity="down",
+):
     result = []
 
     # handle nominal tags first
     for p_true, sample_name in config["pidcalib_config"]["samples"].items():
+        if p_true in blocked_particles:
+            continue
+
         cut = config["pidcalib_config"]["tags"]["cut"]
         pid_cut_arr = []
         pkl_names = []
@@ -190,6 +216,9 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity="down"):
 
     # now handle ad-hoc tags
     for p_true, sample_name in config["pidcalib_config"]["samples"].items():
+        if p_true in blocked_particles:
+            continue
+
         bin_vars = [BINNING_ALIAS[b](sample_name) for b in config["binning"]]
         folder_name = f"{output_folder}/{p_true}TrueTo-{year}"
         sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
@@ -201,6 +230,10 @@ def true_to_tag_directive_gen(config, year, output_folder, polarity="down"):
             for sub_tag in ["nom", "denom"]:
                 cut = subconfig[sub_tag]["cut"]
                 pid_cut = subconfig[sub_tag]["pid_cut"]
+                if "add_pid_cut" in subconfig[sub_tag]:
+                    if p_true not in blocked_add_pid_cut_for_particle:
+                        pid_cut += " & " + subconfig[sub_tag]["add_pid_cut"]
+
                 pkl_name = f"{p_true}TrueTo{p_tag.capitalize()}Tag_{sub_tag}"
 
                 result.append(
@@ -245,7 +278,9 @@ if __name__ == "__main__":
 
     # Generate efficiency histograms with pidcalib2
     config["tags"] = cut_replacement(config["tags"])
-    directives = true_to_tag_directive_gen(config, args.year, "raw_histos")
+    directives = true_to_tag_directive_gen(
+        config, args.year, "raw_histos", **MODES[args.mode]
+    )
 
     # in case of a dry run
     if args.dry_run:
@@ -262,4 +297,4 @@ if __name__ == "__main__":
                             print(f"    {i}")
 
     for d in directives:
-        true_to_tag_gen(d, dry_run=args.dry_run, debug=args.debug)
+        true_to_tag_gen(d, dry_run=args.dry_run, debug=args.debug, mode=args.mode)
