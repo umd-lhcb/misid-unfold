@@ -49,7 +49,7 @@ pidcalib_config:
         p: P
         e: e_B_Jpsi
     tags:
-        cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0"
+        cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased"
     tags_addon:
         mu:
             nom:
@@ -58,7 +58,7 @@ pidcalib_config:
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
-            ubdt_cut: "BDTmu > 0.25"  # FIXME: Not implemented yet
+            ubdt_cut: "BDTmu > 0.25"
 
 
 # specify additional source of histograms
