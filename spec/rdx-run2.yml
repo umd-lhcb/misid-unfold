@@ -57,7 +57,7 @@ pidcalib_config:
             nom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                add_pid_cut: "BDTmu > 0.25"
+                add_pid_cut: "UBDT > 0.25"
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
