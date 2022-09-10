@@ -24,7 +24,7 @@ Read `spec/rdx-run2.yml` to see all required inputs!
 
 ### Generation of true to tag misID efficiencies
 
-1. Update the **true to tag** efficiencies with _modified_ `pidcalib` sample:
+1. Update $K, \pi, p$ efficiencies w/ _modified_ `pidcalib` samples:
 
      _modified_ refers to the `pidcalib` ntuples w/ UBDT branches, which are
      only available at `glacier`
@@ -32,6 +32,15 @@ Read `spec/rdx-run2.yml` to see all required inputs!
     1. Clone this project on `glacier`
     2. Run `nix develop` in the project root
     3. In the resulting shell, run `make build-rdx-true-to-tag-2016-glacier`
+
+2. Update $e$ efficiency w/ _original_ `pidcalib` samples:
+
+    Note that the _original_ samples lack UBDT branch, so we need to add them later
+
+    1. Clone this project on `lxplus`
+    2. In the project root, run `make build-rdx-true-to-tag-2016-lxplus`
+
+3. Update ghost and $e$ conditional efficiencies w/ local $J/\psi$ samples
 
 
 #### Remark on `cut` vs. `pid_cut` options in the YAML file

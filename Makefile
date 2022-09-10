@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Sep 09, 2022 at 07:02 PM -0400
+# Last Change: Sat Sep 10, 2022 at 07:11 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -124,6 +124,7 @@ build-rdx-weights-2016-mu: \
 ###############################
 .PHONY: ghost-eff-gen
 
+# TODO: The input files are removed. Update needed to the YAML file
 ghost-eff-gen:
 	$(eval OUT_DIR	:=	$(GENPATH)/ghost_eff-$(TIME_STAMP)-true_to_tag-2016)
 	./scripts/build_histo_eff.py -c ./spec/rdx-ghost_eff_comp.yml -o $(OUT_DIR) -y 2016
