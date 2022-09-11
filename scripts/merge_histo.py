@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Apr 22, 2022 at 12:31 AM -0400
+# Last Change: Sun Sep 11, 2022 at 05:52 AM -0400
 #
 # Description: histogram merger (M)
 
@@ -11,6 +11,8 @@ import numpy as np
 from argparse import ArgumentParser
 from pathlib import Path
 from os import makedirs
+from os.path import basename
+from glob import glob
 from yaml import safe_load
 from scipy.special import erf, erfinv
 
@@ -186,6 +188,23 @@ def divide_histo(name, histo_nom, histo_denom):
     return histo
 
 
+def multiply_histo_in_place(histo1, histo2):
+    _, histo_axis_nbins = prep_root_histo("tmp", histo1)
+
+    indices_ranges = [list(range(1, n + 1)) for n in histo_axis_nbins]
+    for idx in itertools.product(*indices_ranges):
+        print(f"  Working on index: {idx}")
+        fac1 = histo1.GetBinContent(*idx)
+        fac2 = histo2.GetBinContent(*idx)
+        print(f'    original: {fac1}')
+        print(f'    new fac:  {fac2}')
+        if np.isnan(fac1):
+            fac1 = 0
+        if np.isnan(fac2):
+            fac2 = 0
+        histo1.SetBinContent(histo1.GetBin(*idx), fac1 * fac2)
+
+
 ########################
 # Histo helpers: fixup #
 ########################
@@ -276,37 +295,47 @@ def abs_dir(path):
     return str(Path(path).parent.absolute())
 
 
-def merge_true_to_tag(output_ntp, path_prefix, path, config):
-    ptcl_true = list(config["pidcalib_config"]["samples"])
-    ptcl_tag = list(config["tags"])
+def merge_true_to_tag(output_ntp, path_prefix, paths, config):
+    # Build a dictionary of 'output histoname' -> related histos
+    histo_map = dict()
+    for p in paths:
+        for h in glob(f"{path_prefix}/{p}/*.root"):
+            histo_name = basename(h).split(".")[0]
+            main_name = histo_name.split("_")[0]
+            if main_name not in histo_map:
+                histo_map[main_name] = [h]
+            else:
+                histo_map[main_name].append(h)
 
-    # Handle normal trueToTag first
-    for p_true in ptcl_true:
-        for p_tag in ptcl_tag:
-            histo_name = f"{p_true}TrueTo{p_tag.capitalize()}Tag"
-            print(f"Copy {histo_name} and shift means...")
-
-            input_ntp = ROOT.TFile(f"{path_prefix}/{path}/{histo_name}.root")
+    for main_name, inputs in histo_map.items():
+        # copy histo (mostly) verbatim when there's only 1 histo
+        if len(inputs) == 1:
+            print(f"Copy {main_name} and shift means...")
+            input_ntp = ROOT.TFile(inputs[0])
             histo_orig = input_ntp.Get("eff")
-            histo_out = rebuild_root_histo(histo_name, histo_orig)
+            histo_out = rebuild_root_histo(main_name, histo_orig)
             fix_bad_bins_in_histo(histo_out)
 
             output_ntp.cd()
             histo_out.Write()
 
-    # Handle additional ntuples
-    for p_true in ptcl_true:
-        for p_addon in config["pidcalib_config"]["tags_addon"]:
-            histo_name = f"{p_true}TrueTo{p_addon.capitalize()}Tag"
-            print(f"Copy {histo_name} and shift means...")
+        else:
+            print(f"Combining {main_name}...")
+            path_nom = [p for p in inputs if "_nom" in p][0]
+            path_denom = [p for p in inputs if "_denom" in p][0]
 
-            ntp_nom = ROOT.TFile(f"{path_prefix}/{path}/{histo_name}_nom.root")
-            ntp_denom = ROOT.TFile(f"{path_prefix}/{path}/{histo_name}_denom.root")
+            ntp_nom = ROOT.TFile(path_nom)
+            ntp_denom = ROOT.TFile(path_denom)
 
             histo_nom = ntp_nom.Get("eff")
             histo_denom = ntp_denom.Get("eff")
-            histo_ratio = divide_histo(histo_name, histo_nom, histo_denom)
+            histo_ratio = divide_histo(main_name, histo_nom, histo_denom)
             fix_bad_bins_in_histo(histo_ratio)
+
+            for p in [i for i in inputs if "_nom" not in i and "_denom" not in i]:
+                ntp_addon = ROOT.TFile(p)
+                histo_addon = ntp_addon.Get("eff")
+                multiply_histo_in_place(histo_ratio, histo_addon)
 
             output_ntp.cd()
             histo_ratio.Write()
