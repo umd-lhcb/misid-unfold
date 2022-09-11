@@ -20,7 +20,8 @@ git annex sync
 
 ## The misID unfolding procedure
 
-Read `spec/rdx-run2.yml` to see all required inputs!
+Read `spec/rdx-run2.yml` for more info!
+The output folders are located in `gen` folder.
 
 ### Generation of true to tag misID efficiencies
 
@@ -40,7 +41,20 @@ Read `spec/rdx-run2.yml` to see all required inputs!
     1. Clone this project on `lxplus`
     2. In the project root, run `make build-rdx-true-to-tag-2016-lxplus`
 
-3. Update ghost and $e$ conditional efficiencies w/ local $J/\psi$ samples
+4. Update ghost and $e$ conditional efficiencies w/ local incl. $J/\psi$ MC
+   samples w/ `make build-rdx-true-to-tag-2016-local`
+
+    Starting from this step, all operations are done locally or on `glacier`.
+    And `nix develop` is always assumed
+
+5. Merge all efficiencies obtained above into a single file locally
+    w/ `make build-rdx-merged-2016`
+
+    Copy output folders to `histo` folder, and configure the YAML file
+    (the `input_histos` section) before you run the `make` command!
+
+6. Extract $K, \pi$ momentum smearing info into a small ntuple
+    w/ `make build-generic-dif-smearing`
 
 
 #### Remark on `cut` vs. `pid_cut` options in the YAML file
@@ -66,43 +80,27 @@ One can test these rules with:
 locally, without actually running the efficiency generation program.
 
 
-2. **If you want to update the **true -> tag** efficiencies with the official `pidcalib` sample**:
-    1. Clone this project on `lxplus`, without setting up `git annex`
-    2. `make build-rdx-true-to-tag-2016`
-    3. Copy the histograms in `gen` folder to `histos` folder, commit them then update the spec YAML.
+### Unfold the misID efficiencies
 
-3. **Now everything's local**. Make sure to download all required ntuples with `git annex get`.
+Make sure to download all required ntuples with `git annex get`!
 
 4. `make build-rdx-tag-2016`, Copy and commit histograms then update YAML (this
     is implied for all subsequent steps).
 
     This is to build tagged histograms from misID control sample.
 
-5. `make build-rdx-merged-2016`
-
-    This is to merge all `pidcalib` histograms into a single file.
-
 6. `make build-rdx-unfold-2016`
 
     This is to do actual misID unfolding.
 
-7. `make build-generic-dif-smearing`
 
-    This is to extract `K, pi` momentum smearing info into a small ntuple.
 
-8. Finally, `make build-rdx-weights-2016`
+### Apply misID and DiF smearing weights
+
+`make build-rdx-weights-2016`
 
     This apply misID weights and momentum smearing on misID control samples.
     It's typically not applied here. The rule here is for demo purpose only.
-
-
-## Apply misID and DiF smearing weights
-
-To apply these weight on some sample ntuple:
-
-```
-make test-rdx-weights
-```
 
 Some test plots including both the nominal region and the DSB region can be
 generated with:

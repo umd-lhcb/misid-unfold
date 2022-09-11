@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Sep 10, 2022 at 07:11 PM -0400
+# Last Change: Sat Sep 10, 2022 at 11:53 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -31,37 +31,26 @@ applyer: $(BINPATH)/ApplyMisIDWeight
 clean:
 	@rm -rf $(GENPATH)/*
 
-build-test: \
-	build-rdx-tag-2016 test-pidcalib2-wrapper \
-	build-rdx-merged-2016 build-rdx-unfolded-2016 build-generic-dif-smearing \
-	build-rdx-weights-2016
-
-build-test-lxplus: build-rdx-true-to-tag-2016
-
-build-test-nix:
+test-nix:
 	nix build ".#misid-unfold-applyer"
-
-plot-test: \
-    plot-rdx-bin_vars-2016 plot-rdx-fit_vars-2016
 
 
 #######
 # RDX #
 #######
-.PHONY: build-tagged-histo build-rdx-true-to-tag-2016 build-rdx-weights-2016
 
 # Generation of true to tag misID efficiency
-.PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2016-lxplus \
-	test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
+.PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2016-lxplus
 build-rdx-true-to-tag-2016-glacier:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 -m glacier
 
 build-rdx-true-to-tag-2016-lxplus:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag-2016)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2016)
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 -m lxplus
 
 
+.PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
 test-pidcalib2-wrapper-glacier:
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run -m glacier
 
@@ -69,7 +58,14 @@ test-pidcalib2-wrapper-lxplus:
 	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run -m lxplus
 
 
-# Build the misID weights. Multi-step
+.PHONY: build-rdx-true-to-tag-2016-local
+build-rdx-true-to-tag-2016-local:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
+	./scripts/build_histo_eff.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
+
+
+# Build the misID weights
+.PHONY: build-tagged-histo build-rdx-true-to-tag-2016 build-rdx-weights-2016
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
 	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
@@ -124,7 +120,8 @@ build-rdx-weights-2016-mu: \
 ###############################
 .PHONY: ghost-eff-gen
 
-# TODO: The input files are removed. Update needed to the YAML file
+# TODO: The input files are removed. Update needed
+# you probably want to refer back to 0.2.4
 ghost-eff-gen:
 	$(eval OUT_DIR	:=	$(GENPATH)/ghost_eff-$(TIME_STAMP)-true_to_tag-2016)
 	./scripts/build_histo_eff.py -c ./spec/rdx-ghost_eff_comp.yml -o $(OUT_DIR) -y 2016
@@ -200,6 +197,7 @@ test-unfold: $(BINPATH)/UnfoldMisID
 		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
 		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root
 
+.PHONY: test-gen-aux-filename test-get-particle-name
 
 test-gen-aux-filename: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
 	$(eval AUX_NTP	:=	$(basename $(notdir $^))--aux_misid.root)
@@ -210,16 +208,6 @@ test-get-particle-name: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-st
 	$(eval PARTICLE	:=	$(word 1, $(subst --, ,$(NTP_NAME))))
 	@echo $(NTP_NAME)
 	@echo $(PARTICLE)
-
-
-test-rdx-weights: \
-	$(BINPATH)/ApplyMisIDWeight \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
-	./histos/generic-22_04_21_20_12-dif_smearing/dif.root
-	$(eval OUT_DIR	:=	$(GENPATH)/test-rdx-weights)
-	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
-	@mkdir -p $(OUT_DIR)
-	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
 
 ###############
