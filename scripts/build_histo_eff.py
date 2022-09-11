@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Sep 11, 2022 at 01:02 AM -0400
+# Last Change: Sun Sep 11, 2022 at 03:06 AM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -166,7 +166,7 @@ if __name__ == "__main__":
                 histo_passed = histo_builder(binning_scheme, df, p_tag, "passed")
                 print(f"    # of event passing 'pid_cut': {histo_passed.GetEntries()}")
 
-                ntp_name = f"{p_true}TrueTo{p_tag.upper()}Tag.root"
+                ntp_name = f"{p_true}TrueTo{p_tag.capitalize()}Tag.root"
                 ntp_out = TFile(f"{args.output}/{ntp_name}", "recreate")
 
                 eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr())
@@ -174,3 +174,32 @@ if __name__ == "__main__":
                 eff.Write()
                 histo_all.Write()
                 histo_passed.Write()
+
+        # handle 'tags_addon'
+        if "tags_addon" in subconfig:
+            for p_tag, suffixes in subconfig["tags_addon"].items():
+                print(f"Handling ad-hoc tagged for {p_true}")
+                for suf in suffixes:
+                    subsubconfig = subconfig['tags_addon'][p_tag][suf]
+                    ntp_name = f"{p_true}TrueTo{p_tag.capitalize()}Tag_{suf}.root"
+                    print(f"  Generating {ntp_name}")
+
+                    global_cut = subsubconfig["cut"].replace("&", "&&")
+                    histo_all = histo_builder(binning_scheme, df, global_cut, "all")
+                    print(f"  # of event passing 'cut': {histo_all.GetEntries()}")
+
+                    cuts = (
+                        global_cut + " && " + subsubconfig["pid_cut"].replace("&", "&&")
+                    )
+                    histo_passed = histo_builder(binning_scheme, df, cuts, "passed")
+                    print(
+                        f"  # of event passing 'pid_cut': {histo_passed.GetEntries()}"
+                    )
+
+                    ntp_out = TFile(f"{args.output}/{ntp_name}", "recreate")
+
+                    eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr())
+                    eff.SetName("eff")
+                    eff.Write()
+                    histo_all.Write()
+                    histo_passed.Write()
