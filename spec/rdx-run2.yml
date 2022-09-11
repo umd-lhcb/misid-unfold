@@ -5,6 +5,7 @@
 # - unfolding weights applyer (A)
 # - unfolding efficiency calculator (U)
 # - histogram merger (M)
+# - efficiency histogram builder (E
 
 
 binning:
@@ -61,6 +62,21 @@ pidcalib_config:
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
+
+# Used by (E)
+local_pid_config:
+    2016:
+        g:
+            samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/ghost_Jpsi*.root:tree"
+            tags:
+                cut: "IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
+        e:
+            samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/e_Jpsi*.root:tree"
+            tags_addon:
+                mu:
+                    rel:
+                        cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
+                        pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
 
 
 # specify additional source of histograms
