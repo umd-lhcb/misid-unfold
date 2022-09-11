@@ -69,7 +69,7 @@ local_pid_config:
         g:
             samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/ghost_Jpsi*.root:tree"
             tags:
-                cut: "IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
+                cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
         e:
             samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/e_Jpsi*.root:tree"
             tags_addon:
@@ -84,25 +84,17 @@ local_pid_config:
 # this will generate a single efficiency histo root file
 input_histos:
     2016:
-        true_to_tag: "../histos/rdx-22_04_07_01_05-true_to_tag-2016"
-        extra:
-            "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
-                H2H_Ghost_TO_Pi: gTrueToPiTag
-                H2H_Ghost_TO_K: gTrueToKTag
-                H2H_Ghost_TO_P: gTrueToPTag
-                H2H_Ghost_TO_e: gTrueToETag
-                H2H_Ghost_TO_Ghost: gTrueToGTag
-                H2H_Ghost_TO_Mu: gTrueToMuTag
-        product:
-            # FIXME: Not implemented. Reserved for electron UBDT efficiency product
-            #        This means that the final eTrue -> Tag efficiency would be:
-            #          eTrueTo_Tag (from PIDCalib) * eTrueTo_TagUBDT
-            "/dev/null":
-                eTrueToPiTag: eTrueToPiTag_BDTmu
-                eTrueToKTag: eTrueToKTag_BDTmu
-                eTrueToPTag: eTrueToPTag_BDTmu
-                eTrueToETag: eTrueToETag_BDTmu
-                eTrueToGTag: eTrueToGTag_BDTmu
+        true_to_tag:
+            - "../histos/rdx-22_04_07_01_05-true_to_tag-2016"
+            - "../histos/rdx-22_09_11_03_19-true_to_tag_local-2016"
+        # extra:
+        #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
+        #         H2H_Ghost_TO_Pi: gTrueToPiTag
+        #         H2H_Ghost_TO_K: gTrueToKTag
+        #         H2H_Ghost_TO_P: gTrueToPTag
+        #         H2H_Ghost_TO_e: gTrueToETag
+        #         H2H_Ghost_TO_Ghost: gTrueToGTag
+        #         H2H_Ghost_TO_Mu: gTrueToMuTag
 
 
 # building tagged histograms, used by (T), and (U)
