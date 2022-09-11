@@ -176,7 +176,7 @@ if __name__ == "__main__":
             for p_tag, suffixes in subconfig["tags_addon"].items():
                 print(f"Handling ad-hoc tagged for {p_true}")
                 for suf in suffixes:
-                    subsubconfig = subconfig['tags_addon'][p_tag][suf]
+                    subsubconfig = subconfig["tags_addon"][p_tag][suf]
                     ntp_name = f"{p_true}TrueTo{p_tag.capitalize()}Tag_{suf}.root"
                     print(f"  Generating {ntp_name}")
 
