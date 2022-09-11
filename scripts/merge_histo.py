@@ -196,8 +196,8 @@ def multiply_histo_in_place(histo1, histo2):
         print(f"  Working on index: {idx}")
         fac1 = histo1.GetBinContent(*idx)
         fac2 = histo2.GetBinContent(*idx)
-        print(f'    original: {fac1}')
-        print(f'    new fac:  {fac2}')
+        print(f"    original: {fac1}")
+        print(f"    new fac:  {fac2}")
         if np.isnan(fac1):
             fac1 = 0
         if np.isnan(fac2):
