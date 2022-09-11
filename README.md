@@ -50,8 +50,9 @@ The output folders are located in `gen` folder.
 5. Merge all efficiencies obtained above into a single file locally
     w/ `make build-rdx-merged-2016`
 
-    Copy output folders to `histo` folder, and configure the YAML file
-    (the `input_histos` section) before you run the `make` command!
+    Copy output folders of previous steps from `gen` to `histo` folder, and
+    configure the YAML file (the `input_histos` section) before you run the
+    `make` command!
 
 6. Extract $K, \pi$ momentum smearing info into a small ntuple
     w/ `make build-generic-dif-smearing`
