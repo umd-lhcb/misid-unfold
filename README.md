@@ -57,6 +57,10 @@ The output folders are located in `gen` folder.
 6. Extract $K, \pi$ momentum smearing info into a small ntuple
     w/ `make build-generic-dif-smearing`
 
+#### Remark on negative efficiencies
+
+Sometimes the efficiencies are negative, due to sWeight. To correct for that,
+we followed a procedure suggested by Phoebe. For more info, see p. 3 of [this slide](https://github.com/umd-lhcb/group-talks/blob/master/phys_group_meetings/22-04-13_yipeng_rdx_status.pdf).
 
 #### Remark on `cut` vs. `pid_cut` options in the YAML file
 
