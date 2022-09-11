@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sat Sep 10, 2022 at 11:53 PM -0400
+# Last Change: Sun Sep 11, 2022 at 03:15 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -64,6 +64,13 @@ build-rdx-true-to-tag-2016-local:
 	./scripts/build_histo_eff.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
 
 
+.PHONY: build-rdx-merged-2016
+build-rdx-merged-2016:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
+	@mkdir -p $(OUT_DIR)
+	./scripts/merge_histo.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
+
+
 # Build the misID weights
 .PHONY: build-tagged-histo build-rdx-true-to-tag-2016 build-rdx-weights-2016
 build-rdx-tag-2016:
@@ -71,10 +78,6 @@ build-rdx-tag-2016:
 	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
 
 
-build-rdx-merged-2016:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
-	@mkdir -p $(OUT_DIR)
-	./scripts/merge_histo.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
