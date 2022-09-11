@@ -56,7 +56,7 @@ pidcalib_config:
     tags_addon:  # ad-hoc tags
         mu:
             nom:
-                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
+                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"  # this is the accpetance cut
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
                 add_pid_cut: "UBDT > 0.25"
             denom:
@@ -70,6 +70,15 @@ local_pid_config:
             samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/ghost_Jpsi*.root:tree"
             tags:
                 cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
+            tags_addon:
+                mu:
+                    nom:
+                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
+                        pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
+                        add_pid_cut: "UBDT > 0.25"
+                    denom:
+                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
+                        pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
         e:
             samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/e_Jpsi*.root:tree"
             tags_addon:
@@ -86,7 +95,7 @@ input_histos:
     2016:
         true_to_tag:
             - "../histos/rdx-22_04_07_01_05-true_to_tag-2016"
-            - "../histos/rdx-22_09_11_03_19-true_to_tag_local-2016"
+            - "../histos/rdx-22_09_11_06_12-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
         #         H2H_Ghost_TO_Pi: gTrueToPiTag
