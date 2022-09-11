@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Aug 12, 2022 at 04:25 AM -0400
+# Last Change: Sun Sep 11, 2022 at 01:02 AM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -24,13 +24,6 @@ from ROOT.RDF import TH3DModel, TH2DModel, TH1DModel
 from ROOT.std import vector
 
 
-################
-# Configurable #
-################
-
-HISTO_NAME = "eff.root"
-
-
 #######################
 # Command line parser #
 #######################
@@ -43,7 +36,7 @@ def parse_input():
 
     parser.add_argument("-o", "--output", required=True, help="specify output dir.")
 
-    parser.add_argument("-y", "--year", default="2016", help="specify year.")
+    parser.add_argument("-y", "--year", type=int, default=2016, help="specify year.")
 
     return parser.parse_args()
 
@@ -64,7 +57,7 @@ def div_with_confint(num, denom):
     return ratio, err_bar
 
 
-def histo_builder(binning_scheme, df, cuts=None, tree="tree", name="eff"):
+def histo_builder(binning_scheme, df, cuts=None, name="eff"):
     bin_vars = []
     bin_nums = []
     bin_edges = []
@@ -94,7 +87,7 @@ def histo_builder(binning_scheme, df, cuts=None, tree="tree", name="eff"):
     )
 
     histo = df.Histo3D(h3_model, *bin_vars)  # this returns a pointer and is lazy
-    histo.GetTitle()  # make it execute
+    histo.GetTitle()  # make it execute immediately
     return histo
 
 
@@ -150,29 +143,34 @@ if __name__ == "__main__":
     with open(args.config, "r") as f:
         config = safe_load(f)
     binning_scheme = config["binning"]
+    pid_config = config["local_pid_config"][args.year]
+    tagged_config = config["tags"]
 
-    ntp_out = TFile(f"{args.output}/{HISTO_NAME}", "recreate")
-    for particle, subconfig in config["input_ntps"][int(args.year)].items():
-        global_cut = subconfig["cuts"] if "cuts" in subconfig else "true"
-        ntps, tree = ntp_tree(subconfig["files"], config_dir_path)
-
+    for p_true, subconfig in pid_config.items():
+        input_ntps, tree = ntp_tree(subconfig["samples"], config_dir_path)
         chain = TChain(tree)
-        for n in ntps:
+        for n in input_ntps:
             chain.Add(n)
         df = RDataFrame(chain)
-        histo_all = histo_builder(binning_scheme, df, global_cut, "all")
 
-        for sp, cut_expr in config["tags"].items():
-            name = histo_name_gen(particle, sp)
-            cuts = global_cut + " && " + cut_expr.replace("&", "&&")
-            print(f"  specie {sp} has the following cuts: {cuts}")
-            df = df.Define(sp, cuts)
+        # handle 'tags'
+        if "tags" in subconfig:
+            print(f"Handling tagged for {p_true}")
+            global_cut = subconfig["tags"]["cut"].replace("&", "&&")
+            histo_all = histo_builder(binning_scheme, df, global_cut, "all")
+            print(f"  # of event passing 'cut': {histo_all.GetEntries()}")
+            for p_tag, pid_cut in tagged_config.items():
+                print(f"    Handling {p_tag}")
+                cuts = global_cut + " && " + pid_cut.replace("&", "&&")
+                df = df.Define(p_tag, cuts)  # this is to make expr '!pi' work
+                histo_passed = histo_builder(binning_scheme, df, p_tag, "passed")
+                print(f"    # of event passing 'pid_cut': {histo_passed.GetEntries()}")
 
-            histo_passed = histo_builder(
-                binning_scheme, df, cuts, name=name + "_passed"
-            )
+                ntp_name = f"{p_true}TrueTo{p_tag.upper()}Tag.root"
+                ntp_out = TFile(f"{args.output}/{ntp_name}", "recreate")
 
-            eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr())
-            eff.SetName(name)
-            eff.SetTitle(name)
-            eff.Write()
+                eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr())
+                eff.SetName("eff")
+                eff.Write()
+                histo_all.Write()
+                histo_passed.Write()
