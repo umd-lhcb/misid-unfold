@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Sep 11, 2022 at 11:15 PM -0400
+# Last Change: Mon Sep 12, 2022 at 05:06 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -89,8 +89,8 @@ build-rdx-tag-2016:
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
-	$< --debug --iteration 30 \
-		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root \
+	$< --debug --iteration 20 \
+		-e ./histos/rdx-22_09_12_05_03-merged-2016/merged.root \
 		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
 		-o $(OUT_DIR) \
 		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
@@ -152,7 +152,7 @@ plot-rdx-bin_vars-2016:
 		-i ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 	./scripts/plot_histo.py -o $(OUT_DIR) \
-		-i ./histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root \
+		-i ./histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
 plot-rdx-bin_vars-ana-2016:
@@ -160,10 +160,12 @@ plot-rdx-bin_vars-ana-2016:
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag --extension pdf \
 		-i ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
-		--show-title 0 1 0 --show-legend 1 0 0
+		--show-title 0 1 0 --show-legend 1 0 0 \
+		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 	./scripts/plot_histo.py -o $(OUT_DIR) --extension pdf \
-		-i ./histos/rdx-22_05_22_03_51-unfolded-2016/unfolded.root \
-		--show-title 0 1 0 --show-legend 1 0 0
+		-i ./histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root \
+		--show-title 0 1 0 --show-legend 1 0 0 \
+		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
 
 plot-rdx-fit_vars-2016: \
