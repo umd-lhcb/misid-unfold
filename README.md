@@ -85,6 +85,9 @@ One can test these rules with:
 locally, without actually running the efficiency generation program.
 
 
+### Generation of tagging efficiencies
+
+
 ### Unfold the misID efficiencies
 
 Make sure to download all required ntuples with `git annex get`!
@@ -97,7 +100,6 @@ Make sure to download all required ntuples with `git annex get`!
 6. `make build-rdx-unfold-2016`
 
     This is to do actual misID unfolding.
-
 
 
 ### Apply misID and DiF smearing weights

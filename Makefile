@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Sep 11, 2022 at 03:15 AM -0400
+# Last Change: Sun Sep 11, 2022 at 11:15 PM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -71,13 +71,20 @@ build-rdx-merged-2016:
 	./scripts/merge_histo.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
 
 
-# Build the misID weights
-.PHONY: build-tagged-histo build-rdx-true-to-tag-2016 build-rdx-weights-2016
+.PHONY: build-generic-dif-smearing
+build-generic-dif-smearing:
+	$(eval OUT_DIR	:=	$(GENPATH)/generic-$(TIME_STAMP)-dif_smearing)
+	@mkdir -p $(OUT_DIR)
+	./scripts/build_histo_dif.py --plot -o $(OUT_DIR) \
+		-k ./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
+		-p ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+
+
+# Unfold the misID weights
+.PHONY: build-rdx-tag-2016
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
 	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
-
-
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
@@ -88,15 +95,16 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 		-o $(OUT_DIR) \
 		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
-build-generic-dif-smearing:
-	$(eval OUT_DIR	:=	$(GENPATH)/generic-$(TIME_STAMP)-dif_smearing)
-	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_dif.py --plot -o $(OUT_DIR) \
-		-k ./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
-		-p ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+
+.PHONY: test-unfold
+test-unfold: $(BINPATH)/UnfoldMisID
+	$< -c ./spec/rdx-run2.yml --dryRun \
+		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
+		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root
 
 
-# Test application of misID weights
+# Application of misID weights
+.PHONY: build-rdx-weights-2016 build-rdx-weights-2016-md build-rdx-weights-2016-mu
 build-rdx-weights-2016: build-rdx-weights-2016-md build-rdx-weights-2016-mu
 
 build-rdx-weights-2016-md: \
@@ -193,13 +201,6 @@ plot-rdx-fit_vars_dsb-ana-2016: \
 ########
 # Test #
 ########
-.PHONY: test-unfold
-
-test-unfold: $(BINPATH)/UnfoldMisID
-	$< -c ./spec/rdx-run2.yml --dryRun \
-		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
-		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root
-
 .PHONY: test-gen-aux-filename test-get-particle-name
 
 test-gen-aux-filename: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_02--mu_misid--data--2016--md.root
