@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Sep 11, 2022 at 05:52 AM -0400
+# Last Change: Mon Sep 12, 2022 at 05:02 AM -0400
 #
 # Description: histogram merger (M)
 
@@ -202,7 +202,21 @@ def multiply_histo_in_place(histo1, histo2):
             fac1 = 0
         if np.isnan(fac2):
             fac2 = 0
+
+        err1 = histo1.GetBinContent(*idx)
+        err2 = histo2.GetBinContent(*idx)
+        if np.isnan(err1):
+            err1 = 0
+        if np.isnan(err2):
+            err2 = 0
+
+        if fac1 == 0 or fac2 == 0:
+            err = 0
+        else:
+            err = fac1 * fac2 * np.sqrt((err1 / fac1) ** 2 + (err2 / fac2) ** 2)
+
         histo1.SetBinContent(histo1.GetBin(*idx), fac1 * fac2)
+        histo1.SetBinError(histo1.GetBin(*idx), err)
 
 
 ########################
