@@ -87,21 +87,28 @@ locally, without actually running the efficiency generation program.
 
 ### Generation of tagging efficiencies
 
-Run `build-rdx-tag-2016`.
+```
+build-rdx-tag-2016
+```
 
 
 ### Unfold the misID efficiencies
 
 Make sure to download all required ntuples with `git annex get`!
 
-`make build-rdx-unfold-2016`.
+```
+make build-rdx-unfold-2016
+```
+
 One can also test-run the unfolding (w/o actually doing unfolding!)
 by `make test-unfold`.
 
 
 ### Apply misID and DiF smearing weights
 
-`make build-rdx-weights-2016`
+```
+make build-rdx-weights-2016
+```
 
 This apply misID weights and momentum smearing on misID control samples.
 It's typically not applied here. The rule here is for demo purpose only.
