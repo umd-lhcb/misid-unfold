@@ -94,7 +94,8 @@ local_pid_config:
 input_histos:
     2016:
         true_to_tag:
-            - "../histos/rdx-22_04_07_01_05-true_to_tag-2016"
+            - "../histos/rdx-22_09_11_06_15-true_to_tag_glacier-2016"
+            - "../histos/rdx-22_09_11_12_16-true_to_tag_lxplus-2016"
             - "../histos/rdx-22_09_11_06_12-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
