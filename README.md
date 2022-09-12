@@ -94,6 +94,8 @@ build-rdx-tag-2016
 ### Unfold the misID efficiencies
 
 Make sure to download all required ntuples with `git annex get`!
+Also, make sure the input files are set correct for unfolding
+in the `Makefile`.
 
 ```
 make build-rdx-unfold-2016
