@@ -87,27 +87,24 @@ locally, without actually running the efficiency generation program.
 
 ### Generation of tagging efficiencies
 
+Run `build-rdx-tag-2016`.
+
 
 ### Unfold the misID efficiencies
 
 Make sure to download all required ntuples with `git annex get`!
 
-4. `make build-rdx-tag-2016`, Copy and commit histograms then update YAML (this
-    is implied for all subsequent steps).
-
-    This is to build tagged histograms from misID control sample.
-
-6. `make build-rdx-unfold-2016`
-
-    This is to do actual misID unfolding.
+`make build-rdx-unfold-2016`.
+One can also test-run the unfolding (w/o actually doing unfolding!)
+by `make test-unfold`.
 
 
 ### Apply misID and DiF smearing weights
 
 `make build-rdx-weights-2016`
 
-    This apply misID weights and momentum smearing on misID control samples.
-    It's typically not applied here. The rule here is for demo purpose only.
+This apply misID weights and momentum smearing on misID control samples.
+It's typically not applied here. The rule here is for demo purpose only.
 
 Some test plots including both the nominal region and the DSB region can be
 generated with:
