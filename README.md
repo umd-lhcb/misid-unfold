@@ -91,7 +91,6 @@ locally, without actually running the efficiency generation program.
 build-rdx-tag-2016
 ```
 
-
 ### Unfold the misID efficiencies
 
 Make sure to download all required ntuples with `git annex get`!
@@ -102,7 +101,6 @@ make build-rdx-unfold-2016
 
 One can also test-run the unfolding (w/o actually doing unfolding!)
 by `make test-unfold`.
-
 
 ### Apply misID and DiF smearing weights
 
