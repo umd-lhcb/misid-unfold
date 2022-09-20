@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Sep 20, 2022 at 03:39 AM -0400
+// Last Change: Tue Sep 20, 2022 at 09:49 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -304,7 +304,6 @@ RNode computeDiFVars(RNode df, F& randGetter, double mB, string suffix,
   vector<string> brNames = {"mm2", "q2", "el", "b_m"};
   for (auto& n : brNames) outputBrs.emplace_back(n + suffix);
 
-  // NOTE: 'el' is defined as p_B - p_D
   return df.Define("v4_mu" + suffix, rebuildMu4MomPartial, {"v4_mu"})
       .Define("v4_b_reco" + suffix, "v4_mu" + suffix + " + v4_d")
       .Define("v4_b_est" + suffix, estB4MomPartial,
