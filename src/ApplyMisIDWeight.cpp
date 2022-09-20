@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Sat Aug 06, 2022 at 01:41 AM -0400
+// Last Change: Tue Sep 20, 2022 at 03:27 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -289,7 +289,7 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
 }
 
 template <typename F>
-RNode computeFitVars(RNode df, F& randGetter, double mB, string suffix,
+RNode computeDiFVars(RNode df, F& randGetter, double mB, string suffix,
                      vector<string>& outputBrs) {
   // we probably did some unnecessary copies here, but deducing those nested
   // lambdas can be quite hard so I'm just being lazy here.
@@ -301,12 +301,10 @@ RNode computeFitVars(RNode df, F& randGetter, double mB, string suffix,
     return estB4Mom(v4BReco, v3BFlight, mB);
   };
 
-  outputBrs.emplace_back("mm2" + suffix);
-  outputBrs.emplace_back("q2" + suffix);
-  outputBrs.emplace_back("el" + suffix);
+  vector<string> brNames = {"mm2", "q2", "el", "b_m"};
+  for (auto& n : brNames) outputBrs.emplace_back(n + suffix);
 
-  // FIXME: Not sure if 'el' is defined this way, as we probably don't have a
-  // lepton at all.
+  // NOTE: 'el' is defined as p_B - p_D
   return df.Define("v4_mu" + suffix, rebuildMu4MomPartial, {"v4_mu"})
       .Define("v4_b_reco" + suffix, "v4_mu" + suffix + " + v4_d")
       .Define("v4_b_est" + suffix, estB4MomPartial,
@@ -314,7 +312,8 @@ RNode computeFitVars(RNode df, F& randGetter, double mB, string suffix,
       .Define("mm2" + suffix, m2Miss,
               {"v4_b_est" + suffix, "v4_b_reco" + suffix})
       .Define("q2" + suffix, q2, {"v4_b_est" + suffix, "v4_d"})
-      .Define("el" + suffix, el, {"v4_b_est" + suffix, "v4_mu" + suffix});
+      .Define("el" + suffix, el, {"v4_b_est" + suffix, "v4_mu" + suffix})
+      .Define("b_m" + suffix, calcBM, {"v4_b_reco" + suffix});
 }
 
 template <typename F1, typename F2>
@@ -357,8 +356,8 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
   // Replace mass hypo and compute fit vars
-  df = computeFitVars(df, randPiGetter, mBRef, "_smr_pi", outputBrs);
-  df = computeFitVars(df, randKGetter, mBRef, "_smr_k", outputBrs);
+  df = computeDiFVars(df, randPiGetter, mBRef, "_smr_pi", outputBrs);
+  df = computeDiFVars(df, randKGetter, mBRef, "_smr_k", outputBrs);
 
   return {df, outputBrs};
 }

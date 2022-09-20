@@ -1,6 +1,6 @@
-// Author: Yipeng Sun, Svede Braun
+// Author: Yipeng Sun, Svende Braun
 // License: BSD 2-clause
-// Last Change: Tue Apr 26, 2022 at 03:28 PM -0400
+// Last Change: Tue Sep 20, 2022 at 03:26 AM -0400
 
 #pragma once
 
@@ -80,3 +80,6 @@ Double_t el(PxPyPzEVector& v4BEst, PxPyPzEVector& v4Mu) {
 Double_t q2(PxPyPzEVector& v4BEst, PxPyPzEVector& v4D) {
   return (v4BEst - v4D).M2() / 1000 / 1000;
 }
+
+// in MeV!
+Double_t calcBM(PxPyPzEVector& v4BReco) { return v4BReco.M(); }
