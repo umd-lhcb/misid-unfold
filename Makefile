@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Mon Sep 12, 2022 at 05:06 AM -0400
+# Last Change: Tue Sep 20, 2022 at 03:42 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -103,27 +103,16 @@ test-unfold: $(BINPATH)/UnfoldMisID
 		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root
 
 
-# Application of misID weights
-.PHONY: build-rdx-weights-2016 build-rdx-weights-2016-md build-rdx-weights-2016-mu
-build-rdx-weights-2016: build-rdx-weights-2016-md build-rdx-weights-2016-mu
-
-build-rdx-weights-2016-md: \
+# Test of application of misID weights
+.PHONY: test-apply-rdx-weights-2016
+test-apply-rdx-weights-2016: \
 	$(BINPATH)/ApplyMisIDWeight \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root \
+	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
 	./histos/generic-22_04_21_20_12-dif_smearing/dif.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
-	$< -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
-
-build-rdx-weights-2016-mu: \
-	$(BINPATH)/ApplyMisIDWeight \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--mu.root \
-	./histos/generic-22_04_21_20_12-dif_smearing/dif.root
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
-	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
-	@mkdir -p $(OUT_DIR)
-	$< -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
 
 ###############################
@@ -167,15 +156,6 @@ plot-rdx-bin_vars-ana-2016:
 		--show-title 0 1 0 --show-legend 1 0 0 \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
-
-plot-rdx-fit_vars-2016: \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--mu.root
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-fit_vars-2016)
-	$(eval AUX_NTP_MD	:=	$(basename $<)--aux_misid.root)
-	$(eval AUX_NTP_MU	:=	$(basename $(word 2, $^))--aux_misid.root)
-	@mkdir -p $(OUT_DIR)
-	./scripts/plot_fit_vars.py -o $(OUT_DIR) -i $< $(word 2, $^) -a $(AUX_NTP_MD) $(AUX_NTP_MU)
 
 plot-rdx-fit_vars-ana-2016: \
 	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-step2/D0--22_04_24--mu_misid--data--2016--md.root \

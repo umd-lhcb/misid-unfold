@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Sep 20, 2022 at 03:27 AM -0400
+// Last Change: Tue Sep 20, 2022 at 03:39 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -45,7 +45,7 @@ typedef vector<pair<string, string>> vPStrStr;
 typedef vector<pair<regex, string>>  vPRegStr;
 
 static const vPStrStr MU_BRANCH_DEFS{
-    // PIDCalib name, DaVinci name
+    // PIDCalib name, DaVinci name w/o particle name
     {"MC15TuneV1_ProbNNpi", "MC15TuneV1_ProbNNpi"},
     {"MC15TuneV1_ProbNNk", "MC15TuneV1_ProbNNk"},
     {"MC15TuneV1_ProbNNp", "MC15TuneV1_ProbNNp"},
@@ -59,7 +59,7 @@ static const vPStrStr MU_BRANCH_DEFS{
     {"DLLd", "PIDd"},
     {"IsMuon", "isMuon"},
     {"InMuonAcc", "InMuonAcc"},
-    {"MuonUnbiased", "L0MuonDecision_TIS"},  // not sure
+    ////
     {"Brunel_MC15TuneV1_ProbNNpi", "MC15TuneV1_ProbNNpi"},
     {"Brunel_MC15TuneV1_ProbNNk", "MC15TuneV1_ProbNNk"},
     {"Brunel_MC15TuneV1_ProbNNp", "MC15TuneV1_ProbNNp"},
@@ -72,9 +72,8 @@ static const vPStrStr MU_BRANCH_DEFS{
     {"Brunel_DLLmu", "PIDmu"},
     {"Brunel_DLLd", "PIDd"},
     {"Brunel_IsMuon", "isMuon"},
-    {"Brunel_P", "P"},
     {"Brunel_InMuonAcc", "InMuonAcc"},
-    {"Brunel_MuonUnbiased", "L0MuonDecision_TIS"},  // not sure
+    {"Brunel_P", "P"},
     // special aliases for compute eta
     {"P", "P"},
     {"PZ", "PZ"},
@@ -105,6 +104,7 @@ RNode defineBranch(RNode df, string particle = "mu",
 
   auto inputBrName = rules[idx].second;
   if (particle != ""s) inputBrName = particle + "_" + inputBrName;
+  cout << "Define " << rules[idx].first << " as " << inputBrName << endl;
 
   return defineBranch(df.Define(rules[idx].first, inputBrName), particle, rules,
                       idx + 1);
@@ -383,8 +383,7 @@ int main(int argc, char** argv) {
     ("c,config", "specify input YAML config file",
      cxxopts::value<string>())
     // flags (typically don't change these)
-    ("a,alias", "apply aliases.",
-     cxxopts::value<bool>()->default_value("false"))
+    ("a,alias", "apply aliases.")
     ("p,particle", "specify alias particle",
      cxxopts::value<string>()->default_value("mu"))
   ;
