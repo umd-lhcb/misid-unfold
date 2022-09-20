@@ -171,32 +171,23 @@ input_ntps:
 # Used by (A)
 weight_brs:
     2016:
-        # for specially postprocessed ntuple
-        tree:
-            - prefix: D0
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
-              name: wmis_norm
-            - prefix: D0_bsb
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
-              name: wmis_bsb
-        # for step-1 ntuple
         TupleBminus/DecayTree:
             - prefix: D0
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
+              file: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_norm
             - prefix: D0_bsb
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
+              file: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_bsb
         TupleB0/DecayTree:
             - prefix: Dst
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
+              file: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_norm
             - prefix: Dst_dsb
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
+              file: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_dsb
             - prefix: Dst_bsb
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
+              file: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_bsb
             - prefix: Dst_dsb_bsb
-              file: "../histos/rdx-22_06_24_00_46-unfolded-2016/unfolded.root"
+              file: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_dsb_bsb
