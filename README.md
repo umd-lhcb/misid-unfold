@@ -87,9 +87,26 @@ locally, without actually running the efficiency generation program.
 
 ### Generation of tagging efficiencies
 
+This step relies on our misID ntuple with a special process which add
+PIDCalib-like branches like `Brunel_ProbNNghost` (which is just an alias
+to `mu_ProbNNghost`).
+
+The special process is needed so that we can apply the same cuts on
+these ntuples as if we are applying cuts on PIDCalib ntuples, eliminating
+the need to translate branch names.
+
+To build these special ntuples, go to `lhcb-ntuples-gen`, then type:
+
+```
+make rdx-ntuple-run2-misid_study
+```
+
+Once that is done, configure `spec/rdx-run2.yml` properly, then:
+
 ```
 build-rdx-tag-2016
 ```
+
 
 ### Unfold the misID efficiencies
 
@@ -112,10 +129,3 @@ make build-rdx-weights-2016
 
 This apply misID weights and momentum smearing on misID control samples.
 It's typically not applied here. The rule here is for demo purpose only.
-
-Some test plots including both the nominal region and the DSB region can be
-generated with:
-
-```
-make plot-rdx-fit_vars_dsb-ana-2016
-```
