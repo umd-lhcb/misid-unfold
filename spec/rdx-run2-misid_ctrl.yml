@@ -48,7 +48,7 @@ pidcalib_config:
             nom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"  # this is the accpetance cut
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                add_pid_cut: "UBDT <= 0.25"  # NOTE: inequality flipped
+                add_pid_cut: "UBDT < 0.25"  # NOTE: inequality flipped
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
@@ -65,7 +65,7 @@ local_pid_config:
                     nom:
                         cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                         pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                        add_pid_cut: "UBDT <= 0.25"  # NOTE: inequality flipped
+                        add_pid_cut: "UBDT < 0.25"  # NOTE: inequality flipped
                     denom:
                         cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                         pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
@@ -75,7 +75,7 @@ local_pid_config:
                 mu:
                     rel:
                         cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                        pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT <= 0.25"
+                        pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
 
 
 # specify additional source of histograms
