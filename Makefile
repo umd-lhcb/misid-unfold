@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Tue Sep 20, 2022 at 11:27 AM -0400
+# Last Change: Thu Sep 22, 2022 at 02:02 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -113,6 +113,13 @@ test-apply-rdx-weights-2016: \
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
 	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+
+
+# Aux. efficiencies for ProbNNk > 2 on true ghost
+.PHONY: build-rdx-aux-probnnk-on-ghost
+build-rdx-aux-probnnk-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_oldcut_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2016 -o $(OUT_DIR)
 
 
 ###############################

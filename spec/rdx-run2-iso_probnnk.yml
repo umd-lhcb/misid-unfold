@@ -1,0 +1,22 @@
+# this is for obtaining:
+#   Brunel_MC15TuneV1_ProbNNk > 0.2
+# cut efficiency on TRUE ghost particles
+
+binning:  # mostly from Phoebe's run 1 kISOeff histo
+    P: [3.e+3, 6.e+3, 9.3e+3, 10.e+3, 15.6e+3, 20.e+3, 40.e+3, 100.e+3]
+    ETA: [1.7, 3.6, 5.0]
+    nTracks: [0, 150, 225, 600]
+
+
+tags: {}  # dummy
+
+
+local_pid_config:
+    2016:
+        ghost_nnk_gt:
+            samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/ghost_Jpsi*.root:tree"
+            tags_addon:
+                k:
+                    eff:
+                        cut: "is_ghost"  # dummy actually
+                        pid_cut: "Brunel_MC15TuneV1_ProbNNk > 0.2"
