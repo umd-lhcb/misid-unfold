@@ -13,8 +13,15 @@ tags: {}  # dummy
 
 local_pid_config:
     2016:
-        ghost_nnk_gt:
-            samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/ghost_Jpsi*.root:tree"
+        MagDown:
+            samples: "../ntuples/0.9.7-rdx_production/Dst_D0-mc_ghost-step2/ghost-*md.root:tree"
+            tags_addon:
+                k:
+                    eff:
+                        cut: "is_ghost"  # dummy actually
+                        pid_cut: "Brunel_MC15TuneV1_ProbNNk > 0.2"
+        MagUp:
+            samples: "../ntuples/0.9.7-rdx_production/Dst_D0-mc_ghost-step2/ghost-*mu.root:tree"
             tags_addon:
                 k:
                     eff:
