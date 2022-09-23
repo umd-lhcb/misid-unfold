@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Sep 23, 2022 at 04:33 AM -0400
+# Last Change: Fri Sep 23, 2022 at 04:51 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -110,11 +110,13 @@ test-unfold: $(BINPATH)/UnfoldMisID
 test-apply-rdx-weights-2016: \
 	$(BINPATH)/ApplyMisIDWeight \
 	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
-	./histos/generic-22_04_21_20_12-dif_smearing/dif.root
+	./histos/generic-22_09_23_04_48-dif_smearing/dif.root
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
-	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) -o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
 
 # Aux. efficiencies for ProbNNk > 2 on true ghost
