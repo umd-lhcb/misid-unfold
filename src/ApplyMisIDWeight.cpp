@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Sep 23, 2022 at 04:27 AM -0400
+// Last Change: Fri Sep 23, 2022 at 04:59 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -43,6 +43,8 @@ using ROOT::RDF::RNode;
 
 typedef vector<pair<string, string>> vPStrStr;
 typedef vector<pair<regex, string>>  vPRegStr;
+
+const double PRE_SCALE_CORRECTION = 10.0;
 
 static const vPStrStr MU_BRANCH_DEFS{
     // PIDCalib name, DaVinci name w/o particle name
@@ -188,7 +190,8 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
     df = df.Define(brName,
                    [histoWt](double& x, double& y, double& z) {
                      auto binIdx = histoWt->FindFixBin(x, y, z);
-                     return histoWt->GetBinContent(binIdx);
+                     return histoWt->GetBinContent(binIdx) *
+                            PRE_SCALE_CORRECTION;
                    },
                    {"P", "ETA", "nTracks"});
     outputBrs.emplace_back(brName);
