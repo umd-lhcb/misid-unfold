@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Tue Sep 20, 2022 at 09:49 AM -0400
+// Last Change: Fri Sep 23, 2022 at 04:27 AM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -279,13 +279,13 @@ vector<string> setBrPrefix(const string prefix, const vector<string> vars) {
 }
 
 void getSmrFac(vector<vector<double>>& result, string auxFile,
-               string prefix = "k") {
-  auto df = RDataFrame(prefix + "_smr", auxFile);
+               string prefix = "k_smr") {
+  auto df = RDataFrame(prefix, auxFile);
   df.Foreach(
       [&](double x, double y, double z) {
         result.emplace_back(vector<double>{x, y, z});
       },
-      setBrPrefix(prefix + "_smr", {"x", "y", "z"}));
+      setBrPrefix(prefix, {"x", "y", "z"}));
 }
 
 template <typename F>
@@ -385,6 +385,10 @@ int main(int argc, char** argv) {
     ("a,alias", "apply aliases.")
     ("p,particle", "specify alias particle",
      cxxopts::value<string>()->default_value("mu"))
+    ("kSmrBrName", "specify K-smear branch name",
+     cxxopts::value<string>()->default_value("k_smr"))
+    ("piSmrBrName", "specify pi-smear branch name",
+     cxxopts::value<string>()->default_value("pi_smr"))
   ;
   // clang-format on
 
@@ -395,11 +399,13 @@ int main(int argc, char** argv) {
   }
 
   // get options
-  auto ntpIn      = parsedArgs["input"].as<string>();
-  auto ntpOut     = parsedArgs["output"].as<string>();
-  auto ntpAux     = parsedArgs["aux"].as<string>();
-  auto particle   = parsedArgs["particle"].as<string>();
-  auto applyAlias = parsedArgs["alias"].as<bool>();
+  auto ntpIn       = parsedArgs["input"].as<string>();
+  auto ntpOut      = parsedArgs["output"].as<string>();
+  auto ntpAux      = parsedArgs["aux"].as<string>();
+  auto particle    = parsedArgs["particle"].as<string>();
+  auto applyAlias  = parsedArgs["alias"].as<bool>();
+  auto kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
+  auto piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
 
   // parse YAML config
   auto ymlFile         = parsedArgs["config"].as<string>();
@@ -442,8 +448,8 @@ int main(int argc, char** argv) {
     // read smearing factors from aux ntuple
     auto smrFacK  = vector<vector<double>>{};
     auto smrFacPi = vector<vector<double>>{};
-    getSmrFac(smrFacK, ntpAux);
-    getSmrFac(smrFacPi, ntpAux, "pi");
+    getSmrFac(smrFacK, ntpAux, kSmrBrName);
+    getSmrFac(smrFacPi, ntpAux, piSmrBrName);
 
     // we can call these functions directly to get random smearing factors
     auto randSmrFacK  = getRandSmrHelper(smrFacK);
