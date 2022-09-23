@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Thu Apr 21, 2022 at 08:12 PM -0400
+# Last Change: Fri Sep 23, 2022 at 04:33 AM -0400
 #
 # Description: build decay-in-flight histos
 
@@ -20,32 +20,42 @@ from pyTuplingUtils.plot import plot_histo, ax_add_args_histo
 # Configurable #
 ################
 
-DATA_RANGE = {
-    "k_smr": [
-        ((0.85, 1.15), 100),
-        ((0.85, 1.15), 100),
-        ((0.95, 1.05), 100),
-    ],
-    "pi_smr": [
-        ((0.55, 1.1), 100),
-        ((0.55, 1.1), 100),
-        ((0.7, 1.05), 100),
-    ],
-}
-
-ADD_LABELS = ["x", "y", "z"]
-
 OUTPUT_NTP_NAME = "dif.root"
-PARTICLES = {
-    "k_smr": "K",
-    "pi_smr": "pi",
-}
 TREE_NAME = "mytuple/DecayTree"
 
+ADD_LABELS = ["x", "y", "z"]
 TRUE_P_BRS = ["TRUEP_X", "TRUEP_Y", "TRUEP_Z"]
 RECO_P_BRS = ["PX", "PY", "PZ"]
 
-CUTS = {"k_smr": "abs(K_TRUEID) == 321", "pi_smr": "abs(pi_TRUEID) == 211"}
+####
+PARTICLES = {
+    "k_smr": "K",
+    "pi_smr": "pi",
+    "k_smr_ubdt_veto": "K",
+    "pi_smr_ubdt_veto": "pi",
+}
+
+CUTS = {
+    "k_smr": "K_TRACK_GhostProb < 0.5 & K_isMuon & K_PIDmu > 2.0 & BDTmuCut > 0.25 & abs(K_TRUEID) == 321",
+    "pi_smr": "pi_TRACK_GhostProb < 0.5 & pi_isMuon & pi_PIDmu > 2.0 & BDTmuCut > 0.25 & abs(pi_TRUEID) == 211",
+    "k_smr_ubdt_veto": "K_TRACK_GhostProb < 0.5 & K_isMuon & K_PIDmu > 2.0 & BDTmuCut < 0.25 & abs(K_TRUEID) == 321",
+    "pi_smr_ubdt_veto": "pi_TRACK_GhostProb < 0.5 & pi_isMuon & pi_PIDmu > 2.0 & BDTmuCut < 0.25 & abs(pi_TRUEID) == 211",
+}
+####
+PLOT_NBINS = 100
+
+PLOT_PARTICLE_ALIASES = {
+    "k_smr": r"$K$ (passing UBDT cut)",
+    "pi_smr": r"$\pi$ (passing UBDT cut)",
+    "k_smr_ubdt_veto": r"$K$ (failing UBDT cut)",
+    "pi_smr_ubdt_veto": r"$\pi$ (failing UBDT cut)",
+}
+
+PLOT_VAR_ALIASES = {
+    "PX": r"$p_x^{reco} / p_x^{true}$",
+    "PY": r"$p_y^{reco} / p_y^{true}$",
+    "PZ": r"$p_z^{reco} / p_z^{true}$",
+}
 
 
 #######################
@@ -56,14 +66,7 @@ CUTS = {"k_smr": "abs(K_TRUEID) == 321", "pi_smr": "abs(pi_TRUEID) == 211"}
 def parse_input():
     parser = ArgumentParser(description="build decay-in-flight histos.")
 
-    parser.add_argument(
-        "-k", "--input-K", required=True, help="specify Kaon input ntuple."
-    )
-
-    parser.add_argument(
-        "-p", "--input-pi", required=True, help="specify pion input ntuple."
-    )
-
+    parser.add_argument("ntps", nargs="+", help="specify input ntuples.")
     parser.add_argument("-o", "--output", required=True, help="specify output dir.")
 
     parser.add_argument(
@@ -80,8 +83,8 @@ def parse_input():
 ###########
 
 
-def plot(br, title, filename, nbins=40, plot_range=(0, 1)):
-    histo, bins = gen_histo(br, bins=nbins, data_range=plot_range)
+def plot(br, title, filename, nbins=40):
+    histo, bins = gen_histo(br, bins=nbins)
     plot_histo(
         bins,
         histo,
@@ -101,17 +104,20 @@ if __name__ == "__main__":
     args = parse_input()
     output_ntp = uproot.recreate(f"{args.output}/{OUTPUT_NTP_NAME}")
 
-    ntps = [args.input_K, args.input_pi]
     ptcls = list(PARTICLES.keys())
-    for (idx, n) in enumerate(ntps):
+    for (idx, n) in enumerate(args.ntps):
         evaluator = BooleanEvaluator(n, TREE_NAME)
         ptcl = ptcls[idx]
         prefix = PARTICLES[ptcl]
+        print(f"Working on {ptcl}, with a branch prefix {prefix}")
+        print(f"  Input ntuple: {n}")
+        print(f"  Output tree name: {ptcl}")
 
         true_brs = [evaluator.eval(f"{prefix}_{b}") for b in TRUE_P_BRS]
         reco_brs = [evaluator.eval(f"{prefix}_{b}") for b in RECO_P_BRS]
+
+        print(f"  Global cuts: {CUTS[ptcl]}")
         global_cut = evaluator.eval(CUTS[ptcl])
-        add_cuts = [global_cut]
         output_brs = []
         output_tree = dict()
 
@@ -123,21 +129,18 @@ if __name__ == "__main__":
                 out=np.zeros_like(reco_brs[i]),
                 where=true_brs[i] != 0,
             )
-            add_cuts.append(ratio > DATA_RANGE[ptcl][i][0][0])
-            add_cuts.append(ratio < DATA_RANGE[ptcl][i][0][1])
             output_brs.append(ratio)
 
             if args.plot:
-                title = f"{prefix}: {RECO_P_BRS[i]} / {TRUE_P_BRS[i]}"
-                filename = f"{args.output}/{prefix}_{RECO_P_BRS[i]}_{TRUE_P_BRS[i]}.png"
-                plot_range = DATA_RANGE[ptcl][i][0]
-                nbins = DATA_RANGE[ptcl][i][1]
-                # apply cut
-                plot(ratio[global_cut], title, filename, nbins, plot_range)
+                title = (
+                    f"{PLOT_PARTICLE_ALIASES[ptcl]}: {PLOT_VAR_ALIASES[RECO_P_BRS[i]]}"
+                )
+                filename = f"{args.output}/{ptcl}_{RECO_P_BRS[i]}_{TRUE_P_BRS[i]}.pdf"
+                plot(ratio[global_cut], title, filename, PLOT_NBINS)
 
         for idx, br in enumerate(output_brs):
             br_name = f"{ptcl}_{ADD_LABELS[idx]}"
-            output_tree[br_name] = br[np.logical_and.reduce(add_cuts)]
+            output_tree[br_name] = br[global_cut]
 
         # now write the tree
         output_ntp[ptcl] = output_tree
