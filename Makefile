@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Thu Sep 22, 2022 at 02:02 AM -0400
+# Last Change: Fri Sep 23, 2022 at 04:33 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -76,8 +76,10 @@ build-generic-dif-smearing:
 	$(eval OUT_DIR	:=	$(GENPATH)/generic-$(TIME_STAMP)-dif_smearing)
 	@mkdir -p $(OUT_DIR)
 	./scripts/build_histo_dif.py --plot -o $(OUT_DIR) \
-		-k ./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
-		-p ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
+		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
+		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
+		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
 
 
 # Unfold the misID weights
