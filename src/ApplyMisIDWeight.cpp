@@ -1,6 +1,6 @@
 // Author: Yipeng Sun
 // License: BSD 2-clause
-// Last Change: Fri Sep 23, 2022 at 04:59 AM -0400
+// Last Change: Sun Sep 25, 2022 at 09:43 PM -0400
 //
 // Description: unfolding weights applyer (A)
 
@@ -185,13 +185,20 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
     histos.emplace_back(histoWt);
     cout << "  Loading histo " << histoName << endl;
 
+    double prescale = 1.0;
+    if (TString(h).Contains("MuTag")) {
+      cout << "  " << h
+           << " is a transfer-factor weight, apply 10x enhance due to prescale."
+           << endl;
+      prescale = PRE_SCALE_CORRECTION;
+    }
+
     auto brName = weightBrPrefix + "_" + h;
     cout << "  Generating " << brName << "..." << endl;
     df = df.Define(brName,
-                   [histoWt](double& x, double& y, double& z) {
+                   [histoWt, prescale](double& x, double& y, double& z) {
                      auto binIdx = histoWt->FindFixBin(x, y, z);
-                     return histoWt->GetBinContent(binIdx) *
-                            PRE_SCALE_CORRECTION;
+                     return histoWt->GetBinContent(binIdx) * prescale;
                    },
                    {"P", "ETA", "nTracks"});
     outputBrs.emplace_back(brName);
