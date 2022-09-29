@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Sun Sep 11, 2022 at 03:15 AM -0400
+# Last Change: Thu Sep 29, 2022 at 12:33 AM -0400
 #
 # Description: efficiency histogram builder (E)
 
@@ -97,8 +97,9 @@ def compute_efficiency(histo_all, histo_passed):
     zbins = histo_all.GetNbinsZ()
 
     histo_eff = histo_passed.Clone()
+    # take over/underflow bin into account
     for i, j, k in product(
-        range(1, xbins + 1), range(1, ybins + 1), range(1, zbins + 1)
+        range(0, xbins + 2), range(0, ybins + 2), range(0, zbins + 2)
     ):
         idx = histo_all.GetBin(i, j, k)
         n_all = histo_all.GetBinContent(idx)
