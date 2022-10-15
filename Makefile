@@ -1,6 +1,6 @@
 # Author: Yipeng Sun
 # License: BSD 2-clause
-# Last Change: Fri Sep 23, 2022 at 04:51 AM -0400
+# Last Change: Sat Oct 15, 2022 at 12:45 AM -0400
 
 BINPATH := ./bin
 GENPATH := ./gen
@@ -17,6 +17,15 @@ CXXFLAGS	:=	$(shell root-config --cflags) -Iinclude
 LINKFLAGS	:=	$(shell root-config --libs)
 ADDCXXFLAGS	:=	-O2 -march=native -mtune=native
 ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
+
+
+#################
+# Configuration #
+#################
+
+EFFICIENCIES	:=	./histos/rdx-22_09_12_05_03-merged-2016/merged.root
+TAGGED	:=	./histos/rdx-22_06_23_12_07-tag-2016/tagged.root
+UNFOLDED	:=	./histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
 
 
 ###########
@@ -91,18 +100,15 @@ build-rdx-tag-2016:
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
-	$< --debug --iteration 20 \
-		-e ./histos/rdx-22_09_12_05_03-merged-2016/merged.root \
-		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
-		-o $(OUT_DIR) \
+	$< --debug --iteration 5 \
+		-e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
 		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-unfold
 test-unfold: $(BINPATH)/UnfoldMisID
 	$< -c ./spec/rdx-run2.yml --dryRun \
-		-y ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
-		-e ./histos/rdx-22_04_13_23_16-merged-2016/merged.root
+		-y $(TAGGED) -e $(EFFICIENCIES)
 
 
 # Test of application of misID weights
@@ -147,21 +153,21 @@ plot-rdx-bin_vars-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-2016)
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag \
-		-i ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
+		-i $(TAGGED) \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 	./scripts/plot_histo.py -o $(OUT_DIR) \
-		-i ./histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root \
+		-i $(UNFOLDED) \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
 plot-rdx-bin_vars-ana-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-bin_vars-ana-2016)
 	@mkdir -p $(OUT_DIR)
 	./scripts/plot_histo.py -o $(OUT_DIR) -s Tag --extension pdf \
-		-i ./histos/rdx-22_06_23_12_07-tag-2016/tagged.root \
+		-i $(TAGGED) \
 		--show-title 0 1 0 --show-legend 1 0 0 \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 	./scripts/plot_histo.py -o $(OUT_DIR) --extension pdf \
-		-i ./histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root \
+		-i $(UNFOLDED) \
 		--show-title 0 1 0 --show-legend 1 0 0 \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
