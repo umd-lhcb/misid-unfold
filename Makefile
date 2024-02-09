@@ -111,6 +111,20 @@ test-unfold: $(BINPATH)/UnfoldMisID
 		-y $(TAGGED) -e $(EFFICIENCIES)
 
 
+# Unfold the misID weights RJpsi
+.PHONY: build-rjpsi-tag-2016
+build-rjpsi-tag-2016:
+	$(eval OUT_DIR	:=	$(GENPATH)/rjpsi-$(TIME_STAMP)-tag-2016)
+	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
+
+build-rjpsi-unfolded-2016: $(BINPATH)/MisIDWeightor
+	$(eval OUT_DIR	:=	$(GENPATH)/rjpsi-$(TIME_STAMP)-unfolded-2016)
+	@mkdir -p $(OUT_DIR)
+	$< --debug --iteration 5 \
+		-e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
+		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+
+
 # Test of application of misID weights
 .PHONY: test-apply-rdx-weights-2016
 test-apply-rdx-weights-2016: \
