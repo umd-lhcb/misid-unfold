@@ -41,6 +41,12 @@ The output folders are located in `gen` folder.
     1. Clone this project on `lxplus`
     2. In the project root, run `make build-rdx-true-to-tag-2016-lxplus`
 
+    Note that you might need to use a specific version of `pidcalib`. Edit `cmd_prefix` in `scripts/pidcalib_wrapper.py` and replace it with:
+    ```
+    cmd_prefix = "lb-conda pidcalib/2022-09-02 " if mode == "lxplus" else ""
+    ```
+    `pidcalib/2022-09-02` corresponds to version `1.0.6`.
+
 4. Update ghost and $e$ conditional efficiencies w/ local incl. $J/\psi$ MC
    samples w/ `make build-rdx-true-to-tag-2016-local`
 
