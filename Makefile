@@ -57,32 +57,32 @@ test-nix:
 .PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2016-lxplus
 build-rdx-true-to-tag-2016-glacier:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 -m glacier
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2-misid_ctrl.yml -o $(OUT_DIR) -y 2016 -m glacier
 
 build-rdx-true-to-tag-2016-lxplus:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2016)
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 -m lxplus
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2-misid_ctrl.yml -o $(OUT_DIR) -y 2016 -m lxplus
 
 
 .PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
 test-pidcalib2-wrapper-glacier:
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run -m glacier
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2-misid_ctrl.yml -o $(GENPATH) --dry-run -m glacier
 
 test-pidcalib2-wrapper-lxplus:
-	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2.yml -o $(GENPATH) --dry-run -m lxplus
+	./scripts/pidcalib_wrapper.py -c ./spec/rdx-run2-misid_ctrl.yml -o $(GENPATH) --dry-run -m lxplus
 
 
 .PHONY: build-rdx-true-to-tag-2016-local
 build-rdx-true-to-tag-2016-local:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
-	./scripts/build_histo_eff.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
+	./scripts/build_histo_eff.py -c ./spec/rdx-run2-misid_ctrl.yml -o $(OUT_DIR) -y 2016
 
 
 .PHONY: build-rdx-merged-2016
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/merge_histo.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
+	./scripts/merge_histo.py -c ./spec/rdx-run2-misid_ctrl.yml -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: build-generic-dif-smearing
@@ -100,19 +100,19 @@ build-generic-dif-smearing:
 .PHONY: build-rdx-tag-2016
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
-	./scripts/build_histo_tagged.py -c ./spec/rdx-run2.yml -o $(OUT_DIR) -y 2016
+	./scripts/build_histo_tagged.py -c ./spec/rdx-run2-misid_ctrl.yml -o $(OUT_DIR) -y 2016
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 5 \
 		-e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
-		-c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+		-c ./spec/rdx-run2-misid_ctrl.yml | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-unfold
 test-unfold: $(BINPATH)/UnfoldMisID
-	$< -c ./spec/rdx-run2.yml --dryRun \
+	$< -c ./spec/rdx-run2-misid_ctrl.yml --dryRun \
 		-y $(TAGGED) -e $(EFFICIENCIES)
 
 
@@ -127,7 +127,7 @@ test-apply-rdx-weights-2016: \
 	@mkdir -p $(OUT_DIR)
 	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
-		-o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2.yml | tee $(OUT_DIR)/stdout.log
+		-o $(OUT_DIR)/$(AUX_NTP) -c ./spec/rdx-run2-misid_ctrl.yml | tee $(OUT_DIR)/stdout.log
 
 
 # Aux. efficiencies for ProbNNk > 2 on true ghost
