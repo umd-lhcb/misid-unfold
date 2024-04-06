@@ -14,7 +14,7 @@ TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
 COMPILER	:=	$(shell root-config --cxx)
 CXXFLAGS	:=	$(shell root-config --cflags) -Iinclude
-LINKFLAGS	:=	$(shell root-config --libs)
+LINKFLAGS	:=	$(shell root-config --libs) -lc++fs
 ADDCXXFLAGS	:=	-O2 -march=native -mtune=native
 ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 
