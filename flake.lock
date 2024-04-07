@@ -205,16 +205,17 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "dirtyRev": "59c25fa68a3bcea9930631ccbba473c08c509394-dirty",
-        "dirtyShortRev": "59c25fa-dirty",
-        "lastModified": 1703347319,
-        "narHash": "sha256-eoPp44l5GhbrBDsr2siZHOu7QLfMNdEi86WxSAVM7yc=",
-        "type": "git",
-        "url": "file:///Users/hadjichris/umd-lhcb/root-curated"
+        "lastModified": 1655306486,
+        "narHash": "sha256-SX+9imom16R7FgVwX+bwAmfjxyzY0rB2SxWnbtdc+yk=",
+        "owner": "umd-lhcb",
+        "repo": "root-curated",
+        "rev": "a5571fb3e8d8ad185bf443697106b4a142a47945",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///Users/hadjichris/umd-lhcb/root-curated"
+        "owner": "umd-lhcb",
+        "repo": "root-curated",
+        "type": "github"
       }
     }
   },
