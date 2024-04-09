@@ -19,6 +19,7 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TH3D.h>
+#include "TSystem.h"
 
 #include <RooUnfoldBayes.h>
 #include <RooUnfoldResponse.h>
@@ -528,6 +529,15 @@ int main(int argc, char** argv) {
     return 0;
   }
 
+  // check info level
+  auto debug = parsedArgs["debug"].as<bool>();
+
+  // Save output for future reference
+  const TString log_name = debug ? "src/UnfoldMisID_dbg.log" : "src/UnfoldMisID.log"; // FIXME hardcoded path
+  if ( !remove(log_name) ) { std::cout << "Old log file " << log_name << " has been deleted." << std::endl; }
+  gSystem->RedirectOutput(log_name);
+  // gErrorIgnoreLevel = kWarning;
+
   // parse YAML config
   auto ymlConfig  = YAML::LoadFile(parsedArgs["config"].as<string>());
   auto ptclTarget = parsedArgs["targetParticle"].as<string>();
@@ -552,7 +562,6 @@ int main(int argc, char** argv) {
   }
 
   // unfold
-  auto debug     = parsedArgs["debug"].as<bool>();
   auto numOfIter = parsedArgs["iteration"].as<int>();
   unfold(prefix, ptclList, histoBinSize, histoInGetter, histoOutGetter, debug,
          numOfIter);
