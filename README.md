@@ -121,7 +121,7 @@ Also, make sure the input files are set correct for unfolding
 in the `Makefile`.
 
 ```
-make build-rdx-unfold-2016
+make build-rdx-unfolded-2016
 ```
 
 One can also test-run the unfolding (w/o actually doing unfolding!)
