@@ -287,9 +287,23 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
               if (debug)
                 cout << "  Loading efficiency from " << name << ", got " << eff
                      << endl;
-              if (isnan(eff) || isinf(eff)) eff = 0.0;
 
-              histRes->SetBinContent(idxTag + 1, idxTrue + 1, abs(eff));
+              if (isnan(eff) || isinf(eff)) {
+                cout << "WARNING Invalid efficiency (" << eff << "). Setting it to 0." << endl;
+                eff = 0.;
+              }
+
+              if (eff < 0.) {
+                cout << "WARNING Negative efficiency (" << eff << "). Setting it to 0." << endl;
+                eff = 0.;
+              }
+
+              // Avoid signed zero in log file, which may be confused with a small negative efficiency.
+              // Note: floating point +0, -0 and 0 are numerically equivalent.
+              // See https://en.wikipedia.org/wiki/Signed_zero
+              if (eff == 0.) eff = abs(eff);
+
+              histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
               histRes->SetBinError(idxTag + 1, idxTrue + 1, err);
             }
           }
