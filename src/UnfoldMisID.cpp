@@ -546,16 +546,16 @@ int main(int argc, char** argv) {
   // Check info level
   auto debug = parsedArgs["debug"].as<bool>();
   // Check get yml file
-  const string yml_path = parsedArgs["config"].as<string>();
-  const string yml_name = fileNameFromPath(yml_path);
+  const string ymlFile = parsedArgs["config"].as<string>();
+  const string ymlName = fileNameFromPath(ymlFile);
 
   // Save output for future reference
-  const TString log_name = debug ? "src/UnfoldMisID_"+yml_name+"_dbg.log" : "src/UnfoldMisID"+yml_name+".log"; // TODO hardcoded path
-  if ( !remove(log_name) ) { std::cout << "Old log file " << log_name << " has been deleted." << std::endl; }
-  gSystem->RedirectOutput(log_name);
+  const TString logName = debug ? "src/UnfoldMisID_"+ymlName+"_dbg.log" : "src/UnfoldMisID"+ymlName+".log"; // TODO hardcoded path
+  if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
+  gSystem->RedirectOutput(logName);
 
   // parse YAML config
-  auto ymlConfig  = YAML::LoadFile(yml_path);
+  auto ymlConfig  = YAML::LoadFile(ymlFile);
   auto ptclTarget = parsedArgs["targetParticle"].as<string>();
   auto ptclList   = getKeyNames(ymlConfig["tags"]);
   auto year       = parsedArgs["year"].as<string>();

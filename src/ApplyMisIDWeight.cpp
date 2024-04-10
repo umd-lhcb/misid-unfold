@@ -420,12 +420,12 @@ int main(int argc, char** argv) {
 
   // Check get yml file
   const string ymlFile = parsedArgs["config"].as<string>();
-  const string yml_name = fileNameFromPath(ymlFile);
+  const string ymlName = fileNameFromPath(ymlFile);
 
   // Save output for future reference
-  const TString log_name = "src/ApplyMisIDWeight_"+yml_name+".log"; // TODO hardcoded path
-  if ( !remove(log_name) ) { std::cout << "Old log file " << log_name << " has been deleted." << std::endl; }
-  gSystem->RedirectOutput(log_name);
+  const TString logName = "src/ApplyMisIDWeight_"+ymlName+".log"; // TODO hardcoded path
+  if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
+  gSystem->RedirectOutput(logName);
 
   // parse YAML config
   auto ymlConfig       = YAML::LoadFile(ymlFile);
