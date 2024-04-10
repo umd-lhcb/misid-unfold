@@ -1,0 +1,352 @@
+--------
+Define MC15TuneV1_ProbNNpi as mu_MC15TuneV1_ProbNNpi
+Define MC15TuneV1_ProbNNk as mu_MC15TuneV1_ProbNNk
+Define MC15TuneV1_ProbNNp as mu_MC15TuneV1_ProbNNp
+Define MC15TuneV1_ProbNNe as mu_MC15TuneV1_ProbNNe
+Define MC15TuneV1_ProbNNmu as mu_MC15TuneV1_ProbNNmu
+Define MC15TuneV1_ProbNNghost as mu_MC15TuneV1_ProbNNghost
+Define DLLK as mu_PIDK
+Define DLLp as mu_PIDp
+Define DLLe as mu_PIDe
+Define DLLmu as mu_PIDmu
+Define DLLd as mu_PIDd
+Define IsMuon as mu_isMuon
+Define InMuonAcc as mu_InMuonAcc
+Define Brunel_MC15TuneV1_ProbNNpi as mu_MC15TuneV1_ProbNNpi
+Define Brunel_MC15TuneV1_ProbNNk as mu_MC15TuneV1_ProbNNk
+Define Brunel_MC15TuneV1_ProbNNp as mu_MC15TuneV1_ProbNNp
+Define Brunel_MC15TuneV1_ProbNNe as mu_MC15TuneV1_ProbNNe
+Define Brunel_MC15TuneV1_ProbNNmu as mu_MC15TuneV1_ProbNNmu
+Define Brunel_MC15TuneV1_ProbNNghost as mu_MC15TuneV1_ProbNNghost
+Define Brunel_DLLK as mu_PIDK
+Define Brunel_DLLp as mu_PIDp
+Define Brunel_DLLe as mu_PIDe
+Define Brunel_DLLmu as mu_PIDmu
+Define Brunel_DLLd as mu_PIDd
+Define Brunel_IsMuon as mu_isMuon
+Define Brunel_InMuonAcc as mu_InMuonAcc
+Define Brunel_P as mu_P
+Define P as mu_P
+Define PZ as mu_PZ
+Define pi as Brunel_MC15TuneV1_ProbNNpi > 0.1 && Brunel_DLLK < 0.0 && Brunel_DLLp < 0.0 && Brunel_DLLe < 2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define k as Brunel_MC15TuneV1_ProbNNk > 0.1 && Brunel_DLLK > 0.0 && (Brunel_DLLp - Brunel_DLLK) < 0.0 && (Brunel_DLLe - Brunel_DLLK) < -2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define p as Brunel_MC15TuneV1_ProbNNp > 0.1 && Brunel_DLLp > 0.0 && (Brunel_DLLp - Brunel_DLLK) > 2.0 && (Brunel_DLLe - Brunel_DLLp) < -2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define e as Brunel_DLLe > 2.0 && (Brunel_DLLe - Brunel_DLLK) > -2.0 && (Brunel_DLLe - Brunel_DLLp) > -2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define g as !pi && !k && !p && !e
+Define is_misid_pi as pi
+Define is_misid_k as k
+Define is_misid_p as p
+Define is_misid_e as e
+Define is_misid_g as g
+Handling tree TupleBminus/DecayTree from histos of prefix D0 from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Generate transfer factors/DiF smearing wieghts for all species
+  Loading histo D0__piTagToMuTag
+  piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_piTagToMuTag...
+  Loading histo D0__kTagToMuTag
+  kTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_kTagToMuTag...
+  Loading histo D0__pTagToMuTag
+  pTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_pTagToMuTag...
+  Loading histo D0__eTagToMuTag
+  eTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_eTagToMuTag...
+  Loading histo D0__gTagToMuTag
+  gTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_gTagToMuTag...
+  Loading histo D0__piTagToKTrue
+  Generating wmis_norm_piTagToKTrue...
+  Loading histo D0__piTagToPiTrue
+  Generating wmis_norm_piTagToPiTrue...
+  Loading histo D0__kTagToKTrue
+  Generating wmis_norm_kTagToKTrue...
+  Loading histo D0__kTagToPiTrue
+  Generating wmis_norm_kTagToPiTrue...
+  Loading histo D0__pTagToKTrue
+  Generating wmis_norm_pTagToKTrue...
+  Loading histo D0__pTagToPiTrue
+  Generating wmis_norm_pTagToPiTrue...
+  Loading histo D0__eTagToKTrue
+  Generating wmis_norm_eTagToKTrue...
+  Loading histo D0__eTagToPiTrue
+  Generating wmis_norm_eTagToPiTrue...
+  Loading histo D0__gTagToKTrue
+  Generating wmis_norm_gTagToKTrue...
+  Loading histo D0__gTagToPiTrue
+  Generating wmis_norm_gTagToPiTrue...
+  wmis_norm = is_misid_pi*wmis_norm_piTagToMuTag + is_misid_k*wmis_norm_kTagToMuTag + is_misid_p*wmis_norm_pTagToMuTag + is_misid_e*wmis_norm_eTagToMuTag + is_misid_g*wmis_norm_gTagToMuTag
+  wmis_norm_smr_k = is_misid_pi*wmis_norm_piTagToKTrue + is_misid_k*wmis_norm_kTagToKTrue + is_misid_p*wmis_norm_pTagToKTrue + is_misid_e*wmis_norm_eTagToKTrue + is_misid_g*wmis_norm_gTagToKTrue
+  wmis_norm_smr_pi = is_misid_pi*wmis_norm_piTagToPiTrue + is_misid_k*wmis_norm_kTagToPiTrue + is_misid_p*wmis_norm_pTagToPiTrue + is_misid_e*wmis_norm_eTagToPiTrue + is_misid_g*wmis_norm_gTagToPiTrue
+  wmis_norm_no_smr = 1.0 - wmis_norm_smr_k - wmis_norm_smr_pi
+Define wmis_norm as is_misid_pi*wmis_norm_piTagToMuTag + is_misid_k*wmis_norm_kTagToMuTag + is_misid_p*wmis_norm_pTagToMuTag + is_misid_e*wmis_norm_eTagToMuTag + is_misid_g*wmis_norm_gTagToMuTag
+Define wmis_norm_smr_k as is_misid_pi*wmis_norm_piTagToKTrue + is_misid_k*wmis_norm_kTagToKTrue + is_misid_p*wmis_norm_pTagToKTrue + is_misid_e*wmis_norm_eTagToKTrue + is_misid_g*wmis_norm_gTagToKTrue
+Define wmis_norm_smr_pi as is_misid_pi*wmis_norm_piTagToPiTrue + is_misid_k*wmis_norm_kTagToPiTrue + is_misid_p*wmis_norm_pTagToPiTrue + is_misid_e*wmis_norm_eTagToPiTrue + is_misid_g*wmis_norm_gTagToPiTrue
+Define wmis_norm_no_smr as 1.0 - wmis_norm_smr_k - wmis_norm_smr_pi
+Handling tree TupleBminus/DecayTree from histos of prefix D0_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Generate transfer factors/DiF smearing wieghts for all species
+  Loading histo D0_bsb__piTagToMuTag
+  piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_piTagToMuTag...
+  Loading histo D0_bsb__kTagToMuTag
+  kTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_kTagToMuTag...
+  Loading histo D0_bsb__pTagToMuTag
+  pTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_pTagToMuTag...
+  Loading histo D0_bsb__eTagToMuTag
+  eTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_eTagToMuTag...
+  Loading histo D0_bsb__gTagToMuTag
+  gTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_gTagToMuTag...
+  Loading histo D0_bsb__piTagToKTrue
+  Generating wmis_bsb_piTagToKTrue...
+  Loading histo D0_bsb__piTagToPiTrue
+  Generating wmis_bsb_piTagToPiTrue...
+  Loading histo D0_bsb__kTagToKTrue
+  Generating wmis_bsb_kTagToKTrue...
+  Loading histo D0_bsb__kTagToPiTrue
+  Generating wmis_bsb_kTagToPiTrue...
+  Loading histo D0_bsb__pTagToKTrue
+  Generating wmis_bsb_pTagToKTrue...
+  Loading histo D0_bsb__pTagToPiTrue
+  Generating wmis_bsb_pTagToPiTrue...
+  Loading histo D0_bsb__eTagToKTrue
+  Generating wmis_bsb_eTagToKTrue...
+  Loading histo D0_bsb__eTagToPiTrue
+  Generating wmis_bsb_eTagToPiTrue...
+  Loading histo D0_bsb__gTagToKTrue
+  Generating wmis_bsb_gTagToKTrue...
+  Loading histo D0_bsb__gTagToPiTrue
+  Generating wmis_bsb_gTagToPiTrue...
+  wmis_bsb = is_misid_pi*wmis_bsb_piTagToMuTag + is_misid_k*wmis_bsb_kTagToMuTag + is_misid_p*wmis_bsb_pTagToMuTag + is_misid_e*wmis_bsb_eTagToMuTag + is_misid_g*wmis_bsb_gTagToMuTag
+  wmis_bsb_smr_k = is_misid_pi*wmis_bsb_piTagToKTrue + is_misid_k*wmis_bsb_kTagToKTrue + is_misid_p*wmis_bsb_pTagToKTrue + is_misid_e*wmis_bsb_eTagToKTrue + is_misid_g*wmis_bsb_gTagToKTrue
+  wmis_bsb_smr_pi = is_misid_pi*wmis_bsb_piTagToPiTrue + is_misid_k*wmis_bsb_kTagToPiTrue + is_misid_p*wmis_bsb_pTagToPiTrue + is_misid_e*wmis_bsb_eTagToPiTrue + is_misid_g*wmis_bsb_gTagToPiTrue
+  wmis_bsb_no_smr = 1.0 - wmis_bsb_smr_k - wmis_bsb_smr_pi
+Define wmis_bsb as is_misid_pi*wmis_bsb_piTagToMuTag + is_misid_k*wmis_bsb_kTagToMuTag + is_misid_p*wmis_bsb_pTagToMuTag + is_misid_e*wmis_bsb_eTagToMuTag + is_misid_g*wmis_bsb_gTagToMuTag
+Define wmis_bsb_smr_k as is_misid_pi*wmis_bsb_piTagToKTrue + is_misid_k*wmis_bsb_kTagToKTrue + is_misid_p*wmis_bsb_pTagToKTrue + is_misid_e*wmis_bsb_eTagToKTrue + is_misid_g*wmis_bsb_gTagToKTrue
+Define wmis_bsb_smr_pi as is_misid_pi*wmis_bsb_piTagToPiTrue + is_misid_k*wmis_bsb_kTagToPiTrue + is_misid_p*wmis_bsb_pTagToPiTrue + is_misid_e*wmis_bsb_eTagToPiTrue + is_misid_g*wmis_bsb_gTagToPiTrue
+Define wmis_bsb_no_smr as 1.0 - wmis_bsb_smr_k - wmis_bsb_smr_pi
+Writing to ./gen/rdx-24_04_10_11_33-weights-2016/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--aux_misid.root
+--------
+Define MC15TuneV1_ProbNNpi as mu_MC15TuneV1_ProbNNpi
+Define MC15TuneV1_ProbNNk as mu_MC15TuneV1_ProbNNk
+Define MC15TuneV1_ProbNNp as mu_MC15TuneV1_ProbNNp
+Define MC15TuneV1_ProbNNe as mu_MC15TuneV1_ProbNNe
+Define MC15TuneV1_ProbNNmu as mu_MC15TuneV1_ProbNNmu
+Define MC15TuneV1_ProbNNghost as mu_MC15TuneV1_ProbNNghost
+Define DLLK as mu_PIDK
+Define DLLp as mu_PIDp
+Define DLLe as mu_PIDe
+Define DLLmu as mu_PIDmu
+Define DLLd as mu_PIDd
+Define IsMuon as mu_isMuon
+Define InMuonAcc as mu_InMuonAcc
+Define Brunel_MC15TuneV1_ProbNNpi as mu_MC15TuneV1_ProbNNpi
+Define Brunel_MC15TuneV1_ProbNNk as mu_MC15TuneV1_ProbNNk
+Define Brunel_MC15TuneV1_ProbNNp as mu_MC15TuneV1_ProbNNp
+Define Brunel_MC15TuneV1_ProbNNe as mu_MC15TuneV1_ProbNNe
+Define Brunel_MC15TuneV1_ProbNNmu as mu_MC15TuneV1_ProbNNmu
+Define Brunel_MC15TuneV1_ProbNNghost as mu_MC15TuneV1_ProbNNghost
+Define Brunel_DLLK as mu_PIDK
+Define Brunel_DLLp as mu_PIDp
+Define Brunel_DLLe as mu_PIDe
+Define Brunel_DLLmu as mu_PIDmu
+Define Brunel_DLLd as mu_PIDd
+Define Brunel_IsMuon as mu_isMuon
+Define Brunel_InMuonAcc as mu_InMuonAcc
+Define Brunel_P as mu_P
+Define P as mu_P
+Define PZ as mu_PZ
+Define pi as Brunel_MC15TuneV1_ProbNNpi > 0.1 && Brunel_DLLK < 0.0 && Brunel_DLLp < 0.0 && Brunel_DLLe < 2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define k as Brunel_MC15TuneV1_ProbNNk > 0.1 && Brunel_DLLK > 0.0 && (Brunel_DLLp - Brunel_DLLK) < 0.0 && (Brunel_DLLe - Brunel_DLLK) < -2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define p as Brunel_MC15TuneV1_ProbNNp > 0.1 && Brunel_DLLp > 0.0 && (Brunel_DLLp - Brunel_DLLK) > 2.0 && (Brunel_DLLe - Brunel_DLLp) < -2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define e as Brunel_DLLe > 2.0 && (Brunel_DLLe - Brunel_DLLK) > -2.0 && (Brunel_DLLe - Brunel_DLLp) > -2.0 && Brunel_MC15TuneV1_ProbNNghost < 0.25
+Define g as !pi && !k && !p && !e
+Define is_misid_pi as pi
+Define is_misid_k as k
+Define is_misid_p as p
+Define is_misid_e as e
+Define is_misid_g as g
+Handling tree TupleB0/DecayTree from histos of prefix Dst from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Generate transfer factors/DiF smearing wieghts for all species
+  Loading histo Dst__piTagToMuTag
+  piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_piTagToMuTag...
+  Loading histo Dst__kTagToMuTag
+  kTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_kTagToMuTag...
+  Loading histo Dst__pTagToMuTag
+  pTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_pTagToMuTag...
+  Loading histo Dst__eTagToMuTag
+  eTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_eTagToMuTag...
+  Loading histo Dst__gTagToMuTag
+  gTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_norm_gTagToMuTag...
+  Loading histo Dst__piTagToKTrue
+  Generating wmis_norm_piTagToKTrue...
+  Loading histo Dst__piTagToPiTrue
+  Generating wmis_norm_piTagToPiTrue...
+  Loading histo Dst__kTagToKTrue
+  Generating wmis_norm_kTagToKTrue...
+  Loading histo Dst__kTagToPiTrue
+  Generating wmis_norm_kTagToPiTrue...
+  Loading histo Dst__pTagToKTrue
+  Generating wmis_norm_pTagToKTrue...
+  Loading histo Dst__pTagToPiTrue
+  Generating wmis_norm_pTagToPiTrue...
+  Loading histo Dst__eTagToKTrue
+  Generating wmis_norm_eTagToKTrue...
+  Loading histo Dst__eTagToPiTrue
+  Generating wmis_norm_eTagToPiTrue...
+  Loading histo Dst__gTagToKTrue
+  Generating wmis_norm_gTagToKTrue...
+  Loading histo Dst__gTagToPiTrue
+  Generating wmis_norm_gTagToPiTrue...
+  wmis_norm = is_misid_pi*wmis_norm_piTagToMuTag + is_misid_k*wmis_norm_kTagToMuTag + is_misid_p*wmis_norm_pTagToMuTag + is_misid_e*wmis_norm_eTagToMuTag + is_misid_g*wmis_norm_gTagToMuTag
+  wmis_norm_smr_k = is_misid_pi*wmis_norm_piTagToKTrue + is_misid_k*wmis_norm_kTagToKTrue + is_misid_p*wmis_norm_pTagToKTrue + is_misid_e*wmis_norm_eTagToKTrue + is_misid_g*wmis_norm_gTagToKTrue
+  wmis_norm_smr_pi = is_misid_pi*wmis_norm_piTagToPiTrue + is_misid_k*wmis_norm_kTagToPiTrue + is_misid_p*wmis_norm_pTagToPiTrue + is_misid_e*wmis_norm_eTagToPiTrue + is_misid_g*wmis_norm_gTagToPiTrue
+  wmis_norm_no_smr = 1.0 - wmis_norm_smr_k - wmis_norm_smr_pi
+Define wmis_norm as is_misid_pi*wmis_norm_piTagToMuTag + is_misid_k*wmis_norm_kTagToMuTag + is_misid_p*wmis_norm_pTagToMuTag + is_misid_e*wmis_norm_eTagToMuTag + is_misid_g*wmis_norm_gTagToMuTag
+Define wmis_norm_smr_k as is_misid_pi*wmis_norm_piTagToKTrue + is_misid_k*wmis_norm_kTagToKTrue + is_misid_p*wmis_norm_pTagToKTrue + is_misid_e*wmis_norm_eTagToKTrue + is_misid_g*wmis_norm_gTagToKTrue
+Define wmis_norm_smr_pi as is_misid_pi*wmis_norm_piTagToPiTrue + is_misid_k*wmis_norm_kTagToPiTrue + is_misid_p*wmis_norm_pTagToPiTrue + is_misid_e*wmis_norm_eTagToPiTrue + is_misid_g*wmis_norm_gTagToPiTrue
+Define wmis_norm_no_smr as 1.0 - wmis_norm_smr_k - wmis_norm_smr_pi
+Handling tree TupleB0/DecayTree from histos of prefix Dst_dsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Generate transfer factors/DiF smearing wieghts for all species
+  Loading histo Dst_dsb__piTagToMuTag
+  piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_piTagToMuTag...
+  Loading histo Dst_dsb__kTagToMuTag
+  kTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_kTagToMuTag...
+  Loading histo Dst_dsb__pTagToMuTag
+  pTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_pTagToMuTag...
+  Loading histo Dst_dsb__eTagToMuTag
+  eTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_eTagToMuTag...
+  Loading histo Dst_dsb__gTagToMuTag
+  gTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_gTagToMuTag...
+  Loading histo Dst_dsb__piTagToKTrue
+  Generating wmis_dsb_piTagToKTrue...
+  Loading histo Dst_dsb__piTagToPiTrue
+  Generating wmis_dsb_piTagToPiTrue...
+  Loading histo Dst_dsb__kTagToKTrue
+  Generating wmis_dsb_kTagToKTrue...
+  Loading histo Dst_dsb__kTagToPiTrue
+  Generating wmis_dsb_kTagToPiTrue...
+  Loading histo Dst_dsb__pTagToKTrue
+  Generating wmis_dsb_pTagToKTrue...
+  Loading histo Dst_dsb__pTagToPiTrue
+  Generating wmis_dsb_pTagToPiTrue...
+  Loading histo Dst_dsb__eTagToKTrue
+  Generating wmis_dsb_eTagToKTrue...
+  Loading histo Dst_dsb__eTagToPiTrue
+  Generating wmis_dsb_eTagToPiTrue...
+  Loading histo Dst_dsb__gTagToKTrue
+  Generating wmis_dsb_gTagToKTrue...
+  Loading histo Dst_dsb__gTagToPiTrue
+  Generating wmis_dsb_gTagToPiTrue...
+  wmis_dsb = is_misid_pi*wmis_dsb_piTagToMuTag + is_misid_k*wmis_dsb_kTagToMuTag + is_misid_p*wmis_dsb_pTagToMuTag + is_misid_e*wmis_dsb_eTagToMuTag + is_misid_g*wmis_dsb_gTagToMuTag
+  wmis_dsb_smr_k = is_misid_pi*wmis_dsb_piTagToKTrue + is_misid_k*wmis_dsb_kTagToKTrue + is_misid_p*wmis_dsb_pTagToKTrue + is_misid_e*wmis_dsb_eTagToKTrue + is_misid_g*wmis_dsb_gTagToKTrue
+  wmis_dsb_smr_pi = is_misid_pi*wmis_dsb_piTagToPiTrue + is_misid_k*wmis_dsb_kTagToPiTrue + is_misid_p*wmis_dsb_pTagToPiTrue + is_misid_e*wmis_dsb_eTagToPiTrue + is_misid_g*wmis_dsb_gTagToPiTrue
+  wmis_dsb_no_smr = 1.0 - wmis_dsb_smr_k - wmis_dsb_smr_pi
+Define wmis_dsb as is_misid_pi*wmis_dsb_piTagToMuTag + is_misid_k*wmis_dsb_kTagToMuTag + is_misid_p*wmis_dsb_pTagToMuTag + is_misid_e*wmis_dsb_eTagToMuTag + is_misid_g*wmis_dsb_gTagToMuTag
+Define wmis_dsb_smr_k as is_misid_pi*wmis_dsb_piTagToKTrue + is_misid_k*wmis_dsb_kTagToKTrue + is_misid_p*wmis_dsb_pTagToKTrue + is_misid_e*wmis_dsb_eTagToKTrue + is_misid_g*wmis_dsb_gTagToKTrue
+Define wmis_dsb_smr_pi as is_misid_pi*wmis_dsb_piTagToPiTrue + is_misid_k*wmis_dsb_kTagToPiTrue + is_misid_p*wmis_dsb_pTagToPiTrue + is_misid_e*wmis_dsb_eTagToPiTrue + is_misid_g*wmis_dsb_gTagToPiTrue
+Define wmis_dsb_no_smr as 1.0 - wmis_dsb_smr_k - wmis_dsb_smr_pi
+Handling tree TupleB0/DecayTree from histos of prefix Dst_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Generate transfer factors/DiF smearing wieghts for all species
+  Loading histo Dst_bsb__piTagToMuTag
+  piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_piTagToMuTag...
+  Loading histo Dst_bsb__kTagToMuTag
+  kTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_kTagToMuTag...
+  Loading histo Dst_bsb__pTagToMuTag
+  pTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_pTagToMuTag...
+  Loading histo Dst_bsb__eTagToMuTag
+  eTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_eTagToMuTag...
+  Loading histo Dst_bsb__gTagToMuTag
+  gTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_bsb_gTagToMuTag...
+  Loading histo Dst_bsb__piTagToKTrue
+  Generating wmis_bsb_piTagToKTrue...
+  Loading histo Dst_bsb__piTagToPiTrue
+  Generating wmis_bsb_piTagToPiTrue...
+  Loading histo Dst_bsb__kTagToKTrue
+  Generating wmis_bsb_kTagToKTrue...
+  Loading histo Dst_bsb__kTagToPiTrue
+  Generating wmis_bsb_kTagToPiTrue...
+  Loading histo Dst_bsb__pTagToKTrue
+  Generating wmis_bsb_pTagToKTrue...
+  Loading histo Dst_bsb__pTagToPiTrue
+  Generating wmis_bsb_pTagToPiTrue...
+  Loading histo Dst_bsb__eTagToKTrue
+  Generating wmis_bsb_eTagToKTrue...
+  Loading histo Dst_bsb__eTagToPiTrue
+  Generating wmis_bsb_eTagToPiTrue...
+  Loading histo Dst_bsb__gTagToKTrue
+  Generating wmis_bsb_gTagToKTrue...
+  Loading histo Dst_bsb__gTagToPiTrue
+  Generating wmis_bsb_gTagToPiTrue...
+  wmis_bsb = is_misid_pi*wmis_bsb_piTagToMuTag + is_misid_k*wmis_bsb_kTagToMuTag + is_misid_p*wmis_bsb_pTagToMuTag + is_misid_e*wmis_bsb_eTagToMuTag + is_misid_g*wmis_bsb_gTagToMuTag
+  wmis_bsb_smr_k = is_misid_pi*wmis_bsb_piTagToKTrue + is_misid_k*wmis_bsb_kTagToKTrue + is_misid_p*wmis_bsb_pTagToKTrue + is_misid_e*wmis_bsb_eTagToKTrue + is_misid_g*wmis_bsb_gTagToKTrue
+  wmis_bsb_smr_pi = is_misid_pi*wmis_bsb_piTagToPiTrue + is_misid_k*wmis_bsb_kTagToPiTrue + is_misid_p*wmis_bsb_pTagToPiTrue + is_misid_e*wmis_bsb_eTagToPiTrue + is_misid_g*wmis_bsb_gTagToPiTrue
+  wmis_bsb_no_smr = 1.0 - wmis_bsb_smr_k - wmis_bsb_smr_pi
+Define wmis_bsb as is_misid_pi*wmis_bsb_piTagToMuTag + is_misid_k*wmis_bsb_kTagToMuTag + is_misid_p*wmis_bsb_pTagToMuTag + is_misid_e*wmis_bsb_eTagToMuTag + is_misid_g*wmis_bsb_gTagToMuTag
+Define wmis_bsb_smr_k as is_misid_pi*wmis_bsb_piTagToKTrue + is_misid_k*wmis_bsb_kTagToKTrue + is_misid_p*wmis_bsb_pTagToKTrue + is_misid_e*wmis_bsb_eTagToKTrue + is_misid_g*wmis_bsb_gTagToKTrue
+Define wmis_bsb_smr_pi as is_misid_pi*wmis_bsb_piTagToPiTrue + is_misid_k*wmis_bsb_kTagToPiTrue + is_misid_p*wmis_bsb_pTagToPiTrue + is_misid_e*wmis_bsb_eTagToPiTrue + is_misid_g*wmis_bsb_gTagToPiTrue
+Define wmis_bsb_no_smr as 1.0 - wmis_bsb_smr_k - wmis_bsb_smr_pi
+Handling tree TupleB0/DecayTree from histos of prefix Dst_dsb_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Generate transfer factors/DiF smearing wieghts for all species
+  Loading histo Dst_dsb_bsb__piTagToMuTag
+  piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_bsb_piTagToMuTag...
+  Loading histo Dst_dsb_bsb__kTagToMuTag
+  kTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_bsb_kTagToMuTag...
+  Loading histo Dst_dsb_bsb__pTagToMuTag
+  pTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_bsb_pTagToMuTag...
+  Loading histo Dst_dsb_bsb__eTagToMuTag
+  eTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_bsb_eTagToMuTag...
+  Loading histo Dst_dsb_bsb__gTagToMuTag
+  gTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
+  Generating wmis_dsb_bsb_gTagToMuTag...
+  Loading histo Dst_dsb_bsb__piTagToKTrue
+  Generating wmis_dsb_bsb_piTagToKTrue...
+  Loading histo Dst_dsb_bsb__piTagToPiTrue
+  Generating wmis_dsb_bsb_piTagToPiTrue...
+  Loading histo Dst_dsb_bsb__kTagToKTrue
+  Generating wmis_dsb_bsb_kTagToKTrue...
+  Loading histo Dst_dsb_bsb__kTagToPiTrue
+  Generating wmis_dsb_bsb_kTagToPiTrue...
+  Loading histo Dst_dsb_bsb__pTagToKTrue
+  Generating wmis_dsb_bsb_pTagToKTrue...
+  Loading histo Dst_dsb_bsb__pTagToPiTrue
+  Generating wmis_dsb_bsb_pTagToPiTrue...
+  Loading histo Dst_dsb_bsb__eTagToKTrue
+  Generating wmis_dsb_bsb_eTagToKTrue...
+  Loading histo Dst_dsb_bsb__eTagToPiTrue
+  Generating wmis_dsb_bsb_eTagToPiTrue...
+  Loading histo Dst_dsb_bsb__gTagToKTrue
+  Generating wmis_dsb_bsb_gTagToKTrue...
+  Loading histo Dst_dsb_bsb__gTagToPiTrue
+  Generating wmis_dsb_bsb_gTagToPiTrue...
+  wmis_dsb_bsb = is_misid_pi*wmis_dsb_bsb_piTagToMuTag + is_misid_k*wmis_dsb_bsb_kTagToMuTag + is_misid_p*wmis_dsb_bsb_pTagToMuTag + is_misid_e*wmis_dsb_bsb_eTagToMuTag + is_misid_g*wmis_dsb_bsb_gTagToMuTag
+  wmis_dsb_bsb_smr_k = is_misid_pi*wmis_dsb_bsb_piTagToKTrue + is_misid_k*wmis_dsb_bsb_kTagToKTrue + is_misid_p*wmis_dsb_bsb_pTagToKTrue + is_misid_e*wmis_dsb_bsb_eTagToKTrue + is_misid_g*wmis_dsb_bsb_gTagToKTrue
+  wmis_dsb_bsb_smr_pi = is_misid_pi*wmis_dsb_bsb_piTagToPiTrue + is_misid_k*wmis_dsb_bsb_kTagToPiTrue + is_misid_p*wmis_dsb_bsb_pTagToPiTrue + is_misid_e*wmis_dsb_bsb_eTagToPiTrue + is_misid_g*wmis_dsb_bsb_gTagToPiTrue
+  wmis_dsb_bsb_no_smr = 1.0 - wmis_dsb_bsb_smr_k - wmis_dsb_bsb_smr_pi
+Define wmis_dsb_bsb as is_misid_pi*wmis_dsb_bsb_piTagToMuTag + is_misid_k*wmis_dsb_bsb_kTagToMuTag + is_misid_p*wmis_dsb_bsb_pTagToMuTag + is_misid_e*wmis_dsb_bsb_eTagToMuTag + is_misid_g*wmis_dsb_bsb_gTagToMuTag
+Define wmis_dsb_bsb_smr_k as is_misid_pi*wmis_dsb_bsb_piTagToKTrue + is_misid_k*wmis_dsb_bsb_kTagToKTrue + is_misid_p*wmis_dsb_bsb_pTagToKTrue + is_misid_e*wmis_dsb_bsb_eTagToKTrue + is_misid_g*wmis_dsb_bsb_gTagToKTrue
+Define wmis_dsb_bsb_smr_pi as is_misid_pi*wmis_dsb_bsb_piTagToPiTrue + is_misid_k*wmis_dsb_bsb_kTagToPiTrue + is_misid_p*wmis_dsb_bsb_pTagToPiTrue + is_misid_e*wmis_dsb_bsb_eTagToPiTrue + is_misid_g*wmis_dsb_bsb_gTagToPiTrue
+Define wmis_dsb_bsb_no_smr as 1.0 - wmis_dsb_bsb_smr_k - wmis_dsb_bsb_smr_pi
+Writing to ./gen/rdx-24_04_10_11_33-weights-2016/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--aux_misid.root

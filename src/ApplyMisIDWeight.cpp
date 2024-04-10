@@ -19,6 +19,7 @@
 #include <TRandom.h>
 #include <TRandomGen.h>
 #include <TString.h>
+#include "TSystem.h"
 #include <TTree.h>
 #include <ROOT/RDataFrame.hxx>
 
@@ -417,8 +418,16 @@ int main(int argc, char** argv) {
   auto kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
   auto piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
 
+  // Check get yml file
+  const string ymlFile = parsedArgs["config"].as<string>();
+  const string yml_name = fileNameFromPath(ymlFile);
+
+  // Save output for future reference
+  const TString log_name = "src/ApplyMisIDWeight_"+yml_name+".log"; // TODO hardcoded path
+  if ( !remove(log_name) ) { std::cout << "Old log file " << log_name << " has been deleted." << std::endl; }
+  gSystem->RedirectOutput(log_name);
+
   // parse YAML config
-  auto ymlFile         = parsedArgs["config"].as<string>();
   auto ymlConfig       = YAML::LoadFile(ymlFile);
   auto year            = parsedArgs["year"].as<string>();
   auto ymlDirPath      = absDirPath(parsedArgs["config"].as<string>());
