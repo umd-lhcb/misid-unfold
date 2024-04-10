@@ -2,10 +2,10 @@
 # - pidcalib2 wrapper (P)
 # - tagged histogram builder (T)
 # - ghost/uncategoried efficiency histogram builder (G)
-# - unfolding weights applyer (A)
+# - unfolding weights applier (A)
 # - unfolding efficiency calculator (U)
 # - histogram merger (M)
-# - efficiency histogram builder (E
+# - efficiency histogram builder (E)
 
 
 binning:
@@ -58,7 +58,9 @@ pidcalib_config:
             nom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"  # this is the accpetance cut
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                add_pid_cut: "UBDT > 0.25"
+                add_pid_cut:
+                    default: "UBDT > 0.25"
+                    misid_ctrl: "UBDT < 0.25"
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                 pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
@@ -75,7 +77,9 @@ local_pid_config:
                     nom:
                         cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                         pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                        add_pid_cut: "UBDT > 0.25"
+                        add_pid_cut:
+                            default: "UBDT > 0.25"
+                            misid_ctrl: "UBDT < 0.25"
                     denom:
                         cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
                         pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
@@ -85,8 +89,9 @@ local_pid_config:
                 mu:
                     rel:
                         cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                        pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
-
+                        pid_cut:
+                            default: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
+                            misid_ctrl: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
 
 # specify additional source of histograms
 # used by the efficiency histogram merger (M)
@@ -173,21 +178,33 @@ weight_brs:
     2016:
         TupleBminus/DecayTree:
             - prefix: D0
-              file: "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+              file:
+                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_norm
             - prefix: D0_bsb
-              file: "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+              file:
+                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_bsb
         TupleB0/DecayTree:
             - prefix: Dst
-              file: "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+              file:
+                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_norm
             - prefix: Dst_dsb
-              file: "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+              file:
+                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_dsb
             - prefix: Dst_bsb
-              file: "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+              file:
+                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_bsb
             - prefix: Dst_dsb_bsb
-              file: "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+              file:
+                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
               name: wmis_dsb_bsb

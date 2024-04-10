@@ -534,6 +534,8 @@ int main(int argc, char** argv) {
      cxxopts::value<string>()->default_value("mu"))
     ("outputHisto", "specify output histo name",
      cxxopts::value<string>()->default_value("unfolded.root"))
+    ("C,ctrl-sample", "Use control sample uBDT cut.",
+     cxxopts::value<bool>())
     ;
   // clang-format on
 
@@ -545,12 +547,16 @@ int main(int argc, char** argv) {
 
   // Check info level
   auto debug = parsedArgs["debug"].as<bool>();
-  // Check get yml file
+  // Check uBDT cut
+  bool ctrlSample = parsedArgs["ctrl-sample"].as<bool>();
+  // Get YML file name
   const string ymlFile = parsedArgs["config"].as<string>();
   const string ymlName = fileNameFromPath(ymlFile);
 
   // Save output for future reference
-  const TString logName = debug ? "src/UnfoldMisID_"+ymlName+"_dbg.log" : "src/UnfoldMisID"+ymlName+".log"; // TODO hardcoded path
+  const TString debugSufix = debug ? "_dbg" : "";
+  const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
+  const TString logName = "src/UnfoldMisID_" + ymlName + ctrlSampleSufix + debugSufix + ".log"; // TODO hardcoded path
   if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
   gSystem->RedirectOutput(logName);
 

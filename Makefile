@@ -9,13 +9,14 @@ CPP_FILES	:=	$(wildcard src/*.cpp)
 EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%,$(CPP_FILES))
 TEX_FILES	:=	$(wildcard docs/*.tex)
 PDF_FILES	:=	$(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
-
 YML_FILE := ./spec/rdx-run2.yml
+
+CTRL_SAMPLE_FLAG :=
 ifdef USE_CTRL_SAMPLE
   ifeq ($(USE_CTRL_SAMPLE), true)
-    YML_FILE = ./spec/rdx-run2-misid_ctrl.yml
+    CTRL_SAMPLE_FLAG = --ctrl-sample
   else
-    $(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default YML file.)
+    $(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default uBDT file.)
   endif
 endif
 
@@ -66,19 +67,19 @@ test-nix:
 .PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2016-lxplus
 build-rdx-true-to-tag-2016-glacier:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG)
 
 build-rdx-true-to-tag-2016-lxplus:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2016)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG)
 
 
 .PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
 test-pidcalib2-wrapper-glacier:
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m glacier
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m glacier $(CTRL_SAMPLE_FLAG)
 
 test-pidcalib2-wrapper-lxplus:
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m lxplus
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m lxplus $(CTRL_SAMPLE_FLAG)
 
 
 .PHONY: build-rdx-true-to-tag-2016-local
@@ -116,7 +117,7 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 5 \
 		-e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
-		-c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+		-c $(YML_FILE) $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-unfold
@@ -136,7 +137,7 @@ test-apply-rdx-weights-2016: \
 	@mkdir -p $(OUT_DIR)
 	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
-		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 
 
 # Aux. efficiencies for ProbNNk > 2 on true ghost
