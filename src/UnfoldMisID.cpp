@@ -591,6 +591,10 @@ int main(int argc, char** argv) {
   // save output
   auto outputFilename = parsedArgs["output"].as<string>() + "/" +
                         parsedArgs["outputHisto"].as<string>();
+  if (ctrlSample) {
+    const int dot_idx = outputFilename.find_last_of(".");
+    outputFilename = outputFilename.substr(0, dot_idx) + ctrlSampleSufix + outputFilename.substr(dot_idx, outputFilename.size());
+  }
   auto ntpOut = make_unique<TFile>(outputFilename.data(), "RECREATE");
 
   for (const auto& [key, h] : histoOut)
