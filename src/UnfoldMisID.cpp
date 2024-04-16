@@ -121,8 +121,8 @@ void printResGeneric(const TH2D*                             res,
   cout.precision(4);
   cout << fixed;
 
-  for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
-    for (int idxCol = 1; idxCol <= nbinsY; idxCol++) {
+  for (int idxCol = 1; idxCol <= nbinsX; idxCol++) {
+    for (int idxRow = 1; idxRow <= nbinsY; idxRow++) {
       auto elem = getter(res, idxRow, idxCol);
       cout << setw(8) << elem;
       if (elem < 0)
