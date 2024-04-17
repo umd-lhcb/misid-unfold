@@ -38,10 +38,17 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES	:=	./histos/rdx-22_09_12_05_03-merged-2016/merged.root
-TAGGED	:=	./histos/rdx-22_06_23_12_07-tag-2016/tagged.root
-UNFOLDED	:=	./histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
-
+#TODO remove timestamps in \histos subdirectories, reduce code duplication
+ifeq ($(USE_CTRL_SAMPLE), true)
+  TAGGED	   := ./histos/ctrl_sample/rdx-tag-2016/tagged.root
+  UNFOLDED	   := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
+  DIF          := ./histos/ctrl_sample/generic-dif_smearing/dif.root
+else
+  TAGGED	   := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
+  UNFOLDED	   := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
+  DIF          := ./histos/default/generic-22_09_23_04_48-dif_smearing/dif.root
+endif
+EFFICIENCIES := ./histos/default/rdx-22_09_12_05_03-merged-2016/merged.root
 
 ###########
 # General #
@@ -131,7 +138,7 @@ test-unfold: $(BINPATH)/UnfoldMisID
 test-apply-rdx-weights-2016: \
 	$(BINPATH)/ApplyMisIDWeight \
 	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
-	./histos/generic-22_09_23_04_48-dif_smearing/dif.root
+	$(DIF)
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)

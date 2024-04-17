@@ -99,9 +99,9 @@ local_pid_config:
 input_histos:
     2016:
         true_to_tag:
-            - "../histos/rdx-22_09_11_06_15-true_to_tag_glacier-2016"
-            - "../histos/rdx-22_09_11_12_16-true_to_tag_lxplus-2016"
-            - "../histos/rdx-22_09_11_06_12-true_to_tag_local-2016"
+            - "../histos/default/rdx-22_09_11_06_15-true_to_tag_glacier-2016"
+            - "../histos/default/rdx-22_09_11_12_16-true_to_tag_lxplus-2016"
+            - "../histos/default/rdx-22_09_11_06_12-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
         #         H2H_Ghost_TO_Pi: gTrueToPiTag
@@ -179,32 +179,32 @@ weight_brs:
         TupleBminus/DecayTree:
             - prefix: D0
               file:
-                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
+                default:    "../histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root"
               name: wmis_norm
             - prefix: D0_bsb
               file:
-                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
+                default:    "../histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root"
               name: wmis_bsb
         TupleB0/DecayTree:
             - prefix: Dst
               file:
-                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
+                default:    "../histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root"
               name: wmis_norm
             - prefix: Dst_dsb
               file:
-                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
+                default:    "../histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root"
               name: wmis_dsb
             - prefix: Dst_bsb
               file:
-                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
+                default:    "../histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root"
               name: wmis_bsb
             - prefix: Dst_dsb_bsb
               file:
-                default:    "../histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root"
+                default:    "../histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root"
+                misid_ctrl: "../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root"
               name: wmis_dsb_bsb
