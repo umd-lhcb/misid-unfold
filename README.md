@@ -136,7 +136,7 @@ make build-rdx-weights-2016
 This apply misID weights and momentum smearing on misID control samples.
 It's typically not applied here. The rule here is for demo purpose only.
 
-::info
+:::info
 **Mind the YML file**
 By default, the ```make``` commands listed above use the ```rdx-run2.yml``` configuration file, which contains the signal uBDT cut.
 To use the misid uBDT cut, the ```USE_CTRL_SAMPLE``` variable must be set appropriately:
