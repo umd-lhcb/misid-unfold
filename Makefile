@@ -40,9 +40,9 @@ endif
 
 #TODO remove timestamps in \histos subdirectories, reduce code duplication
 ifeq ($(USE_CTRL_SAMPLE), true)
-  TAGGED	   := ./histos/ctrl_sample/rdx-tag-2016/tagged.root
+  TAGGED	   := ./histos/ctrl_sample/rdx-tag-2016/tagged_misid_ctrl.root
   UNFOLDED	   := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
-  DIF          := ./histos/ctrl_sample/generic-dif_smearing/dif.root
+  DIF          := ./histos/ctrl_sample/generic-dif_smearing/dif_misid_ctrl.root
 else
   TAGGED	   := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
   UNFOLDED	   := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
@@ -106,7 +106,7 @@ build-rdx-merged-2016:
 build-generic-dif-smearing:
 	$(eval OUT_DIR	:=	$(GENPATH)/generic-$(TIME_STAMP)-dif_smearing)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_dif.py --plot -o $(OUT_DIR) \
+	./scripts/build_histo_dif.py --plot $(CTRL_SAMPLE_FLAG) -o $(OUT_DIR) \
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
@@ -117,7 +117,7 @@ build-generic-dif-smearing:
 .PHONY: build-rdx-tag-2016
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
-	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016
+	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG)
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
