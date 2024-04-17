@@ -110,7 +110,7 @@ make rdx-ntuple-run2-misid_study
 Once that is done, configure `spec/rdx-run2.yml` properly, then:
 
 ```
-build-rdx-tag-2016
+make build-rdx-tag-2016
 ```
 
 
