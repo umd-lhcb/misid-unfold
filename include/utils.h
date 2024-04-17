@@ -31,6 +31,12 @@ string absDirPath(string pathRaw) {
   return std::filesystem::absolute(dirPath).string();
 }
 
+string fileNameFromPath(const string& path) {
+  const int first = path.find_last_of("/\\");
+  const int last = path.find_last_of(".");
+  return path.substr(first+1, last-first-1);
+}
+
 //////////////////
 // ROOT-related //
 //////////////////

@@ -110,7 +110,7 @@ make rdx-ntuple-run2-misid_study
 Once that is done, configure `spec/rdx-run2.yml` properly, then:
 
 ```
-build-rdx-tag-2016
+make build-rdx-tag-2016
 ```
 
 
@@ -121,7 +121,7 @@ Also, make sure the input files are set correct for unfolding
 in the `Makefile`.
 
 ```
-make build-rdx-unfold-2016
+make build-rdx-unfolded-2016
 ```
 
 One can also test-run the unfolding (w/o actually doing unfolding!)
@@ -135,3 +135,15 @@ make build-rdx-weights-2016
 
 This apply misID weights and momentum smearing on misID control samples.
 It's typically not applied here. The rule here is for demo purpose only.
+
+::info
+**Mind the YML file**
+By default, the ```make``` commands listed above use the ```rdx-run2.yml``` configuration file, which contains the signal uBDT cut.
+To use the misid uBDT cut, the ```USE_CTRL_SAMPLE``` variable must be set appropriately:
+
+```
+make build-rdx-weights-2016 USE_CTRL_SAMPLE=true
+```
+
+Assigning unexpected values to this variable will generate a warning.
+:::

@@ -72,6 +72,11 @@ def parse_input():
         "-m", "--mode", default="glacier", help="specify operation mode."
     )
 
+    parser.add_argument(
+        "--ctrl-sample", action="store_true", help="Use control sample uBDT cut."
+    )
+
+
     return parser.parse_args()
 
 
@@ -180,6 +185,7 @@ def true_to_tag_directive_gen(
     blocked_particles=[],
     blocked_add_pid_cut_for_particle=[],
     polarity="down",
+    ctrl_sample=False
 ):
     result = []
 
@@ -232,7 +238,10 @@ def true_to_tag_directive_gen(
                 pid_cut = subconfig[sub_tag]["pid_cut"]
                 if "add_pid_cut" in subconfig[sub_tag]:
                     if p_true not in blocked_add_pid_cut_for_particle:
-                        pid_cut += " & " + subconfig[sub_tag]["add_pid_cut"]
+                        if ctrl_sample:
+                            pid_cut += " & " + subconfig[sub_tag]["add_pid_cut"]["misid_ctrl"]
+                        else:
+                            pid_cut += " & " + subconfig[sub_tag]["add_pid_cut"]["default"]
 
                 pkl_name = f"{p_true}TrueTo{p_tag.capitalize()}Tag_{sub_tag}"
 
@@ -279,7 +288,7 @@ if __name__ == "__main__":
     # Generate efficiency histograms with pidcalib2
     config["tags"] = cut_replacement(config["tags"])
     directives = true_to_tag_directive_gen(
-        config, args.year, "raw_histos", **MODES[args.mode]
+        config, args.year, "raw_histos", **MODES[args.mode], ctrl_sample=args.ctrl_sample
     )
 
     # in case of a dry run

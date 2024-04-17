@@ -19,6 +19,7 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TH3D.h>
+#include "TSystem.h"
 
 #include <RooUnfoldBayes.h>
 #include <RooUnfoldResponse.h>
@@ -120,8 +121,8 @@ void printResGeneric(const TH2D*                             res,
   cout.precision(4);
   cout << fixed;
 
-  for (int idxRow = 1; idxRow <= nbinsX; idxRow++) {
-    for (int idxCol = 1; idxCol <= nbinsY; idxCol++) {
+  for (int idxCol = 1; idxCol <= nbinsX; idxCol++) {
+    for (int idxRow = 1; idxRow <= nbinsY; idxRow++) {
       auto elem = getter(res, idxRow, idxCol);
       cout << setw(8) << elem;
       if (elem < 0)
@@ -286,9 +287,23 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
               if (debug)
                 cout << "  Loading efficiency from " << name << ", got " << eff
                      << endl;
-              if (isnan(eff) || isinf(eff)) eff = 0.0;
 
-              histRes->SetBinContent(idxTag + 1, idxTrue + 1, abs(eff));
+              if (isnan(eff) || isinf(eff)) {
+                cout << "WARNING Invalid efficiency (" << eff << "). Setting it to 0." << endl;
+                eff = 0.;
+              }
+
+              if (eff < 0.) {
+                cout << "WARNING Negative efficiency (" << eff << "). Setting it to 0." << endl;
+                eff = 0.;
+              }
+
+              // Avoid signed zero in log file, which may be confused with a small negative efficiency.
+              // Note: floating point +0, -0 and 0 are numerically equivalent.
+              // See https://en.wikipedia.org/wiki/Signed_zero
+              if (eff == 0.) eff = abs(eff);
+
+              histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
               histRes->SetBinError(idxTag + 1, idxTrue + 1, err);
             }
           }
@@ -519,6 +534,8 @@ int main(int argc, char** argv) {
      cxxopts::value<string>()->default_value("mu"))
     ("outputHisto", "specify output histo name",
      cxxopts::value<string>()->default_value("unfolded.root"))
+    ("C,ctrl-sample", "Use control sample uBDT cut.",
+     cxxopts::value<bool>())
     ;
   // clang-format on
 
@@ -528,8 +545,23 @@ int main(int argc, char** argv) {
     return 0;
   }
 
+  // Check info level
+  auto debug = parsedArgs["debug"].as<bool>();
+  // Check uBDT cut
+  bool ctrlSample = parsedArgs["ctrl-sample"].as<bool>();
+  // Get YML file name
+  const string ymlFile = parsedArgs["config"].as<string>();
+  const string ymlName = fileNameFromPath(ymlFile);
+
+  // Save output for future reference
+  const TString debugSufix = debug ? "_dbg" : "";
+  const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
+  const TString logName = "src/UnfoldMisID_" + ymlName + ctrlSampleSufix + debugSufix + ".log"; // TODO hardcoded path
+  if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
+  gSystem->RedirectOutput(logName);
+
   // parse YAML config
-  auto ymlConfig  = YAML::LoadFile(parsedArgs["config"].as<string>());
+  auto ymlConfig  = YAML::LoadFile(ymlFile);
   auto ptclTarget = parsedArgs["targetParticle"].as<string>();
   auto ptclList   = getKeyNames(ymlConfig["tags"]);
   auto year       = parsedArgs["year"].as<string>();
@@ -552,7 +584,6 @@ int main(int argc, char** argv) {
   }
 
   // unfold
-  auto debug     = parsedArgs["debug"].as<bool>();
   auto numOfIter = parsedArgs["iteration"].as<int>();
   unfold(prefix, ptclList, histoBinSize, histoInGetter, histoOutGetter, debug,
          numOfIter);
@@ -560,6 +591,10 @@ int main(int argc, char** argv) {
   // save output
   auto outputFilename = parsedArgs["output"].as<string>() + "/" +
                         parsedArgs["outputHisto"].as<string>();
+  if (ctrlSample) {
+    const int dot_idx = outputFilename.find_last_of(".");
+    outputFilename = outputFilename.substr(0, dot_idx) + ctrlSampleSufix + outputFilename.substr(dot_idx, outputFilename.size());
+  }
   auto ntpOut = make_unique<TFile>(outputFilename.data(), "RECREATE");
 
   for (const auto& [key, h] : histoOut)

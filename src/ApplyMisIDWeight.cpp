@@ -19,6 +19,7 @@
 #include <TRandom.h>
 #include <TRandomGen.h>
 #include <TString.h>
+#include "TSystem.h"
 #include <TTree.h>
 #include <ROOT/RDataFrame.hxx>
 
@@ -391,6 +392,8 @@ int main(int argc, char** argv) {
     ("o,output", "specify output ntuple", cxxopts::value<string>())
     ("c,config", "specify input YAML config file",
      cxxopts::value<string>())
+     ("C,ctrl-sample", "Use control sample uBDT cut.",
+     cxxopts::value<bool>())
     // flags (typically don't change these)
     ("a,alias", "apply aliases.")
     ("p,particle", "specify alias particle",
@@ -416,9 +419,19 @@ int main(int argc, char** argv) {
   auto applyAlias  = parsedArgs["alias"].as<bool>();
   auto kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
   auto piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
+  bool ctrlSample  = parsedArgs["ctrl-sample"].as<bool>();
+
+  // Check get yml file
+  const string ymlFile = parsedArgs["config"].as<string>();
+  const string ymlName = fileNameFromPath(ymlFile);
+
+  // Save output for future reference
+  const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
+  const TString logName = "src/ApplyMisIDWeight_" + ymlName + ctrlSampleSufix + ".log"; // TODO hardcoded path
+  if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
+  gSystem->RedirectOutput(logName);
 
   // parse YAML config
-  auto ymlFile         = parsedArgs["config"].as<string>();
   auto ymlConfig       = YAML::LoadFile(ymlFile);
   auto year            = parsedArgs["year"].as<string>();
   auto ymlDirPath      = absDirPath(parsedArgs["config"].as<string>());
@@ -480,7 +493,7 @@ int main(int argc, char** argv) {
     // add all kinds of weights
     for (auto entry : it->second) {
       auto histoPrefix    = entry["prefix"].as<string>();
-      auto histoFile      = entry["file"].as<string>();
+      auto histoFile      = ctrlSample ? entry["file"]["misid_ctrl"].as<string>() : entry["file"]["default"].as<string>();
       auto weightBrPrefix = entry["name"].as<string>();
       histoFile           = filePrefix + "/" + histoFile;
 
