@@ -142,7 +142,7 @@ test-apply-rdx-weights-2016: \
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
-	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
+	$< --debug -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
 		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 

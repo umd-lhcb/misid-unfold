@@ -384,6 +384,8 @@ int main(int argc, char** argv) {
   argOpts.add_options()
     // general
     ("h,help", "print help")
+    ("d,debug", "enable debug mode",
+     cxxopts::value<bool>()->default_value("false"))
     ("Y,year", "sample year",
      cxxopts::value<string>()->default_value("2016"))
     // I/O
@@ -425,11 +427,16 @@ int main(int argc, char** argv) {
   const string ymlFile = parsedArgs["config"].as<string>();
   const string ymlName = fileNameFromPath(ymlFile);
 
-  // Save output for future reference
-  const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
-  const TString logName = "src/ApplyMisIDWeight_" + ymlName + ctrlSampleSufix + ".log"; // TODO hardcoded path
-  if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
-  gSystem->RedirectOutput(logName);
+  // Check info level
+  auto debug = parsedArgs["debug"].as<bool>();
+
+  // Save output when debug flag is set
+  if (debug) {
+    const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
+    const TString logName = "src/ApplyMisIDWeight_" + ymlName + ctrlSampleSufix + ".log"; // TODO hardcoded path
+    if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
+    gSystem->RedirectOutput(logName);
+  }
 
   // parse YAML config
   auto ymlConfig       = YAML::LoadFile(ymlFile);
