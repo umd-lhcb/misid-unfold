@@ -33,7 +33,8 @@
         "C_Cpp.default.includePath": [
             "${workspaceFolder}/include/",
             "/nix/store/5gsxk0mipchr1a6v9pwvpgzaf9bakcx8-root-6.24.02/include/**",
-            "/nix/store/rbvd1cq9gy7vbkds7v2w968vmrl5a9vd-roounfold-2.1/include/"
+            "/nix/store/rbvd1cq9gy7vbkds7v2w968vmrl5a9vd-roounfold-2.1/include/",
+            "/nix/store/3zvgb0wgvbjal65sb4mz50r0dzsgsdn4-libyaml-cpp-0.6.3/include/"
         ],
         "C_Cpp.default.intelliSenseMode": "gcc-x64",
         "C_Cpp.files.exclude": {
