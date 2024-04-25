@@ -40,8 +40,8 @@ const Double_t nts = numToys * numToys;
  *  @date   2015-08-11
  */
 
-const TString year = "16";
-const TString pidfile_name = "/home/ejiang/rjpsi_misid/myPid_up.root";
+const TString year = "17";
+const TString pidfile_name = "/home/ejiang/rjpsi_misid/myPid_down.root";
 const bool verbose = false;
 const bool very_verbose = false;
 
@@ -634,24 +634,21 @@ void MisIDFunction::createCountCache(TTree* tree) {
 }
 
 void MisIDWeightor() {
-  TChain* oldtree;
   TString oldfilename, newfilename;
 
   if(year=="16"){
-    oldfilename = "/home/ejiang/tuples16/2016_Data_MD_misID_0_skimmed.root";
-    newfilename = "/home/ejiang/tuples16/2016_Data_MD_misID_0_skimmed_unfold.root";
-    oldtree = new TChain("DecayTree");
+    oldfilename = "/home/ejiang/tuples16/sel/2016_Data_MD_misID_sel.root";
+    newfilename = "/home/ejiang/tuples16/sel/2016_Data_MD_misID_sel_unfold.root";
   }
   if(year=="17"){
-    oldfilename = "/home/ejiang/tuples17/2017_Data_MU_misID_skimmed.root";
-    newfilename = "/home/ejiang/tuples17/2017_Data_MU_misID_skimmed_unfold.root";
-    oldtree = new TChain("JpsiRecTuple/DecayTree");
+    oldfilename = "/home/ejiang/tuples17/sel/2017_Data_MD_misID_sel.root";
+    newfilename = "/home/ejiang/tuples17/sel/2017_Data_MD_misID_sel_unfold.root";
   }
   else if(year=="18"){
-    oldfilename = "/home/ejiang/tuples18/2018_Data_MD_misID_0_skimmed.root";
-    newfilename = "/home/ejiang/tuples18/2018_Data_MD_misID_0_skimmed_unfold.root";
-    oldtree = new TChain("JpsiRecTuple/DecayTree");
+    oldfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel.root";
+    newfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel_unfold.root";
   }
+  TChain* oldtree = new TChain("DecayTree");
   // TString oldfilename = "/home/ejiang/tuples17/2017_Data_MU_misID_skimmed.root";
   oldtree->Add(oldfilename.Data());
 
