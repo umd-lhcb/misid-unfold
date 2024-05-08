@@ -4,51 +4,52 @@
 
 BINPATH := ./bin
 GENPATH := ./gen
-VPATH := src:docs
-CPP_FILES	:=	$(wildcard src/*.cpp)
-EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%,$(CPP_FILES))
-TEX_FILES	:=	$(wildcard docs/*.tex)
-PDF_FILES	:=	$(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
-YML_FILE := ./spec/rdx-run2.yml
+VPATH   := src:docs
+CPP_FILES := $(wildcard src/*.cpp)
+EXE_FILES := $(patsubst src/%.cpp,$(BINPATH)/%,$(CPP_FILES))
+TEX_FILES := $(wildcard docs/*.tex)
+PDF_FILES := $(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
+YML_FILE  := ./spec/rdx-run2.yml
 
 CTRL_SAMPLE_FLAG :=
 ifdef USE_CTRL_SAMPLE
-  ifeq ($(USE_CTRL_SAMPLE), true)
-    CTRL_SAMPLE_FLAG = --ctrl-sample
-  else
-    $(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default uBDT file.)
-  endif
+	ifeq ($(USE_CTRL_SAMPLE), true)
+		CTRL_SAMPLE_FLAG = --ctrl-sample
+	else
+		$(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default uBDT file.)
+	endif
 endif
 
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
-COMPILER	:=	$(shell root-config --cxx)
-CXXFLAGS	:=	$(shell root-config --cflags) -Iinclude
-LINKFLAGS	:=	$(shell root-config --libs)
-ADDCXXFLAGS	:=	-O2 -march=native -mtune=native
-ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
+COMPILER     := $(shell root-config --cxx)
+CXXFLAGS     := $(shell root-config --cflags) -Iinclude
+LINKFLAGS    := $(shell root-config --libs)
+ADDCXXFLAGS  := -O2 -march=native -mtune=native
+ADDLINKFLAGS := -lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
-  $(info OS is $(OS) (macOS), adding -lc++fs to LINKFLAGS)
-  LINKFLAGS := $(shell root-config --libs) -lc++fs
+	$(info OS is $(OS) (macOS), adding -lc++fs to LINKFLAGS)
+	LINKFLAGS := $(shell root-config --libs) -lc++fs
 endif
+
 
 #################
 # Configuration #
 #################
 
-#TODO remove timestamps in \histos subdirectories, reduce code duplication
 ifeq ($(USE_CTRL_SAMPLE), true)
-  TAGGED	   := ./histos/ctrl_sample/rdx-tag-2016/tagged_misid_ctrl.root
-  UNFOLDED	   := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
-  DIF          := ./histos/ctrl_sample/generic-dif_smearing/dif_misid_ctrl.root
+	TAGGED   := ./histos/ctrl_sample/rdx-tag-2016/tagged_misid_ctrl.root
+	UNFOLDED := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
+	DIF      := ./histos/ctrl_sample/generic-dif_smearing/dif_misid_ctrl.root
 else
-  TAGGED	   := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
-  UNFOLDED	   := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
-  DIF          := ./histos/default/generic-22_09_23_04_48-dif_smearing/dif.root
+	TAGGED   := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
+	UNFOLDED := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
+	DIF      := ./histos/default/generic-22_09_23_04_48-dif_smearing/dif.root
 endif
 EFFICIENCIES := ./histos/default/rdx-22_09_12_05_03-merged-2016/merged.root
+
 
 ###########
 # General #
