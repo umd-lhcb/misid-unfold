@@ -41,17 +41,22 @@ const Double_t nts = numToys * numToys;
  */
 
 const TString year = "17";
-const TString pidfile_name = "/home/ejiang/rjpsi_misid/myPid_down.root";
+const TString pidfile_name = "/home/ejiang/rjpsi_misid/myPid_up.root";
 const bool verbose = false;
 const bool very_verbose = false;
 
 const TString CutString = "Jpsi_L0DiMuonDecision_TOS==1 && (Jpsi_Hlt1DiMuonHighMassDecision_TOS==1 || Jpsi_Hlt1DiMuonLowMassDecision_TOS==1) && Jpsi_Hlt2DiMuonDetachedJPsiDecision_TOS==1 && Bc_ISOLATION_BDT<0.2 && Bc_MM<=6400 && Bc_MM>=3203 && Bc_ENDVERTEX_CHI2<25 && Bc_DOCA<0.15 && BachMu_IPCHI2_OWNPV>4.8 && MuM_IPCHI2_OWNPV>4 && MuP_IPCHI2_OWNPV>4 && Jpsi_MM<=3150 && Jpsi_MM>=3040 && BachMu_P>3000 && BachMu_P<100000 && nTracks<600 && BachMu_PT>750 && BachMu_isMuon==0";
-
-const TString PiCutString = "BachMu_ProbNNpi>0.1&&BachMu_PIDK<1.0&&BachMu_PIDmu<2.0&&BachMu_PIDp<4.0&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNp>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNk>0.1)";
-const TString KCutString = "BachMu_ProbNNk>0.1&&!(BachMu_ProbNNe>0.1)&&!(BachMu_PIDmu>2)";
-const TString PCutString = "BachMu_ProbNNp>0.1&&BachMu_PIDK<1&&!(BachMu_ProbNNk>0.1)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_PIDmu>2)";
-const TString MuCutString = "BachMu_PIDmu>2&&!(BachMu_ProbNNe>0.1)";
-const TString ECutString = "BachMu_ProbNNe>0.1";
+const TString PiCutString = "(BachMu_ProbNNp<0.1)||!(BachMu_PIDK<1)||!(BachMu_ProbNNk>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";// wrong & not used -- whatever fails all other cuts is sorted as pi                                                   
+const TString PCutString = "BachMu_ProbNNp>0.1&&(BachMu_PIDK-BachMu_PIDp<2)&&!(BachMu_ProbNNk>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
+const TString KCutString = "BachMu_ProbNNk>0.1&&(BachMu_PIDK-BachMu_PIDp>2)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
+const TString MuCutString = "BachMu_PIDmu>2&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
+const TString ECutString = "BachMu_ProbNNe>0.1&&!(BachMu_ProbNNghost>0.2)";
+const TString GhCutString = "BachMu_ProbNNghost>0.2";
+// const TString PiCutString = "BachMu_ProbNNpi>0.1&&BachMu_PIDK<1.0&&BachMu_PIDmu<2.0&&BachMu_PIDp<4.0&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNp>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNk>0.1)";
+// const TString KCutString = "BachMu_ProbNNk>0.1&&!(BachMu_ProbNNe>0.1)&&!(BachMu_PIDmu>2)";
+// const TString PCutString = "BachMu_ProbNNp>0.1&&BachMu_PIDK<1&&!(BachMu_ProbNNk>0.1)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_PIDmu>2)";
+// const TString MuCutString = "BachMu_PIDmu>2&&!(BachMu_ProbNNe>0.1)";
+// const TString ECutString = "BachMu_ProbNNe>0.1";
 const Int_t numClasses = 6;
 const Int_t num = numClasses-1;
 
@@ -560,12 +565,13 @@ void MisIDFunction::createCountCache(TTree* tree) {
   TTreeFormula* EtaFormula = new TTreeFormula("BachMu_ETA","TMath::ATanH(BachMu_PZ/BachMu_P)",tree);
   TTreeFormula* nTracksFormula = new TTreeFormula("nTracks","nTracks",tree);
   TTreeFormula* Cut = new TTreeFormula("Cut",CutString,tree);
-  TTreeFormula* PiCut = new TTreeFormula("PiCut",PiCutString,tree);
+  // TTreeFormula* PiCut = new TTreeFormula("PiCut",PiCutString,tree);
   TTreeFormula* KCut  = new TTreeFormula("KCut", KCutString, tree);
   TTreeFormula* PCut  = new TTreeFormula("PCut", PCutString, tree);
   TTreeFormula* MuCut = new TTreeFormula("MuCut",MuCutString,tree);
   TTreeFormula* ECut  = new TTreeFormula("ECut", ECutString, tree);
-
+  TTreeFormula* GhCut = new TTreeFormula("GhCut", GhCutString, tree);
+  
   Long64_t nentries = tree->GetEntries();
   for (Long64_t entry = 0; entry < nentries; ++entry) {
     if (entry % 5000 == 0) {
@@ -573,18 +579,16 @@ void MisIDFunction::createCountCache(TTree* tree) {
     }
     tree->GetEntry(entry);
     if (Cut->EvalInstance()) {
-      Double_t picut = PiCut->EvalInstance();
+      // Double_t picut = PiCut->EvalInstance();
       Double_t kcut = KCut->EvalInstance();
       Double_t pcut = PCut->EvalInstance();
       Double_t mucut = MuCut->EvalInstance();
       Double_t ecut = ECut->EvalInstance();
+      Double_t ghcut = GhCut->EvalInstance();
       Species sp = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       Int_t hh = -1;
-      if (PiCut->EvalInstance()) {
-	hh = 0;
-	MisIDFunction::listPi.Enter(entry);
-	sp.piNum = 1.0;
-      } else if (KCut->EvalInstance()) {
+
+      if (KCut->EvalInstance()) {
 	hh = 1;
 	MisIDFunction::listK.Enter(entry);
 	sp.kNum = 1.0;
@@ -600,17 +604,20 @@ void MisIDFunction::createCountCache(TTree* tree) {
 	hh = 4;
 	MisIDFunction::listE.Enter(entry);
 	sp.eNum = 1.0;
-      } else {
-	hh = 5;
+      } else if (GhCut->EvalInstance()) {
+	hh = 5;// New Ghost PID
 	MisIDFunction::listNone.Enter(entry);
 	sp.uNum = 1.0;
+      } else {
+	hh = 0;
+	MisIDFunction::listPi.Enter(entry);
+	sp.piNum = 1.0;
       }
-      //Int_t PidBin = static_cast<Int_t>(PidBinFormula->EvalInstance());
+	    //Int_t PidBin = static_cast<Int_t>(PidBinFormula->EvalInstance());
       Double_t p = PFormula->EvalInstance();
       Double_t eta = EtaFormula->EvalInstance();
       Double_t nt = nTracksFormula->EvalInstance();
       Int_t PidBin = HistoMatrix[0][0]->FindFixBin(p,eta,nt);
-      if(PidBin==62){std::cout<<"HELP, THIS IS 62"<<std::endl;}
       //if (PidBin != 296) continue;
       auto it = MisIDFunction::countCache->find(PidBin);
       if (it == MisIDFunction::countCache->end()) {
@@ -649,10 +656,8 @@ void MisIDWeightor() {
     newfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel_unfold.root";
   }
   TChain* oldtree = new TChain("DecayTree");
-  // TString oldfilename = "/home/ejiang/tuples17/2017_Data_MU_misID_skimmed.root";
   oldtree->Add(oldfilename.Data());
 
-  // TString newfilename = "/home/ejiang/tuples17/2017_Data_MU_misID_skimmed_unfold.root";
   std::cin.get();
 
   MisIDFunction* fobj = new MisIDFunction(0);
