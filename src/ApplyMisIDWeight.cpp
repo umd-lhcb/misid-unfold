@@ -423,6 +423,10 @@ int main(int argc, char** argv) {
   auto piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
   bool ctrlSample  = parsedArgs["ctrl-sample"].as<bool>();
 
+  // Get correct smearing in case of misid validation fit
+  if (ctrlSample) kSmrBrName += "_ubdt_veto";
+  if (ctrlSample) piSmrBrName += "_ubdt_veto";
+
   // Check get yml file
   const string ymlFile = parsedArgs["config"].as<string>();
   const string ymlName = fileNameFromPath(ymlFile);
