@@ -35,12 +35,38 @@ PARTICLES = {
     "pi_smr_ubdt_veto": "pi",
 }
 
+####
+def get_cuts(p):
+    # Included HLT2, Stripping and Offline cuts, except:
+    # - uBDT cut, which is added explicitely below.
+    # - IPCHI2 cut, which shouldn't affect the smearing AND rejects most
+    #   signal events on our dominantly prompt charm MC.
+    cuts =    f" ETA( {p}_P, {p}_PZ ) > 1.7"
+    cuts += f" & ETA( {p}_P, {p}_PZ ) < 5"
+    cuts += f" & {p}_TRACK_GhostProb < 0.5"
+    cuts += f" & {p}_isMuon"
+    cuts += f" & {p}_PIDmu > 2.0"
+    cuts += f" & {p}_PIDe < 1"
+    cuts += f" & {p}_P > 3 * GeV"
+    cuts += f" & {p}_P < 100 * GeV"
+    cuts +=  " & nPVs > 0"
+    cuts +=  " & nSPDHits < 450"
+    cuts +=  " & LOG10pp(K_PX, K_PY, K_PZ, pi_PX, pi_PY, pi_PZ) > -6.5"
+    # Truth-matching cuts
+    cuts +=  " & abs(D_TRUEID) == 421"
+    cuts +=  " & pi_TRUEORIGINVERTEX_TYPE == 2"
+    cuts +=  " & K_TRUEORIGINVERTEX_TYPE == 2"
+    #
+    cuts += f" & abs({p}_TRUEP_X) > 50"
+    cuts += f" & abs({p}_TRUEP_Y) > 50"
+    return cuts
 CUTS = {
-    "k_smr": "K_TRACK_GhostProb < 0.5 & K_isMuon & K_PIDmu > 2.0 & BDTmuCut > 0.25 & abs(K_TRUEID) == 321",
-    "pi_smr": "pi_TRACK_GhostProb < 0.5 & pi_isMuon & pi_PIDmu > 2.0 & BDTmuCut > 0.25 & abs(pi_TRUEID) == 211",
-    "k_smr_ubdt_veto": "K_TRACK_GhostProb < 0.5 & K_isMuon & K_PIDmu > 2.0 & BDTmuCut < 0.25 & abs(K_TRUEID) == 321",
-    "pi_smr_ubdt_veto": "pi_TRACK_GhostProb < 0.5 & pi_isMuon & pi_PIDmu > 2.0 & BDTmuCut < 0.25 & abs(pi_TRUEID) == 211",
+    "k_smr":            get_cuts("K")  + " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25",
+    "pi_smr":           get_cuts("pi") + " & abs(K_TRUEID)  == 321 & BDTmuCut > 0.25",
+    "k_smr_ubdt_veto":  get_cuts("K")  + " & abs(pi_TRUEID) == 211 & BDTmuCut < 0.25",
+    "pi_smr_ubdt_veto": get_cuts("pi") + " & abs(K_TRUEID)  == 321 & BDTmuCut < 0.25",
 }
+
 ####
 PLOT_NBINS = 100
 
@@ -116,7 +142,7 @@ if __name__ == "__main__":
         evaluator = BooleanEvaluator(n, TREE_NAME)
         ptcl = ptcls[idx]
         prefix = PARTICLES[ptcl]
-        print(f"Working on {ptcl}, with a branch prefix {prefix}")
+        print(f"\nWorking on {ptcl}, with a branch prefix {prefix}")
         print(f"  Input ntuple: {n}")
         print(f"  Output tree name: {ptcl}")
 
