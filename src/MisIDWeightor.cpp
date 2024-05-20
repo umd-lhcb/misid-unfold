@@ -40,7 +40,7 @@ const Double_t nts = numToys * numToys;
  *  @date   2015-08-11
  */
 
-const TString year = "17";
+const TString year = "18";
 const TString pidfile_name = "/home/ejiang/rjpsi_misid/myPid_up.root";
 const bool verbose = false;
 const bool very_verbose = false;
@@ -644,16 +644,16 @@ void MisIDWeightor() {
   TString oldfilename, newfilename;
 
   if(year=="16"){
-    oldfilename = "/home/ejiang/tuples16/sel/2016_Data_MD_misID_sel.root";
-    newfilename = "/home/ejiang/tuples16/sel/2016_Data_MD_misID_sel_unfold.root";
+    oldfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel.root";
+    newfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel_unfold.root";
   }
   if(year=="17"){
-    oldfilename = "/home/ejiang/tuples17/sel/2017_Data_MD_misID_sel.root";
-    newfilename = "/home/ejiang/tuples17/sel/2017_Data_MD_misID_sel_unfold.root";
+    oldfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel.root";
+    newfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel_unfold.root";
   }
   else if(year=="18"){
-    oldfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel.root";
-    newfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel_unfold.root";
+    oldfilename = "/home/ejiang/tuples18/sel/2018_Data_MU_misID_sel.root";
+    newfilename = "/home/ejiang/tuples18/sel/2018_Data_MU_misID_sel_unfold.root";
   }
   TChain* oldtree = new TChain("DecayTree");
   oldtree->Add(oldfilename.Data());
