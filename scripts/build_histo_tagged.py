@@ -36,10 +36,6 @@ def parse_input():
 
     parser.add_argument("-y", "--year", default="2016", help="specify year.")
 
-    parser.add_argument(
-        "--ctrl-sample", action="store_true", help="Use control sample uBDT cut."
-    )
-
     return parser.parse_args()
 
 
@@ -70,9 +66,6 @@ def histo_name_gen(name):
 if __name__ == "__main__":
     args = parse_input()
     config_dir_path = abs_dir(args.config)
-    if (args.ctrl_sample):
-        # Assuming .root extension
-        HISTO_NAME = HISTO_NAME[0:-5] + "_misid_ctrl" + HISTO_NAME[-5:]
     makedirs(args.output, exist_ok=True)
     ntp = uproot.recreate(f"{args.output}/{HISTO_NAME}")
 

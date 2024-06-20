@@ -40,13 +40,12 @@ endif
 #################
 
 ifeq ($(USE_CTRL_SAMPLE), true)
-	TAGGED   := ./histos/ctrl_sample/rdx-tag-2016/tagged_misid_ctrl.root
 	UNFOLDED := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
 else
-	TAGGED   := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
 	UNFOLDED := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
 endif
 EFFICIENCIES := ./histos/default/rdx-22_09_12_05_03-merged-2016/merged.root
+TAGGED       := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
 DIF          := ./histos/default/generic-24_06_20_05_14-dif_smearing/dif.root
 
 
@@ -117,7 +116,7 @@ build-generic-dif-smearing:
 .PHONY: build-rdx-tag-2016
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
-	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG)
+	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
