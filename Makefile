@@ -4,43 +4,49 @@
 
 BINPATH := ./bin
 GENPATH := ./gen
-VPATH := src:docs
-CPP_FILES	:=	$(wildcard src/*.cpp)
-EXE_FILES	:=	$(patsubst src/%.cpp,$(BINPATH)/%,$(CPP_FILES))
-TEX_FILES	:=	$(wildcard docs/*.tex)
-PDF_FILES	:=	$(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
-YML_FILE := ./spec/rdx-run2.yml
+VPATH   := src:docs
+CPP_FILES := $(wildcard src/*.cpp)
+EXE_FILES := $(patsubst src/%.cpp,$(BINPATH)/%,$(CPP_FILES))
+TEX_FILES := $(wildcard docs/*.tex)
+PDF_FILES := $(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
+YML_FILE  := ./spec/rdx-run2.yml
 
 CTRL_SAMPLE_FLAG :=
 ifdef USE_CTRL_SAMPLE
-  ifeq ($(USE_CTRL_SAMPLE), true)
-    CTRL_SAMPLE_FLAG = --ctrl-sample
-  else
-    $(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default uBDT file.)
-  endif
+	ifeq ($(USE_CTRL_SAMPLE), true)
+		CTRL_SAMPLE_FLAG = --ctrl-sample
+	else
+		$(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default uBDT file.)
+	endif
 endif
 
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
-COMPILER	:=	$(shell root-config --cxx)
-CXXFLAGS	:=	$(shell root-config --cflags) -Iinclude
-LINKFLAGS	:=	$(shell root-config --libs)
-ADDCXXFLAGS	:=	-O2 -march=native -mtune=native
-ADDLINKFLAGS	:=	-lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
+COMPILER     := $(shell root-config --cxx)
+CXXFLAGS     := $(shell root-config --cflags) -Iinclude
+LINKFLAGS    := $(shell root-config --libs)
+ADDCXXFLAGS  := -O2 -march=native -mtune=native
+ADDLINKFLAGS := -lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
-  $(info OS is $(OS) (macOS), adding -lc++fs to LINKFLAGS)
-  LINKFLAGS := $(shell root-config --libs) -lc++fs
+	$(info OS is $(OS) (macOS), adding -lc++fs to LINKFLAGS)
+	LINKFLAGS := $(shell root-config --libs) -lc++fs
 endif
+
 
 #################
 # Configuration #
 #################
 
-EFFICIENCIES	:=	./histos/rdx-22_09_12_05_03-merged-2016/merged.root
-TAGGED	:=	./histos/rdx-22_06_23_12_07-tag-2016/tagged.root
-UNFOLDED	:=	./histos/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
+ifeq ($(USE_CTRL_SAMPLE), true)
+	UNFOLDED := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
+else
+	UNFOLDED := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
+endif
+EFFICIENCIES := ./histos/default/rdx-22_09_12_05_03-merged-2016/merged.root
+TAGGED       := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
+DIF          := ./histos/default/generic-24_06_20_05_14-dif_smearing/dif.root
 
 
 ###########
@@ -131,11 +137,11 @@ test-unfold: $(BINPATH)/UnfoldMisID
 test-apply-rdx-weights-2016: \
 	$(BINPATH)/ApplyMisIDWeight \
 	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
-	./histos/generic-22_09_23_04_48-dif_smearing/dif.root
+	$(DIF)
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
-	$< -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
+	$< --debug -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
 		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 

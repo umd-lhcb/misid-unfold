@@ -38,7 +38,7 @@ Define is_misid_k as k
 Define is_misid_p as p
 Define is_misid_e as e
 Define is_misid_g as g
-Handling tree TupleBminus/DecayTree from histos of prefix D0 from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Handling tree TupleBminus/DecayTree from histos of prefix D0 from file /home/lmeyerga/misid-unfold/./spec/../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
 Generate transfer factors/DiF smearing wieghts for all species
   Loading histo D0__piTagToMuTag
   piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
@@ -83,7 +83,7 @@ Define wmis_norm as is_misid_pi*wmis_norm_piTagToMuTag + is_misid_k*wmis_norm_kT
 Define wmis_norm_smr_k as is_misid_pi*wmis_norm_piTagToKTrue + is_misid_k*wmis_norm_kTagToKTrue + is_misid_p*wmis_norm_pTagToKTrue + is_misid_e*wmis_norm_eTagToKTrue + is_misid_g*wmis_norm_gTagToKTrue
 Define wmis_norm_smr_pi as is_misid_pi*wmis_norm_piTagToPiTrue + is_misid_k*wmis_norm_kTagToPiTrue + is_misid_p*wmis_norm_pTagToPiTrue + is_misid_e*wmis_norm_eTagToPiTrue + is_misid_g*wmis_norm_gTagToPiTrue
 Define wmis_norm_no_smr as 1.0 - wmis_norm_smr_k - wmis_norm_smr_pi
-Handling tree TupleBminus/DecayTree from histos of prefix D0_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Handling tree TupleBminus/DecayTree from histos of prefix D0_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
 Generate transfer factors/DiF smearing wieghts for all species
   Loading histo D0_bsb__piTagToMuTag
   piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
@@ -128,7 +128,7 @@ Define wmis_bsb as is_misid_pi*wmis_bsb_piTagToMuTag + is_misid_k*wmis_bsb_kTagT
 Define wmis_bsb_smr_k as is_misid_pi*wmis_bsb_piTagToKTrue + is_misid_k*wmis_bsb_kTagToKTrue + is_misid_p*wmis_bsb_pTagToKTrue + is_misid_e*wmis_bsb_eTagToKTrue + is_misid_g*wmis_bsb_gTagToKTrue
 Define wmis_bsb_smr_pi as is_misid_pi*wmis_bsb_piTagToPiTrue + is_misid_k*wmis_bsb_kTagToPiTrue + is_misid_p*wmis_bsb_pTagToPiTrue + is_misid_e*wmis_bsb_eTagToPiTrue + is_misid_g*wmis_bsb_gTagToPiTrue
 Define wmis_bsb_no_smr as 1.0 - wmis_bsb_smr_k - wmis_bsb_smr_pi
-Writing to ./gen/rdx-24_04_10_08_52-weights-2016/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--aux_misid.root
+Writing to ./gen/rdx-24_04_19_04_51-weights-2016/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--aux_misid.root
 --------
 Define MC15TuneV1_ProbNNpi as mu_MC15TuneV1_ProbNNpi
 Define MC15TuneV1_ProbNNk as mu_MC15TuneV1_ProbNNk
@@ -169,7 +169,7 @@ Define is_misid_k as k
 Define is_misid_p as p
 Define is_misid_e as e
 Define is_misid_g as g
-Handling tree TupleB0/DecayTree from histos of prefix Dst from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Handling tree TupleB0/DecayTree from histos of prefix Dst from file /home/lmeyerga/misid-unfold/./spec/../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
 Generate transfer factors/DiF smearing wieghts for all species
   Loading histo Dst__piTagToMuTag
   piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
@@ -214,7 +214,7 @@ Define wmis_norm as is_misid_pi*wmis_norm_piTagToMuTag + is_misid_k*wmis_norm_kT
 Define wmis_norm_smr_k as is_misid_pi*wmis_norm_piTagToKTrue + is_misid_k*wmis_norm_kTagToKTrue + is_misid_p*wmis_norm_pTagToKTrue + is_misid_e*wmis_norm_eTagToKTrue + is_misid_g*wmis_norm_gTagToKTrue
 Define wmis_norm_smr_pi as is_misid_pi*wmis_norm_piTagToPiTrue + is_misid_k*wmis_norm_kTagToPiTrue + is_misid_p*wmis_norm_pTagToPiTrue + is_misid_e*wmis_norm_eTagToPiTrue + is_misid_g*wmis_norm_gTagToPiTrue
 Define wmis_norm_no_smr as 1.0 - wmis_norm_smr_k - wmis_norm_smr_pi
-Handling tree TupleB0/DecayTree from histos of prefix Dst_dsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Handling tree TupleB0/DecayTree from histos of prefix Dst_dsb from file /home/lmeyerga/misid-unfold/./spec/../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
 Generate transfer factors/DiF smearing wieghts for all species
   Loading histo Dst_dsb__piTagToMuTag
   piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
@@ -259,7 +259,7 @@ Define wmis_dsb as is_misid_pi*wmis_dsb_piTagToMuTag + is_misid_k*wmis_dsb_kTagT
 Define wmis_dsb_smr_k as is_misid_pi*wmis_dsb_piTagToKTrue + is_misid_k*wmis_dsb_kTagToKTrue + is_misid_p*wmis_dsb_pTagToKTrue + is_misid_e*wmis_dsb_eTagToKTrue + is_misid_g*wmis_dsb_gTagToKTrue
 Define wmis_dsb_smr_pi as is_misid_pi*wmis_dsb_piTagToPiTrue + is_misid_k*wmis_dsb_kTagToPiTrue + is_misid_p*wmis_dsb_pTagToPiTrue + is_misid_e*wmis_dsb_eTagToPiTrue + is_misid_g*wmis_dsb_gTagToPiTrue
 Define wmis_dsb_no_smr as 1.0 - wmis_dsb_smr_k - wmis_dsb_smr_pi
-Handling tree TupleB0/DecayTree from histos of prefix Dst_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Handling tree TupleB0/DecayTree from histos of prefix Dst_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
 Generate transfer factors/DiF smearing wieghts for all species
   Loading histo Dst_bsb__piTagToMuTag
   piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
@@ -304,7 +304,7 @@ Define wmis_bsb as is_misid_pi*wmis_bsb_piTagToMuTag + is_misid_k*wmis_bsb_kTagT
 Define wmis_bsb_smr_k as is_misid_pi*wmis_bsb_piTagToKTrue + is_misid_k*wmis_bsb_kTagToKTrue + is_misid_p*wmis_bsb_pTagToKTrue + is_misid_e*wmis_bsb_eTagToKTrue + is_misid_g*wmis_bsb_gTagToKTrue
 Define wmis_bsb_smr_pi as is_misid_pi*wmis_bsb_piTagToPiTrue + is_misid_k*wmis_bsb_kTagToPiTrue + is_misid_p*wmis_bsb_pTagToPiTrue + is_misid_e*wmis_bsb_eTagToPiTrue + is_misid_g*wmis_bsb_gTagToPiTrue
 Define wmis_bsb_no_smr as 1.0 - wmis_bsb_smr_k - wmis_bsb_smr_pi
-Handling tree TupleB0/DecayTree from histos of prefix Dst_dsb_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/rdx-22_09_12_05_03-unfolded-2016/unfolded.root
+Handling tree TupleB0/DecayTree from histos of prefix Dst_dsb_bsb from file /home/lmeyerga/misid-unfold/./spec/../histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
 Generate transfer factors/DiF smearing wieghts for all species
   Loading histo Dst_dsb_bsb__piTagToMuTag
   piTagToMuTag is a transfer-factor weight, apply 10x enhance due to prescale.
@@ -349,4 +349,4 @@ Define wmis_dsb_bsb as is_misid_pi*wmis_dsb_bsb_piTagToMuTag + is_misid_k*wmis_d
 Define wmis_dsb_bsb_smr_k as is_misid_pi*wmis_dsb_bsb_piTagToKTrue + is_misid_k*wmis_dsb_bsb_kTagToKTrue + is_misid_p*wmis_dsb_bsb_pTagToKTrue + is_misid_e*wmis_dsb_bsb_eTagToKTrue + is_misid_g*wmis_dsb_bsb_gTagToKTrue
 Define wmis_dsb_bsb_smr_pi as is_misid_pi*wmis_dsb_bsb_piTagToPiTrue + is_misid_k*wmis_dsb_bsb_kTagToPiTrue + is_misid_p*wmis_dsb_bsb_pTagToPiTrue + is_misid_e*wmis_dsb_bsb_eTagToPiTrue + is_misid_g*wmis_dsb_bsb_gTagToPiTrue
 Define wmis_dsb_bsb_no_smr as 1.0 - wmis_dsb_bsb_smr_k - wmis_dsb_bsb_smr_pi
-Writing to ./gen/rdx-24_04_10_08_52-weights-2016/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--aux_misid.root
+Writing to ./gen/rdx-24_04_19_04_51-weights-2016/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--aux_misid.root
