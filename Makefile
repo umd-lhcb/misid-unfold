@@ -42,13 +42,12 @@ endif
 ifeq ($(USE_CTRL_SAMPLE), true)
 	TAGGED   := ./histos/ctrl_sample/rdx-tag-2016/tagged_misid_ctrl.root
 	UNFOLDED := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
-	DIF      := ./histos/ctrl_sample/generic-dif_smearing/dif_misid_ctrl.root
 else
 	TAGGED   := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
 	UNFOLDED := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
-	DIF      := ./histos/default/generic-22_09_23_04_48-dif_smearing/dif.root
 endif
 EFFICIENCIES := ./histos/default/rdx-22_09_12_05_03-merged-2016/merged.root
+DIF          := ./histos/default/generic-24_06_20_05_14-dif_smearing/dif.root
 
 
 ###########
@@ -107,7 +106,7 @@ build-rdx-merged-2016:
 build-generic-dif-smearing:
 	$(eval OUT_DIR	:=	$(GENPATH)/generic-$(TIME_STAMP)-dif_smearing)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_dif.py --plot $(CTRL_SAMPLE_FLAG) -o $(OUT_DIR) \
+	./scripts/build_histo_dif.py --plot -o $(OUT_DIR) \
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \

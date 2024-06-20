@@ -101,10 +101,6 @@ def parse_input():
         help="plot momentum ratios, for finding binnings.",
     )
 
-    parser.add_argument(
-        "--ctrl-sample", action="store_true", help="Use control sample uBDT cut."
-    )
-
     return parser.parse_args()
 
 
@@ -132,9 +128,6 @@ def plot(br, title, filename, nbins=40):
 if __name__ == "__main__":
     mplhep.style.use("LHCb2")
     args = parse_input()
-    if (args.ctrl_sample):
-        # Assuming .root extension
-        OUTPUT_NTP_NAME = OUTPUT_NTP_NAME[0:-5] + "_misid_ctrl" + OUTPUT_NTP_NAME[-5:]
     output_ntp = uproot.recreate(f"{args.output}/{OUTPUT_NTP_NAME}")
 
     ptcls = list(PARTICLES.keys())
