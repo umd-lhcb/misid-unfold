@@ -549,16 +549,17 @@ int main(int argc, char** argv) {
   auto debug = parsedArgs["debug"].as<bool>();
   // Check uBDT cut
   bool ctrlSample = parsedArgs["ctrl-sample"].as<bool>();
+  const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
   // Get YML file name
   const string ymlFile = parsedArgs["config"].as<string>();
   const string ymlName = fileNameFromPath(ymlFile);
 
-  // Save output for future reference
-  const TString debugSufix = debug ? "_dbg" : "";
-  const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
-  const TString logName = "src/UnfoldMisID_" + ymlName + ctrlSampleSufix + debugSufix + ".log"; // TODO hardcoded path
-  if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
-  gSystem->RedirectOutput(logName);
+  // Save output when debug flag is set
+  if (debug) {
+    const TString logName = "src/UnfoldMisID_" + ymlName + ctrlSampleSufix + ".log"; // TODO hardcoded path
+    if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
+    gSystem->RedirectOutput(logName);
+  }
 
   // parse YAML config
   auto ymlConfig  = YAML::LoadFile(ymlFile);
