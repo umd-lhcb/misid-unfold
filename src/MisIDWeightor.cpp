@@ -1,4 +1,4 @@
-//#if !defined(__CINT__) || defined(__MAKECINT__)
+//#if !defined(__COAINT__) || defined(__MAKECINT__)
 #if !(defined(__CINT__) || defined(__CLING__)) || defined(__ACLIC__)
 #include <TROOT.h>
 #include "TSystem.h"
@@ -25,6 +25,7 @@
 #include <tuple>
 #include <array>
 
+// #define GHOST_ALTERNATE
 using namespace std;
 
 // Include files
@@ -40,7 +41,6 @@ const Double_t nts = numToys * numToys;
  *  @date   2015-08-11
  */
 
-const TString year = "18";
 const TString pidfile_name = "/home/ejiang/rjpsi_misid/myPid_up.root";
 const bool verbose = false;
 const bool very_verbose = false;
@@ -144,8 +144,7 @@ public:
       HistoVector[3] = loadRootObject(pidfile,"EFFDLLK_Mu_TO_MU");
       HistoVector[4] = loadRootObject(pidfile,"EFFDLLK_e_TO_MU");
       HistoVector[5] = loadRootObject(pidfile,"EFFDLLK_Ghost_TO_MU");
-    }
-    
+    }    
   };
 
   /// Destructor
@@ -259,8 +258,13 @@ public:
 #ifdef GHOST_ALTERNATE
 	    //static_assert(false);
 	    for (int j = 0; j < num; j++) {
-	      response_matrix[j][num] = 0.0;
+	      response_matrix[j][num] = response_matrix[j][2];
+	      // response_matrix[j][num] = 0.0;
 	    }
+	    
+	    response_matrix[num][num] = response_matrix[num][2];
+	    // response_matrix[num][num] = 1.0;
+
 #endif
 
 	    if (verbose) std::cout << "H -> H RESPONSE MATRIX:" << std::endl;
@@ -355,9 +359,18 @@ public:
 		  double val, err;
 #ifdef GHOST_ALTERNATE
 		  // grab pion
-		  Int_t z = (i == num) ? 0 : i;
-		  val = HistoVector[z]->GetBinContent(PidBin);
-		  err = HistoVector[z]->GetBinError(PidBin);
+		  // Int_t z = (i == num) ? 0 : i;
+		  // val = HistoVector[z]->GetBinContent(PidBin);
+		  // err = HistoVector[z]->GetBinError(PidBin);
+		  if (i==num){ //ghost
+		    val = 0.0;
+		    err = 0.01;
+		  }
+		  else { //other cases as normal
+		    val = HistoVector[i]->GetBinContent(PidBin);
+		    err = HistoVector[i]->GetBinError(PidBin);
+		  }
+
 #else
 		  val = HistoVector[i]->GetBinContent(PidBin);
 		  err = HistoVector[i]->GetBinError(PidBin);
@@ -640,21 +653,30 @@ void MisIDFunction::createCountCache(TTree* tree) {
   }
 }
 
-void MisIDWeightor() {
+void MisIDWeightor(TString year) {
   TString oldfilename, newfilename;
 
-  if(year=="16"){
-    oldfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel.root";
-    newfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel_unfold.root";
-  }
-  if(year=="17"){
-    oldfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel.root";
-    newfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel_unfold.root";
-  }
-  else if(year=="18"){
-    oldfilename = "/home/ejiang/tuples18/sel/2018_Data_MU_misID_sel.root";
-    newfilename = "/home/ejiang/tuples18/sel/2018_Data_MU_misID_sel_unfold.root";
-  }
+  oldfilename = "/home/ejiang/tuples"+year+"/comb/20"+year+"_Data_MU_misID_sel.root";
+  newfilename = "/home/ejiang/tuples"+year+"/comb/20"+year+"_Data_MU_misID_sel_unfold.root";
+  
+  // if(year=="16"){
+  //   oldfilename = "/home/ejiang/tuples16/comb/2016_Data_MU_misID_sel.root";
+  //   newfilename = "/home/ejiang/tuples16/comb/2016_Data_MU_misID_sel_unfold.root";
+  //   // oldfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel.root";
+  //   // newfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel_unfold_p.root";
+  // }
+  // if(year=="17"){
+  //   oldfilename = "/home/ejiang/tuples17/comb/2017_Data_MU_misID_sel.root";
+  //   newfilename = "/home/ejiang/tuples17/comb/2017_Data_MU_misID_sel_unfold.root";
+  //   // oldfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel.root";
+  //   // newfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel_unfold_p.root";
+  // }
+  // else if(year=="18"){
+  //   oldfilename = "/home/ejiang/tuples18/comb/2018_Data_MU_misID_sel.root";
+  //   newfilename = "/home/ejiang/tuples18/comb/2018_Data_MU_misID_sel_unfold.root";
+  //   // oldfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel_bachmu_p.root";
+  //   // newfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel_bachmu_p_unfold.root";
+  // }
   TChain* oldtree = new TChain("DecayTree");
   oldtree->Add(oldfilename.Data());
 
@@ -836,12 +858,29 @@ void MisIDWeightor() {
 
 #ifndef __CINT__
 int main () {
+  TString year = "18";
+
 #ifdef GHOST_ALTERNATE
-  std::cout << "OH NO!" << std::endl;
+  std::cout << "GHOST ALTERNATE" << std::endl;
+  std::cout << year << std::endl;
+  MisIDWeightor(year);
+  year = "17";
+  std::cout << year << std::endl;
+  MisIDWeightor(year);
+  year = "16";
+  std::cout << year << std::endl;
+  MisIDWeightor(year);
   return 0;
 #endif
   std::cout << "STARTING" << std::endl;
-  MisIDWeightor();
+  std::cout << year << std::endl;
+  MisIDWeightor(year);
+  // year = "17";
+  // std::cout << year << std::endl;
+  // MisIDWeightor(year);
+  // year = "16";
+  // std::cout << year << std::endl;
+  // MisIDWeightor(year);
   return 0;
 }  // Main program when run stand-alone
 #endif
