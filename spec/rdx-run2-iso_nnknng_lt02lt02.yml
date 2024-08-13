@@ -1,5 +1,5 @@
 # this is for obtaining:
-#   Brunel_MC15TuneV1_ProbNNk > 0.2
+#   Brunel_MC15TuneV1_ProbNNk < 0.2 AND (now also) Brunel_MC15TuneV1_ProbNNghost < 0.2
 # cut efficiency on TRUE ghost particles
 
 binning:  # mostly from Phoebe's run 1 kISOeff histo
@@ -19,11 +19,11 @@ local_pid_config:
                 k:
                     eff:
                         cut: "is_ghost"  # dummy actually
-                        pid_cut: "Brunel_MC15TuneV1_ProbNNk > 0.2"
+                        pid_cut: "Brunel_MC15TuneV1_ProbNNk < 0.2 & Brunel_MC15TuneV1_ProbNNghost < 0.2"
         MagUp:
             samples: "../ntuples/0.9.7-rdx_production/Dst_D0-mc_ghost-step2/ghost-*mu.root:tree"
             tags_addon:
                 k:
                     eff:
                         cut: "is_ghost"  # dummy actually
-                        pid_cut: "Brunel_MC15TuneV1_ProbNNk > 0.2"
+                        pid_cut: "Brunel_MC15TuneV1_ProbNNk < 0.2 & Brunel_MC15TuneV1_ProbNNghost < 0.2"
