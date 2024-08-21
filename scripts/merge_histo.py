@@ -44,6 +44,10 @@ def parse_input():
 
     parser.add_argument("-y", "--year", default="2016", help="specify year.")
 
+    parser.add_argument(
+        "--ctrl-sample", action="store_true", help="Use control sample uBDT cut."
+    )
+
     return parser.parse_args()
 
 
@@ -149,7 +153,7 @@ def rebuild_root_histo(name, histo_orig, recenter=True):
             value = recenter_dist(value, error)
         else:
             print(
-                f"    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0."
+                "    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0."
             )
 
         histo.SetBinContent(histo.GetBin(*idx), value)
@@ -388,11 +392,15 @@ if __name__ == "__main__":
 
     output_ntp = ROOT.TFile(f"{args.output}/{HISTO_NAME}", "RECREATE")
     for mode, params in config["input_histos"][int(args.year)].items():
+        if args.ctrl_sample:
+            params = params["misid_ctrl"]
+        else:
+            params = params["default"]
         if mode not in KNOWN_MERGERS:
             print(f'WARNING: Unknown mode: "{mode}". Skipping...')
             continue
 
-        print(f"Merging {mode}...")
+        print(f"Merging {mode} using {params}...")
         KNOWN_MERGERS[mode](output_ntp, path_prefix, params, config)
 
     output_ntp.Close()

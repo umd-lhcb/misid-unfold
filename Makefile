@@ -40,13 +40,14 @@ endif
 #################
 
 ifeq ($(USE_CTRL_SAMPLE), true)
-	UNFOLDED := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
+	UNFOLDED     := ./histos/ctrl_sample/rdx-unfolded-2016/unfolded_misid_ctrl.root
+	EFFICIENCIES := ./histos/ctrl_sample/rdx-24_08_21_05_28-merged-2016/merged.root
 else
-	UNFOLDED := ./histos/default/rdx-22_10_15_00_44-unfolded-2016/unfolded.root
+	UNFOLDED     := ./histos/default/rdx--unfolded-2016/unfolded.root
+	EFFICIENCIES := ./histos/default/rdx-24_08_21_05_29-merged-2016/merged.root
 endif
-EFFICIENCIES := ./histos/default/rdx-22_09_12_05_03-merged-2016/merged.root
-TAGGED       := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
-DIF          := ./histos/default/generic-24_06_20_05_14-dif_smearing/dif.root
+TAGGED := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
+DIF    := ./histos/default/generic-24_06_20_05_14-dif_smearing/dif.root
 
 
 ###########
@@ -98,7 +99,7 @@ build-rdx-true-to-tag-2016-local:
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
+	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: build-generic-dif-smearing
