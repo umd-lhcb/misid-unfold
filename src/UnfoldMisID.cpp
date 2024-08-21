@@ -19,7 +19,6 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TH3D.h>
-#include "TSystem.h"
 
 #include <RooUnfoldBayes.h>
 #include <RooUnfoldResponse.h>
@@ -553,13 +552,6 @@ int main(int argc, char** argv) {
   // Get YML file name
   const string ymlFile = parsedArgs["config"].as<string>();
   const string ymlName = fileNameFromPath(ymlFile);
-
-  // Save output when debug flag is set
-  if (debug) {
-    const TString logName = "src/UnfoldMisID_" + ymlName + ctrlSampleSufix + ".log"; // TODO hardcoded path
-    if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
-    gSystem->RedirectOutput(logName);
-  }
 
   // parse YAML config
   auto ymlConfig  = YAML::LoadFile(ymlFile);
