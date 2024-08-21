@@ -91,7 +91,7 @@ test-pidcalib2-wrapper-lxplus:
 .PHONY: build-rdx-true-to-tag-2016-local
 build-rdx-true-to-tag-2016-local:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
-	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016
+	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG)
 
 
 .PHONY: build-rdx-merged-2016

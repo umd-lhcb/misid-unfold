@@ -76,13 +76,14 @@ local_pid_config:
                 mu:
                     nom:
                         cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
-                        pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                        add_pid_cut:
-                            default: "UBDT > 0.25"
-                            misid_ctrl: "UBDT < 0.25"
+                        pid_cut:
+                            default: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
+                            misid_ctrl: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
                     denom:
                         cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
-                        pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
+                        pid_cut:
+                            default: "IsMuon == 0.0 & InMuonAcc == 1.0"
+                            misid_ctrl: "IsMuon == 0.0 & InMuonAcc == 1.0"
         e:
             samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/e_Jpsi*.root:tree"
             tags_addon:
