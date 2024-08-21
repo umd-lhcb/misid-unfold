@@ -115,9 +115,8 @@ def dump_binning(yml_bins, samples, output):
 
 
 def run_cmd(cmd, dry_run=False):
-    if dry_run:
-        print(cmd)
-    else:
+    print("\n" + cmd + "\n")
+    if not dry_run:
         ret_val = system(cmd)
         if ret_val:
             raise ValueError("Command execution failed.")
@@ -287,6 +286,8 @@ if __name__ == "__main__":
 
     # Generate efficiency histograms with pidcalib2
     config["tags"] = cut_replacement(config["tags"])
+    if args.ctrl_sample:
+        print("Using MisID validation PID cuts")
     directives = true_to_tag_directive_gen(
         config, args.year, "raw_histos", **MODES[args.mode], ctrl_sample=args.ctrl_sample
     )
