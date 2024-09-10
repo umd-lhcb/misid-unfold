@@ -5,8 +5,6 @@
 #
 # Description: efficiency histogram builder (E)
 
-import numpy as np
-
 from argparse import ArgumentParser
 from pathlib import Path
 from os import makedirs
@@ -20,7 +18,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True  # Don't hijack argparse!
 ROOT.PyConfig.DisableRootLogon = True  # Don't read .rootlogon.py
 
 from ROOT import TChain, TFile, RDataFrame
-from ROOT.RDF import TH3DModel, TH2DModel, TH1DModel
+from ROOT.RDF import TH3DModel
 from ROOT.std import vector
 
 
@@ -37,6 +35,10 @@ def parse_input():
     parser.add_argument("-o", "--output", required=True, help="specify output dir.")
 
     parser.add_argument("-y", "--year", type=int, default=2016, help="specify year.")
+
+    parser.add_argument(
+        "--ctrl-sample", action="store_true", help="Use control sample uBDT cut."
+    )
 
     return parser.parse_args()
 
@@ -156,11 +158,13 @@ if __name__ == "__main__":
             global_cut = subconfig["tags"]["cut"].replace("&", "&&")
             histo_all = histo_builder(binning_scheme, df, global_cut, "all")
             print(f"  # of event passing 'cut': {histo_all.GetEntries()}")
+            print(f"  cut: {global_cut}")
             for p_tag, pid_cut in tagged_config.items():
                 print(f"    Handling {p_tag}")
                 cuts = global_cut + " && " + pid_cut.replace("&", "&&")
                 df = df.Define(p_tag, cuts)  # this is to make expr '!pi' work
                 histo_passed = histo_builder(binning_scheme, df, p_tag, "passed")
+                print(f"    pid_cut: {cuts}")
                 print(f"    # of event passing 'pid_cut': {histo_passed.GetEntries()}")
 
                 ntp_name = f"{p_true}TrueTo{p_tag.capitalize()}Tag.root"
@@ -183,12 +187,15 @@ if __name__ == "__main__":
 
                     global_cut = subsubconfig["cut"].replace("&", "&&")
                     histo_all = histo_builder(binning_scheme, df, global_cut, "all")
+                    print(f"  cut: {global_cut}")
                     print(f"  # of event passing 'cut': {histo_all.GetEntries()}")
 
-                    cuts = (
-                        global_cut + " && " + subsubconfig["pid_cut"].replace("&", "&&")
-                    )
+                    if args.ctrl_sample:
+                        cuts = global_cut + " && " + subsubconfig["pid_cut"]["misid_ctrl"].replace("&", "&&")
+                    else:
+                        cuts = global_cut + " && " + subsubconfig["pid_cut"]["default"].replace("&", "&&")
                     histo_passed = histo_builder(binning_scheme, df, cuts, "passed")
+                    print(f"  pid_cut: {cuts}")
                     print(
                         f"  # of event passing 'pid_cut': {histo_passed.GetEntries()}"
                     )

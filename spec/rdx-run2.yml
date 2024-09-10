@@ -56,14 +56,14 @@ pidcalib_config:
     tags_addon:  # ad-hoc tags
         mu:
             nom:
-                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"  # this is the accpetance cut
+                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"  # this is the acceptance cut
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
                 add_pid_cut:
                     default: "UBDT > 0.25"
                     misid_ctrl: "UBDT < 0.25"
             denom:
-                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
-                pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
+                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                pid_cut: "IsMuon == 0.0"
 
 # Used by (E)
 local_pid_config:
@@ -75,23 +75,24 @@ local_pid_config:
             tags_addon:
                 mu:
                     nom:
-                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
-                        pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                        add_pid_cut:
-                            default: "UBDT > 0.25"
-                            misid_ctrl: "UBDT < 0.25"
+                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                        pid_cut:
+                            default: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
+                            misid_ctrl: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
                     denom:
-                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0"
-                        pid_cut: "IsMuon == 0.0 & InMuonAcc == 1.0"
+                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                        pid_cut:
+                            default: "IsMuon == 0.0"
+                            misid_ctrl: "IsMuon == 0.0"
         e:
             samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/e_Jpsi*.root:tree"
             tags_addon:
                 mu:
                     rel:
-                        cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
+                        cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
                         pid_cut:
-                            default: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
-                            misid_ctrl: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
+                            default: "UBDT > 0.25"
+                            misid_ctrl: "UBDT < 0.25"
 
 # specify additional source of histograms
 # used by the efficiency histogram merger (M)
@@ -99,9 +100,14 @@ local_pid_config:
 input_histos:
     2016:
         true_to_tag:
-            - "../histos/default/rdx-22_09_11_06_15-true_to_tag_glacier-2016"
-            - "../histos/default/rdx-22_09_11_12_16-true_to_tag_lxplus-2016"
-            - "../histos/default/rdx-22_09_11_06_12-true_to_tag_local-2016"
+            default:
+                - "../histos/default/rdx-24_09_10_10_16-true_to_tag_glacier-2016"
+                - "../histos/default/rdx-24_09_10_16_18-true_to_tag_lxplus-2016"
+                - "../histos/default/rdx-24_09_10_10_16-true_to_tag_local-2016"
+            misid_ctrl:
+                - "../histos/ctrl_sample/rdx-24_09_10_11_29-true_to_tag_glacier-2016"
+                - "../histos/ctrl_sample/rdx-24_09_10_16_22-true_to_tag_lxplus-2016"
+                - "../histos/ctrl_sample/rdx-24_09_10_10_19-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
         #         H2H_Ghost_TO_Pi: gTrueToPiTag
