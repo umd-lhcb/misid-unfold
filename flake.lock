@@ -105,11 +105,11 @@
         "root-curated": "root-curated"
       },
       "locked": {
-        "lastModified": 1659989218,
-        "narHash": "sha256-zlacvKinUHWVwkXhK6fuiInvtgICMYamRwUYTS7rwVQ=",
+        "lastModified": 1727125089,
+        "narHash": "sha256-RjvWnS4a5Z9uPrEedA7Cm9FzT3pqZGhN9Bv96L4mgZI=",
         "owner": "umd-lhcb",
         "repo": "pidcalib2",
-        "rev": "f5b4a2ab578cffd2fa33b7c1b0e06a103addb2ed",
+        "rev": "8ee9b18129eec182d1215e1bf3f175751961601e",
         "type": "github"
       },
       "original": {
