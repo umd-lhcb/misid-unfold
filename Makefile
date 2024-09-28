@@ -30,7 +30,7 @@ ADDLINKFLAGS := -lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
 
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
-	$(info OS is $(OS) (macOS), adding -lc++fs to LINKFLAGS)
+$(info OS is $(OS) (macOS), adding -lc++fs to LINKFLAGS)
 	LINKFLAGS := $(shell root-config --libs) -lc++fs
 endif
 
