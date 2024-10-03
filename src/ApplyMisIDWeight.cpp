@@ -153,10 +153,10 @@ vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
     auto srcPtcl = it->first.as<string>();
     auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag";
     result.emplace_back(name);
-    for (auto it_true = node.begin(); it_true != node.end(); it_true++) {
-      auto srcPtclSingle = it_true->first.as<string>();
-      auto name_single = name + "_" + srcPtclSingle + "TrueOnly";
-      result.emplace_back(name_single);
+    for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
+      auto srcPtclSingle = itTrue->first.as<string>();
+      auto nameSingle = name + "_" + srcPtclSingle + "TrueOnly";
+      result.emplace_back(nameSingle);
     }
   }
 
@@ -169,7 +169,8 @@ vector<TString> buildHistoSmrWtnames(YAML::Node node) {
 
   for (auto it = node.begin(); it != node.end(); it++) {
     for (auto tgt : targetParticles) {
-      auto name = it->first.as<string>() + "TagTo" + tgt + "True";
+      auto srcPtcl = it->first.as<string>();
+      auto name = srcPtcl + "TagTo" + tgt + "True";
       result.emplace_back(name);
     }
   }
@@ -242,19 +243,19 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
   cout << "  " << wtPrefix << " = " << expr << endl;
 
   // Also generate weights assuming single true type
-  for(const auto& p_true : particles) {
+  for(const auto& pTrue : particles) {
     expr  = ""s;
     first = true;
     for(const auto& p : particles) {
-      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" + p_true + "TrueOnly";
+      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" + pTrue + "TrueOnly";
       if (!first) expr += " + ";
       first = false;
       expr += brPrefix + p + "*" + wtBrName;
     }
-    auto wtPrefix_singleTrue = wtPrefix + "_" + p_true;
-    outputBrs.emplace_back(wtPrefix_singleTrue);
-    directives.emplace_back(pair{wtPrefix_singleTrue, expr});
-    cout << "  " << wtPrefix_singleTrue << " = " << expr << endl;
+    auto wtPrefixSingleTrue = wtPrefix + "_" + pTrue;
+    outputBrs.emplace_back(wtPrefixSingleTrue);
+    directives.emplace_back(pair{wtPrefixSingleTrue, expr});
+    cout << "  " << wtPrefixSingleTrue << " = " << expr << endl;
   }
 
   // generate the DiF smearing weight for each event
@@ -278,7 +279,7 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
 
   // generate the DiF no smearing weight
   auto brNoSmr = wtPrefix + "_no_smr";
-  outputBrs.emplace_back(wtPrefix + "_no_smr");
+  outputBrs.emplace_back(brNoSmr);
 
   expr = "1.0"s;
   for (const auto& smr : brSmrNames) {
