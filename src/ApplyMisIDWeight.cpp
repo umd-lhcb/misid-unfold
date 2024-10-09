@@ -19,7 +19,6 @@
 #include <TRandom.h>
 #include <TRandomGen.h>
 #include <TString.h>
-#include "TSystem.h"
 #include <TTree.h>
 #include <ROOT/RDataFrame.hxx>
 
@@ -154,6 +153,11 @@ vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
     auto srcPtcl = it->first.as<string>();
     auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag";
     result.emplace_back(name);
+    for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
+      auto srcPtclSingle = itTrue->first.as<string>();
+      auto nameSingle = name + "_" + srcPtclSingle + "TrueOnly";
+      result.emplace_back(nameSingle);
+    }
   }
 
   return result;
@@ -165,7 +169,8 @@ vector<TString> buildHistoSmrWtnames(YAML::Node node) {
 
   for (auto it = node.begin(); it != node.end(); it++) {
     for (auto tgt : targetParticles) {
-      auto name = it->first.as<string>() + "TagTo" + tgt + "True";
+      auto srcPtcl = it->first.as<string>();
+      auto name = srcPtcl + "TagTo" + tgt + "True";
       result.emplace_back(name);
     }
   }
@@ -182,9 +187,10 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
 
   for (const auto& h : iterable) {
     auto histoName = string(histoPrefix + "__" + h);
-    auto histoWt   = static_cast<TH3D*>(ntpHisto->Get(histoName.data()));
-    histos.emplace_back(histoWt);
     cout << "  Loading histo " << histoName << endl;
+    auto histoWt   = static_cast<TH3D*>(ntpHisto->Get(histoName.data()));
+    if (!histoWt) throw runtime_error("Could not get histogram with name " + histoName);
+    histos.emplace_back(histoWt);
 
     double prescale = 1.0;
     if (TString(h).Contains("MuTag")) {
@@ -236,6 +242,22 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
   directives.emplace_back(pair{wtPrefix, expr});
   cout << "  " << wtPrefix << " = " << expr << endl;
 
+  // Also generate weights assuming single true type
+  for(const auto& pTrue : particles) {
+    expr  = ""s;
+    first = true;
+    for(const auto& p : particles) {
+      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" + pTrue + "TrueOnly";
+      if (!first) expr += " + ";
+      first = false;
+      expr += brPrefix + p + "*" + wtBrName;
+    }
+    auto wtPrefixSingleTrue = wtPrefix + "_" + pTrue;
+    outputBrs.emplace_back(wtPrefixSingleTrue);
+    directives.emplace_back(pair{wtPrefixSingleTrue, expr});
+    cout << "  " << wtPrefixSingleTrue << " = " << expr << endl;
+  }
+
   // generate the DiF smearing weight for each event
   vector<string> brSmrNames{};
   for (const auto& tgt : wtSmrParticles) {
@@ -257,7 +279,7 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
 
   // generate the DiF no smearing weight
   auto brNoSmr = wtPrefix + "_no_smr";
-  outputBrs.emplace_back(wtPrefix + "_no_smr");
+  outputBrs.emplace_back(brNoSmr);
 
   expr = "1.0"s;
   for (const auto& smr : brSmrNames) {
@@ -434,14 +456,6 @@ int main(int argc, char** argv) {
   // Check info level
   auto debug = parsedArgs["debug"].as<bool>();
 
-  // Save output when debug flag is set
-  if (debug) {
-    const TString ctrlSampleSufix = ctrlSample ? "_misid_ctrl" : "";
-    const TString logName = "src/ApplyMisIDWeight_" + ymlName + ctrlSampleSufix + ".log"; // TODO hardcoded path
-    if ( !remove(logName) ) { std::cout << "Old log file " << logName << " has been deleted." << std::endl; }
-    gSystem->RedirectOutput(logName);
-  }
-
   // parse YAML config
   auto ymlConfig       = YAML::LoadFile(ymlFile);
   auto year            = parsedArgs["year"].as<string>();
@@ -452,6 +466,14 @@ int main(int argc, char** argv) {
   // snapshot option
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
+
+  // Generate names of histograms to be imported from unfolded.root
+  auto histoWtNames    = buildHistoWtNames(particle, ymlConfig["tags"]);
+  cout << "Efficiency histograms: " << endl;
+  for (auto h: histoWtNames) cout << "\t" << h << endl;
+  auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
+  cout << "Additional histograms for smearing: " << endl;
+  for (auto h: histoSmrWtNames) cout << "\t" << h << endl;
 
   for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
     cout << "--------" << endl;
@@ -508,16 +530,14 @@ int main(int argc, char** argv) {
       auto weightBrPrefix = entry["name"].as<string>();
       histoFile           = filePrefix + "/" + histoFile;
 
-      cout << "Handling tree " << treeName << " from histos of prefix "
+      cout << "\n\nHandling tree " << treeName << " from histos of prefix "
            << histoPrefix << " from file " << histoFile << endl;
 
       // add weights required by misID weights
       auto ntpHisto = new TFile(histoFile.data(), "READ");
       ntpsToClean.emplace_back(ntpHisto);
 
-      auto histoWtNames    = buildHistoWtNames(particle, ymlConfig["tags"]);
-      auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
-      cout << "Generate transfer factors/DiF smearing wieghts for all species"
+      cout << "Generate transfer factors/DiF smearing weights for all species"
            << endl;
       auto [dfHistos, outputBrsHistos, histos] =
           applyWtFromHistos(df, ntpHisto, histoPrefix, weightBrPrefix,
@@ -530,7 +550,8 @@ int main(int argc, char** argv) {
       df = defineBranch(dfHistos, ""s, directives);
       for (auto br : outputBrsWts) outputBrNames.emplace_back(br);
     }
-    cout << "Writing to " << ntpOut << endl;
+    cout << "\n\nWriting branches to " << ntpOut << ":" << endl;
+    for (auto br: outputBrNames) cout << "\t-" << br << endl;
     df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
 
     for (auto& n : ntpsToClean) delete n;

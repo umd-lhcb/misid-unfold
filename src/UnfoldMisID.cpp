@@ -122,7 +122,7 @@ void printResGeneric(const TH2D*                             res,
 
   for (int idxCol = 1; idxCol <= nbinsX; idxCol++) {
     for (int idxRow = 1; idxRow <= nbinsY; idxRow++) {
-      auto elem = getter(res, idxRow, idxCol);
+      auto elem = getter(res, idxCol, idxRow);
       cout << setw(8) << elem;
       if (elem < 0)
         badElem.emplace_back("(" + to_string(idxRow) + ", " +
@@ -208,7 +208,7 @@ auto getHistoOutHelper(map<string, shared_ptr<TH3D>>* mapHisto,
 // Unfold //
 ////////////
 
-void ensureUnitarity(TH2D* res, bool debug = true) {
+void ensureUnitarity(TH2D* res, vStr ptcls, bool debug = true) {
   auto nbinsX = res->GetNbinsX();
   auto nbinsY = res->GetNbinsY();
 
@@ -229,6 +229,11 @@ void ensureUnitarity(TH2D* res, bool debug = true) {
     double prob = 0.0;
     for (int x = 1; x < nbinsX; x++) {
       prob += res->GetBinContent(x, y);
+    }
+    if (debug) {
+      if ( abs( (1-prob) - res->GetBinContent(nbinsX, y) ) > 1e-6 ) {
+        cout << "INFO: Changing " << ptcls[y-1] << "TrueTo" << ptcls[nbinsX-1] << "Tag eff from " << res->GetBinContent(nbinsX, y) << " to " << 1 - prob << endl;
+      }
     }
     res->SetBinContent(nbinsX, y, 1 - prob);
   }
@@ -306,12 +311,25 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
               histRes->SetBinError(idxTag + 1, idxTrue + 1, err);
             }
           }
-          ensureUnitarity(histRes);
+          ensureUnitarity(histRes, ptcls);
 
           // perform unfolding to get unfolded ("true") yield
           RooUnfoldResponse resp(nullptr, histDim, histRes);
           RooUnfoldBayes    unfoldWorker(&resp, histMea, numOfIter);
           auto              histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
+
+          if (debug) {
+            // Print measured and unfolded yields
+            cout << "\nINFO: measured vs unfolded yields vs predicted (" << pref << " " << x << " " << y << " " << z << ")" << endl;
+            for (int idx = 0; idx != totSize; idx++) {
+              double pred = 0.;
+              for (int idy = 0; idy != totSize; idy++) {
+                pred += histRes->GetBinContent(idx+1, idy+1) * histUnf->GetBinContent(idy+1);
+              }
+              cout << "\t" << ptcls[idx] << ": " << histMea->GetBinContent(idx+1) << " | " << histUnf->GetBinContent(idx+1) << " | " << pred << endl;
+            }
+            cout << endl;
+          }
 
           // Save unfolded yields
           for (int idx = 0; idx != totSize; idx++) {
@@ -333,6 +351,8 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
           for (int idxTag = 0; idxTag != totSize; idxTag++) {
             auto wtTagToMuTag    = 0.0;
             auto probTrueNormFac = 0.0;
+            // Store weights for each true species
+            vector<double> wtTagToMuTag_singleTrue(5, 0.);
 
             // Compute the shared normalization factor
             for (int idxTrue = 0; idxTrue != totSize; idxTrue++)
@@ -380,6 +400,7 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
                 cout << "  trans. fac. = " << probTagToTrue << " * "
                      << effTrueToMuTag << " = " << wtTagToMuTagElem << endl;
               wtTagToMuTag += wtTagToMuTagElem;
+              wtTagToMuTag_singleTrue[idxTrue] = wtTagToMuTagElem;
             }
 
             // we use idxTag as the second index, which checks out
@@ -390,6 +411,13 @@ void unfold(vStr& prefix, vStr& ptcls, vector<int>& nbins, F1& histoInGetter,
             if (debug)
               cout << "Writing final contracted transfer factor = "
                    << wtTagToMuTag << " to " << name << endl;
+
+            // Save transfer factors considering single true type
+            for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
+              auto name_single = name + "_" + ptcls[idxTrue] + "TrueOnly";
+              auto histo_single = histoOutGetter(name_single);
+              histo_single->SetBinContent(x, y, z, wtTagToMuTag_singleTrue[idxTrue]);
+            }
           }
 
           if (debug) {
