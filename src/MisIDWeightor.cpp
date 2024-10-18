@@ -41,7 +41,6 @@ const Double_t nts = numToys * numToys;
  *  @date   2015-08-11
  */
 
-const TString pidfile_name = "/home/ejiang/rjpsi_misid/myPid_up.root";
 const bool verbose = false;
 const bool very_verbose = false;
 
@@ -76,7 +75,7 @@ class MisIDFunction {
 public: 
 
   /// Standard constructor
-  MisIDFunction(int cuttype = 0)
+  MisIDFunction(TString pidfile_name,int cuttype = 0)
     : cache(new std::map<Int_t,CacheType >()),
       pidfile(pidfile_name)
   {
@@ -653,36 +652,24 @@ void MisIDFunction::createCountCache(TTree* tree) {
   }
 }
 
-void MisIDWeightor(TString year) {
+void MisIDWeightor(TString year, TString suffix= "") {
   TString oldfilename, newfilename;
 
-  oldfilename = "/home/ejiang/tuples"+year+"/comb/20"+year+"_Data_MU_misID_sel.root";
-  newfilename = "/home/ejiang/tuples"+year+"/comb/20"+year+"_Data_MU_misID_sel_unfold.root";
+  oldfilename = "/home/ejiang/tuples"+year+"/sel/20"+year+"_Data_misID_sel_MuonNShared.root";
+  newfilename = "/home/ejiang/tuples"+year+"/sel/20"+year+"_Data_misID_sel_MuonNShared_unfold"+suffix+".root";
+
+  // const TString year = "18";
+  // const TString suffix = "isMuon_allYears";
+  // const TString pidfile_name = "/home/ejiang/rjpsi_misid/pidws/myPid_18_isMuon.root";
+  const TString pidfile_name = "/home/ejiang/rjpsi_misid/pidws/myPid_"+year+suffix+".root";
+
   
-  // if(year=="16"){
-  //   oldfilename = "/home/ejiang/tuples16/comb/2016_Data_MU_misID_sel.root";
-  //   newfilename = "/home/ejiang/tuples16/comb/2016_Data_MU_misID_sel_unfold.root";
-  //   // oldfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel.root";
-  //   // newfilename = "/home/ejiang/tuples16/sel/2016_Data_MU_misID_sel_unfold_p.root";
-  // }
-  // if(year=="17"){
-  //   oldfilename = "/home/ejiang/tuples17/comb/2017_Data_MU_misID_sel.root";
-  //   newfilename = "/home/ejiang/tuples17/comb/2017_Data_MU_misID_sel_unfold.root";
-  //   // oldfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel.root";
-  //   // newfilename = "/home/ejiang/tuples17/sel/2017_Data_MU_misID_sel_unfold_p.root";
-  // }
-  // else if(year=="18"){
-  //   oldfilename = "/home/ejiang/tuples18/comb/2018_Data_MU_misID_sel.root";
-  //   newfilename = "/home/ejiang/tuples18/comb/2018_Data_MU_misID_sel_unfold.root";
-  //   // oldfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel_bachmu_p.root";
-  //   // newfilename = "/home/ejiang/tuples18/sel/2018_Data_MD_misID_sel_bachmu_p_unfold.root";
-  // }
   TChain* oldtree = new TChain("DecayTree");
   oldtree->Add(oldfilename.Data());
 
   std::cin.get();
 
-  MisIDFunction* fobj = new MisIDFunction(0);
+  MisIDFunction* fobj = new MisIDFunction(pidfile_name,0);
   fobj->createCountCache(oldtree);
 
   TF1 PIDWfunc("PIDWfunc",fobj,0,10000,5,"MisIDFunction");
@@ -708,6 +695,7 @@ void MisIDWeightor(TString year) {
   if (kTRUE) {
     Int_t PidBin = 0;
     Double_t BachMu_P;
+    Double_t BachMu_PT;
     Double_t BachMu_PZ;
     Double_t BachMu_ETA;
     Double_t nTracks;
@@ -730,6 +718,11 @@ void MisIDWeightor(TString year) {
     oldtree->SetBranchAddress("HadronHypo",&HadronHypo);
     oldtree->SetBranchAddress("PIDW",&PIDW);
     oldtree->SetBranchAddress("PIDWVar",&PIDWVar);
+    // for looking at NaNs
+    oldtree->SetBranchAddress("BachMu_PT",&BachMu_PT);
+    oldtree->SetBranchAddress("BachMu_ETA",&BachMu_ETA);
+    // oldtree->SetBranchAddress("nTracks",&nTracks);
+
     ///    oldtree->SetBranchAddress("PIDW_DLL",&PIDW_DLL);
     ///    oldtree->SetBranchAddress("PIDWVar_DLL",&PIDWVar_DLL);
     
@@ -782,6 +775,11 @@ void MisIDWeightor(TString year) {
     for (Int_t i = 0; i < N_entries; i++) {
       oldtree->GetEntry(i);
       getPidBin();
+      // cout<<PidBin<<endl;
+      // if(PidBin==73||PidBin==41){
+      // 	cout<<"Removing PidBin "<<PidBin<<endl;
+      // 	continue;
+      // }
      
       PIDW = 0.0;
       PIDWVar = 0.0;
@@ -843,6 +841,28 @@ void MisIDWeightor(TString year) {
 	HadronHypo = 5;
 	MISIDTYPE = 1;
       }
+      if(isnan(PIDW)){
+	cout<<"PIDW is nan"<<endl;
+	cout<<"PIDW_PI "<<PIDW_PI<<endl;
+	cout<<"PIDW_K "<<PIDW_K<<endl;
+	cout<<"PIDW_P "<<PIDW_P<<endl;
+	cout<<"PIDW_E "<<PIDW_E<<endl;
+	cout<<"PIDW_MU "<<PIDW_MU<<endl;
+	cout<<"PIDW_U "<<PIDW_U<<endl;
+	cout<<"BachMu_P "<<BachMu_P<<endl;
+	cout<<"BachMu_PT "<<BachMu_PT<<endl;
+	cout<<"BachMu_ETA "<<BachMu_ETA<<endl;
+	cout<<"nTracks "<<nTracks<<endl;
+	cout<<"BinN "<<PidBin<<endl;
+	// ->FindFixBin();
+	PIDW = 0.0;
+      }
+      if(isnan(PIDW_PI)){ PIDW_PI = 0.0;}
+      if(isnan(PIDW_K)){ PIDW_K = 0.0;}
+      if(isnan(PIDW_P)){ PIDW_P = 0.0;}
+      if(isnan(PIDW_E)){ PIDW_E = 0.0;}
+      if(isnan(PIDW_MU)){ PIDW_MU = 0.0;}
+      if(isnan(PIDW_U)){ PIDW_U = 0.0;}
       
       // FILL
       newtree->Fill();
@@ -858,7 +878,7 @@ void MisIDWeightor(TString year) {
 
 #ifndef __CINT__
 int main () {
-  TString year = "18";
+  // TString year = "18";
 
 #ifdef GHOST_ALTERNATE
   std::cout << "GHOST ALTERNATE" << std::endl;
@@ -873,14 +893,44 @@ int main () {
   return 0;
 #endif
   std::cout << "STARTING" << std::endl;
-  std::cout << year << std::endl;
-  MisIDWeightor(year);
-  // year = "17";
-  // std::cout << year << std::endl;
-  // MisIDWeightor(year);
-  // year = "16";
-  // std::cout << year << std::endl;
-  // MisIDWeightor(year);
+
+  TString years[]={"18"};
+  TString suffixes[]={"nocorr",};
+  // TString suffixes[]={"isMuon", "isMuon_allYears", "nocorr",
+  //   "isMuon_allYears_DLL", "isMuon_allYears_uBDT",
+  //   "isMuon_DLL", "isMuon_uBDT",
+  //   "nocorr_DLL", "nocorr_uBDT",};
+  for(const auto&year : years){ // which year sample this correction is for 
+    for(const auto&suffix : suffixes){ // which weird variation i'm doing
+      cout<<"Year: "<<"\t"<<suffix;
+      if(suffix.Contains("DLL")){ // fix DLLyear for each year independent of sample
+        for(const auto&DLLyear : years){
+          cout<<"\t"<<"DLLyear: "<<DLLyear;
+          MisIDWeightor(year, "_"+suffix+"_"+DLLyear);
+	}
+      }
+      else if(suffix.Contains("uBDT")){ // fix uBDTyear for each year independent of sample
+        for(const auto&uBDTyear : years){
+          cout<<"\t"<<"uBDTyear: "<<uBDTyear;
+          MisIDWeightor(year, "_"+suffix+"_"+uBDTyear);
+        }
+      }
+      else { MisIDWeightor(year, "_"+suffix); }
+    }
+  }
   return 0;
+
+  // const TString suffix = "isMuon_allYears";
+
+  // std::cout << year << std::endl;
+  // MisIDWeightor(year,suffix);
+  // // year = "17";
+  // // std::cout << year << std::endl;
+  // // MisIDWeightor(year);
+  // // year = "16";
+  // // std::cout << year << std::endl;
+  // // MisIDWeightor(year);
+  // cout<<"Created PIDWs with "<<suffix<<endl;
+  // return 0;
 }  // Main program when run stand-alone
 #endif
