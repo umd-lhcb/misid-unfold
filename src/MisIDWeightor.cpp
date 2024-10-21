@@ -41,8 +41,8 @@ const Double_t nts = numToys * numToys;
  *  @date   2015-08-11
  */
 
-const bool verbose = false;
-const bool very_verbose = false;
+const bool verbose = true;
+const bool very_verbose = true;
 
 const TString CutString = "Jpsi_L0DiMuonDecision_TOS==1 && (Jpsi_Hlt1DiMuonHighMassDecision_TOS==1 || Jpsi_Hlt1DiMuonLowMassDecision_TOS==1) && Jpsi_Hlt2DiMuonDetachedJPsiDecision_TOS==1 && Bc_ISOLATION_BDT<0.2 && Bc_MM<=6400 && Bc_MM>=3203 && Bc_ENDVERTEX_CHI2<25 && Bc_DOCA<0.15 && BachMu_IPCHI2_OWNPV>4.8 && MuM_IPCHI2_OWNPV>4 && MuP_IPCHI2_OWNPV>4 && Jpsi_MM<=3150 && Jpsi_MM>=3040 && BachMu_P>3000 && BachMu_P<100000 && nTracks<600 && BachMu_PT>750 && BachMu_isMuon==0";
 const TString PiCutString = "(BachMu_ProbNNp<0.1)||!(BachMu_PIDK<1)||!(BachMu_ProbNNk>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";// wrong & not used -- whatever fails all other cuts is sorted as pi                                                   
@@ -656,8 +656,8 @@ void MisIDFunction::createCountCache(TTree* tree) {
 void MisIDWeightor(TString year, TString suffix= "") {
   TString oldfilename, newfilename;
 
-  oldfilename = "/home/ejiang/tuples"+year+"/sel/20"+year+"_Data_misID_sel_MuonNShared.root";
-  newfilename = "/home/ejiang/tuples"+year+"/sel/20"+year+"_Data_misID_sel_MuonNShared_unfold"+suffix+".root";
+  oldfilename = "/home/ejiang/tuples"+year+"/sel/20"+year+"_Data_misID_sel.root";
+  newfilename = "/home/ejiang/tuples"+year+"/sel/20"+year+"_Data_misID_sel_unfold"+suffix+".root";
 
   // const TString year = "18";
   // const TString suffix = "isMuon_allYears";
@@ -896,8 +896,8 @@ int main () {
 #endif
   std::cout << "STARTING" << std::endl;
 
-  TString years[]={"17"};
-  TString suffixes[]={"isMuon"};
+  TString years[]={"18"};
+  TString suffixes[]={"isMuon_1"};
   // TString suffixes[]={"isMuon", "isMuon_allYears", "nocorr",
   //   "isMuon_allYears_DLL", "isMuon_allYears_uBDT",
   //   "isMuon_DLL", "isMuon_uBDT",
