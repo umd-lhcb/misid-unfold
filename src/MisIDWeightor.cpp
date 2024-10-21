@@ -129,6 +129,7 @@ public:
       HistoVector[3] = loadRootObject(pidfile,"EFFNN0_Mu_TO_MU");
       HistoVector[4] = loadRootObject(pidfile,"EFFNN0_e_TO_MU");
       HistoVector[5] = loadRootObject(pidfile,"EFFNN0_Ghost_TO_MU");
+      HistoVector[3]->Print("all");
     } else if (cuttype==1) { //dll
       HistoVector[0] = loadRootObject(pidfile,"EFFDLL0_Pi_TO_MU");
       HistoVector[1] = loadRootObject(pidfile,"EFFDLL0_K_TO_MU");
@@ -662,7 +663,7 @@ void MisIDWeightor(TString year, TString suffix= "") {
   // const TString suffix = "isMuon_allYears";
   // const TString pidfile_name = "/home/ejiang/rjpsi_misid/pidws/myPid_18_isMuon.root";
   const TString pidfile_name = "/home/ejiang/rjpsi_misid/pidws/myPid_"+year+suffix+".root";
-
+  cout<<"Creating "<<newfilename<<" using weights from "<<pidfile_name<<endl;
   
   TChain* oldtree = new TChain("DecayTree");
   oldtree->Add(oldfilename.Data());
@@ -716,8 +717,8 @@ void MisIDWeightor(TString year, TString suffix= "") {
     oldtree->SetBranchAddress("BachMu_PZ",&BachMu_PZ);
     oldtree->SetBranchAddress("nTracks",&nTracks);
     oldtree->SetBranchAddress("HadronHypo",&HadronHypo);
-    oldtree->SetBranchAddress("PIDW",&PIDW);
-    oldtree->SetBranchAddress("PIDWVar",&PIDWVar);
+    // oldtree->SetBranchAddress("PIDW",&PIDW);
+    // oldtree->SetBranchAddress("PIDWVar",&PIDWVar);
     // for looking at NaNs
     oldtree->SetBranchAddress("BachMu_PT",&BachMu_PT);
     oldtree->SetBranchAddress("BachMu_ETA",&BachMu_ETA);
@@ -841,6 +842,7 @@ void MisIDWeightor(TString year, TString suffix= "") {
 	HadronHypo = 5;
 	MISIDTYPE = 1;
       }
+      // if(PIDW_MU!=0){cout<<"MU NOT 0"<<endl;}
       if(isnan(PIDW)){
 	cout<<"PIDW is nan"<<endl;
 	cout<<"PIDW_PI "<<PIDW_PI<<endl;
