@@ -894,8 +894,8 @@ int main () {
 #endif
   std::cout << "STARTING" << std::endl;
 
-  TString years[]={"18"};
-  TString suffixes[]={"nocorr",};
+  TString years[]={"17"};
+  TString suffixes[]={"isMuon"};
   // TString suffixes[]={"isMuon", "isMuon_allYears", "nocorr",
   //   "isMuon_allYears_DLL", "isMuon_allYears_uBDT",
   //   "isMuon_DLL", "isMuon_uBDT",
