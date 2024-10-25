@@ -23,7 +23,6 @@
 #include <ROOT/RDataFrame.hxx>
 
 #include <yaml-cpp/yaml.h>
-#include <boost/range/join.hpp>
 #include <cxxopts.hpp>
 
 #include "kinematic.h"
@@ -165,21 +164,6 @@ vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
   return result;
 }
 
-vector<TString> buildHistoSmrWtnames(YAML::Node node) {
-  vector<TString> result{};
-  vector<TString> targetParticles = {"K", "Pi"};
-
-  for (auto it = node.begin(); it != node.end(); it++) {
-    for (auto tgt : targetParticles) {
-      auto srcPtcl = it->first.as<string>();
-      auto name    = srcPtcl + "TagTo" + tgt + "True";
-      result.emplace_back(name);
-    }
-  }
-
-  return result;
-}
-
 template <typename T, typename C = decay_t<decltype(*begin(declval<T>()))>>
 tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
     RNode df, TFile* ntpHisto, string histoPrefix, string weightBrPrefix,
@@ -265,35 +249,6 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
     if (debug) cout << "  " << wtPrefixSingleTrue << " = " << expr << endl;
   }
 
-  // generate the DiF smearing weight for each event
-  vector<string> brSmrNames{};
-  for (const auto& tgt : wtSmrParticles) {
-    expr  = ""s;
-    first = true;
-    for (const auto& p : particles) {
-      auto wtBrName = wtPrefix + "_" + p + "TagTo" + capitalize(tgt) + "True";
-      if (!first) expr += " + ";
-      first = false;
-      expr += brPrefix + p + "*" + wtBrName;
-    }
-
-    auto outputBr = wtPrefix + "_smr_" + tgt;
-    brSmrNames.push_back(outputBr);
-    outputBrs.emplace_back(outputBr);
-    directives.emplace_back(pair{outputBr, expr});
-    if (debug) cout << "  " << outputBr << " = " << expr << endl;
-  }
-
-  // generate the DiF no smearing weight
-  auto brNoSmr = wtPrefix + "_no_smr";
-  outputBrs.emplace_back(brNoSmr);
-
-  expr = "1.0"s;
-  for (const auto& smr : brSmrNames) {
-    expr += " - " + smr;
-  }
-  if (debug) cout << "  " << brNoSmr << " = " << expr << endl;
-  directives.emplace_back(pair{brNoSmr, expr});
 
   return {directives, outputBrs};
 }
@@ -495,9 +450,6 @@ int main(int argc, char** argv) {
   auto histoWtNames = buildHistoWtNames(particle, ymlConfig["tags"]);
   cout << "\nEfficiency histograms: " << endl;
   for (auto h : histoWtNames) cout << "\t" << h << endl;
-  auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
-  cout << "\nAdditional histograms for smearing: " << endl;
-  for (auto h : histoSmrWtNames) cout << "\t" << h << endl;
 
   for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
     if (debug) cout << "--------" << endl;
@@ -568,7 +520,7 @@ int main(int argc, char** argv) {
              << endl;
       auto [dfHistos, outputBrsHistos, histos] =
           applyWtFromHistos(df, ntpHisto, histoPrefix, weightBrPrefix,
-                            boost::join(histoWtNames, histoSmrWtNames), debug);
+                            histoWtNames, debug);
       for (auto br : outputBrsHistos) outputBrNames.emplace_back(br);
 
       // add the actual misID weights
