@@ -21,6 +21,13 @@ from pyTuplingUtils.boolean.eval import BooleanEvaluator
 
 HISTO_NAME = "tagged.root"
 
+SKIM_CUTS = {
+    "iso": "is_iso_loose",
+    "1os": "is_1os_loose",
+    "2os": "is_2os_loose",
+    "dd": "is_dd_loose",
+    "vmu": "1"
+}
 
 #######################
 # Command line parser #
@@ -83,19 +90,25 @@ if __name__ == "__main__":
         for br_name in config["binning"]:
             histo_brs.append(evaluator.eval(br_name))
 
-        global_cut = evaluator.eval(subconfig["cuts"])
+        global_cut_expr = subconfig["cuts"]
+        global_cut = evaluator.eval(global_cut_expr)
+        print(f"  Global cuts: {global_cut_expr}")
 
-        for sp, cut_expr in config["tags"].items():
-            print(f"  specie {histo_name_gen(sp)} has the following cuts: {cut_expr}")
-            cut = evaluator.eval(cut_expr)
+        for s, skim_cut_expr in SKIM_CUTS.items():
+            skim_cut = evaluator.eval(skim_cut_expr)
+            print(f"    Skim cuts: {skim_cut_expr}")
 
-            # Make sure the evaluator is aware of the new variable
-            evaluator.transformer.known_symb[sp] = cut
-            evaluator.transformer.cache[sp] = cut
+            for sp, cut_expr in config["tags"].items():
+                print(f"    Species {histo_name_gen(sp)} has the following cuts: {cut_expr}")
+                cut = evaluator.eval(cut_expr)
 
-            # Now build histograms
-            ntp[f"{particle}__{histo_name_gen(sp)}"] = np.histogramdd(
-                histo_brs,
-                bins=list(config["binning"].values()),
-                weights=(cut & global_cut),
-            )
+                # Make sure the evaluator is aware of the new variable
+                evaluator.transformer.known_symb[sp] = cut
+                evaluator.transformer.cache[sp] = cut
+
+                # Now build histograms
+                ntp[f"{particle}__{histo_name_gen(sp)}__{s}"] = np.histogramdd(
+                    histo_brs,
+                    bins=list(config["binning"].values()),
+                    weights=(cut & global_cut & skim_cut),
+                )

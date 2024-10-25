@@ -147,20 +147,20 @@ pair<vPStrStr, vector<string>> genTaggedCutDirective(
 // Helpers for weight computation //
 ////////////////////////////////////
 
-vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
+vector<TString> buildHistoWtNames(string targetParticle, const vector<TString>& skims, YAML::Node node) {
   vector<TString> result{};
-
-  for (auto it = node.begin(); it != node.end(); it++) {
-    auto srcPtcl = it->first.as<string>();
-    auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag";
-    result.emplace_back(name);
-    for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
-      auto srcPtclSingle = itTrue->first.as<string>();
-      auto nameSingle    = name + "_" + srcPtclSingle + "TrueOnly";
-      result.emplace_back(nameSingle);
+  for (const auto& skim : skims) {
+    for (auto it = node.begin(); it != node.end(); it++) {
+      auto srcPtcl = it->first.as<string>();
+      auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag_" + skim;
+      result.emplace_back(name);
+      for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
+        auto srcPtclSingle = itTrue->first.as<string>();
+        auto nameSingle    = name + "_" + srcPtclSingle + "TrueOnly";
+        result.emplace_back(nameSingle);
+      }
     }
   }
-
   return result;
 }
 
@@ -205,6 +205,7 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
 
 pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
                                               const string& wtPrefix,
+                                              const vector<TString>& skims,
                                               const bool&   debug = false,
                                               string brPrefix = "is_misid_") {
   vPStrStr       directives{};
@@ -217,38 +218,42 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
   for (auto it = node.begin(); it != node.end(); it++)
     particles.emplace_back(it->first.as<string>());
 
-  // generate the automatic weight for each event based on the species of the
-  // event
-  auto expr  = ""s;
-  auto first = true;
+  for (const auto& skim : skims) {
 
-  for (const auto& p : particles) {
-    auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle;
-    if (!first) expr += " + ";
-    first = false;
-    expr += brPrefix + p + "*" + wtBrName;
-  }
-  outputBrs.emplace_back(wtPrefix);
-  directives.emplace_back(pair{wtPrefix, expr});
-  if (debug) cout << "  " << wtPrefix << " = " << expr << endl;
+    // generate the automatic weight for each event based on the species of the
+    // event
+    auto expr  = ""s;
+    auto first = true;
 
-  // Also generate weights assuming single true type
-  for (const auto& pTrue : particles) {
-    expr  = ""s;
-    first = true;
     for (const auto& p : particles) {
-      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" +
-                      pTrue + "TrueOnly";
+      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" + skim;
       if (!first) expr += " + ";
       first = false;
       expr += brPrefix + p + "*" + wtBrName;
     }
-    auto wtPrefixSingleTrue = wtPrefix + "_" + pTrue;
-    outputBrs.emplace_back(wtPrefixSingleTrue);
-    directives.emplace_back(pair{wtPrefixSingleTrue, expr});
-    if (debug) cout << "  " << wtPrefixSingleTrue << " = " << expr << endl;
-  }
+    auto wtName = wtPrefix + "_" + skim;
+    outputBrs.emplace_back(wtName);
+    directives.emplace_back(pair{wtName, expr});
+    if (debug) cout << "  " << wtName << " = " << expr << endl;
 
+    // Also generate weights assuming single true type
+    for (const auto& pTrue : particles) {
+      expr  = ""s;
+      first = true;
+      for (const auto& p : particles) {
+        auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" + skim + "_" +
+                      pTrue + "TrueOnly";
+        if (!first) expr += " + ";
+        first = false;
+        expr += brPrefix + p + "*" + wtBrName;
+      }
+      auto wtNameSingleTrue = wtName + "_" + pTrue;
+      outputBrs.emplace_back(wtNameSingleTrue);
+      directives.emplace_back(pair{wtNameSingleTrue, expr});
+      if (debug) cout << "  " << wtNameSingleTrue << " = " << expr << endl;
+    }
+
+  }
 
   return {directives, outputBrs};
 }
@@ -446,8 +451,12 @@ int main(int argc, char** argv) {
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
 
+  // Produce list of skims. Currently, only tagged yields are different.
+  // For vmu, no skim cuts are applied.
+  vector<TString> skims = {"iso", "1os", "2os", "dd"};
+
   // Generate names of histograms to be imported from unfolded.root
-  auto histoWtNames = buildHistoWtNames(particle, ymlConfig["tags"]);
+  auto histoWtNames = buildHistoWtNames(particle, skims, ymlConfig["tags"]);
   cout << "\nEfficiency histograms: " << endl;
   for (auto h : histoWtNames) cout << "\t" << h << endl;
 
@@ -525,7 +534,7 @@ int main(int argc, char** argv) {
 
       // add the actual misID weights
       auto [directives, outputBrsWts] =
-          genWtDirective(ymlConfig["tags"], weightBrPrefix, debug);
+          genWtDirective(ymlConfig["tags"], weightBrPrefix, skims, debug);
       df = defineBranch(dfHistos, ""s, directives, debug);
       for (auto br : outputBrsWts) outputBrNames.emplace_back(br);
     }
