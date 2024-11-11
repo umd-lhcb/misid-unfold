@@ -57,8 +57,8 @@ def get_cuts(p):
     cuts +=  " & pi_TRUEORIGINVERTEX_TYPE == 2"
     cuts +=  " & K_TRUEORIGINVERTEX_TYPE == 2"
     #
-    cuts += f" & abs({p}_TRUEP_X) > 50"
-    cuts += f" & abs({p}_TRUEP_Y) > 50"
+    # cuts += f" & abs({p}_TRUEP_X) > 50"
+    # cuts += f" & abs({p}_TRUEP_Y) > 50"
     return cuts
 CUTS = {
     "k_smr":            get_cuts("K")  + " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25",
@@ -167,6 +167,47 @@ if __name__ == "__main__":
         for idx, br in enumerate(output_brs):
             br_name = f"{ptcl}_{ADD_LABELS[idx]}"
             output_tree[br_name] = br[global_cut]
+
+        true_px = evaluator.eval(f"{prefix}_TRUEP_X")
+        true_py = evaluator.eval(f"{prefix}_TRUEP_Y")
+        true_pz = evaluator.eval(f"{prefix}_TRUEP_Z")
+        true_pt = evaluator.eval(f"{prefix}_TRUEPT")
+        reco_px = evaluator.eval(f"{prefix}_PX")
+        reco_py = evaluator.eval(f"{prefix}_PY")
+        reco_pz = evaluator.eval(f"{prefix}_PZ")
+        reco_pt = evaluator.eval(f"{prefix}_PT")
+        reco_p = evaluator.eval(f"{prefix}_P")
+
+        # Get delta_theta
+        true_theta = np.arctan(np.divide(true_pt,true_pz))
+        reco_theta = np.arctan(np.divide(reco_pt,reco_pz))
+        delta_theta = np.subtract(reco_theta, true_theta)
+
+        output_brs.append(delta_theta)
+        output_tree[f"{ptcl}_dTheta"] = delta_theta[global_cut]
+
+        # Get delta_phi
+        true_phi = np.arccos(np.divide(true_px,true_pt))
+        reco_phi = np.arccos(np.divide(reco_px,reco_pt))
+        # For y < 0, phi is actually 2*pi - acos(px/pt)
+        twopis = np.full_like(delta_theta, 2*math.pi)
+        true_phi = np.subtract(twopis, true_phi, out=true_phi, where=true_py<0.)
+        reco_phi = np.subtract(twopis, reco_phi, out=reco_phi, where=true_py<0.)
+        delta_phi = np.subtract(reco_phi, true_phi)
+        # Set delta_phi -> 2pi - delta_phi for delta_phi > pi
+        delta_phi = np.subtract(twopis, delta_phi, out=delta_phi, where=delta_phi>math.pi)
+        # Set delta_phi -> delta_phi - 2pi for delta_phi <= -pi
+        delta_phi = np.add(delta_phi, twopis, out=delta_phi, where=delta_phi<=-math.pi)
+
+        output_brs.append(delta_phi)
+        output_tree[f"{ptcl}_dPhi"] = delta_phi[global_cut]
+
+        # Get P ratio
+        true_p = np.sqrt(np.add(np.power(true_pt, 2), np.power(true_pz, 2)))
+        ratio_p = np.divide(reco_p, true_p, out=np.zeros_like(reco_p), where=true_p>0)
+
+        output_brs.append(ratio_p)
+        output_tree[f"{ptcl}_rP"] = ratio_p[global_cut]
 
         # now write the tree
         output_ntp[ptcl] = output_tree

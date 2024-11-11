@@ -31,15 +31,42 @@ using ROOT::Math::XYZVector;
 // Rebuild momentum //
 //////////////////////
 
-PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac) {
-  auto vec = PxPyPzMVector{};
-
-  vec.SetPx(v4Mu.Px() * smrFac[0]);
-  vec.SetPy(v4Mu.Py() * smrFac[1]);
-  vec.SetPz(v4Mu.Pz() * smrFac[2]);
-  vec.SetM(v4Mu.M());
-
-  return PxPyPzEVector(vec);
+PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString mode = "cartesian") {
+  if (mode == "cartesian") {
+    // Get variations
+    double rx = smrFac[0];
+    double ry = smrFac[1];
+    double rz = smrFac[2];
+    // Compute smeared vector
+    auto vec = PxPyPzMVector{};
+    vec.SetPx(v4Mu.Px() * rx);
+    vec.SetPy(v4Mu.Py() * ry);
+    vec.SetPz(v4Mu.Pz() * rz);
+    vec.SetM(v4Mu.M());
+    return PxPyPzEVector(vec);
+  }
+  else if (mode == "spherical") {
+    // Get variations
+    double dtheta = smrFac[3];
+    double dphi = smrFac[4];
+    double rp = smrFac[5];
+    // Compute smeared vector
+    double p = v4Mu.P() * rp;
+    double theta = v4Mu.Theta() + dtheta;
+    double pt = p * sin(theta);
+    double pz = p * cos(theta);
+    double eta = 0.5 * log((p+pz)/(p-pz));
+    double phi = v4Mu.Phi() + dphi;
+    auto vec = PtEtaPhiMVector();
+    vec.SetPt(pt);
+    vec.SetEta(eta);
+    vec.SetPhi(phi);
+    vec.SetM(v4Mu.M());
+    return PxPyPzEVector(vec);
+  }
+  else {
+    throw std::runtime_error("rebuildMu4Mom: Unexpected mode.");
+  }
 }
 
 XYZVector buildBFlightDir(double endVtxX, double ownPvX, double endVtxY,
