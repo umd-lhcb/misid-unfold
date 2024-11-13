@@ -315,10 +315,10 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
                string prefix = "k_smr") {
   auto df = RDataFrame(prefix, auxFile);
   df.Foreach(
-      [&](double x, double y, double z) {
-        result.emplace_back(vector<double>{x, y, z});
+      [&](double x, double y, double z, double dTheta, double dPhi, double rP) {
+        result.emplace_back(vector<double>{x, y, z, dTheta, dPhi, rP});
       },
-      setBrPrefix(prefix, {"x", "y", "z"}));
+      setBrPrefix(prefix, {"x", "y", "z", "dTheta", "dPhi", "rP"}));
 }
 
 template <typename F>

@@ -57,11 +57,7 @@ PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString m
     double pz = p * cos(theta);
     double eta = 0.5 * log((p+pz)/(p-pz));
     double phi = v4Mu.Phi() + dphi;
-    auto vec = PtEtaPhiMVector();
-    vec.SetPt(pt);
-    vec.SetEta(eta);
-    vec.SetPhi(phi);
-    vec.SetM(v4Mu.M());
+    auto vec = PtEtaPhiMVector( pt, eta, phi, v4Mu.M() );
     return PxPyPzEVector(vec);
   }
   else {
