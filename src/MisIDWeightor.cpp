@@ -41,13 +41,14 @@ const Double_t nts = numToys * numToys;
  *  @date   2015-08-11
  */
 
-const bool verbose = true;
-const bool very_verbose = true;
+const bool verbose = false;
+const bool very_verbose = false;
+const bool setEffsTo1 = false;
 
 const TString CutString = "Jpsi_L0DiMuonDecision_TOS==1 && (Jpsi_Hlt1DiMuonHighMassDecision_TOS==1 || Jpsi_Hlt1DiMuonLowMassDecision_TOS==1) && Jpsi_Hlt2DiMuonDetachedJPsiDecision_TOS==1 && Bc_ISOLATION_BDT<0.2 && Bc_MM<=6400 && Bc_MM>=3203 && Bc_ENDVERTEX_CHI2<25 && Bc_DOCA<0.15 && BachMu_IPCHI2_OWNPV>4.8 && MuM_IPCHI2_OWNPV>4 && MuP_IPCHI2_OWNPV>4 && Jpsi_MM<=3150 && Jpsi_MM>=3040 && BachMu_P>3000 && BachMu_P<100000 && nTracks<600 && BachMu_PT>750 && BachMu_isMuon==0";
-const TString PiCutString = "(BachMu_ProbNNp<0.1)||!(BachMu_PIDK<1)||!(BachMu_ProbNNk>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";// wrong & not used -- whatever fails all other cuts is sorted as pi                                                   
-const TString PCutString = "BachMu_ProbNNp>0.1&&(BachMu_PIDK-BachMu_PIDp<2)&&!(BachMu_ProbNNk>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
-const TString KCutString = "BachMu_ProbNNk>0.1&&(BachMu_PIDK-BachMu_PIDp>2)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
+// const TString PiCutString = "(BachMu_ProbNNp<0.1)||!(BachMu_PIDK<1)||!(BachMu_ProbNNk>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";// wrong & not used -- whatever fails all other cuts is sorted as pi                                                   
+const TString PCutString = "BachMu_ProbNNp>0.1&&!((BachMu_PIDK-BachMu_PIDp)>2)&&!(BachMu_ProbNNk>0.1)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
+const TString KCutString = "BachMu_ProbNNk>0.1&&((BachMu_PIDK-BachMu_PIDp)>2)&&!(BachMu_PIDmu>2)&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
 const TString MuCutString = "BachMu_PIDmu>2&&!(BachMu_ProbNNe>0.1)&&!(BachMu_ProbNNghost>0.2)";
 const TString ECutString = "BachMu_ProbNNe>0.1&&!(BachMu_ProbNNghost>0.2)";
 const TString GhCutString = "BachMu_ProbNNghost>0.2";
@@ -185,7 +186,7 @@ public:
       Double_t valbreak_hyb[numClasses][numClasses] = {0}; // first index is hat category; second is weight for unfolded type
 
       if (!HistoMatrix[0][0]->IsBinUnderflow(PidBin) && !HistoMatrix[0][0]->IsBinOverflow(PidBin)) {
-	std::cout<<"not over or underflow"<<std::endl;
+	// std::cout<<"not over or underflow"<<std::endl;
 	TH1D temp("temp","temp",1,0,2);
 	TString cut;
 
@@ -236,9 +237,10 @@ public:
 	  for (int toy = 0; toy < numToys; toy++) {
 
 	    if (verbose) std::cout << "\n\n TOY #" << toy << ":\n\n";
+	    std::cout<<"FIRST H2H RESPONSE MATRIX"<<std::endl;
 	    Double_t response_matrix[numClasses][numClasses];
-	    for (int j = 0; j < numClasses; j++) {
-	      for (int i = 0; i < numClasses; i++) {
+	    for (int j = 0; j < numClasses; j++) { // j: tagged species
+	      for (int i = 0; i < numClasses; i++) { // i: real species
 		double val = HistoMatrix[i][j]->GetBinContent(PidBin);
 		double err = HistoMatrix[i][j]->GetBinError(PidBin);
 		double sample = -1;
@@ -351,8 +353,9 @@ public:
 	      if (very_verbose) std::cout << "\n\n NESTED TOY #" << toy2 << ":\n\n";
 	      Double_t eff_vector[numClasses];
 	      for (int i = 0; i < numClasses; i++) {
-
+		if (setEffsTo1){ eff_vector[i]=1.0; continue;}
 		if (i == 3) { // muons
+		  std::cout<<"Setting muon eff vector to 0"<<std::endl;
 		  eff_vector[i] = 0.0;
 		} else {
 
@@ -374,8 +377,6 @@ public:
 #else
 		  val = HistoVector[i]->GetBinContent(PidBin);
 		  err = HistoVector[i]->GetBinError(PidBin);
-		  ///val = 0.90;
-		  ///err = 0.01;
 #endif
 		  double sample = -1;
 		  if (val < 0) {
@@ -431,8 +432,8 @@ public:
 	      }
 	    }
 
-	    if (very_verbose) std::cin.get();
-	    if (very_verbose) exit(1);
+	    // if (very_verbose) std::cin.get();
+	    // if (very_verbose) exit(1);
 	  }
 
 	  delete measured_hist;
@@ -480,14 +481,21 @@ public:
 	cache->insert(CacheEntry(i+100*PidBin,std::make_tuple(val_umd[i],valerr_umd[i],break_umd)));
 	cache->insert(CacheEntry(i+10+100*PidBin,std::make_tuple(val_hyb[i],valerr_hyb[i],break_hyb)));
       }
+      // if(verbose){
+      // 	cout<<"val umd"<<endl;
+      // 	val_umd->Print("all");
+      // 	cout<<"break hyb"<<endl;
+      // 	break_hyb->Print("all");
+      // }
+
       std::array<Double_t,numClasses> aempty {};
       cache->insert(CacheEntry(numClasses+100*PidBin,std::make_tuple(avgVal,avgValErr,aempty))); // nikhef
       cache->insert(CacheEntry(numClasses+10+100*PidBin,std::make_tuple(avgVal,avgValErr,aempty))); // nikhef
     }
 
     // Now its been inserted
-    if (verbose) std::cin.get();
-    if (verbose) exit(1);
+    // if (verbose) std::cin.get();
+    // if (verbose) exit(1);
     it = cache->find(marker);
     Double_t val, err;
     std::array<Double_t,numClasses> breakdown {};
@@ -495,8 +503,17 @@ public:
 
     if (returnError)
       return err;
-    else if (returnHadronType)
+    else if (returnHadronType){      
+      // cout<<"Return type: "<<breakdown[HadronReturnType]<<endl;
+      // cout<<"Pi "<<breakdown[0]<<endl;
+      // cout<<"K "<<breakdown[1]<<endl;
+      // cout<<"P "<<breakdown[2]<<endl;
+      // cout<<"Mu "<<breakdown[3]<<endl;
+      // cout<<"E "<<breakdown[4]<<endl;
+      // cout<<"U "<<breakdown[5]<<endl;
+      // cout<<"val "<<val<<endl;
       return breakdown[HadronReturnType];
+    }
     else
       return val;
 
@@ -737,8 +754,8 @@ void MisIDWeightor(TString year, TString suffix= "") {
     newtree->Branch("PIDW_PI",&PIDW_PI,"PIDW_PI/D");
     newtree->Branch("PIDW_K",&PIDW_K,"PIDW_K/D");
     newtree->Branch("PIDW_P",&PIDW_P,"PIDW_P/D");
-    newtree->Branch("PIDW_E",&PIDW_E,"PIDW_E/D");
     newtree->Branch("PIDW_MU",&PIDW_MU,"PIDW_MU/D");
+    newtree->Branch("PIDW_E",&PIDW_E,"PIDW_E/D");
     newtree->Branch("PIDW_U",&PIDW_U,"PIDW_U/D");
 
     Int_t MISIDTYPE;
@@ -765,10 +782,10 @@ void MisIDWeightor(TString year, TString suffix= "") {
       PIDW_PI = PIDWfunc_breakdown[0]->operator()(PidBin);
       PIDW_K = PIDWfunc_breakdown[1]->operator()(PidBin);
       PIDW_P = PIDWfunc_breakdown[2]->operator()(PidBin);
-      PIDW_E = PIDWfunc_breakdown[3]->operator()(PidBin);
-      PIDW_MU = PIDWfunc_breakdown[4]->operator()(PidBin);
+      PIDW_MU = PIDWfunc_breakdown[3]->operator()(PidBin);
+      PIDW_E = PIDWfunc_breakdown[4]->operator()(PidBin);
       PIDW_U = PIDWfunc_breakdown[5]->operator()(PidBin);
-      ///cout << PIDW <<","<<PIDWVar<<","<<PIDW_PI<<","<<PIDW_K<<","<<PIDW_P<<","<<PIDW_E<<","<<PIDW_MU<<","<<PIDW_U<<endl;
+      // cout << PIDW <<","<<PIDWVar<<","<<PIDW_PI<<","<<PIDW_K<<","<<PIDW_P<<","<<PIDW_MU<<","<<PIDW_E<<","<<PIDW_U<<endl;
     };
 
     Int_t N_entries = oldtree->GetEntries();
@@ -842,6 +859,7 @@ void MisIDWeightor(TString year, TString suffix= "") {
 	HadronHypo = 5;
 	MISIDTYPE = 1;
       }
+      
       // if(PIDW_MU!=0){cout<<"MU NOT 0"<<endl;}
       if(isnan(PIDW)){
 	cout<<"PIDW is nan"<<endl;
@@ -896,8 +914,8 @@ int main () {
 #endif
   std::cout << "STARTING" << std::endl;
 
-  TString years[]={"18"};
-  TString suffixes[]={"isMuon_1"};
+  TString years[]={"16","17","18"};
+  TString suffixes[]={"isMuon_allYears_noP"};
   // TString suffixes[]={"isMuon", "isMuon_allYears", "nocorr",
   //   "isMuon_allYears_DLL", "isMuon_allYears_uBDT",
   //   "isMuon_DLL", "isMuon_uBDT",
