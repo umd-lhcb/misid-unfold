@@ -155,7 +155,7 @@ vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
     result.emplace_back(name);
     for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
       auto srcPtclSingle = itTrue->first.as<string>();
-      auto nameSingle = name + "_" + srcPtclSingle + "TrueOnly";
+      auto nameSingle    = name + "_" + srcPtclSingle + "TrueOnly";
       result.emplace_back(nameSingle);
     }
   }
@@ -170,7 +170,7 @@ vector<TString> buildHistoSmrWtnames(YAML::Node node) {
   for (auto it = node.begin(); it != node.end(); it++) {
     for (auto tgt : targetParticles) {
       auto srcPtcl = it->first.as<string>();
-      auto name = srcPtcl + "TagTo" + tgt + "True";
+      auto name    = srcPtcl + "TagTo" + tgt + "True";
       result.emplace_back(name);
     }
   }
@@ -188,8 +188,9 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
   for (const auto& h : iterable) {
     auto histoName = string(histoPrefix + "__" + h);
     cout << "  Loading histo " << histoName << endl;
-    auto histoWt   = static_cast<TH3D*>(ntpHisto->Get(histoName.data()));
-    if (!histoWt) throw runtime_error("Could not get histogram with name " + histoName);
+    auto histoWt = static_cast<TH3D*>(ntpHisto->Get(histoName.data()));
+    if (!histoWt)
+      throw runtime_error("Could not get histogram with name " + histoName);
     histos.emplace_back(histoWt);
 
     double prescale = 1.0;
@@ -243,11 +244,12 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
   cout << "  " << wtPrefix << " = " << expr << endl;
 
   // Also generate weights assuming single true type
-  for(const auto& pTrue : particles) {
+  for (const auto& pTrue : particles) {
     expr  = ""s;
     first = true;
-    for(const auto& p : particles) {
-      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" + pTrue + "TrueOnly";
+    for (const auto& p : particles) {
+      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" +
+                      pTrue + "TrueOnly";
       if (!first) expr += " + ";
       first = false;
       expr += brPrefix + p + "*" + wtBrName;
@@ -350,8 +352,8 @@ RNode computeDiFVars(RNode df, F& randGetter, double mB, string suffix,
 
 template <typename F1, typename F2>
 pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
-                                             F1& randKGetter,
-                                             F2& randPiGetter, string smr_mode) {
+                                             F1& randKGetter, F2& randPiGetter,
+                                             string smr_mode) {
   vector<string> outputBrs{};
   string         dMeson = ""s;
   string         bMeson = ""s;
@@ -438,15 +440,15 @@ int main(int argc, char** argv) {
   }
 
   // get options
-  auto ntpIn       = parsedArgs["input"].as<string>();
-  auto ntpOut      = parsedArgs["output"].as<string>();
-  auto ntpAux      = parsedArgs["aux"].as<string>();
-  auto particle    = parsedArgs["particle"].as<string>();
-  auto applyAlias  = parsedArgs["alias"].as<bool>();
-  auto kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
-  auto piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
-  bool ctrlSample  = parsedArgs["ctrl-sample"].as<bool>();
-  string smr_mode  = parsedArgs["smrMode"].as<string>();
+  auto   ntpIn       = parsedArgs["input"].as<string>();
+  auto   ntpOut      = parsedArgs["output"].as<string>();
+  auto   ntpAux      = parsedArgs["aux"].as<string>();
+  auto   particle    = parsedArgs["particle"].as<string>();
+  auto   applyAlias  = parsedArgs["alias"].as<bool>();
+  auto   kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
+  auto   piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
+  bool   ctrlSample  = parsedArgs["ctrl-sample"].as<bool>();
+  string smr_mode    = parsedArgs["smrMode"].as<string>();
 
   // Get correct smearing in case of misid validation fit
   if (ctrlSample) kSmrBrName += "_ubdt_veto";
@@ -471,12 +473,12 @@ int main(int argc, char** argv) {
   writeOpts.fMode = "UPDATE";
 
   // Generate names of histograms to be imported from unfolded.root
-  auto histoWtNames    = buildHistoWtNames(particle, ymlConfig["tags"]);
+  auto histoWtNames = buildHistoWtNames(particle, ymlConfig["tags"]);
   cout << "Efficiency histograms: " << endl;
-  for (auto h: histoWtNames) cout << "\t" << h << endl;
+  for (auto h : histoWtNames) cout << "\t" << h << endl;
   auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
   cout << "Additional histograms for smearing: " << endl;
-  for (auto h: histoSmrWtNames) cout << "\t" << h << endl;
+  for (auto h : histoSmrWtNames) cout << "\t" << h << endl;
 
   for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
     cout << "--------" << endl;
@@ -528,8 +530,9 @@ int main(int argc, char** argv) {
 
     // add all kinds of weights
     for (auto entry : it->second) {
-      auto histoPrefix    = entry["prefix"].as<string>();
-      auto histoFile      = ctrlSample ? entry["file"]["misid_ctrl"].as<string>() : entry["file"]["default"].as<string>();
+      auto histoPrefix = entry["prefix"].as<string>();
+      auto histoFile   = ctrlSample ? entry["file"]["misid_ctrl"].as<string>()
+                                    : entry["file"]["default"].as<string>();
       auto weightBrPrefix = entry["name"].as<string>();
       histoFile           = filePrefix + "/" + histoFile;
 
@@ -554,7 +557,7 @@ int main(int argc, char** argv) {
       for (auto br : outputBrsWts) outputBrNames.emplace_back(br);
     }
     cout << "\n\nWriting branches to " << ntpOut << ":" << endl;
-    for (auto br: outputBrNames) cout << "\t-" << br << endl;
+    for (auto br : outputBrNames) cout << "\t-" << br << endl;
     df.Snapshot(treeName, ntpOut, outputBrNames, writeOpts);
 
     for (auto& n : ntpsToClean) delete n;

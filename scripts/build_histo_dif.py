@@ -167,7 +167,7 @@ if __name__ == "__main__":
         true_py = evaluator.eval(f"{prefix}_TRUEP_Y")
         true_pz = evaluator.eval(f"{prefix}_TRUEP_Z")
         true_pt = evaluator.eval(f"{prefix}_TRUEPT")
-        true_p = np.sqrt( np.add( np.power(true_pt, 2), np.power(true_pz, 2) ) )
+        true_p = np.sqrt(np.add(np.power(true_pt, 2), np.power(true_pz, 2)))
         reco_px = evaluator.eval(f"{prefix}_PX")
         reco_py = evaluator.eval(f"{prefix}_PY")
         reco_pz = evaluator.eval(f"{prefix}_PZ")
@@ -175,20 +175,23 @@ if __name__ == "__main__":
         reco_p = evaluator.eval(f"{prefix}_P")
 
         # Get P ratio
-        ratio_p = np.divide(reco_p, true_p, out=np.zeros_like(reco_p), where=true_p>0)
+        ratio_p = np.divide(reco_p,
+                            true_p,
+                            out=np.zeros_like(reco_p),
+                            where=true_p > 0)
 
         output_tree[f"{ptcl}_rP"] = ratio_p[global_cut]
 
         # Get theta variation
-        true_theta = np.arccos(np.divide(true_pz,true_p))
-        reco_theta = np.arccos(np.divide(reco_pz,reco_p))
+        true_theta = np.arccos(np.divide(true_pz, true_p))
+        reco_theta = np.arccos(np.divide(reco_pz, reco_p))
         delta_theta = np.subtract(reco_theta, true_theta)
 
         output_tree[f"{ptcl}_dTheta"] = delta_theta[global_cut]
 
         # Get phi variation
-        true_abs_phi = np.arccos(np.divide(true_px,true_pt))
-        reco_abs_phi = np.arccos(np.divide(reco_px,reco_pt))
+        true_abs_phi = np.arccos(np.divide(true_px, true_pt))
+        reco_abs_phi = np.arccos(np.divide(reco_px, reco_pt))
         # For y < 0, phi is actually -1 * acos(px/pt)
         true_py_sign = np.sign(true_py)
         true_phi = np.multiply(true_py_sign, true_abs_phi)
@@ -197,9 +200,15 @@ if __name__ == "__main__":
         delta_phi = np.subtract(reco_phi, true_phi)
         # Set delta_phi -> 2pi - delta_phi for delta_phi > pi
         twopis = np.full_like(delta_phi, 2. * math.pi)
-        delta_phi = np.subtract(twopis, delta_phi, out=delta_phi, where=delta_phi>math.pi)
+        delta_phi = np.subtract(twopis,
+                                delta_phi,
+                                out=delta_phi,
+                                where=delta_phi > math.pi)
         # Set delta_phi -> delta_phi + 2pi for delta_phi <= -pi
-        delta_phi = np.add(delta_phi, twopis, out=delta_phi, where=delta_phi<=-math.pi)
+        delta_phi = np.add(delta_phi,
+                           twopis,
+                           out=delta_phi,
+                           where=delta_phi <= -math.pi)
 
         output_tree[f"{ptcl}_dPhi"] = delta_phi[global_cut]
 

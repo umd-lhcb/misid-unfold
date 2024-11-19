@@ -31,7 +31,8 @@ using ROOT::Math::XYZVector;
 // Rebuild momentum //
 //////////////////////
 
-PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString mode = "PThetaPhi") {
+PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac,
+                            TString mode = "PThetaPhi") {
   if (mode == "PxPyPz") {
     // Get variations
     double rx = smrFac[0];
@@ -44,24 +45,24 @@ PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString m
     vec.SetPz(v4Mu.Pz() * rz);
     vec.SetM(v4Mu.M());
     return PxPyPzEVector(vec);
-  }
-  else if (mode == "PThetaPhi") {
+  } else if (mode == "PThetaPhi") {
     // Get variations
-    const double& rp = smrFac[3];
+    const double& rp     = smrFac[3];
     const double& dtheta = smrFac[4];
-    const double& dphi = smrFac[5];
+    const double& dphi   = smrFac[5];
     // Compute smeared vector
-    double p = v4Mu.P() * rp;
+    double p     = v4Mu.P() * rp;
     double theta = v4Mu.Theta() + dtheta;
-    double pt = p * sin(theta);
-    double pz = p * cos(theta);
-    double eta = 0.5 * log((p+pz)/(p-pz));
-    double phi = v4Mu.Phi() + dphi;
-    auto vec = PtEtaPhiMVector( pt, eta, phi, v4Mu.M() );
+    double pt    = p * sin(theta);
+    double pz    = p * cos(theta);
+    double eta   = 0.5 * log((p + pz) / (p - pz));
+    double phi   = v4Mu.Phi() + dphi;
+    auto   vec   = PtEtaPhiMVector(pt, eta, phi, v4Mu.M());
     return PxPyPzEVector(vec);
-  }
-  else {
-    throw std::runtime_error("rebuildMu4Mom: Unexpected misid smearing mode. Options are PxPyPz and PThetaPhi (default).");
+  } else {
+    throw std::runtime_error(
+        "rebuildMu4Mom: Unexpected misid smearing mode. Options are PxPyPz and "
+        "PThetaPhi (default).");
   }
 }
 
