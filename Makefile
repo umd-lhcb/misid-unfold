@@ -47,7 +47,7 @@ else
 	EFFICIENCIES := ./histos/default/rdx-24_09_10_13_03-merged-2016/merged.root
 endif
 TAGGED := ./histos/default/rdx-22_06_23_12_07-tag-2016/tagged.root
-DIF    := ./histos/default/generic-24_06_20_05_14-dif_smearing/dif.root
+DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
 
 
 ###########
