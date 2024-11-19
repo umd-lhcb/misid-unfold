@@ -315,10 +315,10 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
                string prefix = "k_smr") {
   auto df = RDataFrame(prefix, auxFile);
   df.Foreach(
-      [&](double x, double y, double z, double dTheta, double dPhi, double rP) {
-        result.emplace_back(vector<double>{x, y, z, dTheta, dPhi, rP});
+      [&](double x, double y, double z, double rP, double dTheta, double dPhi) {
+        result.emplace_back(vector<double>{x, y, z, rP, dTheta, dPhi});
       },
-      setBrPrefix(prefix, {"x", "y", "z", "dTheta", "dPhi", "rP"}));
+      setBrPrefix(prefix, {"x", "y", "z", "rP", "dTheta", "dPhi"}));
 }
 
 template <typename F>
@@ -426,8 +426,8 @@ int main(int argc, char** argv) {
      cxxopts::value<string>()->default_value("k_smr"))
     ("piSmrBrName", "specify pi-smear branch name",
      cxxopts::value<string>()->default_value("pi_smr"))
-    ("smrMode", "specify cartesian or spherical smearing",
-     cxxopts::value<string>()->default_value("cartesian"))
+    ("smrMode", "specify strategy for misid smearing (options are PThetaPhi or PxPyPz)",
+     cxxopts::value<string>()->default_value("PThetaPhi"))
   ;
   // clang-format on
 

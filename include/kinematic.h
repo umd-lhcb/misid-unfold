@@ -31,8 +31,8 @@ using ROOT::Math::XYZVector;
 // Rebuild momentum //
 //////////////////////
 
-PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString mode = "cartesian") {
-  if (mode == "cartesian") {
+PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString mode = "PThetaPhi") {
+  if (mode == "PxPyPz") {
     // Get variations
     double rx = smrFac[0];
     double ry = smrFac[1];
@@ -45,11 +45,11 @@ PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString m
     vec.SetM(v4Mu.M());
     return PxPyPzEVector(vec);
   }
-  else if (mode == "spherical") {
+  else if (mode == "PThetaPhi") {
     // Get variations
-    double dtheta = smrFac[3];
-    double dphi = smrFac[4];
-    double rp = smrFac[5];
+    const double& rp = smrFac[3];
+    const double& dtheta = smrFac[4];
+    const double& dphi = smrFac[5];
     // Compute smeared vector
     double p = v4Mu.P() * rp;
     double theta = v4Mu.Theta() + dtheta;
@@ -61,7 +61,7 @@ PxPyPzEVector rebuildMu4Mom(PxPyPzEVector v4Mu, vector<double> smrFac, TString m
     return PxPyPzEVector(vec);
   }
   else {
-    throw std::runtime_error("rebuildMu4Mom: Unexpected mode.");
+    throw std::runtime_error("rebuildMu4Mom: Unexpected misid smearing mode. Options are PxPyPz and PThetaPhi (default).");
   }
 }
 
