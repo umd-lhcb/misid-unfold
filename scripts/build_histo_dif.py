@@ -38,8 +38,8 @@ PARTICLES = {
 
 ####
 def get_cuts(p):
-    # Included HLT2, Stripping and Offline cuts, except:
-    # - uBDT cut, which is added explicitely below.
+    # Included HLT2, Stripping and Offline mu cuts, except:
+    # - uBDT cut, which is added explicitly below.
     # - IPCHI2 cut, which shouldn't affect the smearing AND rejects most
     #   signal events on our dominantly prompt charm MC.
     cuts =    f" ETA( {p}_P, {p}_PZ ) > 1.7"
@@ -50,16 +50,8 @@ def get_cuts(p):
     cuts += f" & {p}_PIDe < 1"
     cuts += f" & {p}_P > 3 * GeV"
     cuts += f" & {p}_P < 100 * GeV"
-    cuts +=  " & nPVs > 0"
-    cuts +=  " & nSPDHits < 450"
     cuts +=  " & LOG10pp(K_PX, K_PY, K_PZ, pi_PX, pi_PY, pi_PZ) > -6.5"
-    # Truth-matching cuts
-    cuts +=  " & abs(D_TRUEID) == 421"
-    cuts +=  " & pi_TRUEORIGINVERTEX_TYPE == 2"
-    cuts +=  " & K_TRUEORIGINVERTEX_TYPE == 2"
-    #
-    # cuts += f" & abs({p}_TRUEP_X) > 50"
-    # cuts += f" & abs({p}_TRUEP_Y) > 50"
+    cuts +=  " & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6"
     return cuts
 CUTS = {
     "k_smr":            get_cuts("K")  + " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25",
@@ -148,6 +140,7 @@ if __name__ == "__main__":
         output_brs = []
         output_tree = dict()
 
+        # Produce branches for PxPyPz strategy
         for i in range(len(RECO_P_BRS)):
             # reco / true !!!
             ratio = np.true_divide(
@@ -169,6 +162,7 @@ if __name__ == "__main__":
             br_name = f"{ptcl}_{ADD_LABELS[idx]}"
             output_tree[br_name] = br[global_cut]
 
+        # Produce branches for PThetaPhi strategy
         true_px = evaluator.eval(f"{prefix}_TRUEP_X")
         true_py = evaluator.eval(f"{prefix}_TRUEP_Y")
         true_pz = evaluator.eval(f"{prefix}_TRUEP_Z")
@@ -185,7 +179,6 @@ if __name__ == "__main__":
         reco_theta = np.arccos(np.divide(reco_pz,reco_p))
         delta_theta = np.subtract(reco_theta, true_theta)
 
-        output_brs.append(delta_theta)
         output_tree[f"{ptcl}_dTheta"] = delta_theta[global_cut]
 
         # Get delta_phi
@@ -203,13 +196,11 @@ if __name__ == "__main__":
         # Set delta_phi -> delta_phi + 2pi for delta_phi <= -pi
         delta_phi = np.add(delta_phi, twopis, out=delta_phi, where=delta_phi<=-math.pi)
 
-        output_brs.append(delta_phi)
         output_tree[f"{ptcl}_dPhi"] = delta_phi[global_cut]
 
         # Get P ratio
         ratio_p = np.divide(reco_p, true_p, out=np.zeros_like(reco_p), where=true_p>0)
 
-        output_brs.append(ratio_p)
         output_tree[f"{ptcl}_rP"] = ratio_p[global_cut]
 
         # now write the tree
