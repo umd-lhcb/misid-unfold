@@ -14,7 +14,6 @@ from os import makedirs
 from yaml import safe_load
 from pyTuplingUtils.boolean.eval import BooleanEvaluator
 
-
 ################
 # Configurable #
 ################
@@ -37,9 +36,15 @@ SKIM_CUTS = {
 def parse_input():
     parser = ArgumentParser(description="tagged histogram builder (T).")
 
-    parser.add_argument("-c", "--config", required=True, help="specify YAML config.")
+    parser.add_argument("-c",
+                        "--config",
+                        required=True,
+                        help="specify YAML config.")
 
-    parser.add_argument("-o", "--output", required=True, help="specify output dir.")
+    parser.add_argument("-o",
+                        "--output",
+                        required=True,
+                        help="specify output dir.")
 
     parser.add_argument("-y", "--year", default="2016", help="specify year.")
 
@@ -82,8 +87,7 @@ if __name__ == "__main__":
     for particle, subconfig in config["input_ntps"][int(args.year)].items():
         print(f"Working on {particle}...")
         evaluator = BooleanEvaluator(
-            *ntp_tree(subconfig["files"], dir_abs_path=config_dir_path)
-        )
+            *ntp_tree(subconfig["files"], dir_abs_path=config_dir_path))
 
         # load branches needed to build histos
         histo_brs = []
@@ -99,7 +103,9 @@ if __name__ == "__main__":
             print(f"    Skim cuts: {skim_cut_expr}")
 
             for sp, cut_expr in config["tags"].items():
-                print(f"    Species {histo_name_gen(sp)} has the following cuts: {cut_expr}")
+                print(
+                    f"    Species {histo_name_gen(sp)} has the following cuts: {cut_expr}"
+                )
                 cut = evaluator.eval(cut_expr)
 
                 # Make sure the evaluator is aware of the new variable
