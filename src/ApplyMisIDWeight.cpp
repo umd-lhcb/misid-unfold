@@ -433,9 +433,9 @@ int main(int argc, char** argv) {
   cout << boolalpha;
   cout << "- Input ntuple: " << ntpIn << endl;
   cout << "- Output ntuple: " << ntpOut << endl;
-  cout << "- Auxiliar ntuple: " << ntpAux << endl;
+  cout << "- Auxiliary ntuple: " << ntpAux << endl;
   cout << "- YAML file: " << ymlFile << endl;
-  cout << "- Partile: " << particle << endl;
+  cout << "- Particle: " << particle << endl;
   cout << "- applyAlias: " << applyAlias << endl;
   cout << "- K smear branch name: " << kSmrBrName << endl;
   cout << "- Pi smear branch name: " << piSmrBrName << endl;

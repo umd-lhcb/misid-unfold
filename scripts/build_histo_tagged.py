@@ -85,9 +85,10 @@ if __name__ == "__main__":
         config = safe_load(f)
 
     for particle, subconfig in config["input_ntps"][int(args.year)].items():
-        print(f"Working on {particle}...")
+        input_files = subconfig["files"]
+        print(f"Working on {particle} using files {input_files}")
         evaluator = BooleanEvaluator(
-            *ntp_tree(subconfig["files"], dir_abs_path=config_dir_path))
+            *ntp_tree(input_files, dir_abs_path=config_dir_path))
 
         # load branches needed to build histos
         histo_brs = []
