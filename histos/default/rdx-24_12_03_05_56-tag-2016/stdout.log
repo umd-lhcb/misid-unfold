@@ -1,0 +1,512 @@
+Working on D0 using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on D0_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on D0_ws_Mu using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on D0_ws_Mu_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_dsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_dsb_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: d0_m_ok & !dst_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Mu using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Mu_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Mu_dsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Mu_dsb_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: d0_m_ok & !dst_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Pi using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Pi_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: dx_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Pi_dsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+Working on Dst_ws_Pi_dsb_bsb using files ../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree
+  Global cuts: d0_m_ok & !dst_m_ok & b_m_sb
+    Skim cuts: is_iso_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_1os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_2os_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: is_dd_loose
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e
+    Skim cuts: 1
+    Species piTag has the following cuts: Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species kTag has the following cuts: Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species pTag has the following cuts: Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species eTag has the following cuts: Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25
+    Species gTag has the following cuts: !pi & !k & !p & !e

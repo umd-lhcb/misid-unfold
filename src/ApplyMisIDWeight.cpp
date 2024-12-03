@@ -23,7 +23,6 @@
 #include <ROOT/RDataFrame.hxx>
 
 #include <yaml-cpp/yaml.h>
-#include <boost/range/join.hpp>
 #include <cxxopts.hpp>
 
 #include "kinematic.h"
@@ -148,35 +147,23 @@ pair<vPStrStr, vector<string>> genTaggedCutDirective(
 // Helpers for weight computation //
 ////////////////////////////////////
 
-vector<TString> buildHistoWtNames(string targetParticle, YAML::Node node) {
+vector<TString> buildHistoWtNames(string                 targetParticle,
+                                  const vector<TString>& skims,
+                                  YAML::Node             node) {
   vector<TString> result{};
-
-  for (auto it = node.begin(); it != node.end(); it++) {
-    auto srcPtcl = it->first.as<string>();
-    auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag";
-    result.emplace_back(name);
-    for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
-      auto srcPtclSingle = itTrue->first.as<string>();
-      auto nameSingle    = name + "_" + srcPtclSingle + "TrueOnly";
-      result.emplace_back(nameSingle);
-    }
-  }
-
-  return result;
-}
-
-vector<TString> buildHistoSmrWtnames(YAML::Node node) {
-  vector<TString> result{};
-  vector<TString> targetParticles = {"K", "Pi"};
-
-  for (auto it = node.begin(); it != node.end(); it++) {
-    for (auto tgt : targetParticles) {
+  for (const auto& skim : skims) {
+    for (auto it = node.begin(); it != node.end(); it++) {
       auto srcPtcl = it->first.as<string>();
-      auto name    = srcPtcl + "TagTo" + tgt + "True";
+      auto name =
+          srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag_" + skim;
       result.emplace_back(name);
+      for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
+        auto srcPtclSingle = itTrue->first.as<string>();
+        auto nameSingle    = name + "_" + srcPtclSingle + "TrueOnly";
+        result.emplace_back(nameSingle);
+      }
     }
   }
-
   return result;
 }
 
@@ -219,10 +206,11 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
   return {df, outputBrs, histos};
 }
 
-pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
-                                              const string& wtPrefix,
-                                              const bool&   debug = false,
-                                              string brPrefix = "is_misid_") {
+pair<vPStrStr, vector<string>> genWtDirective(YAML::Node             node,
+                                              const string&          wtPrefix,
+                                              const vector<TString>& skims,
+                                              const bool& debug = false,
+                                              string brPrefix   = "is_misid_") {
   vPStrStr       directives{};
   vector<string> outputBrs{};
   const auto     wtTargetParticle = "MuTag";
@@ -233,67 +221,41 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node    node,
   for (auto it = node.begin(); it != node.end(); it++)
     particles.emplace_back(it->first.as<string>());
 
-  // generate the automatic weight for each event based on the species of the
-  // event
-  auto expr  = ""s;
-  auto first = true;
+  for (const auto& skim : skims) {
+    // generate the automatic weight for each event based on the species of the
+    // event
+    auto expr  = ""s;
+    auto first = true;
 
-  for (const auto& p : particles) {
-    auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle;
-    if (!first) expr += " + ";
-    first = false;
-    expr += brPrefix + p + "*" + wtBrName;
-  }
-  outputBrs.emplace_back(wtPrefix);
-  directives.emplace_back(pair{wtPrefix, expr});
-  if (debug) cout << "  " << wtPrefix << " = " << expr << endl;
-
-  // Also generate weights assuming single true type
-  for (const auto& pTrue : particles) {
-    expr  = ""s;
-    first = true;
     for (const auto& p : particles) {
-      auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" +
-                      pTrue + "TrueOnly";
+      auto wtBrName =
+          wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" + skim;
       if (!first) expr += " + ";
       first = false;
       expr += brPrefix + p + "*" + wtBrName;
     }
-    auto wtPrefixSingleTrue = wtPrefix + "_" + pTrue;
-    outputBrs.emplace_back(wtPrefixSingleTrue);
-    directives.emplace_back(pair{wtPrefixSingleTrue, expr});
-    if (debug) cout << "  " << wtPrefixSingleTrue << " = " << expr << endl;
-  }
+    auto wtName = wtPrefix + "_" + skim;
+    outputBrs.emplace_back(wtName);
+    directives.emplace_back(pair{wtName, expr});
+    if (debug) cout << "  " << wtName << " = " << expr << endl;
 
-  // generate the DiF smearing weight for each event
-  vector<string> brSmrNames{};
-  for (const auto& tgt : wtSmrParticles) {
-    expr  = ""s;
-    first = true;
-    for (const auto& p : particles) {
-      auto wtBrName = wtPrefix + "_" + p + "TagTo" + capitalize(tgt) + "True";
-      if (!first) expr += " + ";
-      first = false;
-      expr += brPrefix + p + "*" + wtBrName;
+    // Also generate weights assuming single true type
+    for (const auto& pTrue : particles) {
+      expr  = ""s;
+      first = true;
+      for (const auto& p : particles) {
+        auto wtBrName = wtPrefix + "_" + p + "TagTo" + wtTargetParticle + "_" +
+                        skim + "_" + pTrue + "TrueOnly";
+        if (!first) expr += " + ";
+        first = false;
+        expr += brPrefix + p + "*" + wtBrName;
+      }
+      auto wtNameSingleTrue = wtName + "_" + pTrue;
+      outputBrs.emplace_back(wtNameSingleTrue);
+      directives.emplace_back(pair{wtNameSingleTrue, expr});
+      if (debug) cout << "  " << wtNameSingleTrue << " = " << expr << endl;
     }
-
-    auto outputBr = wtPrefix + "_smr_" + tgt;
-    brSmrNames.push_back(outputBr);
-    outputBrs.emplace_back(outputBr);
-    directives.emplace_back(pair{outputBr, expr});
-    if (debug) cout << "  " << outputBr << " = " << expr << endl;
   }
-
-  // generate the DiF no smearing weight
-  auto brNoSmr = wtPrefix + "_no_smr";
-  outputBrs.emplace_back(brNoSmr);
-
-  expr = "1.0"s;
-  for (const auto& smr : brSmrNames) {
-    expr += " - " + smr;
-  }
-  if (debug) cout << "  " << brNoSmr << " = " << expr << endl;
-  directives.emplace_back(pair{brNoSmr, expr});
 
   return {directives, outputBrs};
 }
@@ -471,9 +433,9 @@ int main(int argc, char** argv) {
   cout << boolalpha;
   cout << "- Input ntuple: " << ntpIn << endl;
   cout << "- Output ntuple: " << ntpOut << endl;
-  cout << "- Auxiliar ntuple: " << ntpAux << endl;
+  cout << "- Auxiliary ntuple: " << ntpAux << endl;
   cout << "- YAML file: " << ymlFile << endl;
-  cout << "- Partile: " << particle << endl;
+  cout << "- Particle: " << particle << endl;
   cout << "- applyAlias: " << applyAlias << endl;
   cout << "- K smear branch name: " << kSmrBrName << endl;
   cout << "- Pi smear branch name: " << piSmrBrName << endl;
@@ -491,13 +453,14 @@ int main(int argc, char** argv) {
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
   writeOpts.fMode = "UPDATE";
 
+  // Produce list of skims. Currently, only tagged yields are different.
+  // For vmu, no skim cuts are applied.
+  vector<TString> skims = {"iso", "1os", "2os", "dd"};
+
   // Generate names of histograms to be imported from unfolded.root
-  auto histoWtNames = buildHistoWtNames(particle, ymlConfig["tags"]);
+  auto histoWtNames = buildHistoWtNames(particle, skims, ymlConfig["tags"]);
   cout << "\nEfficiency histograms: " << endl;
   for (auto h : histoWtNames) cout << "\t" << h << endl;
-  auto histoSmrWtNames = buildHistoSmrWtnames(ymlConfig["tags"]);
-  cout << "\nAdditional histograms for smearing: " << endl;
-  for (auto h : histoSmrWtNames) cout << "\t" << h << endl;
 
   for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
     if (debug) cout << "--------" << endl;
@@ -566,14 +529,13 @@ int main(int argc, char** argv) {
       if (debug)
         cout << "Generate transfer factors/DiF smearing weights for all species"
              << endl;
-      auto [dfHistos, outputBrsHistos, histos] =
-          applyWtFromHistos(df, ntpHisto, histoPrefix, weightBrPrefix,
-                            boost::join(histoWtNames, histoSmrWtNames), debug);
+      auto [dfHistos, outputBrsHistos, histos] = applyWtFromHistos(
+          df, ntpHisto, histoPrefix, weightBrPrefix, histoWtNames, debug);
       for (auto br : outputBrsHistos) outputBrNames.emplace_back(br);
 
       // add the actual misID weights
       auto [directives, outputBrsWts] =
-          genWtDirective(ymlConfig["tags"], weightBrPrefix, debug);
+          genWtDirective(ymlConfig["tags"], weightBrPrefix, skims, debug);
       df = defineBranch(dfHistos, ""s, directives, debug);
       for (auto br : outputBrsWts) outputBrNames.emplace_back(br);
     }
