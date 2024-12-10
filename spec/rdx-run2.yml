@@ -1,7 +1,7 @@
 # this YAML is used by:
 # - pidcalib2 wrapper (P)
 # - tagged histogram builder (T)
-# - ghost/uncategoried efficiency histogram builder (G)
+# - ghost/uncategorized efficiency histogram builder (G)
 # - unfolding weights applier (A)
 # - unfolding efficiency calculator (U)
 # - histogram merger (M)
@@ -9,7 +9,7 @@
 
 
 binning:
-    P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]  # the scific notation has to be written like this for PyYAML
+    P: [3.e+3, 6.e+3, 10.e+3, 15.6e+3, 27.e+3, 60.e+3, 100.e+3]  # the scientific notation has to be written like this for PyYAML
     ETA: [1.7, 3.6, 5.0]
     nTracks: [0, 200, 600]
 
@@ -39,7 +39,7 @@ tags:
         (Brunel_DLLe - Brunel_DLLK) > -2.0 &
         (Brunel_DLLe - Brunel_DLLp) > -2.0 &
         Brunel_MC15TuneV1_ProbNNghost < 0.25
-    g: "!pi & !k & !p & !e"  # ghost/uncategoried
+    g: "!pi & !k & !p & !e"  # ghost/uncategorized
 
 
 # used by (P), as the names suggests
@@ -184,33 +184,21 @@ weight_brs:
     2016:
         TupleBminus/DecayTree:
             - prefix: D0
-              file:
-                default:    "../histos/default/rdx-24_12_03_06_06-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/ctrl_sample/rdx-24_12_03_06_07-unfolded-2016/unfolded_misid_ctrl.root"
+              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_norm
             - prefix: D0_bsb
-              file:
-                default:    "../histos/default/rdx-24_12_03_06_06-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/ctrl_sample/rdx-24_12_03_06_07-unfolded-2016/unfolded_misid_ctrl.root"
+              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_bsb
         TupleB0/DecayTree:
             - prefix: Dst
-              file:
-                default:    "../histos/default/rdx-24_12_03_06_06-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/ctrl_sample/rdx-24_12_03_06_07-unfolded-2016/unfolded_misid_ctrl.root"
+              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_norm
             - prefix: Dst_dsb
-              file:
-                default:    "../histos/default/rdx-24_12_03_06_06-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/ctrl_sample/rdx-24_12_03_06_07-unfolded-2016/unfolded_misid_ctrl.root"
+              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_dsb
             - prefix: Dst_bsb
-              file:
-                default:    "../histos/default/rdx-24_12_03_06_06-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/ctrl_sample/rdx-24_12_03_06_07-unfolded-2016/unfolded_misid_ctrl.root"
+              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_bsb
             - prefix: Dst_dsb_bsb
-              file:
-                default:    "../histos/default/rdx-24_12_03_06_06-unfolded-2016/unfolded.root"
-                misid_ctrl: "../histos/ctrl_sample/rdx-24_12_03_06_07-unfolded-2016/unfolded_misid_ctrl.root"
+              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_dsb_bsb

@@ -141,7 +141,7 @@ test-apply-rdx-weights-2016: \
 	@mkdir -p $(OUT_DIR)
 	$< --debug -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
-		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
 
 
 # Aux. efficiencies for ProbNNk > 2 on true ghost
