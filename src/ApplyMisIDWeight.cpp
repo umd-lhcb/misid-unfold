@@ -320,7 +320,8 @@ RNode computeDiFVars(RNode df, F& randGetter, double mB, string suffix,
 template <typename F1, typename F2>
 pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                                              F1& randKGetter, F2& randPiGetter,
-                                             string smr_mode) {
+                                             string smr_mode,
+                                             string brSuffix = "") {
   vector<string> outputBrs{};
   string         dMeson = ""s;
   string         bMeson = ""s;
@@ -341,24 +342,26 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
 
   // Basic vectors that we use and not going to change
   df = df.Define(
-             "v4_d",
+             "v4_d" + brSuffix,
              [](double px, double py, double pz, double e) {
                return PxPyPzEVector(px, py, pz, e);
              },
              setBrPrefix(dMeson, {"PX", "PY", "PZ", "PE"}))
            .Define(
-               "v4_mu",
+               "v4_mu" + brSuffix,
                [](double px, double py, double pz, double e) {
                  return PxPyPzEVector(px, py, pz, e);
                },
                setBrPrefix(MU_BR_PREFIX, {"PX", "PY", "PZ", "PE"}))
-           .Define("v3_b_dir", buildBFlightDir,
+           .Define("v3_b_dir" + brSuffix, buildBFlightDir,
                    setBrPrefix(bMeson, {"ENDVERTEX_X", "OWNPV_X", "ENDVERTEX_Y",
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
   // Replace mass hypo and compute fit vars
-  df = computeDiFVars(df, randPiGetter, mBRef, "_smr_pi", outputBrs, smr_mode);
-  df = computeDiFVars(df, randKGetter, mBRef, "_smr_k", outputBrs, smr_mode);
+  df = computeDiFVars(df, randPiGetter, mBRef, "_smr_pi" + brSuffix, outputBrs,
+                      smr_mode);
+  df = computeDiFVars(df, randKGetter, mBRef, "_smr_k" + brSuffix, outputBrs,
+                      smr_mode);
 
   return {df, outputBrs};
 }
@@ -385,8 +388,6 @@ int main(int argc, char** argv) {
     ("o,output", "specify output ntuple", cxxopts::value<string>())
     ("c,config", "specify input YAML config file",
      cxxopts::value<string>())
-     ("C,ctrl-sample", "Use control sample uBDT cut.",
-     cxxopts::value<bool>())
     // flags (typically don't change these)
     ("a,alias", "apply aliases.")
     ("p,particle", "specify alias particle",
@@ -414,12 +415,11 @@ int main(int argc, char** argv) {
   auto   applyAlias  = parsedArgs["alias"].as<bool>();
   auto   kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
   auto   piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
-  bool   ctrlSample  = parsedArgs["ctrl-sample"].as<bool>();
   string smr_mode    = parsedArgs["smrMode"].as<string>();
 
   // Get correct smearing in case of misid validation fit
-  if (ctrlSample) kSmrBrName += "_ubdt_veto";
-  if (ctrlSample) piSmrBrName += "_ubdt_veto";
+  auto kSmrBrNameVmu  = kSmrBrName + "_ubdt_veto";
+  auto piSmrBrNameVmu = piSmrBrName + "_ubdt_veto";
 
   // Check get yml file
   const string ymlFile = parsedArgs["config"].as<string>();
@@ -439,7 +439,8 @@ int main(int argc, char** argv) {
   cout << "- applyAlias: " << applyAlias << endl;
   cout << "- K smear branch name: " << kSmrBrName << endl;
   cout << "- Pi smear branch name: " << piSmrBrName << endl;
-  cout << "- vmu: " << ctrlSample << endl;
+  cout << "- K vmu smear branch name: " << kSmrBrNameVmu << endl;
+  cout << "- Pi vmu smear branch name: " << piSmrBrNameVmu << endl;
   cout << "- Smearing strategy: " << smr_mode << endl;
 
   // parse YAML config
@@ -455,7 +456,7 @@ int main(int argc, char** argv) {
 
   // Produce list of skims. Currently, only tagged yields are different.
   // For vmu, no skim cuts are applied.
-  vector<TString> skims = {"iso", "1os", "2os", "dd"};
+  const vector<TString> skims = {"iso", "1os", "2os", "dd", "vmu"};
 
   // Generate names of histograms to be imported from unfolded.root
   auto histoWtNames = buildHistoWtNames(particle, skims, ymlConfig["tags"]);
@@ -489,20 +490,32 @@ int main(int argc, char** argv) {
     }
 
     // read smearing factors from aux ntuple
-    auto smrFacK  = vector<vector<double>>{};
-    auto smrFacPi = vector<vector<double>>{};
+    auto smrFacK     = vector<vector<double>>{};
+    auto smrFacPi    = vector<vector<double>>{};
+    auto smrFacKVmu  = vector<vector<double>>{};
+    auto smrFacPiVmu = vector<vector<double>>{};
     getSmrFac(smrFacK, ntpAux, kSmrBrName);
     getSmrFac(smrFacPi, ntpAux, piSmrBrName);
+    getSmrFac(smrFacKVmu, ntpAux, kSmrBrNameVmu);
+    getSmrFac(smrFacPiVmu, ntpAux, piSmrBrNameVmu);
 
     // we can call these functions directly to get random smearing factors
-    auto randSmrFacK  = getRandSmrHelper(smrFacK);
-    auto randSmrFacPi = getRandSmrHelper(smrFacPi);
+    auto randSmrFacK     = getRandSmrHelper(smrFacK);
+    auto randSmrFacPi    = getRandSmrHelper(smrFacPi);
+    auto randSmrFacKVmu  = getRandSmrHelper(smrFacKVmu);
+    auto randSmrFacPiVmu = getRandSmrHelper(smrFacPiVmu);
 
     // Recompute fit vars
     auto [dfOut, outputBrsFitVars] =
         defRestFrameVars(df, treeTest, randSmrFacK, randSmrFacPi, smr_mode);
     for (auto br : outputBrsFitVars) outputBrNames.emplace_back(br);
     df = dfOut;
+
+    // Recompute fit vars for vmu
+    auto [dfOutVmu, outputBrsFitVarsVmu] = defRestFrameVars(
+        df, treeTest, randSmrFacKVmu, randSmrFacPiVmu, smr_mode, "_vmu");
+    for (auto br : outputBrsFitVarsVmu) outputBrNames.emplace_back(br);
+    df = dfOutVmu;
 
     // add species tags
     auto [directivesTags, outputBrsTags] =
@@ -512,9 +525,8 @@ int main(int argc, char** argv) {
 
     // add all kinds of weights
     for (auto entry : it->second) {
-      auto histoPrefix = entry["prefix"].as<string>();
-      auto histoFile   = ctrlSample ? entry["file"]["misid_ctrl"].as<string>()
-                                    : entry["file"]["default"].as<string>();
+      auto histoPrefix    = entry["prefix"].as<string>();
+      auto histoFile      = entry["file"].as<string>();
       auto weightBrPrefix = entry["name"].as<string>();
       histoFile           = filePrefix + "/" + histoFile;
 

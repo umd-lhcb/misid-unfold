@@ -39,13 +39,9 @@ endif
 # Configuration #
 #################
 
-ifeq ($(USE_CTRL_SAMPLE), true)
-	UNFOLDED     := ./histos/ctrl_sample/rdx-24_12_03_06_07-unfolded-2016/unfolded_misid_ctrl.root
-	EFFICIENCIES := ./histos/ctrl_sample/rdx-24_09_10_13_04-merged-2016/merged.root
-else
-	UNFOLDED     := ./histos/default/rdx-24_12_03_06_06-unfolded-2016/unfolded.root
-	EFFICIENCIES := ./histos/default/rdx-24_09_10_13_03-merged-2016/merged.root
-endif
+EFFICIENCIES := ./histos/default/rdx-24_09_10_13_03-merged-2016/merged.root
+EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-24_09_10_13_04-merged-2016/merged.root
+UNFOLDED := ./histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root
 TAGGED := ./histos/default/rdx-24_12_03_05_56-tag-2016/tagged.root
 DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
 
@@ -124,14 +120,14 @@ build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 5 \
-		-e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
-		-c $(YML_FILE) $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+		--effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU) -y $(TAGGED) -o $(OUT_DIR) \
+		-c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-unfold
 test-unfold: $(BINPATH)/UnfoldMisID
-	$< -c $(YML_FILE) --dryRun \
-		-y $(TAGGED) -e $(EFFICIENCIES)
+	$< -c $(YML_FILE) --dryRun --debug \
+		-y $(TAGGED) --effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU)
 
 
 # Test of application of misID weights
@@ -145,7 +141,7 @@ test-apply-rdx-weights-2016: \
 	@mkdir -p $(OUT_DIR)
 	$< --debug -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
-		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
 
 
 # Aux. efficiencies for ProbNNk > 2 on true ghost
