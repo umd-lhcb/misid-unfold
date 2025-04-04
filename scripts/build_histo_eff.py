@@ -46,14 +46,14 @@ def parse_input():
 #################
 # Histo helpers #
 #################
-
+ONE_SIGMA = 0.682689492137
 
 def div_with_confint(num, denom):
     if denom < 1:
         return 0, 0
 
     ratio = num / denom
-    intv = proportion_confint(num, denom, method="beta", alpha=0.32)  # Clopper-Pearson
+    intv = proportion_confint(num, denom, method="beta", alpha=1-ONE_SIGMA)  # Clopper-Pearson
     # Use the larger error bar and pretend its a Gaussian
     err_bar = max([abs(x - ratio) for x in intv])
     return ratio, err_bar
@@ -93,23 +93,40 @@ def histo_builder(binning_scheme, df, cuts=None, name="eff"):
     return histo
 
 
-def compute_efficiency(histo_all, histo_passed):
-    xbins = histo_all.GetNbinsX()
-    ybins = histo_all.GetNbinsY()
-    zbins = histo_all.GetNbinsZ()
+def compute_efficiency(histo_all, histo_passed, proj_p=False):
+    if proj_p:
+        # Project 3D histogram onto P axis
+        # Meant for e conditional efficiency, where statistics is too low
+        histo_passed_p = histo_passed.ProjectionX()
+        histo_all_p = histo_all.ProjectionX()
 
-    histo_eff = histo_passed.Clone()
-    # take over/underflow bin into account
-    for i, j, k in product(
-        range(0, xbins + 2), range(0, ybins + 2), range(0, zbins + 2)
-    ):
-        idx = histo_all.GetBin(i, j, k)
-        n_all = histo_all.GetBinContent(idx)
-        n_passed = histo_passed.GetBinContent(idx)
+        xbins = histo_all_p.GetNbinsX()
 
-        eff, err = div_with_confint(n_passed, n_all)
-        histo_eff.SetBinContent(idx, eff)
-        histo_eff.SetBinError(idx, err)
+        histo_eff = histo_passed_p.Clone()
+        for i in range(0, xbins + 2):
+            n_all = histo_all_p.GetBinContent(i)
+            n_passed = histo_passed_p.GetBinContent(i)
+
+            eff, err = div_with_confint(n_passed, n_all)
+            histo_eff.SetBinContent(i, eff)
+            histo_eff.SetBinError(i, err)
+    else:
+        xbins = histo_all.GetNbinsX()
+        ybins = histo_all.GetNbinsY()
+        zbins = histo_all.GetNbinsZ()
+
+        histo_eff = histo_passed.Clone()
+        # take over/underflow bin into account
+        for i, j, k in product(
+            range(0, xbins + 2), range(0, ybins + 2), range(0, zbins + 2)
+        ):
+            idx = histo_all.GetBin(i, j, k)
+            n_all = histo_all.GetBinContent(idx)
+            n_passed = histo_passed.GetBinContent(idx)
+
+            eff, err = div_with_confint(n_passed, n_all)
+            histo_eff.SetBinContent(idx, eff)
+            histo_eff.SetBinError(idx, err)
 
     return histo_eff
 
@@ -202,7 +219,8 @@ if __name__ == "__main__":
 
                     ntp_out = TFile(f"{args.output}/{ntp_name}", "recreate")
 
-                    eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr())
+                    projection_p = subsubconfig["projection_p"] if "projection_p" in subsubconfig else False
+                    eff = compute_efficiency(histo_all.GetPtr(), histo_passed.GetPtr(), projection_p)
                     eff.SetName("eff")
                     eff.Write()
                     histo_all.Write()

@@ -39,9 +39,9 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES := ./histos/default/rdx-24_09_10_13_03-merged-2016/merged.root
-EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-24_09_10_13_04-merged-2016/merged.root
-UNFOLDED := ./histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root
+EFFICIENCIES := ./histos/default/rdx-25_04_03_07_07-merged-2016/merged.root
+EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-25_04_03_07_14-merged-2016/merged.root
+UNFOLDED := ./histos/rdx-25_04_03_07_18-unfolded-2016/unfolded.root
 TAGGED := ./histos/default/rdx-24_12_03_05_56-tag-2016/tagged.root
 DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
 
@@ -70,11 +70,13 @@ test-nix:
 .PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2016-lxplus
 build-rdx-true-to-tag-2016-glacier:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG)
+	@mkdir -p $(OUT_DIR)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 
 build-rdx-true-to-tag-2016-lxplus:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2016)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG)
+	@mkdir -p $(OUT_DIR)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
@@ -88,7 +90,8 @@ test-pidcalib2-wrapper-lxplus:
 .PHONY: build-rdx-true-to-tag-2016-local
 build-rdx-true-to-tag-2016-local:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
-	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG)
+	@mkdir -p $(OUT_DIR)
+	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: build-rdx-merged-2016

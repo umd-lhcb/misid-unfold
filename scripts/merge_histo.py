@@ -145,13 +145,19 @@ def rebuild_root_histo(name, histo_orig, recenter=True):
     for idx in itertools.product(*indices_ranges):
         print(f"  Working on index: {idx}")
         value = histo_orig.GetBinContent(*idx)
-        value = 0.0 if np.isnan(value) else value
         error = histo_orig.GetBinError(*idx)
-        error = 0.0 if np.isnan(error) else error
 
-        if recenter and value * error != 0:
-            value = recenter_dist(value, error)
+        if recenter and not np.isnan(value) and not np.isnan(error):
+            if error > 0.0:
+                value = recenter_dist(value, error)
+            else:
+                print(f"    Zero or negative efficiency uncertainty found ({error}). Manually set efficiency to 0.0.")
+                value = 0.0
         else:
+            if np.isnan(value):
+                value = 0.0
+            if np.isnan(error):
+                error = 0.0
             print(
                 "    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0."
             )
@@ -169,37 +175,46 @@ def divide_histo(name, histo_nom, histo_denom):
     for idx in itertools.product(*indices_ranges):
         print(f"  Working on index: {idx}")
         nom = histo_nom.GetBinContent(*idx)
-        nom = 0.0 if np.isnan(nom) else nom
         nom_err = histo_nom.GetBinError(*idx)
-        nom_err = 0.0 if np.isnan(nom_err) else nom_err
 
         denom = histo_denom.GetBinContent(*idx)
-        denom = 0.0 if np.isnan(denom) else denom
         denom_err = histo_denom.GetBinError(*idx)
-        denom_err = 0.0 if np.isnan(denom_err) else denom_err
 
-        if denom == 0.0 or nom == 0.0:
+        nom_ok = not (np.isnan(nom) or np.isnan(nom_err))
+        denom_ok = not (np.isnan(denom) or np.isnan(denom_err))
+
+        if not (denom_ok and nom_ok):
             histo.SetBinContent(histo.GetBin(*idx), 0.0)
             histo.SetBinError(histo.GetBin(*idx), 0.0)
-
         else:
-            nom = recenter_dist(nom, nom_err)
-            denom = recenter_dist(denom, denom_err)
-            value = nom / denom
+            if denom > 0.0 and nom_err > 0.0 and denom_err > 0.0:
+                nom = recenter_dist(nom, nom_err)
+                denom = recenter_dist(denom, denom_err)
+                value = nom / denom
+                error = value * np.sqrt( (nom_err / nom)**2 + (denom_err / denom)**2 )
+            else:
+                value = 0.0
+                error = 0.0
             histo.SetBinContent(histo.GetBin(*idx), value)
-            histo.SetBinError(histo.GetBin(*idx), nom_err)
+            histo.SetBinError(histo.GetBin(*idx), error)
 
     return histo
 
 
 def multiply_histo_in_place(histo1, histo2):
+    print(f"  Multiplying histo {histo1.GetName()} and {histo2.GetName()}")
     _, histo_axis_nbins = prep_root_histo("tmp", histo1)
 
     indices_ranges = [list(range(1, n + 1)) for n in histo_axis_nbins]
     for idx in itertools.product(*indices_ranges):
         print(f"  Working on index: {idx}")
+        # This only applies for e efficiency, where the PIDCalib efficiency
+        # which lacks mu_BDT is multiplied by the conditional e mu_BDT efficiency
+        # Due to low statistics in the MC sample, it is only computed as function of P,
+        # and saved in a 1D histogram
+        idx_p = idx[0]
         fac1 = histo1.GetBinContent(*idx)
-        fac2 = histo2.GetBinContent(*idx)
+        fac2 = histo2.GetBinContent(idx_p)
         print(f"    original: {fac1}")
         print(f"    new fac:  {fac2}")
         if np.isnan(fac1):
@@ -208,7 +223,7 @@ def multiply_histo_in_place(histo1, histo2):
             fac2 = 0
 
         err1 = histo1.GetBinContent(*idx)
-        err2 = histo2.GetBinContent(*idx)
+        err2 = histo2.GetBinContent(idx_p)
         if np.isnan(err1):
             err1 = 0
         if np.isnan(err2):

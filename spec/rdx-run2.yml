@@ -89,6 +89,7 @@ local_pid_config:
             tags_addon:
                 mu:
                     rel:
+                        projection_p: True
                         cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
                         pid_cut:
                             default: "UBDT > 0.25"
@@ -103,11 +104,11 @@ input_histos:
             default:
                 - "../histos/default/rdx-24_09_10_10_16-true_to_tag_glacier-2016"
                 - "../histos/default/rdx-24_09_10_16_18-true_to_tag_lxplus-2016"
-                - "../histos/default/rdx-24_09_10_10_16-true_to_tag_local-2016"
+                - "../histos/default/rdx-25_04_03_06_55-true_to_tag_local-2016"
             misid_ctrl:
                 - "../histos/ctrl_sample/rdx-24_09_10_11_29-true_to_tag_glacier-2016"
                 - "../histos/ctrl_sample/rdx-24_09_10_16_22-true_to_tag_lxplus-2016"
-                - "../histos/ctrl_sample/rdx-24_09_10_10_19-true_to_tag_local-2016"
+                - "../histos/ctrl_sample/rdx-25_04_03_06_57-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
         #         H2H_Ghost_TO_Pi: gTrueToPiTag

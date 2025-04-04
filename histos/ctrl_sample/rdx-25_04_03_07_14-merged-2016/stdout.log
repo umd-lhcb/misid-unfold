@@ -1,0 +1,1733 @@
+Merging true_to_tag using ['../histos/ctrl_sample/rdx-24_09_10_11_29-true_to_tag_glacier-2016', '../histos/ctrl_sample/rdx-24_09_10_16_22-true_to_tag_lxplus-2016', '../histos/ctrl_sample/rdx-25_04_03_06_57-true_to_tag_local-2016']...
+Copy piTrueToGTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0787633 ± 0.0003324. Shifted mean: 0.0787633
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.1624151 ± 0.0006582. Shifted mean: 0.1624151
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.1398247 ± 0.0038994. Shifted mean: 0.1398247
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.2765072 ± 0.0076680. Shifted mean: 0.2765072
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0696487 ± 0.0002019. Shifted mean: 0.0696487
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.1400690 ± 0.0003850. Shifted mean: 0.1400690
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.1362474 ± 0.0010755. Shifted mean: 0.1362474
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.2488388 ± 0.0020375. Shifted mean: 0.2488388
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0505081 ± 0.0001444. Shifted mean: 0.0505081
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.1025765 ± 0.0002729. Shifted mean: 0.1025765
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0826706 ± 0.0005534. Shifted mean: 0.0826706
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.1526508 ± 0.0010264. Shifted mean: 0.1526508
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0391966 ± 0.0001124. Shifted mean: 0.0391966
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0827853 ± 0.0002116. Shifted mean: 0.0827853
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0582875 ± 0.0003073. Shifted mean: 0.0582875
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.1067155 ± 0.0005581. Shifted mean: 0.1067155
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0229769 ± 0.0001008. Shifted mean: 0.0229769
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0536277 ± 0.0001889. Shifted mean: 0.0536277
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0355755 ± 0.0001851. Shifted mean: 0.0355755
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0693748 ± 0.0003394. Shifted mean: 0.0693748
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0347104 ± 0.0002796. Shifted mean: 0.0347104
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0635543 ± 0.0004711. Shifted mean: 0.0635543
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0499748 ± 0.0003169. Shifted mean: 0.0499748
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0808751 ± 0.0005258. Shifted mean: 0.0808751
+Combining kTrueToMuTag...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0147900 ± 0.0002877. Shifted mean: 0.0147900
+    Raw mean ± std: 0.9241623 ± 0.0007581. Shifted mean: 0.9241623
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0204145 ± 0.0005033. Shifted mean: 0.0204145
+    Raw mean ± std: 0.9038473 ± 0.0012139. Shifted mean: 0.9038473
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0174824 ± 0.0026245. Shifted mean: 0.0174824
+    Raw mean ± std: 0.9074150 ± 0.0073955. Shifted mean: 0.9074150
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0224441 ± 0.0054161. Shifted mean: 0.0224442
+    Raw mean ± std: 0.8615722 ± 0.0129197. Shifted mean: 0.8615722
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0136302 ± 0.0001171. Shifted mean: 0.0136302
+    Raw mean ± std: 0.9480506 ± 0.0002421. Shifted mean: 0.9480506
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0174404 ± 0.0001811. Shifted mean: 0.0174404
+    Raw mean ± std: 0.9305375 ± 0.0003793. Shifted mean: 0.9305375
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0137690 ± 0.0005121. Shifted mean: 0.0137690
+    Raw mean ± std: 0.9368823 ± 0.0012173. Shifted mean: 0.9368823
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0214035 ± 0.0009687. Shifted mean: 0.0214035
+    Raw mean ± std: 0.9077927 ± 0.0021429. Shifted mean: 0.9077927
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0095020 ± 0.0000727. Shifted mean: 0.0095020
+    Raw mean ± std: 0.9775394 ± 0.0001164. Shifted mean: 0.9775394
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0107200 ± 0.0001032. Shifted mean: 0.0107200
+    Raw mean ± std: 0.9705009 ± 0.0001782. Shifted mean: 0.9705009
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0082251 ± 0.0002030. Shifted mean: 0.0082251
+    Raw mean ± std: 0.9709096 ± 0.0004348. Shifted mean: 0.9709096
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0113474 ± 0.0003396. Shifted mean: 0.0113474
+    Raw mean ± std: 0.9555758 ± 0.0007301. Shifted mean: 0.9555758
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0070390 ± 0.0000511. Shifted mean: 0.0070390
+    Raw mean ± std: 0.9872341 ± 0.0000699. Shifted mean: 0.9872341
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0075588 ± 0.0000694. Shifted mean: 0.0075588
+    Raw mean ± std: 0.9846382 ± 0.0001011. Shifted mean: 0.9846382
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0053765 ± 0.0001001. Shifted mean: 0.0053765
+    Raw mean ± std: 0.9828772 ± 0.0001951. Shifted mean: 0.9828772
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0067418 ± 0.0001517. Shifted mean: 0.0067418
+    Raw mean ± std: 0.9718116 ± 0.0003242. Shifted mean: 0.9718116
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0046047 ± 0.0000427. Shifted mean: 0.0046047
+    Raw mean ± std: 0.9923230 ± 0.0000554. Shifted mean: 0.9923230
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0046466 ± 0.0000564. Shifted mean: 0.0046466
+    Raw mean ± std: 0.9918307 ± 0.0000755. Shifted mean: 0.9918307
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0033960 ± 0.0000550. Shifted mean: 0.0033960
+    Raw mean ± std: 0.9918268 ± 0.0000895. Shifted mean: 0.9918268
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0040230 ± 0.0000783. Shifted mean: 0.0040230
+    Raw mean ± std: 0.9878260 ± 0.0001406. Shifted mean: 0.9878260
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0017720 ± 0.0000625. Shifted mean: 0.0017720
+    Raw mean ± std: 0.9942133 ± 0.0001048. Shifted mean: 0.9942133
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0017575 ± 0.0000884. Shifted mean: 0.0017575
+    Raw mean ± std: 0.9939773 ± 0.0001448. Shifted mean: 0.9939773
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0022772 ± 0.0000646. Shifted mean: 0.0022772
+    Raw mean ± std: 0.9941091 ± 0.0001078. Shifted mean: 0.9941091
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0029814 ± 0.0000991. Shifted mean: 0.0029814
+    Raw mean ± std: 0.9917675 ± 0.0001699. Shifted mean: 0.9917675
+Combining pTrueToMuTag...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0019035 ± 0.0001651. Shifted mean: 0.0019035
+    Raw mean ± std: 0.9895851 ± 0.0004037. Shifted mean: 0.9895851
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0029547 ± 0.0002286. Shifted mean: 0.0029547
+    Raw mean ± std: 0.9825233 ± 0.0005655. Shifted mean: 0.9825233
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0045277 ± 0.0013416. Shifted mean: 0.0045284
+    Raw mean ± std: 0.9625705 ± 0.0041271. Shifted mean: 0.9625705
+  Working on index: (1, 2, 2)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0002954 ± 0.0085293. Shifted mean: 0.0058643
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: 1.0737018 ± 0.0239986. Shifted mean: 0.9951689
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0029389 ± 0.0000533. Shifted mean: 0.0029389
+    Raw mean ± std: 0.9827582 ± 0.0001304. Shifted mean: 0.9827582
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0047434 ± 0.0000700. Shifted mean: 0.0047434
+    Raw mean ± std: 0.9729178 ± 0.0001673. Shifted mean: 0.9729178
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0056751 ± 0.0001226. Shifted mean: 0.0056751
+    Raw mean ± std: 0.9694617 ± 0.0002910. Shifted mean: 0.9694617
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0113665 ± 0.0002092. Shifted mean: 0.0113665
+    Raw mean ± std: 0.9417506 ± 0.0004755. Shifted mean: 0.9417506
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0016565 ± 0.0000346. Shifted mean: 0.0016565
+    Raw mean ± std: 0.9905226 ± 0.0000838. Shifted mean: 0.9905226
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0033110 ± 0.0000494. Shifted mean: 0.0033110
+    Raw mean ± std: 0.9801294 ± 0.0001202. Shifted mean: 0.9801294
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0022237 ± 0.0000478. Shifted mean: 0.0022237
+    Raw mean ± std: 0.9868697 ± 0.0001189. Shifted mean: 0.9868697
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0048386 ± 0.0000786. Shifted mean: 0.0048386
+    Raw mean ± std: 0.9716945 ± 0.0001885. Shifted mean: 0.9716945
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0003341 ± 0.0000155. Shifted mean: 0.0003341
+    Raw mean ± std: 0.9977789 ± 0.0000381. Shifted mean: 0.9977789
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0007348 ± 0.0000212. Shifted mean: 0.0007348
+    Raw mean ± std: 0.9951115 ± 0.0000523. Shifted mean: 0.9951115
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0011068 ± 0.0000263. Shifted mean: 0.0011068
+    Raw mean ± std: 0.9924893 ± 0.0000689. Shifted mean: 0.9924893
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0025380 ± 0.0000419. Shifted mean: 0.0025380
+    Raw mean ± std: 0.9820992 ± 0.0001107. Shifted mean: 0.9820992
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0001362 ± 0.0000123. Shifted mean: 0.0001362
+    Raw mean ± std: 0.9992149 ± 0.0000268. Shifted mean: 0.9992149
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0001611 ± 0.0000137. Shifted mean: 0.0001611
+    Raw mean ± std: 0.9989564 ± 0.0000296. Shifted mean: 0.9989564
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0005926 ± 0.0000216. Shifted mean: 0.0005926
+    Raw mean ± std: 0.9968283 ± 0.0000503. Shifted mean: 0.9968283
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0015875 ± 0.0000361. Shifted mean: 0.0015875
+    Raw mean ± std: 0.9919352 ± 0.0000815. Shifted mean: 0.9919352
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0001279 ± 0.0000302. Shifted mean: 0.0001279
+    Raw mean ± std: 0.9989966 ± 0.0000720. Shifted mean: 0.9989966
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0001784 ± 0.0000378. Shifted mean: 0.0001784
+    Raw mean ± std: 0.9986231 ± 0.0000872. Shifted mean: 0.9986231
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0003981 ± 0.0000265. Shifted mean: 0.0003981
+    Raw mean ± std: 0.9985587 ± 0.0000541. Shifted mean: 0.9985587
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0008437 ± 0.0000390. Shifted mean: 0.0008437
+    Raw mean ± std: 0.9969337 ± 0.0000753. Shifted mean: 0.9969337
+Copy piTrueToPiTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.9201565 ± 0.0003351. Shifted mean: 0.9201565
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.8348916 ± 0.0006629. Shifted mean: 0.8348916
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.8568578 ± 0.0039395. Shifted mean: 0.8568578
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.7179383 ± 0.0077160. Shifted mean: 0.7179383
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.9222245 ± 0.0002123. Shifted mean: 0.9222245
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.8465574 ± 0.0003992. Shifted mean: 0.8465574
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.8540481 ± 0.0011084. Shifted mean: 0.8540481
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.7345559 ± 0.0020731. Shifted mean: 0.7345559
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.9082153 ± 0.0001899. Shifted mean: 0.9082153
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.8367081 ± 0.0003321. Shifted mean: 0.8367081
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.8786386 ± 0.0006552. Shifted mean: 0.8786386
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.7843957 ± 0.0011613. Shifted mean: 0.7843957
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.9169299 ± 0.0001597. Shifted mean: 0.9169299
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.8545773 ± 0.0002731. Shifted mean: 0.8545773
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.8873012 ± 0.0004111. Shifted mean: 0.8873012
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.8124874 ± 0.0006990. Shifted mean: 0.8124874
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.8976919 ± 0.0001856. Shifted mean: 0.8976919
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.8536776 ± 0.0002889. Shifted mean: 0.8536776
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.8750336 ± 0.0003113. Shifted mean: 0.8750336
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.8126648 ± 0.0005016. Shifted mean: 0.8126648
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.7721883 ± 0.0005468. Shifted mean: 0.7721883
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.7246111 ± 0.0007812. Shifted mean: 0.7246111
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.7436850 ± 0.0005654. Shifted mean: 0.7436850
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.6805119 ± 0.0008123. Shifted mean: 0.6805119
+Copy kTrueToPiTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0458964 ± 0.0013918. Shifted mean: 0.0458964
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0701480 ± 0.0020117. Shifted mean: 0.0701480
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.1333329 ± 0.0139840. Shifted mean: 0.1333329
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.1830588 ± 0.0195129. Shifted mean: 0.1830588
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0148809 ± 0.0003405. Shifted mean: 0.0148809
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0239245 ± 0.0005018. Shifted mean: 0.0239245
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.1072913 ± 0.0024086. Shifted mean: 0.1072913
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.1425092 ± 0.0036088. Shifted mean: 0.1425092
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0051000 ± 0.0001584. Shifted mean: 0.0051000
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0078961 ± 0.0002271. Shifted mean: 0.0078961
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0482953 ± 0.0009121. Shifted mean: 0.0482953
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0812145 ± 0.0013988. Shifted mean: 0.0812145
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0026411 ± 0.0000855. Shifted mean: 0.0026411
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0034805 ± 0.0001193. Shifted mean: 0.0034805
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0196251 ± 0.0003694. Shifted mean: 0.0196251
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0370647 ± 0.0005743. Shifted mean: 0.0370647
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0200591 ± 0.0000919. Shifted mean: 0.0200591
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0233428 ± 0.0001299. Shifted mean: 0.0233428
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0258094 ± 0.0001877. Shifted mean: 0.0258094
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0373941 ± 0.0002843. Shifted mean: 0.0373941
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.1008819 ± 0.0003581. Shifted mean: 0.1008819
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.1096695 ± 0.0004947. Shifted mean: 0.1096695
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.1273412 ± 0.0004017. Shifted mean: 0.1273412
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.1395431 ± 0.0005560. Shifted mean: 0.1395431
+Copy kTrueToETag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0009842 ± 0.0002388. Shifted mean: 0.0009842
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0027122 ± 0.0003648. Shifted mean: 0.0027122
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0061406 ± 0.0026267. Shifted mean: 0.0061725
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0074533 ± 0.0039500. Shifted mean: 0.0075998
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0008212 ± 0.0000596. Shifted mean: 0.0008212
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0016976 ± 0.0000959. Shifted mean: 0.0016976
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0024684 ± 0.0004889. Shifted mean: 0.0024684
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0041339 ± 0.0008046. Shifted mean: 0.0041339
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0002712 ± 0.0000344. Shifted mean: 0.0002712
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0004779 ± 0.0000545. Shifted mean: 0.0004779
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0015029 ± 0.0001850. Shifted mean: 0.0015029
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0024793 ± 0.0002904. Shifted mean: 0.0024793
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0001295 ± 0.0000206. Shifted mean: 0.0001295
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0002440 ± 0.0000303. Shifted mean: 0.0002440
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0003865 ± 0.0000712. Shifted mean: 0.0003865
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0007645 ± 0.0001128. Shifted mean: 0.0007645
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0015449 ± 0.0000260. Shifted mean: 0.0015449
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0018535 ± 0.0000367. Shifted mean: 0.0018535
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0006357 ± 0.0000377. Shifted mean: 0.0006357
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0010447 ± 0.0000567. Shifted mean: 0.0010447
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0050679 ± 0.0000853. Shifted mean: 0.0050679
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0053126 ± 0.0001173. Shifted mean: 0.0053126
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0023686 ± 0.0000621. Shifted mean: 0.0023686
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0024074 ± 0.0000847. Shifted mean: 0.0024074
+Copy piTrueToPTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0010383 ± 0.0000245. Shifted mean: 0.0010383
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0010760 ± 0.0000356. Shifted mean: 0.0010760
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0005135 ± 0.0000620. Shifted mean: 0.0005135
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0009875 ± 0.0001478. Shifted mean: 0.0009875
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0188079 ± 0.0000876. Shifted mean: 0.0188079
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0284388 ± 0.0001487. Shifted mean: 0.0284388
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0141484 ± 0.0002273. Shifted mean: 0.0141484
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0273907 ± 0.0004495. Shifted mean: 0.0273907
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0153499 ± 0.0000689. Shifted mean: 0.0153499
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0293568 ± 0.0001289. Shifted mean: 0.0293568
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0269630 ± 0.0002020. Shifted mean: 0.0269630
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0417374 ± 0.0003497. Shifted mean: 0.0417374
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0061442 ± 0.0000514. Shifted mean: 0.0061442
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0124744 ± 0.0000961. Shifted mean: 0.0124744
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0325470 ± 0.0001576. Shifted mean: 0.0325470
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0464317 ± 0.0002589. Shifted mean: 0.0464317
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0211958 ± 0.0001889. Shifted mean: 0.0211958
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0286253 ± 0.0002934. Shifted mean: 0.0286253
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0383446 ± 0.0002532. Shifted mean: 0.0383446
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0535119 ± 0.0004035. Shifted mean: 0.0535119
+Copy pTrueToETag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0020152 ± 0.0001878. Shifted mean: 0.0020152
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0048749 ± 0.0002732. Shifted mean: 0.0048749
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0084439 ± 0.0021396. Shifted mean: 0.0084440
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0157635 ± 0.0064338. Shifted mean: 0.0158211
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0012997 ± 0.0000380. Shifted mean: 0.0012997
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0023706 ± 0.0000517. Shifted mean: 0.0023706
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0059715 ± 0.0001372. Shifted mean: 0.0059715
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0074807 ± 0.0001771. Shifted mean: 0.0074807
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0005666 ± 0.0000258. Shifted mean: 0.0005666
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0011604 ± 0.0000332. Shifted mean: 0.0011604
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0027556 ± 0.0000574. Shifted mean: 0.0027556
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0043515 ± 0.0000790. Shifted mean: 0.0043515
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0004072 ± 0.0000252. Shifted mean: 0.0004072
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0006696 ± 0.0000256. Shifted mean: 0.0006696
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0012329 ± 0.0000312. Shifted mean: 0.0012329
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0020822 ± 0.0000419. Shifted mean: 0.0020822
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0003317 ± 0.0000259. Shifted mean: 0.0003317
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0004368 ± 0.0000257. Shifted mean: 0.0004368
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0005330 ± 0.0000244. Shifted mean: 0.0005330
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0009485 ± 0.0000322. Shifted mean: 0.0009485
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0006388 ± 0.0000656. Shifted mean: 0.0006388
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0008614 ± 0.0000699. Shifted mean: 0.0008614
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0002665 ± 0.0000330. Shifted mean: 0.0002665
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0003487 ± 0.0000347. Shifted mean: 0.0003487
+Copy kTrueToKTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.1443847 ± 0.0003465. Shifted mean: 0.1443847
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.1317024 ± 0.0004473. Shifted mean: 0.1317024
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.1414821 ± 0.0013906. Shifted mean: 0.1414821
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.1116308 ± 0.0017790. Shifted mean: 0.1116308
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.8744373 ± 0.0002759. Shifted mean: 0.8744373
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.7885368 ± 0.0004370. Shifted mean: 0.7885368
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.7117809 ± 0.0011643. Shifted mean: 0.7117809
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.5725568 ± 0.0016876. Shifted mean: 0.5725568
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.9336651 ± 0.0001633. Shifted mean: 0.9336651
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.8606538 ± 0.0002813. Shifted mean: 0.8606538
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.8361592 ± 0.0005602. Shifted mean: 0.8361592
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.7311880 ± 0.0008735. Shifted mean: 0.7311880
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.9409361 ± 0.0001459. Shifted mean: 0.9409361
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.8929793 ± 0.0002401. Shifted mean: 0.8929793
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.8985516 ± 0.0002925. Shifted mean: 0.8985516
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.8346594 ± 0.0004638. Shifted mean: 0.8346594
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.8138895 ± 0.0004739. Shifted mean: 0.8138895
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.7674905 ± 0.0006815. Shifted mean: 0.7674905
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.7648253 ± 0.0005133. Shifted mean: 0.7648253
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.7060527 ± 0.0007339. Shifted mean: 0.7060527
+Combining piTrueToMuTag...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0006168 ± 0.0000346. Shifted mean: 0.0006168
+    Raw mean ± std: 0.9013491 ± 0.0003374. Shifted mean: 0.9013491
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0018511 ± 0.0000832. Shifted mean: 0.0018511
+    Raw mean ± std: 0.8667962 ± 0.0005397. Shifted mean: 0.8667962
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0022595 ± 0.0006164. Shifted mean: 0.0022596
+    Raw mean ± std: 0.9235081 ± 0.0027050. Shifted mean: 0.9235081
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0066585 ± 0.0014004. Shifted mean: 0.0066585
+    Raw mean ± std: 0.8866589 ± 0.0048173. Shifted mean: 0.8866589
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0025516 ± 0.0000395. Shifted mean: 0.0025516
+    Raw mean ± std: 0.9416461 ± 0.0001783. Shifted mean: 0.9416461
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0048820 ± 0.0000764. Shifted mean: 0.0048820
+    Raw mean ± std: 0.9143856 ± 0.0002928. Shifted mean: 0.9143856
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0031048 ± 0.0001746. Shifted mean: 0.0031048
+    Raw mean ± std: 0.9464203 ± 0.0006685. Shifted mean: 0.9464203
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0069588 ± 0.0004132. Shifted mean: 0.0069588
+    Raw mean ± std: 0.9138763 ± 0.0012318. Shifted mean: 0.9138763
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0012070 ± 0.0000239. Shifted mean: 0.0012070
+    Raw mean ± std: 0.9829318 ± 0.0000879. Shifted mean: 0.9829318
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0023255 ± 0.0000460. Shifted mean: 0.0023255
+    Raw mean ± std: 0.9740163 ± 0.0001466. Shifted mean: 0.9740163
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0019056 ± 0.0000940. Shifted mean: 0.0019056
+    Raw mean ± std: 0.9773561 ± 0.0002991. Shifted mean: 0.9773561
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0044690 ± 0.0001911. Shifted mean: 0.0044690
+    Raw mean ± std: 0.9622089 ± 0.0005345. Shifted mean: 0.9622089
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0004719 ± 0.0000150. Shifted mean: 0.0004719
+    Raw mean ± std: 0.9922133 ± 0.0000548. Shifted mean: 0.9922133
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0010163 ± 0.0000284. Shifted mean: 0.0010163
+    Raw mean ± std: 0.9894225 ± 0.0000849. Shifted mean: 0.9894225
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0013812 ± 0.0000472. Shifted mean: 0.0013812
+    Raw mean ± std: 0.9873329 ± 0.0001505. Shifted mean: 0.9873329
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0030132 ± 0.0000946. Shifted mean: 0.0030132
+    Raw mean ± std: 0.9767996 ± 0.0002707. Shifted mean: 0.9767996
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0002767 ± 0.0000138. Shifted mean: 0.0002767
+    Raw mean ± std: 0.9960403 ± 0.0000443. Shifted mean: 0.9960403
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0005007 ± 0.0000246. Shifted mean: 0.0005007
+    Raw mean ± std: 0.9954697 ± 0.0000647. Shifted mean: 0.9954697
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0005899 ± 0.0000261. Shifted mean: 0.0005899
+    Raw mean ± std: 0.9946001 ± 0.0000772. Shifted mean: 0.9946001
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0012976 ± 0.0000516. Shifted mean: 0.0012976
+    Raw mean ± std: 0.9916368 ± 0.0001313. Shifted mean: 0.9916368
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0002007 ± 0.0000248. Shifted mean: 0.0002007
+    Raw mean ± std: 0.9972813 ± 0.0000862. Shifted mean: 0.9972813
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0002796 ± 0.0000432. Shifted mean: 0.0002796
+    Raw mean ± std: 0.9967592 ± 0.0001212. Shifted mean: 0.9967592
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0006924 ± 0.0000412. Shifted mean: 0.0006924
+    Raw mean ± std: 0.9964509 ± 0.0000997. Shifted mean: 0.9964509
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0014701 ± 0.0000791. Shifted mean: 0.0014701
+    Raw mean ± std: 0.9943685 ± 0.0001669. Shifted mean: 0.9943685
+Copy pTrueToKTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0925853 ± 0.0002837. Shifted mean: 0.0925853
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0889554 ± 0.0002854. Shifted mean: 0.0889554
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0860418 ± 0.0004401. Shifted mean: 0.0860418
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0682660 ± 0.0004450. Shifted mean: 0.0682660
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.1547503 ± 0.0003037. Shifted mean: 0.1547503
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.1776660 ± 0.0003253. Shifted mean: 0.1776660
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.2266522 ± 0.0004107. Shifted mean: 0.2266522
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.2041020 ± 0.0004331. Shifted mean: 0.2041020
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0162746 ± 0.0000979. Shifted mean: 0.0162746
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0251281 ± 0.0001152. Shifted mean: 0.0251281
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.1658665 ± 0.0002849. Shifted mean: 0.1658665
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.1908734 ± 0.0003189. Shifted mean: 0.1908734
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0053362 ± 0.0000761. Shifted mean: 0.0053362
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0077496 ± 0.0000802. Shifted mean: 0.0077496
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0493833 ± 0.0001864. Shifted mean: 0.0493833
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0801206 ± 0.0002406. Shifted mean: 0.0801206
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0188267 ± 0.0002500. Shifted mean: 0.0188267
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0226820 ± 0.0002882. Shifted mean: 0.0226820
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0290312 ± 0.0002192. Shifted mean: 0.0290312
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0363930 ± 0.0002510. Shifted mean: 0.0363930
+Copy kTrueToPTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0054929 ± 0.0000722. Shifted mean: 0.0054929
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0049066 ± 0.0000933. Shifted mean: 0.0049066
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0038097 ± 0.0002350. Shifted mean: 0.0038097
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0026642 ± 0.0003203. Shifted mean: 0.0026642
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0320067 ± 0.0001280. Shifted mean: 0.0320067
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0520276 ± 0.0002214. Shifted mean: 0.0520276
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0649166 ± 0.0005344. Shifted mean: 0.0649166
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0980832 ± 0.0009088. Shifted mean: 0.0980832
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0238024 ± 0.0000865. Shifted mean: 0.0238024
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0468633 ± 0.0001609. Shifted mean: 0.0468633
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0603303 ± 0.0003071. Shifted mean: 0.0603303
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0923264 ± 0.0005142. Shifted mean: 0.0923264
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0092776 ± 0.0000538. Shifted mean: 0.0092776
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0172586 ± 0.0000960. Shifted mean: 0.0172586
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0320058 ± 0.0001518. Shifted mean: 0.0320058
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0453801 ± 0.0002431. Shifted mean: 0.0453801
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0387701 ± 0.0002271. Shifted mean: 0.0387701
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0450847 ± 0.0003242. Shifted mean: 0.0450847
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0456701 ± 0.0002481. Shifted mean: 0.0456701
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0590807 ± 0.0003782. Shifted mean: 0.0590807
+Copy pTrueToPTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0167207 ± 0.0001253. Shifted mean: 0.0167207
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0106667 ± 0.0001028. Shifted mean: 0.0106667
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0121206 ± 0.0001710. Shifted mean: 0.0121206
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0054801 ± 0.0001300. Shifted mean: 0.0054801
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.6226491 ± 0.0004088. Shifted mean: 0.6226491
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.5115499 ± 0.0004269. Shifted mean: 0.5115499
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.3500545 ± 0.0004695. Shifted mean: 0.3500545
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.2684628 ± 0.0004772. Shifted mean: 0.2684628
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.8833075 ± 0.0002387. Shifted mean: 0.8833075
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.8069703 ± 0.0002852. Shifted mean: 0.8069703
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.5954376 ± 0.0003794. Shifted mean: 0.5954376
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.4716322 ± 0.0004085. Shifted mean: 0.4716322
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.9048595 ± 0.0002151. Shifted mean: 0.9048595
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.8449888 ± 0.0002582. Shifted mean: 0.8449888
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.8096168 ± 0.0003433. Shifted mean: 0.8096168
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.6966932 ± 0.0004135. Shifted mean: 0.6966932
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.8597592 ± 0.0005794. Shifted mean: 0.8597592
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.7989575 ± 0.0007043. Shifted mean: 0.7989575
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.8449187 ± 0.0004714. Shifted mean: 0.8449187
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.7811056 ± 0.0005472. Shifted mean: 0.7811056
+Copy pTrueToGTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.9670157 ± 0.0007788. Shifted mean: 0.9670157
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.9428471 ± 0.0010274. Shifted mean: 0.9428471
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.8201079 ± 0.0075284. Shifted mean: 0.8201079
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.6440872 ± 0.0262077. Shifted mean: 0.6440872
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.8711624 ± 0.0003351. Shifted mean: 0.8711624
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.8688952 ± 0.0003494. Shifted mean: 0.8688952
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.7187352 ± 0.0007383. Shifted mean: 0.7187352
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.7091210 ± 0.0008781. Shifted mean: 0.7091210
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.2144143 ± 0.0003451. Shifted mean: 0.2144143
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.2966818 ± 0.0003906. Shifted mean: 0.2966818
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.3284410 ± 0.0004673. Shifted mean: 0.3284410
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.3861593 ± 0.0005416. Shifted mean: 0.3861593
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0957476 ± 0.0002072. Shifted mean: 0.0957476
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.1605551 ± 0.0002599. Shifted mean: 0.1605551
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.1787111 ± 0.0002969. Shifted mean: 0.1787111
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.2389313 ± 0.0003546. Shifted mean: 0.2389313
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0861993 ± 0.0001844. Shifted mean: 0.0861993
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.1418279 ± 0.0002365. Shifted mean: 0.1418279
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.1110426 ± 0.0002721. Shifted mean: 0.1110426
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.1714878 ± 0.0003396. Shifted mean: 0.1714878
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.1114109 ± 0.0004909. Shifted mean: 0.1114109
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.1660309 ± 0.0006296. Shifted mean: 0.1660309
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.1107645 ± 0.0003995. Shifted mean: 0.1107645
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.1619238 ± 0.0004822. Shifted mean: 0.1619238
+Copy piTrueToETag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0010803 ± 0.0000472. Shifted mean: 0.0010803
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0026933 ± 0.0000985. Shifted mean: 0.0026933
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0033175 ± 0.0006845. Shifted mean: 0.0033175
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0055545 ± 0.0014613. Shifted mean: 0.0055546
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0044723 ± 0.0000531. Shifted mean: 0.0044723
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0072761 ± 0.0000928. Shifted mean: 0.0072761
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0033574 ± 0.0002077. Shifted mean: 0.0033574
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0055461 ± 0.0003832. Shifted mean: 0.0055461
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0175076 ± 0.0000845. Shifted mean: 0.0175076
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0210936 ± 0.0001256. Shifted mean: 0.0210936
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0053001 ± 0.0001538. Shifted mean: 0.0053001
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0072760 ± 0.0002569. Shifted mean: 0.0072760
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0253740 ± 0.0000851. Shifted mean: 0.0253740
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0269319 ± 0.0001173. Shifted mean: 0.0269319
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0099901 ± 0.0001256. Shifted mean: 0.0099901
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0108120 ± 0.0001814. Shifted mean: 0.0108120
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0280156 ± 0.0000921. Shifted mean: 0.0280156
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0276165 ± 0.0001219. Shifted mean: 0.0276165
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0132220 ± 0.0000984. Shifted mean: 0.0132220
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0127237 ± 0.0001327. Shifted mean: 0.0127237
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0213611 ± 0.0001823. Shifted mean: 0.0213611
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0199649 ± 0.0002351. Shifted mean: 0.0199649
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0108393 ± 0.0001282. Shifted mean: 0.0108393
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0095985 ± 0.0001656. Shifted mean: 0.0095985
+Copy pTrueToPiTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0309691 ± 0.0007577. Shifted mean: 0.0309691
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0522779 ± 0.0009956. Shifted mean: 0.0522779
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.1714482 ± 0.0073352. Shifted mean: 0.1714482
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.3401493 ± 0.0255758. Shifted mean: 0.3401493
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0182320 ± 0.0001518. Shifted mean: 0.0182320
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0291121 ± 0.0001940. Shifted mean: 0.0291121
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.1771309 ± 0.0006413. Shifted mean: 0.1771309
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.2096522 ± 0.0008013. Shifted mean: 0.2096522
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0076197 ± 0.0000992. Shifted mean: 0.0076197
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0129419 ± 0.0001188. Shifted mean: 0.0129419
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0920967 ± 0.0003063. Shifted mean: 0.0920967
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.1369243 ± 0.0004001. Shifted mean: 0.1369243
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0042631 ± 0.0000874. Shifted mean: 0.0042631
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0066770 ± 0.0000858. Shifted mean: 0.0066770
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0587519 ± 0.0001939. Shifted mean: 0.0587519
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0964809 ± 0.0002557. Shifted mean: 0.0964809
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0032734 ± 0.0000930. Shifted mean: 0.0032734
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0049969 ± 0.0000917. Shifted mean: 0.0049969
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0294242 ± 0.0001612. Shifted mean: 0.0294242
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0507499 ± 0.0002113. Shifted mean: 0.0507499
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0093643 ± 0.0002552. Shifted mean: 0.0093643
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0114682 ± 0.0002803. Shifted mean: 0.0114682
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0150191 ± 0.0001936. Shifted mean: 0.0150191
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0202289 ± 0.0002145. Shifted mean: 0.0202289
+Copy piTrueToKTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0026162 ± 0.0000414. Shifted mean: 0.0026162
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0050215 ± 0.0000797. Shifted mean: 0.0050215
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0058336 ± 0.0002413. Shifted mean: 0.0058336
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0100718 ± 0.0004510. Shifted mean: 0.0100718
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0049612 ± 0.0000534. Shifted mean: 0.0049612
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0111829 ± 0.0001047. Shifted mean: 0.0111829
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0192422 ± 0.0002871. Shifted mean: 0.0192422
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0282868 ± 0.0004833. Shifted mean: 0.0282868
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0031497 ± 0.0000517. Shifted mean: 0.0031497
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0063487 ± 0.0000930. Shifted mean: 0.0063487
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0174582 ± 0.0001853. Shifted mean: 0.0174582
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0282477 ± 0.0003232. Shifted mean: 0.0282477
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0451715 ± 0.0001281. Shifted mean: 0.0451715
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0526038 ± 0.0001891. Shifted mean: 0.0526038
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0436220 ± 0.0002015. Shifted mean: 0.0436220
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0588051 ± 0.0003232. Shifted mean: 0.0588051
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.1505444 ± 0.0004555. Shifted mean: 0.1505444
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.1632445 ± 0.0006355. Shifted mean: 0.1632445
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.1571563 ± 0.0004632. Shifted mean: 0.1571563
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.1755027 ± 0.0006537. Shifted mean: 0.1755027
+Copy kTrueToGTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.9531194 ± 0.0014091. Shifted mean: 0.9531194
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.9271398 ± 0.0020352. Shifted mean: 0.9271398
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.8605265 ± 0.0140881. Shifted mean: 0.8605265
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.8094879 ± 0.0196671. Shifted mean: 0.8094879
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.8344202 ± 0.0004549. Shifted mean: 0.8344202
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.8377690 ± 0.0006281. Shifted mean: 0.8377690
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.7449486 ± 0.0024657. Shifted mean: 0.7449486
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.7390619 ± 0.0036695. Shifted mean: 0.7390619
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0881847 ± 0.0002072. Shifted mean: 0.0881847
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.1510616 ± 0.0003553. Shifted mean: 0.1510616
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.1735043 ± 0.0008739. Shifted mean: 0.1735043
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.2456662 ± 0.0014493. Shifted mean: 0.2456662
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0397619 ± 0.0001146. Shifted mean: 0.0397619
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0887583 ± 0.0002180. Shifted mean: 0.0887583
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0834989 ± 0.0003733. Shifted mean: 0.0834989
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.1386563 ± 0.0006481. Shifted mean: 0.1386563
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0281823 ± 0.0001018. Shifted mean: 0.0281823
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0645659 ± 0.0001873. Shifted mean: 0.0645659
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0429975 ± 0.0001864. Shifted mean: 0.0429975
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0815218 ± 0.0003305. Shifted mean: 0.0815218
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0413906 ± 0.0002712. Shifted mean: 0.0413906
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0724427 ± 0.0004485. Shifted mean: 0.0724427
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0597948 ± 0.0003052. Shifted mean: 0.0597948
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0929162 ± 0.0004971. Shifted mean: 0.0929162
+Combining eTrueToMuTag...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0056237 ± 0.0025934. Shifted mean: 0.0056727
+    Raw mean ± std: 0.9373858 ± 0.0054910. Shifted mean: 0.9373858
+  Working on index: (1, 1, 2)
+    INFO: Raw mean not in [0, 1]!
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: -0.0007890 ± 0.0066697. Shifted mean: 0.0042171
+    Raw mean ± std: 0.9303292 ± 0.0152218. Shifted mean: 0.9303291
+  Working on index: (1, 2, 1)
+  Working on index: (1, 2, 2)
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0002107 ± 0.0014097. Shifted mean: 0.0010335
+    Raw mean ± std: 0.9716547 ± 0.0025756. Shifted mean: 0.9716547
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0034415 ± 0.0031856. Shifted mean: 0.0040033
+    Raw mean ± std: 0.9554901 ± 0.0060183. Shifted mean: 0.9554901
+  Working on index: (2, 2, 1)
+  Working on index: (2, 2, 2)
+  Working on index: (3, 1, 1)
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: -0.0005379 ± 0.0009549. Shifted mean: 0.0004796
+    Raw mean ± std: 0.9830788 ± 0.0016266. Shifted mean: 0.9830788
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0017975 ± 0.0020105. Shifted mean: 0.0022696
+    Raw mean ± std: 0.9759474 ± 0.0035440. Shifted mean: 0.9759474
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0123363 ± 0.0080080. Shifted mean: 0.0129564
+    Raw mean ± std: 0.9698054 ± 0.0104088. Shifted mean: 0.9697811
+  Working on index: (3, 2, 2)
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: -0.0269383 ± 0.0174994. Shifted mean: 0.0057389
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: 1.0232753 ± 0.0268991. Shifted mean: 0.9882940
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0005502 ± 0.0007493. Shifted mean: 0.0007707
+    Raw mean ± std: 0.9928558 ± 0.0010425. Shifted mean: 0.9928558
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0013299 ± 0.0013545. Shifted mean: 0.0016087
+    Raw mean ± std: 0.9856897 ± 0.0021678. Shifted mean: 0.9856897
+  Working on index: (4, 2, 1)
+    INFO: Raw mean not in [0, 1]!
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: -0.0000158 ± 0.0029342. Shifted mean: 0.0019733
+    Raw mean ± std: 0.9913031 ± 0.0039575. Shifted mean: 0.9912337
+  Working on index: (4, 2, 2)
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: -0.0045801 ± 0.0049108. Shifted mean: 0.0020728
+    Raw mean ± std: 0.9822970 ± 0.0085819. Shifted mean: 0.9820865
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0005548 ± 0.0005562. Shifted mean: 0.0006666
+    Raw mean ± std: 0.9960576 ± 0.0007324. Shifted mean: 0.9960576
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0022295 ± 0.0010366. Shifted mean: 0.0022500
+    Raw mean ± std: 0.9941517 ± 0.0013086. Shifted mean: 0.9941517
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0023019 ± 0.0016467. Shifted mean: 0.0024695
+    Raw mean ± std: 0.9924727 ± 0.0020836. Shifted mean: 0.9924724
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0097305 ± 0.0035169. Shifted mean: 0.0097429
+    Raw mean ± std: 0.9856207 ± 0.0042145. Shifted mean: 0.9856190
+  Working on index: (6, 1, 1)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0001115 ± 0.0007693. Shifted mean: 0.0005626
+    Raw mean ± std: 0.9986256 ± 0.0009877. Shifted mean: 0.9985238
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0023110 ± 0.0019304. Shifted mean: 0.0025917
+    Raw mean ± std: 0.9953981 ± 0.0022969. Shifted mean: 0.9953331
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0035708 ± 0.0022819. Shifted mean: 0.0037391
+    Raw mean ± std: 0.9940746 ± 0.0025702. Shifted mean: 0.9940406
+  Working on index: (6, 2, 2)
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: -0.0023106 ± 0.0022025. Shifted mean: 0.0008829
+    Raw mean ± std: 0.9998243 ± 0.0041658. Shifted mean: 0.9971238
+  Multiplying histo eTrueToMuTag and eff
+  Working on index: (1, 1, 1)
+    original: 0.006051571802995855
+    new fac:  0.95625
+  Working on index: (1, 1, 2)
+    original: 0.0045328687831570754
+    new fac:  0.95625
+  Working on index: (1, 2, 1)
+    original: 0.0
+    new fac:  0.95625
+  Working on index: (1, 2, 2)
+    original: 0.0
+    new fac:  0.95625
+  Working on index: (2, 1, 1)
+    original: 0.0010636989906171058
+    new fac:  0.9401709401709402
+  Working on index: (2, 1, 2)
+    original: 0.004189838372056579
+    new fac:  0.9401709401709402
+  Working on index: (2, 2, 1)
+    original: 0.0
+    new fac:  0.9401709401709402
+  Working on index: (2, 2, 2)
+    original: 0.0
+    new fac:  0.9401709401709402
+  Working on index: (3, 1, 1)
+    original: 0.0004878712185930255
+    new fac:  0.8543689320388349
+  Working on index: (3, 1, 2)
+    original: 0.002325540212049966
+    new fac:  0.8543689320388349
+  Working on index: (3, 2, 1)
+    original: 0.013360079501609586
+    new fac:  0.8543689320388349
+  Working on index: (3, 2, 2)
+    original: 0.0058068904917318465
+    new fac:  0.8543689320388349
+  Working on index: (4, 1, 1)
+    original: 0.0007762126421502083
+    new fac:  0.7230769230769231
+  Working on index: (4, 1, 2)
+    original: 0.0016320781372812588
+    new fac:  0.7230769230769231
+  Working on index: (4, 2, 1)
+    original: 0.001990701364795935
+    new fac:  0.7230769230769231
+  Working on index: (4, 2, 2)
+    original: 0.002110578733888245
+    new fac:  0.7230769230769231
+  Working on index: (5, 1, 1)
+    original: 0.000669199463467536
+    new fac:  0.8974358974358975
+  Working on index: (5, 1, 2)
+    original: 0.0022632275089025356
+    new fac:  0.8974358974358975
+  Working on index: (5, 2, 1)
+    original: 0.002488269084143145
+    new fac:  0.8974358974358975
+  Working on index: (5, 2, 2)
+    original: 0.009885098616895566
+    new fac:  0.8974358974358975
+  Working on index: (6, 1, 1)
+    original: 0.0005634515581465285
+    new fac:  0.7777777777777778
+  Working on index: (6, 1, 2)
+    original: 0.0026038732620783313
+    new fac:  0.7777777777777778
+  Working on index: (6, 2, 1)
+    original: 0.003761551461387086
+    new fac:  0.7777777777777778
+  Working on index: (6, 2, 2)
+    original: 0.0008854568644984294
+    new fac:  0.7777777777777778
+Copy eTrueToPiTag and shift means...
+  Working on index: (1, 1, 1)
+    INFO: Raw mean not in [0, 1]!
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: -0.0151525 ± 0.0083626. Shifted mean: 0.0024790
+  Working on index: (1, 1, 2)
+    INFO: Raw mean not in [0, 1]!
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: -0.0552252 ± 0.0249188. Shifted mean: 0.0064388
+  Working on index: (1, 2, 1)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0032988 ± 0.0044736. Shifted mean: 0.0046094
+  Working on index: (2, 1, 2)
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: -0.0117429 ± 0.0103066. Shifted mean: 0.0039739
+  Working on index: (2, 2, 1)
+    WARNING: Very large std!
+    Raw mean ± std: 0.1685009 ± 0.2008459. Shifted mean: 0.2195743
+  Working on index: (2, 2, 2)
+    WARNING: Very large std!
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: 2.2211593 ± 8.5625922. Shifted mean: 0.5029318
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0166030 ± 0.0033457. Shifted mean: 0.0166030
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0054443 ± 0.0065728. Shifted mean: 0.0071414
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0235558 ± 0.0232357. Shifted mean: 0.0281086
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0249178 ± 0.0606761. Shifted mean: 0.0516651
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0215512 ± 0.0025041. Shifted mean: 0.0215512
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0272977 ± 0.0046386. Shifted mean: 0.0272977
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0685094 ± 0.0100476. Shifted mean: 0.0685094
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0779159 ± 0.0200834. Shifted mean: 0.0779173
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0231585 ± 0.0020545. Shifted mean: 0.0231585
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0288066 ± 0.0035730. Shifted mean: 0.0288066
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0574447 ± 0.0058909. Shifted mean: 0.0574447
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0672289 ± 0.0110072. Shifted mean: 0.0672289
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0267521 ± 0.0035720. Shifted mean: 0.0267521
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0391166 ± 0.0067160. Shifted mean: 0.0391166
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0406686 ± 0.0078809. Shifted mean: 0.0406686
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0743283 ± 0.0149737. Shifted mean: 0.0743283
+  FIX: bin (2, 2, 1) = 0.2195743 ± 0.2008459 has a large error, replace w/ weighted average of nearby bins
+    Looking at nearby bin with index (2, 2, 2)
+    std = 8.5625922 > 0.2, skipping...
+    Looking at nearby bin with index (2, 1, 1)
+    Use 0.0046094 ± 0.0044736
+    Looking at nearby bin with index (1, 2, 1)
+    std = 0.0, perhaps the sample does not cover this bin, skipping...
+    Looking at nearby bin with index (3, 2, 1)
+    Use 0.0281086 ± 0.0232357
+    Use weighted average: 0.0054493 ± 0.0043929
+  FIX: bin (2, 2, 2) = 0.5029318 ± 8.5625922 has a large error, replace w/ weighted average of nearby bins
+    Looking at nearby bin with index (2, 2, 1)
+    Use 0.0054493 ± 0.0043929
+    Looking at nearby bin with index (2, 1, 2)
+    Use 0.0039739 ± 0.0103066
+    Looking at nearby bin with index (1, 2, 2)
+    std = 0.0, perhaps the sample does not cover this bin, skipping...
+    Looking at nearby bin with index (3, 2, 2)
+    Use 0.0516651 ± 0.0606761
+    Use weighted average: 0.0054276 ± 0.0040322
+Copy eTrueToPTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0005875 ± 0.0002904. Shifted mean: 0.0005953
+  Working on index: (2, 1, 2)
+    INFO: Raw mean not in [0, 1]!
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: -0.0000260 ± 0.0005176. Shifted mean: 0.0003396
+  Working on index: (2, 2, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (2, 2, 2)
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: -0.0345269 ± 0.1426806. Shifted mean: 0.0844399
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0092301 ± 0.0013363. Shifted mean: 0.0092301
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0161087 ± 0.0028918. Shifted mean: 0.0161087
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0243060 ± 0.0100133. Shifted mean: 0.0244014
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0117776 ± 0.0203322. Shifted mean: 0.0190987
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0054644 ± 0.0009826. Shifted mean: 0.0054644
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0135350 ± 0.0023104. Shifted mean: 0.0135350
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0061033 ± 0.0032786. Shifted mean: 0.0062321
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0194053 ± 0.0088975. Shifted mean: 0.0195680
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0014960 ± 0.0005848. Shifted mean: 0.0014998
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0039666 ± 0.0012851. Shifted mean: 0.0039682
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0086805 ± 0.0024910. Shifted mean: 0.0086812
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0199681 ± 0.0049423. Shifted mean: 0.0199683
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0060432 ± 0.0015001. Shifted mean: 0.0060433
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0075295 ± 0.0027629. Shifted mean: 0.0075407
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0103461 ± 0.0031096. Shifted mean: 0.0103478
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0118609 ± 0.0061077. Shifted mean: 0.0120605
+Copy eTrueToKTag and shift means...
+  Working on index: (1, 1, 1)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 1, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (1, 2, 1)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0003176 ± 0.0007210. Shifted mean: 0.0006246
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0030053 ± 0.0018046. Shifted mean: 0.0031138
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.1688983 ± 0.1287319. Shifted mean: 0.1842227
+  Working on index: (2, 2, 2)
+    Zero or negative efficiency uncertainty found (0.0). Manually set efficiency to 0.0.
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0041603 ± 0.0014623. Shifted mean: 0.0041644
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0065495 ± 0.0033003. Shifted mean: 0.0066472
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0080268 ± 0.0099266. Shifted mean: 0.0106622
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0208311 ± 0.0266160. Shifted mean: 0.0281585
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0016753 ± 0.0010452. Shifted mean: 0.0017467
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0011383 ± 0.0020520. Shifted mean: 0.0019001
+  Working on index: (4, 2, 1)
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: -0.0013970 ± 0.0040478. Shifted mean: 0.0022699
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0020439 ± 0.0082079. Shifted mean: 0.0063679
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0038336 ± 0.0010083. Shifted mean: 0.0038337
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0033398 ± 0.0018429. Shifted mean: 0.0034206
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0106447 ± 0.0028320. Shifted mean: 0.0106450
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0232674 ± 0.0065980. Shifted mean: 0.0232691
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0111364 ± 0.0022829. Shifted mean: 0.0111364
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0080138 ± 0.0040569. Shifted mean: 0.0081365
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0177821 ± 0.0051007. Shifted mean: 0.0177837
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0086942 ± 0.0075182. Shifted mean: 0.0098650
+Copy eTrueToGTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.8013470 ± 0.0099913. Shifted mean: 0.8013470
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.8698115 ± 0.0244935. Shifted mean: 0.8698115
+  Working on index: (1, 2, 1)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.5927245 ± 0.0062877. Shifted mean: 0.5927245
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.6991082 ± 0.0117913. Shifted mean: 0.6991082
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0984806 ± 0.1210614. Shifted mean: 0.1304019
+  Working on index: (2, 2, 2)
+    WARNING: Very large std!
+    INFO: Raw mean not in [0, 1]!
+    Raw mean ± std: 2.3630973 ± 7.6144453. Shifted mean: 0.5040122
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.2494722 ± 0.0043843. Shifted mean: 0.2494722
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.3089708 ± 0.0083518. Shifted mean: 0.3089708
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.3132503 ± 0.0236041. Shifted mean: 0.3132503
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.3682764 ± 0.0591076. Shifted mean: 0.3682764
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.1387534 ± 0.0029756. Shifted mean: 0.1387534
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.2004624 ± 0.0059222. Shifted mean: 0.2004624
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.1922749 ± 0.0094285. Shifted mean: 0.1922749
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.2603640 ± 0.0195940. Shifted mean: 0.2603640
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0971001 ± 0.0024421. Shifted mean: 0.0971001
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.1475168 ± 0.0049768. Shifted mean: 0.1475168
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.1416152 ± 0.0060812. Shifted mean: 0.1416152
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.2001606 ± 0.0124663. Shifted mean: 0.2001606
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0739852 ± 0.0043453. Shifted mean: 0.0739852
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.1274439 ± 0.0091836. Shifted mean: 0.1274439
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.1232687 ± 0.0093582. Shifted mean: 0.1232687
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.1848394 ± 0.0189850. Shifted mean: 0.1848394
+  FIX: bin (2, 2, 2) = 0.5040122 ± 7.6144453 has a large error, replace w/ weighted average of nearby bins
+    Looking at nearby bin with index (2, 2, 1)
+    Use 0.1304019 ± 0.1210614
+    Looking at nearby bin with index (2, 1, 2)
+    Use 0.6991082 ± 0.0117913
+    Looking at nearby bin with index (1, 2, 2)
+    std = 0.0, perhaps the sample does not cover this bin, skipping...
+    Looking at nearby bin with index (3, 2, 2)
+    Use 0.3682764 ± 0.0591076
+    Use weighted average: 0.6814191 ± 0.0115111
+Copy eTrueToETag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.2138055 ± 0.0077141. Shifted mean: 0.2138055
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.1854137 ± 0.0142804. Shifted mean: 0.1854137
+  Working on index: (1, 2, 1)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (1, 2, 2)
+    nan or 0.0 efficiency encountered. Manually set efficiency to 0.0.
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.4030716 ± 0.0059666. Shifted mean: 0.4030716
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.3096553 ± 0.0098594. Shifted mean: 0.3096553
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.5641202 ± 0.1989933. Shifted mean: 0.5611386
+  Working on index: (2, 2, 2)
+    WARNING: Very large std!
+    INFO: Raw mean not in [0, 1]!
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: -3.5497297 ± 15.8038927. Shifted mean: 0.4979737
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.7205344 ± 0.0051344. Shifted mean: 0.7205344
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.6629266 ± 0.0095536. Shifted mean: 0.6629266
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.6308612 ± 0.0279805. Shifted mean: 0.6308612
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.5741971 ± 0.0658156. Shifted mean: 0.5741971
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.8325558 ± 0.0038311. Shifted mean: 0.8325558
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.7575665 ± 0.0072329. Shifted mean: 0.7575665
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.7345093 ± 0.0126390. Shifted mean: 0.7345093
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.6402709 ± 0.0242138. Shifted mean: 0.6402709
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.8744118 ± 0.0032175. Shifted mean: 0.8744118
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.8163703 ± 0.0060649. Shifted mean: 0.8163703
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.7816148 ± 0.0082929. Shifted mean: 0.7816148
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.6893750 ± 0.0156602. Shifted mean: 0.6893750
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.8820830 ± 0.0059514. Shifted mean: 0.8820830
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.8178961 ± 0.0115287. Shifted mean: 0.8178961
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.8079346 ± 0.0124425. Shifted mean: 0.8079346
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.7202773 ± 0.0230720. Shifted mean: 0.7202773
+  FIX: bin (2, 2, 2) = 0.4979737 ± 15.8038927 has a large error, replace w/ weighted average of nearby bins
+    Looking at nearby bin with index (2, 2, 1)
+    Use 0.5611386 ± 0.1989933
+    Looking at nearby bin with index (2, 1, 2)
+    Use 0.3096553 ± 0.0098594
+    Looking at nearby bin with index (1, 2, 2)
+    std = 0.0, perhaps the sample does not cover this bin, skipping...
+    Looking at nearby bin with index (3, 2, 2)
+    Use 0.5741971 ± 0.0658156
+    Use weighted average: 0.3160501 ± 0.0097389
+Copy gTrueToPiTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.1818839 ± 0.0010649. Shifted mean: 0.1818839
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.1267359 ± 0.0010412. Shifted mean: 0.1267359
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0926348 ± 0.0086930. Shifted mean: 0.0926348
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0608856 ± 0.0081583. Shifted mean: 0.0608856
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.1852053 ± 0.0013759. Shifted mean: 0.1852053
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.1174730 ± 0.0012744. Shifted mean: 0.1174730
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.1010342 ± 0.0013226. Shifted mean: 0.1010342
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0716417 ± 0.0012568. Shifted mean: 0.0716417
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.1910203 ± 0.0020651. Shifted mean: 0.1910203
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.1205203 ± 0.0019146. Shifted mean: 0.1205203
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.1324668 ± 0.0011561. Shifted mean: 0.1324668
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.1077836 ± 0.0011524. Shifted mean: 0.1077836
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.1607579 ± 0.0025809. Shifted mean: 0.1607579
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.1047297 ± 0.0025021. Shifted mean: 0.1047297
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.1417122 ± 0.0010449. Shifted mean: 0.1417122
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.1201552 ± 0.0010578. Shifted mean: 0.1201552
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.1191773 ± 0.0035148. Shifted mean: 0.1191773
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0790980 ± 0.0037163. Shifted mean: 0.0790980
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.1374037 ± 0.0012944. Shifted mean: 0.1374037
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.1083065 ± 0.0012947. Shifted mean: 0.1083065
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0538048 ± 0.0070072. Shifted mean: 0.0538048
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0557185 ± 0.0102301. Shifted mean: 0.0557185
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.1104106 ± 0.0030110. Shifted mean: 0.1104106
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0828855 ± 0.0031237. Shifted mean: 0.0828855
+Copy gTrueToKTag and shift means...
+  Working on index: (1, 1, 1)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0000139. Shifted mean: 0.0000094
+  Working on index: (1, 1, 2)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0000177. Shifted mean: 0.0000120
+  Working on index: (1, 2, 1)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0013969. Shifted mean: 0.0009422
+  Working on index: (1, 2, 2)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0016969. Shifted mean: 0.0011446
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0039311 ± 0.0002326. Shifted mean: 0.0039311
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0032661 ± 0.0002391. Shifted mean: 0.0032661
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0057621 ± 0.0003469. Shifted mean: 0.0057621
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0039699 ± 0.0003247. Shifted mean: 0.0039699
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0555150 ± 0.0012158. Shifted mean: 0.0555150
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0351336 ± 0.0010987. Shifted mean: 0.0351336
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0325365 ± 0.0006110. Shifted mean: 0.0325365
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0243230 ± 0.0005797. Shifted mean: 0.0243230
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0704273 ± 0.0018146. Shifted mean: 0.0704273
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0372896 ± 0.0015748. Shifted mean: 0.0372896
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0388008 ± 0.0005829. Shifted mean: 0.0388008
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0350448 ± 0.0006032. Shifted mean: 0.0350448
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0731518 ± 0.0028496. Shifted mean: 0.0731518
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0430182 ± 0.0028414. Shifted mean: 0.0430182
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0496774 ± 0.0008226. Shifted mean: 0.0496774
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0456179 ± 0.0008754. Shifted mean: 0.0456179
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0468870 ± 0.0066204. Shifted mean: 0.0468870
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0542522 ± 0.0101239. Shifted mean: 0.0542522
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0724980 ± 0.0025084. Shifted mean: 0.0724980
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0527887 ± 0.0025584. Shifted mean: 0.0527887
+Combining gTrueToMuTag...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0145196 ± 0.0003186. Shifted mean: 0.0145196
+    Raw mean ± std: 0.9024138 ± 0.0007799. Shifted mean: 0.9024138
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0213365 ± 0.0004258. Shifted mean: 0.0213365
+    Raw mean ± std: 0.8665447 ± 0.0009900. Shifted mean: 0.8665447
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0188172 ± 0.0042210. Shifted mean: 0.0188172
+    Raw mean ± std: 0.8850806 ± 0.0088727. Shifted mean: 0.8850806
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0325077 ± 0.0057175. Shifted mean: 0.0325077
+    Raw mean ± std: 0.8390093 ± 0.0108819. Shifted mean: 0.8390093
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0136659 ± 0.0004047. Shifted mean: 0.0136659
+    Raw mean ± std: 0.9282051 ± 0.0008851. Shifted mean: 0.9282051
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0186296 ± 0.0005163. Shifted mean: 0.0186296
+    Raw mean ± std: 0.9012825 ± 0.0011214. Shifted mean: 0.9012825
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0142905 ± 0.0005135. Shifted mean: 0.0142905
+    Raw mean ± std: 0.9307839 ± 0.0010772. Shifted mean: 0.9307839
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0227982 ± 0.0006967. Shifted mean: 0.0227982
+    Raw mean ± std: 0.8950460 ± 0.0014075. Shifted mean: 0.8950460
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0099575 ± 0.0005332. Shifted mean: 0.0099575
+    Raw mean ± std: 0.9649141 ± 0.0009648. Shifted mean: 0.9649141
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0110488 ± 0.0006238. Shifted mean: 0.0110488
+    Raw mean ± std: 0.9552922 ± 0.0012004. Shifted mean: 0.9552922
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0090686 ± 0.0003257. Shifted mean: 0.0090686
+    Raw mean ± std: 0.9638359 ± 0.0006304. Shifted mean: 0.9638359
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0110120 ± 0.0003867. Shifted mean: 0.0110120
+    Raw mean ± std: 0.9492781 ± 0.0007984. Shifted mean: 0.9492781
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0113789 ± 0.0007697. Shifted mean: 0.0113789
+    Raw mean ± std: 0.9707399 ± 0.0011942. Shifted mean: 0.9707399
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0109706 ± 0.0008829. Shifted mean: 0.0109706
+    Raw mean ± std: 0.9723565 ± 0.0013519. Shifted mean: 0.9723565
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0071280 ± 0.0002555. Shifted mean: 0.0071280
+    Raw mean ± std: 0.9731235 ± 0.0004829. Shifted mean: 0.9731235
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0064886 ± 0.0002648. Shifted mean: 0.0064886
+    Raw mean ± std: 0.9670942 ± 0.0005756. Shifted mean: 0.9670942
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0246914 ± 0.0017147. Shifted mean: 0.0246914
+    Raw mean ± std: 0.9656468 ± 0.0019925. Shifted mean: 0.9656468
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0212300 ± 0.0020407. Shifted mean: 0.0212300
+    Raw mean ± std: 0.9713564 ± 0.0023327. Shifted mean: 0.9713564
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0110699 ± 0.0003987. Shifted mean: 0.0110699
+    Raw mean ± std: 0.9764376 ± 0.0005717. Shifted mean: 0.9764376
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0075121 ± 0.0003679. Shifted mean: 0.0075121
+    Raw mean ± std: 0.9760739 ± 0.0006379. Shifted mean: 0.9760739
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0449927 ± 0.0063026. Shifted mean: 0.0449927
+    Raw mean ± std: 0.9441219 ± 0.0068944. Shifted mean: 0.9441219
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0417246 ± 0.0088607. Shifted mean: 0.0417246
+    Raw mean ± std: 0.9485396 ± 0.0096197. Shifted mean: 0.9485396
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0226290 ± 0.0014535. Shifted mean: 0.0226290
+    Raw mean ± std: 0.9679634 ± 0.0017045. Shifted mean: 0.9679634
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0162942 ± 0.0014834. Shifted mean: 0.0162942
+    Raw mean ± std: 0.9745112 ± 0.0018161. Shifted mean: 0.9745112
+Copy gTrueToGTag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.8122331 ± 0.0010780. Shifted mean: 0.8122331
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.8691781 ± 0.0010552. Shifted mean: 0.8691781
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.8990129 ± 0.0089993. Shifted mean: 0.8990129
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.9363469 ± 0.0083071. Shifted mean: 0.9363469
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.8026430 ± 0.0014093. Shifted mean: 0.8026430
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.8745074 ± 0.0013107. Shifted mean: 0.8745074
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.8747161 ± 0.0014506. Shifted mean: 0.8747161
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.9122952 ± 0.0013760. Shifted mean: 0.9122952
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.6836859 ± 0.0024355. Shifted mean: 0.6836859
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.8009655 ± 0.0023387. Shifted mean: 0.8009655
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.7741080 ± 0.0014228. Shifted mean: 0.7741080
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.8265754 ± 0.0014034. Shifted mean: 0.8265754
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.6888187 ± 0.0032354. Shifted mean: 0.6888187
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.8015043 ± 0.0032357. Shifted mean: 0.8015043
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.7513248 ± 0.0012923. Shifted mean: 0.7513248
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.8068841 ± 0.0012815. Shifted mean: 0.8068841
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.7434130 ± 0.0046878. Shifted mean: 0.7434130
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.8307025 ± 0.0050840. Shifted mean: 0.8307025
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.7307292 ± 0.0016625. Shifted mean: 0.7307292
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.7953890 ± 0.0016745. Shifted mean: 0.7953890
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.8570331 ± 0.0103726. Shifted mean: 0.8570331
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.8592375 ± 0.0146015. Shifted mean: 0.8592375
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.7306716 ± 0.0042150. Shifted mean: 0.7306716
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.7958916 ± 0.0045001. Shifted mean: 0.7958916
+Copy gTrueToPTag and shift means...
+  Working on index: (1, 1, 1)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0000139. Shifted mean: 0.0000094
+  Working on index: (1, 1, 2)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0000177. Shifted mean: 0.0000120
+  Working on index: (1, 2, 1)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0013969. Shifted mean: 0.0009422
+  Working on index: (1, 2, 2)
+    WARNING: Raw and shifted means are significantly different!
+    Raw mean ± std: 0.0000000 ± 0.0016969. Shifted mean: 0.0011446
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0018172 ± 0.0001624. Shifted mean: 0.0018172
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0008127 ± 0.0001276. Shifted mean: 0.0008127
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0021772 ± 0.0002212. Shifted mean: 0.0021772
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0010785 ± 0.0001813. Shifted mean: 0.0010785
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0533809 ± 0.0011941. Shifted mean: 0.0533809
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0350330 ± 0.0010972. Shifted mean: 0.0350330
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0257342 ± 0.0005466. Shifted mean: 0.0257342
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0186445 ± 0.0005108. Shifted mean: 0.0186445
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0666954 ± 0.0017707. Shifted mean: 0.0666954
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0488271 ± 0.0017819. Shifted mean: 0.0488271
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0327763 ± 0.0005382. Shifted mean: 0.0327763
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0172572 ± 0.0004303. Shifted mean: 0.0172572
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0568093 ± 0.0025468. Shifted mean: 0.0568093
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0428448 ± 0.0028362. Shifted mean: 0.0428448
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0650940 ± 0.0009320. Shifted mean: 0.0650940
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0404984 ± 0.0008280. Shifted mean: 0.0404984
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0407379 ± 0.0062477. Shifted mean: 0.0407379
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0293255 ± 0.0079798. Shifted mean: 0.0293267
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0813414 ± 0.0026390. Shifted mean: 0.0813414
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0653290 ± 0.0028134. Shifted mean: 0.0653290
+Copy gTrueToETag and shift means...
+  Working on index: (1, 1, 1)
+    Raw mean ± std: 0.0058830 ± 0.0002175. Shifted mean: 0.0058830
+  Working on index: (1, 1, 2)
+    Raw mean ± std: 0.0040861 ± 0.0002078. Shifted mean: 0.0040861
+  Working on index: (1, 2, 1)
+    Raw mean ± std: 0.0083523 ± 0.0033338. Shifted mean: 0.0083779
+  Working on index: (1, 2, 2)
+    Raw mean ± std: 0.0027675 ± 0.0026847. Shifted mean: 0.0032797
+  Working on index: (2, 1, 1)
+    Raw mean ± std: 0.0064034 ± 0.0002929. Shifted mean: 0.0064034
+  Working on index: (2, 1, 2)
+    Raw mean ± std: 0.0039408 ± 0.0002609. Shifted mean: 0.0039408
+  Working on index: (2, 2, 1)
+    Raw mean ± std: 0.0163104 ± 0.0005674. Shifted mean: 0.0163104
+  Working on index: (2, 2, 2)
+    Raw mean ± std: 0.0110147 ± 0.0005230. Shifted mean: 0.0110147
+  Working on index: (3, 1, 1)
+    Raw mean ± std: 0.0163979 ± 0.0006870. Shifted mean: 0.0163979
+  Working on index: (3, 1, 2)
+    Raw mean ± std: 0.0083476 ± 0.0005607. Shifted mean: 0.0083476
+  Working on index: (3, 2, 1)
+    Raw mean ± std: 0.0351545 ± 0.0006338. Shifted mean: 0.0351545
+  Working on index: (3, 2, 2)
+    Raw mean ± std: 0.0226735 ± 0.0005607. Shifted mean: 0.0226735
+  Working on index: (4, 1, 1)
+    Raw mean ± std: 0.0133008 ± 0.0008405. Shifted mean: 0.0133008
+  Working on index: (4, 1, 2)
+    Raw mean ± std: 0.0076492 ± 0.0007607. Shifted mean: 0.0076492
+  Working on index: (4, 2, 1)
+    Raw mean ± std: 0.0353860 ± 0.0005581. Shifted mean: 0.0353860
+  Working on index: (4, 2, 2)
+    Raw mean ± std: 0.0206587 ± 0.0004690. Shifted mean: 0.0206587
+  Working on index: (5, 1, 1)
+    Raw mean ± std: 0.0074486 ± 0.0010213. Shifted mean: 0.0074486
+  Working on index: (5, 1, 2)
+    Raw mean ± std: 0.0043365 ± 0.0010495. Shifted mean: 0.0043365
+  Working on index: (5, 2, 1)
+    Raw mean ± std: 0.0170957 ± 0.0004966. Shifted mean: 0.0170957
+  Working on index: (5, 2, 2)
+    Raw mean ± std: 0.0101882 ± 0.0004305. Shifted mean: 0.0101882
+  Working on index: (6, 1, 1)
+    Raw mean ± std: 0.0015373 ± 0.0020240. Shifted mean: 0.0021125
+  Working on index: (6, 1, 2)
+    Raw mean ± std: 0.0014663 ± 0.0033636. Shifted mean: 0.0029063
+  Working on index: (6, 2, 1)
+    Raw mean ± std: 0.0050784 ± 0.0007560. Shifted mean: 0.0050784
+  Working on index: (6, 2, 2)
+    Raw mean ± std: 0.0031052 ± 0.0007348. Shifted mean: 0.0031052
