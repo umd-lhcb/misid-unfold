@@ -69,7 +69,7 @@ def decode_arguments(args):
         "--magnet",
         help="magnet polarity",
         required=True,
-        choices=["up", "down"],
+        choices=["up", "down", "both"],
     )
     parser.add_argument(
         "-p",
@@ -206,8 +206,23 @@ def make_eff_hists(config: dict) -> None:
     if config["local_dataframe"]:
         hists = utils.create_histograms_from_local_dataframe(config)
     else:
-        hists_list = utils.create_histograms(config)
-        hists = utils.add_hists(list(hists_list.values()))
+        if config["magnet"] != "both":
+            # Run over single polarity
+            hists_list = utils.create_histograms(config)
+            hists = utils.add_hists(list(hists_list.values()))
+        else:
+            # Run over MagUp samples
+            log.info("Processing MapUp calibration samples")
+            config_up = config.copy()
+            config_up["magnet"] = "up"
+            hists_list_up = utils.create_histograms(config_up)
+            # Now run over MagDown
+            log.info("Processing MagDown calibration samples")
+            config_dw = config.copy()
+            config_dw["magnet"] = "down"
+            hists_list_dw = utils.create_histograms(config_dw)
+            # Produce combined efficiencies
+            hists = utils.add_hists(list(hists_list_up.values()) + list(hists_list_dw.values()))
 
     eff_hists = utils.create_eff_histograms(hists)
     eff_hists_filtered = {k: v for k, v in eff_hists.items() if k.startswith("eff_")}

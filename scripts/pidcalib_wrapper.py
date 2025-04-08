@@ -69,6 +69,10 @@ def parse_input():
     )
 
     parser.add_argument(
+        "-p", "--polarity", default="both", help="magnet polarity", choices=["up", "down", "both"]
+    )
+
+    parser.add_argument(
         "-m", "--mode", default="glacier", help="specify operation mode."
     )
 
@@ -123,7 +127,7 @@ def run_cmd(cmd, dry_run=False):
 
 
 def true_to_tag_gen(
-    directive, dry_run=False, debug=False, polarity="down", mode="lxplus"
+    directive, dry_run=False, debug=False, mode="lxplus"
 ):
     bin_vars = " " + " ".join(f"--bin-var {b}" for b in directive.bin_vars)
     cuts = ""
@@ -183,7 +187,7 @@ def true_to_tag_directive_gen(
     output_folder,
     blocked_particles=[],
     blocked_add_pid_cut_for_particle=[],
-    polarity="down",
+    polarity="both",
     ctrl_sample=False
 ):
     result = []
@@ -289,7 +293,7 @@ if __name__ == "__main__":
     if args.ctrl_sample:
         print("Using MisID validation PID cuts")
     directives = true_to_tag_directive_gen(
-        config, args.year, "raw_histos", **MODES[args.mode], ctrl_sample=args.ctrl_sample
+        config, args.year, "raw_histos", **MODES[args.mode], polarity=args.polarity, ctrl_sample=args.ctrl_sample
     )
 
     # in case of a dry run
