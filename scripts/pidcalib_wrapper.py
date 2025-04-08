@@ -134,7 +134,8 @@ def true_to_tag_gen(
     for pc, nm in zip(directive.pid_cut_arr, directive.pkl_names):
         cuts += f' --pid-cut "{pc}" --pkl-name {nm}.pkl'
 
-    cmd_prefix = "lb-conda pidcalib " if mode == "lxplus" else ""
+    # pidcalib/2022-09-02 corresponds to version 1.0.6
+    cmd_prefix = "lb-conda pidcalib/2022-09-02 " if mode == "lxplus" else ""
 
     cmd = rf'''{cmd_prefix}{CURR_DIR}/make_eff_histo_mod.py \
     --output-dir {directive.folder_name} \
