@@ -93,7 +93,6 @@ build-rdx-true-to-tag-2016-local:
 	@mkdir -p $(OUT_DIR)
 	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
 
-
 .PHONY: build-rdx-merged-2016
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
@@ -110,6 +109,24 @@ build-generic-dif-smearing:
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+
+build-rdx-misid-mc-corrections: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-vmu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-vmu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) --vmu true 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-fake_mu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-fake_mu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) --fake_mu true 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 # Unfold the misID weights
@@ -193,6 +210,14 @@ plot-rdx-bin_vars-ana-2016:
 		--show-title 0 1 0 --show-legend 1 0 0 \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
+#########
+# Plots #
+#########
+
+compare-efficiencies: $(BINPATH)/compareEffs
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-compare-efficiencies)
+	@mkdir $(OUT_DIR)
+	$< -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 ########
 # Test #
@@ -216,6 +241,12 @@ test-get-particle-name: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-st
 
 $(BINPATH)/ApplyMisIDWeight: ApplyMisIDWeight.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
+
+$(BINPATH)/compareEffs: compareEffs.cpp
+	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
+
+$(BINPATH)/GetMisIDCorrections: GetMisIDCorrections.cpp
+	$(COMPILER) $(CXXFLAGS) -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp -lRooFitCore -lRooFit
 
 $(BINPATH)/%: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)

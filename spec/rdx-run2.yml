@@ -203,3 +203,43 @@ weight_brs:
             - prefix: Dst_dsb_bsb
               file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_dsb_bsb
+
+misid_corrections:
+    mc_ntps:
+        2016:
+            k: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_05_15--mc--27163974--2016*.root"
+            pi: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_05_15--mc--27163974--2016*.root"
+        2017:
+            k: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_06_02--mc--27163974--2017*.root"
+            pi: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_06_02--mc--27163974--2017*.root"
+        2018:
+            k: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_05_30--mc--27163974--2018*.root"
+            pi: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_05_30--mc--27163974--2018*.root"
+    pid_calib:
+        trees:
+            k:
+                - "DSt_KPTuple/DecayTree"
+                - "DSt_KMTuple/DecayTree"
+            pi:
+                - "DSt_PiPTuple/DecayTree"
+                - "DSt_PiMTuple/DecayTree"
+        calib_samples:
+            2016:
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2016-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2016-MagDown/*.root"
+            2017:
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2017-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2017-MagDown/*.root"
+            2018:
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2018-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2018-MagDown/*.root"
+        friends:
+            2016:
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2016-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2016-MagDown/*.root"
+            2017:
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2017-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2017-MagDown/*.root"
+            2018:
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2018-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2018-MagDown/*.root"
