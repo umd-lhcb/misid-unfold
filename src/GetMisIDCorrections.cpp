@@ -122,21 +122,25 @@ void plot_dataset(const RooDataSet &ds, const TString path) {
          << ds.GetName() << endl;
     return;
   }
+
   TCanvas c("c", "c", 1280, 960);
   TString hist_prefix = "h_";
   auto    vars        = ds.get(0);
-  //   cout << "\nDEBUG Plotting var distributions" << endl;
   for (auto arg : *vars) {
     RooRealVar *var = static_cast<RooRealVar *>(arg);
-    // cout << "DEBUG Plotting " << var->GetName() << endl;
-    TH1D *hist = static_cast<TH1D *>(ds.createHistogram(
-        hist_prefix + var->GetName(), *var,
-        Binning(40, 0.999 * var->getMin(), 1.001 * var->getMax())));
+
+    // Set histogram range a little beyond the roorealvar limits to avoid
+    // hiding parameters at limit in overflow bin
+    const double var_max = var->getMax(), var_min = var->getMin();
+    const double range     = var_max - var_min;
+    const double range_max = var_max + 0.001 * range;
+    const double range_min = var_min - 0.001 * range;
+
+    TH1D *hist = static_cast<TH1D *>(
+        ds.createHistogram(hist_prefix + var->GetName(), *var,
+                           Binning(100, range_min, range_max)));
     hist->Draw();
-    double min = hist->GetXaxis()->GetXmin();
-    double max = hist->GetXaxis()->GetXmax();
-    cout << "  - " << var->GetName() << ": " << min << ", " << max << " -> "
-         << (max + min) / 2 << endl;
+
     c.SaveAs(path + var->GetName() + ".pdf");
     delete hist;
   }
@@ -217,17 +221,12 @@ int main(int argc, char **argv) {
   int count_total_failed[3][N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] = {{{{0}}}};
 
   // Define variable to access input ntuples
-  int dst_bkgcat, dst_id, dst_mom_id, dst_gd_mom_id, dst_gd_gd_mom_id,
-      d0_bkgcat, d0_id, d0_mom_id, d0_gd_mom_id, d0_gd_gd_mom_id, k_id,
-      k_mom_id, k_gd_mom_id, k_gd_gd_mom_id, pi_id, pi_mom_id, pi_gd_mom_id,
-      pi_gd_gd_mom_id, spi_id, spi_mom_id, spi_gd_mom_id, spi_gd_gd_mom_id,
-      ntracks;
-  double dst_m, d0_m, probe_p, probe_pz, probe_pt, probe_eta, probe_dllmu,
-      probe_dlle, probe_ghostprob, probe_mu_unbiased, ntracks_calib, evt_number,
-      run_number;
-  float probe_ghostprob_mc, probe_mu_ubdt;
-  bool  probe_ismuon, probe_hasmuon, probe_tis_l0, probe_tis_hlt1,
-      probe_tis_hlt2;
+  int    dst_id, d0_id, ntracks;
+  double dst_m, d0_m, d0_pt, probe_p, probe_pz, probe_pt, probe_eta,
+      probe_dllmu, probe_dlle, probe_ghostprob, probe_mu_unbiased,
+      ntracks_calib, spi_p, spi_pt, tag_p, tag_pt;
+  float probe_mu_ubdt, probe_track_chi2ndof;
+  bool  probe_ismuon, probe_hasmuon;
 
   // Other variables
   TCanvas c_single("c_single", "c_single", 1280, 960);
@@ -246,14 +245,10 @@ int main(int argc, char **argv) {
   // Observables
   RooRealVar d0_m_var("d0_m_var", "d0_m_var", 1825, 1910, "MeV/c^{2}");
   RooRealVar dm_var("dm_var", "dm_var", 141, 153, "MeV/c^{2}");
-  RooBinning bins_d0_m_passed(50, 1825, 1910, "bins_mc_d0_passed");
   RooBinning bins_d0_m(85, 1825, 1910, "bins_d0_m");
   RooBinning bins_dm(80, 141, 153, "bins_dm");
-
-  // Define fit range excluding higher D0 mass region to avoid mass threshold in
-  // certain kinematic bins
-  d0_m_var.setRange("fit_calib", 1825, 1900);
-  dm_var.setRange("fit_calib", 141, 153);
+  RooBinning bins_d0_m_passed(50, 1825, 1910, "bins_mc_d0_passed");
+  RooBinning bins_dm_passed(50, 141, 153, "bins_dm_passed");
 
   // Define categories
   RooCategory sample("sample", "sample");
@@ -269,20 +264,20 @@ int main(int argc, char **argv) {
   // D0 signal: CrystalBall + Gaussian
 
   // Core
-  RooRealVar mean_d0_failed("mean_d0_failed", "mean_d0_failed", 1865, 1855,
-                            1875, "MeV");
-  RooRealVar mean_d0_passed("mean_d0_passed", "mean_d0_passed", 1865, 1855,
-                            1875, "MeV");
-  RooRealVar width_d0("width_d0", "width_d0", 7, 1, 15, "MeV");
-  RooRealVar width_cb_d0("width_cb_d0", "width_cb_d0", 6, 1, 20, "MeV");
+  RooRealVar mean_d0_failed("mean_d0_failed", "mean_d0_failed", 1855, 1870,
+                            "MeV");
+  RooRealVar mean_d0_passed("mean_d0_passed", "mean_d0_passed", 1855, 1870,
+                            "MeV");
+  RooRealVar width_d0("width_d0", "width_d0", 1, 15, "MeV");
+  RooRealVar width_cb_d0("width_cb_d0", "width_cb_d0", 1, 20, "MeV");
 
-  RooRealVar m_shift_d0_failed("m_shift_d0_failed", "m_shift_d0_failed", 0, -4,
-                               4, "MeV");
-  RooRealVar m_shift_d0_passed("m_shift_d0_passed", "m_shift_d0_passed", 0, -4,
-                               4, "MeV");
-  RooRealVar w_scale_d0_failed("w_scale_d0_failed", "w_scale_d0_failed", 1, 0.5,
+  RooRealVar m_shift_d0_failed("m_shift_d0_failed", "m_shift_d0_failed", -4, 4,
+                               "MeV");
+  RooRealVar m_shift_d0_passed("m_shift_d0_passed", "m_shift_d0_passed", -4, 4,
+                               "MeV");
+  RooRealVar w_scale_d0_failed("w_scale_d0_failed", "w_scale_d0_failed", 0.5,
                                1.5, "");
-  RooRealVar w_scale_d0_passed("w_scale_d0_passed", "w_scale_d0_passed", 1, 0.5,
+  RooRealVar w_scale_d0_passed("w_scale_d0_passed", "w_scale_d0_passed", 0.5,
                                1.5, "");
 
   RooFormulaVar mean_shifted_d0_failed(
@@ -305,24 +300,24 @@ int main(int argc, char **argv) {
       RooArgList(width_cb_d0, w_scale_d0_passed));
 
   // Left tail
-  RooRealVar alpha_L_d0_failed("alpha_L_d0_failed", "alpha_L_d0_failed", 1.1,
-                               0.01, 5, "");
-  RooRealVar alpha_L_d0_passed("alpha_L_d0_passed", "alpha_L_d0_passed", 0.5,
-                               0.01, 5., "");
-  RooRealVar n_L_d0_failed("n_L_d0_failed", "n_L_d0_failed", 2.5, 0.01, 50, "");
-  RooRealVar n_L_d0_passed("n_L_d0_passed", "n_L_d0_passed", 3.5, 0.01, 50, "");
+  RooRealVar alpha_L_d0_failed("alpha_L_d0_failed", "alpha_L_d0_failed", 1e-3,
+                               3, "");
+  RooRealVar alpha_L_d0_passed("alpha_L_d0_passed", "alpha_L_d0_passed", 1e-3,
+                               3, "");
+  RooRealVar n_L_d0_failed("n_L_d0_failed", "n_L_d0_failed", 0.01, 50, "");
+  RooRealVar n_L_d0_passed("n_L_d0_passed", "n_L_d0_passed", 0.01, 50, "");
 
   // Right tail
-  RooRealVar alpha_R_d0_failed("alpha_R_d0_failed", "alpha_R_d0_failed", 1.3,
-                               0.01, 5, "");
-  RooRealVar alpha_R_d0_passed("alpha_R_d0_passed", "alpha_R_d0_passed", 0.6,
-                               0.01, 5, "");
-  RooRealVar n_R_d0_failed("n_R_d0_failed", "n_R_d0_failed", 4.6, 0.01, 50, "");
-  RooRealVar n_R_d0_passed("n_R_d0_passed", "n_R_d0_passed", 6.1, 0.01, 50, "");
+  RooRealVar alpha_R_d0_failed("alpha_R_d0_failed", "alpha_R_d0_failed", 1e-3,
+                               3, "");
+  RooRealVar alpha_R_d0_passed("alpha_R_d0_passed", "alpha_R_d0_passed", 1e-3,
+                               3, "");
+  RooRealVar n_R_d0_failed("n_R_d0_failed", "n_R_d0_failed", 0.01, 50, "");
+  RooRealVar n_R_d0_passed("n_R_d0_passed", "n_R_d0_passed", 0.01, 50, "");
 
   // Gaussian fraction
-  RooRealVar f_d0_passed("f_d0_passed", "f_d0_passed", 0.6, 0, 1);
-  RooRealVar f_d0_failed("f_d0_failed", "f_d0_failed", 0.6, 0, 1);
+  RooRealVar f_d0_passed("f_d0_passed", "f_d0_passed", 0, 1);
+  RooRealVar f_d0_failed("f_d0_failed", "f_d0_failed", 0, 1);
 
   // MC PDFs
   RooGaussian d0_gauss_passed_mc("d0_gauss_passed_mc", "d0_gauss_passed_mc",
@@ -372,20 +367,20 @@ int main(int argc, char **argv) {
   // dm signal: CrystalBall + Gaussian
 
   // Core
-  RooRealVar mean_dm_failed("mean_dm_failed", "mean_dm_failed", 145.5, 144, 147,
+  RooRealVar mean_dm_failed("mean_dm_failed", "mean_dm_failed", 145, 146,
                             "MeV");
-  RooRealVar mean_dm_passed("mean_dm_passed", "mean_dm_passed", 145.5, 144, 147,
+  RooRealVar mean_dm_passed("mean_dm_passed", "mean_dm_passed", 145, 146,
                             "MeV");
-  RooRealVar width_dm("width_dm", "width_dm", 0.1, 0.21, 2, "MeV");
-  RooRealVar width_cb_dm("width_cb_dm", "width_cb_dm", 0.7, 0.1, 3, "MeV");
+  RooRealVar width_dm("width_dm", "width_dm", 0.21, 2, "MeV");
+  RooRealVar width_cb_dm("width_cb_dm", "width_cb_dm", 0.1, 3, "MeV");
 
-  RooRealVar m_shift_dm_failed("m_shift_dm_failed", "m_shift_dm_failed", 0,
-                               -0.4, 0.4, "MeV");
-  RooRealVar m_shift_dm_passed("m_shift_dm_passed", "m_shift_dm_passed", 0,
-                               -0.4, 0.4, "MeV");
-  RooRealVar w_scale_dm_failed("w_scale_dm_failed", "w_scale_dm_failed", 1, 0.5,
+  RooRealVar m_shift_dm_failed("m_shift_dm_failed", "m_shift_dm_failed", -0.4,
+                               0.4, "MeV");
+  RooRealVar m_shift_dm_passed("m_shift_dm_passed", "m_shift_dm_passed", -0.4,
+                               0.4, "MeV");
+  RooRealVar w_scale_dm_failed("w_scale_dm_failed", "w_scale_dm_failed", 0.5,
                                1.5, "");
-  RooRealVar w_scale_dm_passed("w_scale_dm_passed", "w_scale_dm_passed", 1, 0.5,
+  RooRealVar w_scale_dm_passed("w_scale_dm_passed", "w_scale_dm_passed", 0.5,
                                1.5, "");
 
   RooFormulaVar mean_shifted_dm_failed(
@@ -408,24 +403,24 @@ int main(int argc, char **argv) {
       RooArgList(width_cb_dm, w_scale_dm_passed));
 
   // Left tail
-  RooRealVar alpha_L_dm_failed("alpha_L_dm_failed", "alpha_L_dm_failed", 1.8,
-                               0.01, 5, "");
-  RooRealVar alpha_L_dm_passed("alpha_L_dm_passed", "alpha_L_dm_passed", 2.0,
-                               0.01, 5, "");
-  RooRealVar n_L_dm_failed("n_L_dm_failed", "n_L_dm_failed", 4.2, 0.01, 50, "");
-  RooRealVar n_L_dm_passed("n_L_dm_passed", "n_L_dm_passed", 3.3, 0.01, 50, "");
+  RooRealVar alpha_L_dm_failed("alpha_L_dm_failed", "alpha_L_dm_failed", 1e-3,
+                               3, "");
+  RooRealVar alpha_L_dm_passed("alpha_L_dm_passed", "alpha_L_dm_passed", 1e-3,
+                               3, "");
+  RooRealVar n_L_dm_failed("n_L_dm_failed", "n_L_dm_failed", 0.01, 50, "");
+  RooRealVar n_L_dm_passed("n_L_dm_passed", "n_L_dm_passed", 0.01, 50, "");
 
   // Right tail
-  RooRealVar alpha_R_dm_failed("alpha_R_dm_failed", "alpha_R_dm_failed", 1.5,
-                               0.01, 5, "");
-  RooRealVar alpha_R_dm_passed("alpha_R_dm_passed", "alpha_R_dm_passed", 1.5,
-                               0.01, 5, "");
-  RooRealVar n_R_dm_failed("n_R_dm_failed", "n_R_dm_failed", 4.7, 0.01, 50, "");
-  RooRealVar n_R_dm_passed("n_R_dm_passed", "n_R_dm_passed", 4.0, 0.01, 50, "");
+  RooRealVar alpha_R_dm_failed("alpha_R_dm_failed", "alpha_R_dm_failed", 1e-3,
+                               3, "");
+  RooRealVar alpha_R_dm_passed("alpha_R_dm_passed", "alpha_R_dm_passed", 1e-3,
+                               3, "");
+  RooRealVar n_R_dm_failed("n_R_dm_failed", "n_R_dm_failed", 0.01, 50, "");
+  RooRealVar n_R_dm_passed("n_R_dm_passed", "n_R_dm_passed", 0.01, 50, "");
 
   // Gaussian fraction
-  RooRealVar f_dm_passed("f_dm_passed", "f_dm_passed", 0.2, 0, 1);
-  RooRealVar f_dm_failed("f_dm_failed", "f_dm_failed", 0.2, 0, 1);
+  RooRealVar f_dm_passed("f_dm_passed", "f_dm_passed", 0, 1);
+  RooRealVar f_dm_failed("f_dm_failed", "f_dm_failed", 0, 1);
 
   // MC PDFs
   RooGaussian dm_gauss_passed_mc("dm_gauss_passed_mc", "dm_gauss_passed_mc",
@@ -474,22 +469,57 @@ int main(int argc, char **argv) {
   // dm comb model: threshold function
   RooConstVar dm0("dm0", "dm0", PI_M);
 
-  RooRealVar th_pwrlaw_failed("th_pwrlaw_failed", "th_pwrlaw_failed", 0.4, 0.01,
-                              2, "MeV");
-  RooRealVar th_pwrlaw_passed("th_pwrlaw_passed", "th_pwrlaw_passed", 0.4, 0.01,
-                              2, "MeV");
+  // RooRealVar c_comb_spi_failed("c_comb_spi_failed", "c_comb_spi_failed", 0,
+  // 1,
+  //                              "");
+  // RooRealVar c_comb_spi_passed("c_comb_spi_passed", "c_comb_spi_passed", 0,
+  // 1,
+  //                              "");
+  RooRealVar c_comb_spi("c_comb_spi", "c_comb_spi", 0, 1, "");
 
-  RooPowerLaw dm_threshold_failed("dm_threshold_failed", "dm_threshold_failed",
-                                  dm_var, dm0, th_pwrlaw_failed);
-  RooPowerLaw dm_threshold_passed("dm_threshold_passed", "dm_threshold_passed",
-                                  dm_var, dm0, th_pwrlaw_passed);
+  // RooRealVar c_comb_all_failed("c_comb_all_failed", "c_comb_all_failed", 0,
+  // 1,
+  //                              "");
+  // RooRealVar c_comb_all_passed("c_comb_all_passed", "c_comb_all_passed", 0,
+  // 1,
+  //                              "");
+  RooRealVar c_comb_all("c_comb_all", "c_comb_all", 0, 1, "");
+
+  RooPowerLaw dm_comb_spi_failed("dm_comb_spi_failed", "dm_comb_spi_failed",
+                                 dm_var, dm0, c_comb_spi);
+  RooPowerLaw dm_comb_spi_passed("dm_comb_spi_passed", "dm_comb_spi_passed",
+                                 dm_var, dm0, c_comb_spi);
+
+  RooPowerLaw dm_comb_all_failed("dm_comb_all_failed", "dm_comb_all_failed",
+                                 dm_var, dm0, c_comb_all);
+  RooPowerLaw dm_comb_all_passed("dm_comb_all_passed", "dm_comb_all_passed",
+                                 dm_var, dm0, c_comb_all);
 
   // D0 comb model: exponential distribution
-  RooRealVar k_failed("k_failed", "k_failed", -0.003, -0.04, 0, "MeV");
-  RooRealVar k_passed("k_passed", "k_passed", -0.006, -0.04, 0, "MeV");
+  RooRealVar k_part_reco_failed("k_part_reco_failed", "k_part_reco_failed",
+                                -0.10, 0, "");
+  RooRealVar k_part_reco_passed("k_part_reco_passed", "k_part_reco_passed",
+                                -0.10, 0, "");
 
-  RooExponential exp_failed("exp_failed", "exp_failed", d0_m_var, k_failed);
-  RooExponential exp_passed("exp_passed", "exp_passed", d0_m_var, k_passed);
+  // RooRealVar k_comb_all_failed("k_comb_all_failed", "k_comb_all_failed",
+  // -0.10,
+  //                              0, "");
+  // RooRealVar k_comb_all_passed("k_comb_all_passed", "k_comb_all_passed",
+  // -0.10,
+  //                              0, "");
+  RooRealVar k_comb_all("k_comb_all", "k_comb_all", -0.10, 0, "");
+
+  RooExponential d0_part_reco_failed("d0_part_reco_failed",
+                                     "d0_part_reco_failed", d0_m_var,
+                                     k_part_reco_failed);
+  RooExponential d0_part_reco_passed("d0_part_reco_passed",
+                                     "d0_part_reco_passed", d0_m_var,
+                                     k_part_reco_passed);
+
+  RooExponential d0_comb_all_failed("d0_comb_all_failed", "d0_comb_all_failed",
+                                    d0_m_var, k_comb_all);
+  RooExponential d0_comb_all_passed("d0_comb_all_passed", "d0_comb_all_passed",
+                                    d0_m_var, k_comb_all);
 
   ///////////////////////////
   // PDFs for MC-only fits //
@@ -517,23 +547,26 @@ int main(int argc, char **argv) {
                               d0_model_passed_calib, dm_model_passed_calib);
   RooProdPdf sig_failed_calib("sig_failed_calib", "sig_failed_calib",
                               d0_model_failed_calib, dm_model_failed_calib);
-  RooProdPdf dm_comb_passed("dm_comb_passed", "dm_comb_passed",
-                            d0_model_passed_calib, dm_threshold_passed);
-  RooProdPdf dm_comb_failed("dm_comb_failed", "dm_comb_failed",
-                            d0_model_failed_calib, dm_threshold_failed);
-  RooProdPdf d0_comb_passed("d0_comb_passed", "d0_comb_passed", exp_passed,
-                            dm_model_passed_calib);
-  RooProdPdf d0_comb_failed("d0_comb_failed", "d0_comb_failed", exp_failed,
-                            dm_model_failed_calib);
-  RooProdPdf dmd0_comb_passed("dmd0_comb_passed", "dmd0_comb_passed",
-                              exp_passed, dm_threshold_passed);
-  RooProdPdf dmd0_comb_failed("dmd0_comb_failed", "dmd0_comb_failed",
-                              exp_failed, dm_threshold_failed);
 
-  RooRealVar f1_bkg_passed("f1_bkg_passed", "f1_bkg_passed", 0.6, 0., 1.);
-  RooRealVar f2_bkg_passed("f2_bkg_passed", "f2_bkg_passed", 0.3, 0., 1.);
-  RooRealVar f1_bkg_failed("f1_bkg_failed", "f1_bkg_failed", 0.3, 0., 1.);
-  RooRealVar f2_bkg_failed("f2_bkg_failed", "f2_bkg_failed", 0.3, 0., 1.);
+  RooProdPdf dm_comb_passed("dm_comb_passed", "dm_comb_passed",
+                            d0_model_passed_calib, dm_comb_spi_passed);
+  RooProdPdf dm_comb_failed("dm_comb_failed", "dm_comb_failed",
+                            d0_model_failed_calib, dm_comb_spi_failed);
+
+  RooProdPdf d0_comb_passed("d0_comb_passed", "d0_comb_passed",
+                            d0_part_reco_passed, dm_model_passed_calib);
+  RooProdPdf d0_comb_failed("d0_comb_failed", "d0_comb_failed",
+                            d0_part_reco_failed, dm_model_failed_calib);
+
+  RooProdPdf dmd0_comb_passed("dmd0_comb_passed", "dmd0_comb_passed",
+                              d0_comb_all_passed, dm_comb_all_passed);
+  RooProdPdf dmd0_comb_failed("dmd0_comb_failed", "dmd0_comb_failed",
+                              d0_comb_all_failed, dm_comb_all_failed);
+
+  RooRealVar f1_bkg_passed("f1_bkg_passed", "f1_bkg_passed", 0, 1, "");
+  RooRealVar f2_bkg_passed("f2_bkg_passed", "f2_bkg_passed", 0, 1, "");
+  RooRealVar f1_bkg_failed("f1_bkg_failed", "f1_bkg_failed", 0, 1, "");
+  RooRealVar f2_bkg_failed("f2_bkg_failed", "f2_bkg_failed", 0, 1, "");
 
   RooAddPdf bkg_passed(
       "bkg_passed", "bkg_passed",
@@ -544,8 +577,8 @@ int main(int argc, char **argv) {
       RooArgList(dm_comb_failed, d0_comb_failed, dmd0_comb_failed),
       RooArgList(f1_bkg_failed, f2_bkg_failed), true);
 
-  RooRealVar n_mc_passed("n_mc_passed", "n_mc_passed", 1, "");
-  RooRealVar n_mc_failed("n_mc_failed", "n_mc_failed", 1, "");
+  RooRealVar n_mc_passed("n_mc_passed", "n_mc_passed", 0, "");
+  RooRealVar n_mc_failed("n_mc_failed", "n_mc_failed", 0, "");
 
   RooExtendPdf model_mc_passed("model_mc_passed", "model_mc_passed",
                                sig_passed_mc, n_mc_passed);
@@ -553,21 +586,25 @@ int main(int argc, char **argv) {
                                sig_failed_mc, n_mc_failed);
 
   // PID efficiency
-  RooRealVar eff("eff", "eff", 0.02, 0, 1, "");
+  RooRealVar eff("eff", "eff", 0, 1, "");
+  if (fake_mu)
+    eff.setMin(0.70);
+  else
+    eff.setMax(0.04);
 
   // PIDCalib mass window efficiencies
   RooRealVar eff_mw_passed("eff_mw_passed", "eff_mw_passed", 1, "");
   RooRealVar eff_mw_failed("eff_mw_failed", "eff_mw_failed", 1, "");
 
   // Normalizations
-  RooRealVar n_sig("n_sig", "n_sig", 0, 1e9, "");
-  RooRealVar n_bkg_passed("n_bkg_passed", "n_bkg_passed", 0, 1e9, "");
-  RooRealVar n_bkg_failed("n_bkg_failed", "n_bkg_failed", 0, 1e9, "");
+  RooRealVar n_sig("n_sig", "n_sig", 0, 1, "");
+  RooRealVar n_bkg_passed("n_bkg_passed", "n_bkg_passed", 0, 1, "");
+  RooRealVar n_bkg_failed("n_bkg_failed", "n_bkg_failed", 0, 1, "");
 
   RooFormulaVar n_sig_passed("n_sig_passed", "n_sig_passed", "x[0]*x[1]*x[2]",
                              RooArgList(n_sig, eff, eff_mw_passed));
   RooFormulaVar n_sig_failed("n_sig_failed", "n_sig_failed",
-                             "x[0]*(1.-x[1])*x[2]",
+                             "x[0] * (1. - x[1]) * x[2]",
                              RooArgList(n_sig, eff, eff_mw_failed));
 
   RooAddPdf model_passed("model_passed", "model_passed",
@@ -598,83 +635,133 @@ int main(int argc, char **argv) {
   RooDataSet *datasets_calib_failed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P];
 
   auto set_parameters_d0 = [&](const string &probe) {
-    m_shift_d0_failed.setVal(0);
-    m_shift_d0_passed.setVal(0);
-    w_scale_d0_failed.setVal(1);
-    w_scale_d0_passed.setVal(1);
     if (probe == "k") {
-      mean_d0_failed.setVal(1865.35);
-      mean_d0_passed.setVal(1865.35);
-      width_d0.setVal(8.5);
-      width_cb_d0.setVal(7.6);
-      alpha_L_d0_failed.setVal(1.7);
+      mean_d0_failed.setVal(1865);
+      mean_d0_passed.setVal(1865);
+      width_d0.setVal(8.9);
+      width_cb_d0.setVal(7.9);
+      alpha_L_d0_failed.setVal(1.4);
       alpha_L_d0_passed.setVal(0.8);
-      n_L_d0_failed.setVal(2.8);
-      n_L_d0_passed.setVal(6);
-      alpha_R_d0_failed.setVal(1.38);
-      alpha_R_d0_passed.setVal(0.74);
+      n_L_d0_failed.setVal(3.5);
+      n_L_d0_passed.setVal(5);
+      alpha_R_d0_failed.setVal(1.5);
+      alpha_R_d0_passed.setVal(0.8);
       n_R_d0_failed.setVal(7);
       n_R_d0_passed.setVal(6.5);
-      f_d0_passed.setVal(0.50);
-      f_d0_failed.setVal(0.50);
+      f_d0_passed.setVal(0.5);
+      f_d0_failed.setVal(0.5);
     } else if (probe == "pi") {
-      mean_d0_failed.setVal(1865.6);
-      mean_d0_passed.setVal(1865.6);
-      width_d0.setVal(6.8);
-      width_cb_d0.setVal(14);
-      alpha_L_d0_failed.setVal(1.46);
-      alpha_L_d0_passed.setVal(0.33);
-      n_L_d0_failed.setVal(7);
-      n_L_d0_passed.setVal(12);
-      alpha_R_d0_failed.setVal(1.72);
-      alpha_R_d0_passed.setVal(2);
-      n_R_d0_failed.setVal(6);
-      n_R_d0_passed.setVal(7);
-      f_d0_passed.setVal(0.26);
-      f_d0_failed.setVal(0.26);
+      mean_d0_failed.setVal(1865.5);
+      mean_d0_passed.setVal(1865);
+      width_d0.setVal(7.1);
+      width_cb_d0.setVal(10.5);
+      alpha_L_d0_failed.setVal(1.4);
+      alpha_L_d0_passed.setVal(0.6);
+      n_L_d0_failed.setVal(5.5);
+      n_L_d0_passed.setVal(5);
+      alpha_R_d0_failed.setVal(1.7);
+      alpha_R_d0_passed.setVal(1.8);
+      n_R_d0_failed.setVal(7);
+      n_R_d0_passed.setVal(6);
+      f_d0_passed.setVal(0.2);
+      f_d0_failed.setVal(0.3);
     }
   };
 
   auto set_parameters_dm = [&](const string &probe) {
+    if (probe == "k") {
+      mean_dm_failed.setVal(145.4);
+      mean_dm_passed.setVal(145.4);
+      width_dm.setVal(0.6);
+      width_cb_dm.setVal(0.7);
+      alpha_L_dm_failed.setVal(1.4);
+      alpha_L_dm_passed.setVal(1.2);
+      n_L_dm_failed.setVal(5.9);
+      n_L_dm_passed.setVal(6.5);
+      alpha_R_dm_failed.setVal(1.2);
+      alpha_R_dm_passed.setVal(1.0);
+      n_R_dm_failed.setVal(5.1);
+      n_R_dm_passed.setVal(5.5);
+      f_dm_passed.setVal(0.2);
+      f_dm_failed.setVal(0.2);
+    } else if (probe == "pi") {
+      mean_dm_failed.setVal(145.45);
+      mean_dm_passed.setVal(145.45);
+      width_dm.setVal(0.5);
+      width_cb_dm.setVal(0.8);
+      alpha_L_dm_failed.setVal(1.6);
+      alpha_L_dm_passed.setVal(1.5);
+      n_L_dm_failed.setVal(6);
+      n_L_dm_passed.setVal(6);
+      alpha_R_dm_failed.setVal(1.3);
+      alpha_R_dm_passed.setVal(1.2);
+      n_R_dm_failed.setVal(5);
+      n_R_dm_passed.setVal(5.5);
+      f_dm_passed.setVal(0.2);
+      f_dm_failed.setVal(0.2);
+    }
+  };
+
+  auto set_parameters_calib = [&](const string &probe) {
+    m_shift_d0_failed.setVal(0);
+    m_shift_d0_passed.setVal(0);
+    w_scale_d0_failed.setVal(1);
+    w_scale_d0_passed.setVal(1);
     m_shift_dm_failed.setVal(0);
     m_shift_dm_passed.setVal(0);
     w_scale_dm_failed.setVal(1);
     w_scale_dm_passed.setVal(1);
     if (probe == "k") {
-      mean_dm_failed.setVal(145.45);
-      mean_dm_passed.setVal(145.45);
-      width_dm.setVal(0.347);
-      width_cb_dm.setVal(0.84);
-      alpha_L_dm_failed.setVal(1.67);
-      alpha_L_dm_passed.setVal(1.69);
-      n_L_dm_failed.setVal(7.65);
-      n_L_dm_passed.setVal(6.5);
-      alpha_R_dm_failed.setVal(1.37);
-      alpha_R_dm_passed.setVal(1.34);
-      n_R_dm_failed.setVal(5.5);
-      n_R_dm_passed.setVal(7.5);
-      f_dm_passed.setVal(0.12);
-      f_dm_failed.setVal(0.145);
+      // c_comb_spi_failed.setVal(0.49);
+      // c_comb_spi_passed.setVal(0.50);
+      // c_comb_all_failed.setVal(0.32);
+      // c_comb_all_passed.setVal(0.40);
+      c_comb_spi.setVal(0.50);
+      c_comb_all.setVal(0.35);
     } else if (probe == "pi") {
-      mean_dm_failed.setVal(145.436);
-      mean_dm_passed.setVal(145.436);
-      width_dm.setVal(0.7);
-      width_cb_dm.setVal(0.75);
-      alpha_L_dm_failed.setVal(1.35);
-      alpha_L_dm_passed.setVal(2.7);
-      n_L_dm_failed.setVal(7.8);
-      n_L_dm_passed.setVal(6);
-      alpha_R_dm_failed.setVal(1.15);
-      alpha_R_dm_passed.setVal(1.15);
-      n_R_dm_failed.setVal(5.8);
-      n_R_dm_passed.setVal(8);
-      f_dm_passed.setVal(0.4);
-      f_dm_failed.setVal(0.19);
+      // c_comb_spi_failed.setVal(0.50);
+      // c_comb_spi_passed.setVal(0.50);
+      // c_comb_all_failed.setVal(0.33);
+      // c_comb_all_passed.setVal(0.35);
+      c_comb_spi.setVal(0.50);
+      c_comb_all.setVal(0.34);
     }
   };
 
+  RooArgSet fit_vars(d0_m_var, dm_var);
+
+  RooArgSet argset_minos(eff);
+
+  RooArgSet params_d0(mean_d0_failed, mean_d0_passed, width_d0, width_cb_d0,
+                      alpha_L_d0_failed, alpha_L_d0_passed, n_L_d0_failed,
+                      n_L_d0_passed, alpha_R_d0_failed, alpha_R_d0_passed,
+                      n_R_d0_failed, n_R_d0_passed, f_d0_passed, f_d0_failed);
+
+  RooArgSet params_dm(mean_dm_failed, mean_dm_passed, width_dm, width_cb_dm,
+                      alpha_L_dm_failed, alpha_L_dm_passed, n_L_dm_failed,
+                      n_L_dm_passed, alpha_R_dm_failed, alpha_R_dm_passed,
+                      n_R_dm_failed, n_R_dm_passed, f_dm_passed, f_dm_failed);
+
+  RooRealVar m_shift_d0_delta("m_shift_d0_delta", "m_shift_d0_delta", 1, "");
+  RooRealVar m_shift_dm_delta("m_shift_dm_delta", "m_shift_dm_delta", 1, "");
+  RooRealVar w_scale_d0_delta("w_scale_d0_delta", "w_scale_d0_delta", 1, "");
+  RooRealVar w_scale_dm_delta("w_scale_dm_delta", "w_scale_dm_delta", 1, "");
+  RooArgSet params_calib(m_shift_d0_failed, m_shift_d0_passed, m_shift_d0_delta,
+                         w_scale_d0_failed, w_scale_d0_passed, w_scale_d0_delta,
+                         m_shift_dm_failed, m_shift_dm_passed, m_shift_dm_delta,
+                         w_scale_dm_failed, w_scale_dm_passed, w_scale_dm_delta,
+                         c_comb_spi, c_comb_all, k_part_reco_failed,
+                         k_part_reco_passed, k_comb_all, eff, f1_bkg_passed,
+                         f2_bkg_passed, f1_bkg_failed, f2_bkg_failed);
+
   for (auto probe : particles) {
     cout << "INFO Selecting " << probe << endl;
+
+    TString tag;
+    if (probe == "pi")
+      tag = "k";
+    else
+      tag = "pi";
 
     // Initialize MC datasets
     cout << "INFO Initializing MC datasets " << endl;
@@ -683,12 +770,12 @@ int main(int argc, char **argv) {
         for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
           TString suffix = TString::Format("%s_%d_%d_%d", probe.c_str(),
                                            ntrks_idx, eta_idx, p_idx);
-          datasets_mc_passed[ntrks_idx][eta_idx][p_idx] = new RooDataSet(
-              "dataset_mc_passed_" + suffix, "dataset_mc_passed_" + suffix,
-              RooArgSet(d0_m_var, dm_var));
-          datasets_mc_failed[ntrks_idx][eta_idx][p_idx] = new RooDataSet(
-              "dataset_mc_failed_" + suffix, "dataset_mc_failed_" + suffix,
-              RooArgSet(d0_m_var, dm_var));
+          datasets_mc_passed[ntrks_idx][eta_idx][p_idx] =
+              new RooDataSet("dataset_mc_passed_" + suffix,
+                             "dataset_mc_passed_" + suffix, fit_vars);
+          datasets_mc_failed[ntrks_idx][eta_idx][p_idx] =
+              new RooDataSet("dataset_mc_failed_" + suffix,
+                             "dataset_mc_failed_" + suffix, fit_vars);
         }
       }
     }
@@ -698,8 +785,6 @@ int main(int argc, char **argv) {
     // Loop over MC files first to build combined MC sample,
     // but calculating separate mass window efficiencies
     for (auto year : years) {
-      //   cout << "INFO Starting " << year << " calculation" << endl;
-
       // Open and loop over MC files
       const auto mc_path = ymlConfig["mc_ntps"][year][probe].as<string>();
       cout << "INFO Opening MC files: " << mc_path << endl;
@@ -711,46 +796,28 @@ int main(int argc, char **argv) {
       cout << "INFO Setting input branches " << endl;
       ch_mc.SetBranchStatus("*", 0);
       ch_mc.SetBranchAddress("dst_M", &dst_m);
-      //   ch_mc.SetBranchAddress("dst_BKGCAT", &dst_bkgcat);
       ch_mc.SetBranchAddress("dst_TRUEID", &dst_id);
-      //   ch_mc.SetBranchAddress("dst_MC_MOTHER_ID", &dst_mom_id);
-      //   ch_mc.SetBranchAddress("dst_MC_GD_MOTHER_ID", &dst_gd_mom_id);
-      //   ch_mc.SetBranchAddress("dst_MC_GD_GD_MOTHER_ID", &dst_gd_gd_mom_id);
       ch_mc.SetBranchAddress("d0_M", &d0_m);
-      //   ch_mc.SetBranchAddress("d0_BKGCAT", &d0_bkgcat);
+      ch_mc.SetBranchAddress("d0_PT", &d0_pt);
       ch_mc.SetBranchAddress("d0_TRUEID", &d0_id);
-      //   ch_mc.SetBranchAddress("d0_MC_MOTHER_ID", &d0_mom_id);
-      //   ch_mc.SetBranchAddress("d0_MC_GD_MOTHER_ID", &d0_gd_mom_id);
-      //   ch_mc.SetBranchAddress("d0_MC_GD_GD_MOTHER_ID", &d0_gd_gd_mom_id);
-      //   ch_mc.SetBranchAddress("k_TRUEID", &k_id);
-      //   ch_mc.SetBranchAddress("k_MC_MOTHER_ID", &k_mom_id);
-      //   ch_mc.SetBranchAddress("k_MC_GD_MOTHER_ID", &k_gd_mom_id);
-      //   ch_mc.SetBranchAddress("k_MC_GD_GD_MOTHER_ID", &k_gd_gd_mom_id);
-      //   ch_mc.SetBranchAddress("pi_TRUEID", &pi_id);
-      //   ch_mc.SetBranchAddress("pi_MC_MOTHER_ID", &pi_mom_id);
-      //   ch_mc.SetBranchAddress("pi_MC_GD_MOTHER_ID", &pi_gd_mom_id);
-      //   ch_mc.SetBranchAddress("pi_MC_GD_GD_MOTHER_ID", &pi_gd_gd_mom_id);
-      //   ch_mc.SetBranchAddress("spi_TRUEID", &spi_id);
-      //   ch_mc.SetBranchAddress("spi_MC_MOTHER_ID", &spi_mom_id);
-      //   ch_mc.SetBranchAddress("spi_MC_GD_MOTHER_ID", &spi_gd_mom_id);
-      //   ch_mc.SetBranchAddress("spi_MC_GD_GD_MOTHER_ID", &spi_gd_gd_mom_id);
+      ch_mc.SetBranchAddress("spi_P", &spi_p);
+      ch_mc.SetBranchAddress("spi_PT", &spi_pt);
+      ch_mc.SetBranchAddress(tag + "_P", &tag_p);
+      ch_mc.SetBranchAddress(tag + "_PT", &tag_pt);
       ch_mc.SetBranchAddress((probe + "_P").c_str(), &probe_p);
+      ch_mc.SetBranchAddress((probe + "_PT").c_str(), &probe_pt);
       ch_mc.SetBranchAddress((probe + "_PZ").c_str(), &probe_pz);
       ch_mc.SetBranchAddress((probe + "_isMuon").c_str(), &probe_ismuon);
       ch_mc.SetBranchAddress((probe + "_hasMuon").c_str(), &probe_hasmuon);
       ch_mc.SetBranchAddress((probe + "_PIDmu").c_str(), &probe_dllmu);
       ch_mc.SetBranchAddress((probe + "_PIDe").c_str(), &probe_dlle);
-      //   ch_mc.SetBranchAddress("TrackGhostProbability", &probe_ghostprob_mc);
-      //   ch_mc.SetBranchAddress((probe + "_L0Global_TIS").c_str(),
-      //   &probe_tis_l0); ch_mc.SetBranchAddress((probe +
-      //   "_Hlt1Global_TIS").c_str(),
-      //                          &probe_tis_hlt1);
-      //   ch_mc.SetBranchAddress((probe + "_Hlt2Global_TIS").c_str(),
-      //                          &probe_tis_hlt2);
       ch_mc.SetBranchAddress((probe + "_bdt_mu").c_str(), &probe_mu_ubdt);
+      ch_mc.SetBranchAddress("TrackChi2PerDof", &probe_track_chi2ndof);
       ch_mc.SetBranchAddress("nTracks", &ntracks);
 
-      int    count_tm = 0, count_cond = 0, count_range = 0, count_mw = 0;
+      int count_tm = 0, count_cond = 0, count_calib_sel = 0, count_range = 0,
+          count_mw = 0;
+
       int    kin_bin        = -1;
       bool   in_mass_window = false, pid_ok = false;
       double dm = 0;
@@ -771,15 +838,23 @@ int main(int argc, char **argv) {
         if (!probe_hasmuon) continue;
         count_cond++;
 
+        // Calib sample cuts
+        // See tables 36 and 48 in LHCb-PUB-2016-005
+        if (tag_p < 2000 || tag_pt < 250) continue;
+        if (probe_p < 2000 || probe_pt < 250) continue;
+        if (spi_p < 1000 || spi_pt < 100) continue;
+        if (probe_track_chi2ndof > 3) continue;
+        if (std::max(probe_pt, tag_pt) < 1000 || d0_pt < 1500) continue;
+        // TODO Missing track chi2ndof cut on tag and soft pion
+        // Will need to reprocess step1 ntuples to include TupleToolTrackInfo
+        count_calib_sel++;
+
         // MuonUnbiased equivalent to L0+HLT1 TIS. See MuonUnbiased defition at
         // https://gitlab.cern.ch/lhcb-datapkg/WG/PIDCalib/-/blob/master/scriptsR2/makeTuples_pp_2016_reprocessing.py#L71
         // and https://mattermost.web.cern.ch/lhcb/pl/893yre484jggigooti5u3gqb8w
 
-        // Not applying TIS and GHOSTPROB conditional cuts in MC since some
-        // kinematical bins have very low statistics
-
-        // const bool probe_tis = probe_tis_l0 && probe_tis_hlt1;
-        // if (!probe_ghostprob_mc > 0.5 || !probe_tis) continue;
+        // Not applying MuonUnbiased and GHOSTPROB conditional cuts in MC since
+        // some kinematical bins have very low statistics
 
         if (probe_p < 3000 || probe_p >= 100000 || ntracks >= 600) continue;
 
@@ -815,8 +890,8 @@ int main(int argc, char **argv) {
                               [p_bin - 1]++;
             d0_m_var.setVal(d0_m);
             dm_var.setVal(dm);
-            datasets_mc_passed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]->add(
-                RooArgSet(d0_m_var, dm_var));
+            datasets_mc_passed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]->addFast(
+                fit_vars);
           }
         } else {
           count_total_failed[year_idx.at(year)][ntrks_bin - 1][eta_bin - 1]
@@ -826,8 +901,8 @@ int main(int argc, char **argv) {
                               [p_bin - 1]++;
             d0_m_var.setVal(d0_m);
             dm_var.setVal(dm);
-            datasets_mc_failed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]->add(
-                RooArgSet(d0_m_var, dm_var));
+            datasets_mc_failed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]->addFast(
+                fit_vars);
           }
         }
       }
@@ -844,8 +919,10 @@ int main(int argc, char **argv) {
            << count_tm * 100. / entries_mc << "%)" << endl;
       cout << " - After conditional cuts:       " << count_cond << "("
            << count_cond * 100. / count_tm << "%)" << endl;
+      cout << " - After PIDCalib cuts:          " << count_calib_sel << "("
+           << count_calib_sel * 100. / count_cond << "%)" << endl;
       cout << " - After range cuts:             " << count_range << "("
-           << count_range * 100. / count_cond << "%)" << endl;
+           << count_range * 100. / count_calib_sel << "%)" << endl;
       cout << " - After mass window cuts:       " << count_mw << "("
            << count_mw * 100. / count_range << "%)" << endl;
       cout << "Overall: " << "(" << count_mw * 100. / entries_mc << "%)"
@@ -865,12 +942,12 @@ int main(int argc, char **argv) {
             TString suffix =
                 TString::Format("%s_%s_%d_%d_%d", year.c_str(), probe.c_str(),
                                 ntrks_idx, eta_idx, p_idx);
-            datasets_calib_passed[ntrks_idx][eta_idx][p_idx] = new RooDataSet(
-                "dataset_calib_passed_" + suffix,
-                "dataset_calib_passed_" + suffix, RooArgSet(d0_m_var, dm_var));
-            datasets_calib_failed[ntrks_idx][eta_idx][p_idx] = new RooDataSet(
-                "dataset_calib_failed_" + suffix,
-                "dataset_calib_failed_" + suffix, RooArgSet(d0_m_var, dm_var));
+            datasets_calib_passed[ntrks_idx][eta_idx][p_idx] =
+                new RooDataSet("dataset_calib_passed_" + suffix,
+                               "dataset_calib_passed_" + suffix, fit_vars);
+            datasets_calib_failed[ntrks_idx][eta_idx][p_idx] =
+                new RooDataSet("dataset_calib_failed_" + suffix,
+                               "dataset_calib_failed_" + suffix, fit_vars);
           }
         }
       }
@@ -921,8 +998,6 @@ int main(int argc, char **argv) {
                                     &probe_mu_unbiased);
           ch_calib.SetBranchAddress("probe_UBDT", &probe_mu_ubdt);
           ch_calib.SetBranchAddress("nTracks_Brunel", &ntracks_calib);
-          //   ch_calib.SetBranchAddress("eventNumber", &evt_number);
-          //   ch_calib.SetBranchAddress("runNumber", &run_number);
 
           bool pid_ok  = false;
           int  kin_bin = -1;
@@ -933,31 +1008,18 @@ int main(int argc, char **argv) {
           auto start_calib_loop = high_resolution_clock::now();
           for (int evt = 0; evt < entries_calib; evt++) {
             ch_calib.GetEntry(evt);
-            // cout << "\nDEBUG evt = " << evt << endl;
 
             // Conditional cuts
-
-            // cout << "DEBUG probe_mu_unbiased = " << probe_mu_unbiased <<
-            // endl;
-
-            // cout << "DEBUG probe_hasmuon = " << probe_hasmuon
-            //      << ", probe_ghostprob = " << probe_ghostprob << endl;
 
             if (!probe_hasmuon || probe_ghostprob > 0.5 || !probe_mu_unbiased)
               continue;
 
-            // cout << "DEBUG probe_p = " << probe_p
-            //      << ", ntracks_calib = " << ntracks_calib << endl;
-
             if (probe_p < 3000. || probe_p >= 100000. || ntracks_calib >= 600)
               continue;
-
-            // cout << "DEBUG probe_eta = " << probe_eta << endl;
 
             if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
 
             // Fill histograms
-            // cout << "DEBUG d0_m = " << d0_m << ", dm = " << dm << endl;
 
             d0_m_var.setVal(d0_m);
             dm_var.setVal(dst_m - d0_m);
@@ -965,21 +1027,7 @@ int main(int argc, char **argv) {
             // Determine kinematical bin
             kin_bin = histo_binnning.FindBin(probe_p, probe_eta, ntracks_calib);
 
-            //   cout << "DEBUG kin_bin = " << kin_bin << endl;
-
             histo_binnning.GetBinXYZ(kin_bin, p_bin, eta_bin, ntrks_bin);
-
-            //   cout << "DEBUG p_bin = " << p_bin << ", eta_bin = " <<
-            //   eta_bin
-            //        << endl;
-
-            //   cout << "DEBUG ntrks_bin = " << ntrks_bin << endl;
-
-            //   cout << "DEBUG probe_ismuon = " << probe_ismuon
-            //        << ", probe_dllmu = " << probe_dllmu << endl;
-
-            //   cout << "DEBUG probe_mu_ubdt = " << probe_mu_ubdt
-            //        << ", probe_dlle = " << probe_dlle << endl;
 
             if (fake_mu) {
               pid_ok = !probe_ismuon;
@@ -991,13 +1039,12 @@ int main(int argc, char **argv) {
                        probe_mu_ubdt > 0.25;
             }
 
-            // TODO Try addFast()
             if (pid_ok) {
-              datasets_calib_passed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]->add(
-                  RooArgSet(d0_m_var, dm_var));
+              datasets_calib_passed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
+                  ->addFast(fit_vars);
             } else {
-              datasets_calib_failed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]->add(
-                  RooArgSet(d0_m_var, dm_var));
+              datasets_calib_failed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
+                  ->addFast(fit_vars);
             }
           }
 
@@ -1028,25 +1075,10 @@ int main(int argc, char **argv) {
           histo_binnning.Clone("effs_failed_" + suffix + "_unc_lo"));
 
       // Check distribution of fitted parameters
-      RooDataSet ds_params_d0(
-          "ds_params_d0", "ds_params_d0",
-          RooArgSet(mean_d0_failed, mean_d0_passed, width_d0, width_cb_d0,
-                    alpha_L_d0_failed, alpha_L_d0_passed, n_L_d0_failed,
-                    n_L_d0_passed, alpha_R_d0_failed, alpha_R_d0_passed,
-                    n_R_d0_failed, n_R_d0_passed, f_d0_passed, f_d0_failed));
-      RooDataSet ds_params_dm(
-          "ds_params_dm", "ds_params_dm",
-          RooArgSet(mean_dm_failed, mean_dm_passed, width_dm, width_cb_dm,
-                    alpha_L_dm_failed, alpha_L_dm_passed, n_L_dm_failed,
-                    n_L_dm_passed, alpha_R_dm_failed, alpha_R_dm_passed,
-                    n_R_dm_failed, n_R_dm_passed, f_dm_passed, f_dm_failed));
-      RooDataSet ds_params_calib(
-          "ds_params_calib", "ds_params_calib",
-          RooArgSet(m_shift_d0_failed, m_shift_d0_passed, w_scale_d0_failed,
-                    w_scale_d0_passed, m_shift_dm_failed, m_shift_dm_passed,
-                    w_scale_dm_failed, w_scale_dm_passed, th_pwrlaw_failed,
-                    th_pwrlaw_passed, k_failed, k_passed, eff, f1_bkg_passed,
-                    f2_bkg_passed, f1_bkg_failed, f2_bkg_failed));
+      RooDataSet ds_params_d0("ds_params_d0", "ds_params_d0", params_d0);
+      RooDataSet ds_params_dm("ds_params_dm", "ds_params_dm", params_dm);
+      RooDataSet ds_params_calib("ds_params_calib", "ds_params_calib",
+                                 params_calib);
 
       TH3D *fit_status_calib = static_cast<TH3D *>(
           histo_binnning.Clone("fit_status_calib_" + suffix));
@@ -1091,10 +1123,6 @@ int main(int argc, char **argv) {
       ofile.cd();
 
       cout << "INFO Calculating efficiencies " << endl;
-      if (probe == "pi") {
-        set_parameters_d0(probe);
-        set_parameters_dm(probe);
-      }
 
       // Create histogram to hold PID efficiency
       // Use "eff" as name to match PIDCalib output
@@ -1158,8 +1186,9 @@ int main(int argc, char **argv) {
                  << in_mw_failed << " / " << total_failed << " = " << eff_failed
                  << endl;
 
-            // Simultaneous fit to passed and failed distributions
-            cout << "\nINFO Starting D0 MC fit " << suffix << endl;
+            //////////////////////////////////////////////////////////
+            // Simultaneous fits to passed and failed distributions //
+            //////////////////////////////////////////////////////////
 
             mean_d0_failed.setConstant(false);
             mean_d0_passed.setConstant(false);
@@ -1173,6 +1202,8 @@ int main(int argc, char **argv) {
             alpha_R_d0_failed.setConstant(false);
             n_L_d0_failed.setConstant(false);
             n_R_d0_failed.setConstant(false);
+            f_d0_passed.setConstant(false);
+            f_d0_failed.setConstant(false);
             mean_dm_failed.setConstant(false);
             mean_dm_passed.setConstant(false);
             width_dm.setConstant(false);
@@ -1185,8 +1216,6 @@ int main(int argc, char **argv) {
             alpha_R_dm_failed.setConstant(false);
             n_L_dm_failed.setConstant(false);
             n_R_dm_failed.setConstant(false);
-            f_d0_passed.setConstant(false);
-            f_d0_failed.setConstant(false);
             f_dm_passed.setConstant(false);
             f_dm_failed.setConstant(false);
 
@@ -1205,14 +1234,27 @@ int main(int argc, char **argv) {
             const double n_mc_guess_passed = dataset_mc_passed->numEntries();
             const double n_mc_guess_failed = dataset_mc_failed->numEntries();
 
+            // Plot 2D distributions in calib sample
+            TH2F *th2_calib_passed = dataset_calib_passed->createHistogram(
+                d0_m_var, dm_var, 40, 40, "", "th2_calib_passed");
+            TH2F *th2_calib_failed = dataset_calib_failed->createHistogram(
+                d0_m_var, dm_var, 100, 100, "", "th2_calib_failed");
+            c_single.cd();
+            th2_calib_passed->Draw("COLZ");
+            c_single.SaveAs(opath + "/figs/calib/th2_" + suffix +
+                            "_passed.pdf");
+            th2_calib_failed->Draw("COLZ");
+            c_single.SaveAs(opath + "/figs/calib/th2_" + suffix +
+                            "_failed.pdf");
+
             cout << "\nINFO Building combined dataset with:" << endl;
             cout << "  - " << n_calib_passed << " passed calib events" << endl;
             cout << "  - " << n_calib_failed << " failed calib events" << endl;
             cout << "  - " << n_mc_guess_passed << " passed MC events" << endl;
             cout << "  - " << n_mc_guess_failed << " failed MC events" << endl;
 
-            RooDataSet dataset("dataset", "combined calib + MC data",
-                               RooArgSet(d0_m_var, dm_var), Index(sample),
+            RooDataSet dataset("dataset", "combined calib + MC data", fit_vars,
+                               Index(sample),
                                Import("mc_passed", *dataset_mc_passed),
                                Import("mc_failed", *dataset_mc_failed),
                                Import("calib_passed", *dataset_calib_passed),
@@ -1226,36 +1268,14 @@ int main(int argc, char **argv) {
             // "mimimize" calls MIGRAD, and in case of failure calls
             // SIMPLEX, before calling MIGRAD again. Has been quite helpful
             // (just search for SIMPLEX in the log).
-            d0_model_mc.fitTo(dataset, Strategy(2), NumCPU(8), BatchMode(),
-                              PrintLevel(0), Offset(),
-                              Minimizer("Minuit", "minimize"), Timer());
+            cout << "\nINFO Starting D0 MC fit " << suffix << endl;
+            set_parameters_d0(probe);
             RooFitResult *fit_res_d0_mc = d0_model_mc.fitTo(
-                dataset, Strategy(2), NumCPU(8), BatchMode(), PrintLevel(0),
-                Save(), Offset(), Minimizer("Minuit", "migradimproved"),
-                Timer());
+                dataset, Strategy(2), NumCPU(8), PrintLevel(0), Save(),
+                Offset(), Minimizer("Minuit", "minimize"), Timer());
 
-            // If the fit does not converge, try again with different
-            // initial values
             int d0_fit_reattempts = 0;
-            if (!fit_ok(fit_res_d0_mc)) {
-              d0_fit_reattempts++;
-              cout << "\nINFO Retrying D0 MC fit " << suffix << " (retry #"
-                   << d0_fit_reattempts << ")" << endl;
-              cout << "INFO Previous fit status: " << fit_res_d0_mc->status()
-                   << endl;
-              cout << "INFO Previous cov matrix status: "
-                   << fit_res_d0_mc->covQual() << endl;
-              set_parameters_d0(probe);
-              d0_model_mc.fitTo(dataset, Strategy(2), NumCPU(8), BatchMode(),
-                                PrintLevel(0), Offset(),
-                                Minimizer("Minuit", "minimize"), Timer());
-              fit_res_d0_mc = d0_model_mc.fitTo(
-                  dataset, Strategy(2), NumCPU(8), BatchMode(), PrintLevel(0),
-                  Save(), Offset(), Minimizer("Minuit", "migradimproved"),
-                  Timer());
-            }
-
-            // If it still does not converge, keep alternating simplex and
+            // If the fit does not converge, keep alternating simplex and
             // migrad until it converges or hits the limit of retries. Here we
             // hope that simplex can at least find a better starting point for
             // migrad.
@@ -1264,29 +1284,24 @@ int main(int argc, char **argv) {
             while (!fit_ok(fit_res_d0_mc) &&
                    (d0_fit_reattempts < max_fix_reattempts)) {
               d0_fit_reattempts++;
-              cout << "\nINFO Retrying again D0 MC fit " << suffix
-                   << " (retry #" << d0_fit_reattempts << ")" << endl;
+              cout << "\nINFO Retrying D0 MC fit " << suffix << " (retry #"
+                   << d0_fit_reattempts << ")" << endl;
               cout << "INFO Previous fit status: " << fit_res_d0_mc->status()
                    << endl;
               cout << "INFO Previous cov matrix status: "
                    << fit_res_d0_mc->covQual() << endl;
-              d0_model_mc.fitTo(dataset, Strategy(2), NumCPU(8), BatchMode(),
-                                PrintLevel(0), Offset(),
-                                Minimizer("Minuit", "simplex"), Timer());
+              d0_model_mc.fitTo(dataset, NumCPU(8), PrintLevel(0), Offset(),
+                                Minimizer("Minuit", "scan"), Timer(),
+                                Hesse(false));
               fit_res_d0_mc = d0_model_mc.fitTo(
-                  dataset, Strategy(2), NumCPU(8), BatchMode(), PrintLevel(0),
-                  Save(), Offset(), Minimizer("Minuit", "migradimproved"),
-                  Timer());
+                  dataset, Strategy(2), NumCPU(8), PrintLevel(0), Save(),
+                  Offset(), Minimizer("Minuit", "minimize"), Timer());
             }
 
             d0_retries.Fill(d0_fit_reattempts);
 
             if (fit_ok(fit_res_d0_mc)) {
-              ds_params_d0.add(RooArgSet(
-                  mean_d0_failed, mean_d0_passed, width_d0, width_cb_d0,
-                  alpha_L_d0_failed, alpha_L_d0_passed, n_L_d0_failed,
-                  n_L_d0_passed, alpha_R_d0_failed, alpha_R_d0_passed,
-                  n_R_d0_failed, n_R_d0_passed, f_d0_passed, f_d0_failed));
+              ds_params_d0.addFast(params_d0);
             }
 
             fit_status_d0_mc->SetBinContent(kin_bin, fit_res_d0_mc->status());
@@ -1315,32 +1330,12 @@ int main(int argc, char **argv) {
 
             // dm fit
             cout << "\nINFO Starting dm MC fit " << suffix << endl;
-            dm_model_mc.fitTo(dataset, Strategy(2), NumCPU(8), BatchMode(),
-                              PrintLevel(0), Offset(),
-                              Minimizer("Minuit", "minimize"), Timer());
+            set_parameters_dm(probe);
             RooFitResult *fit_res_dm_mc = dm_model_mc.fitTo(
-                dataset, Strategy(2), NumCPU(8), BatchMode(), PrintLevel(0),
-                Save(), Offset(), Minimizer("Minuit", "migradimproved"),
-                Timer());
+                dataset, Strategy(2), NumCPU(8), Save(), PrintLevel(0),
+                Offset(), Minimizer("Minuit", "minimize"), Timer());
 
             int dm_fit_reattempts = 0;
-            if (!fit_ok(fit_res_dm_mc)) {
-              dm_fit_reattempts++;
-              cout << "\nINFO Retrying dm MC fit " << suffix << " (retry #"
-                   << dm_fit_reattempts << ")" << endl;
-              cout << "INFO Previous fit status: " << fit_res_dm_mc->status()
-                   << endl;
-              cout << "INFO Previous cov matrix status: "
-                   << fit_res_dm_mc->covQual() << endl;
-              set_parameters_dm(probe);
-              dm_model_mc.fitTo(dataset, Strategy(2), NumCPU(8), BatchMode(),
-                                PrintLevel(0), Offset(),
-                                Minimizer("Minuit", "minimize"), Timer());
-              fit_res_dm_mc = dm_model_mc.fitTo(
-                  dataset, Strategy(2), NumCPU(8), BatchMode(), PrintLevel(0),
-                  Save(), Offset(), Minimizer("Minuit", "migradimproved"),
-                  Timer());
-            }
 
             while (!fit_ok(fit_res_dm_mc) &&
                    (dm_fit_reattempts < max_fix_reattempts)) {
@@ -1351,23 +1346,18 @@ int main(int argc, char **argv) {
                    << endl;
               cout << "INFO Previous cov matrix status: "
                    << fit_res_dm_mc->covQual() << endl;
-              dm_model_mc.fitTo(dataset, Strategy(2), NumCPU(8), BatchMode(),
-                                PrintLevel(0), Offset(),
-                                Minimizer("Minuit", "simplex"), Timer());
+              dm_model_mc.fitTo(dataset, NumCPU(8), PrintLevel(0), Offset(),
+                                Minimizer("Minuit", "scan"), Timer(),
+                                Hesse(false));
               fit_res_dm_mc = dm_model_mc.fitTo(
-                  dataset, Strategy(2), NumCPU(8), BatchMode(), PrintLevel(0),
-                  Save(), Offset(), Minimizer("Minuit", "migradimproved"),
-                  Timer());
+                  dataset, Strategy(2), NumCPU(8), PrintLevel(0), Save(),
+                  Offset(), Minimizer("Minuit", "minimize"), Timer());
             }
 
             dm_retries.Fill(dm_fit_reattempts);
 
             if (fit_ok(fit_res_dm_mc)) {
-              ds_params_dm.add(RooArgSet(
-                  mean_dm_failed, mean_dm_passed, width_dm, width_cb_dm,
-                  alpha_L_dm_failed, alpha_L_dm_passed, n_L_dm_failed,
-                  n_L_dm_passed, alpha_R_dm_failed, alpha_R_dm_passed,
-                  n_R_dm_failed, n_R_dm_passed, f_dm_passed, f_dm_failed));
+              ds_params_dm.addFast(params_dm);
             }
 
             fit_status_dm_mc->SetBinContent(kin_bin, fit_res_dm_mc->status());
@@ -1422,6 +1412,7 @@ int main(int argc, char **argv) {
             f_dm_failed.setConstant();
 
             // Fit only calib sample
+
             const TString sb_cut =
                 "(dm_var > 149) || (dm_var < 143) || (d0_m_var > 1890) || "
                 "(d0_m_var < 1840)";
@@ -1503,93 +1494,131 @@ int main(int argc, char **argv) {
             f2_bkg_failed.setVal(c2_guess_failed);
             f2_bkg_passed.setVal(c2_guess_passed);
 
-            // No partially reconstructed D0 bkg for k fits
-            if (probe == "k") {
-              f2_bkg_failed.setVal(0);
-              f2_bkg_failed.setConstant();
-              f2_bkg_passed.setVal(0);
-              f2_bkg_passed.setConstant();
-
-            } else {
-              f2_bkg_failed.setConstant(false);
-              f2_bkg_passed.setConstant(false);
-            }
-
             // Guess normalizations based on dm sideband
-            n_bkg_passed.setRange(0.1 * n_bkg_calib_guess_passed,
+            n_bkg_passed.setRange(0.4 * n_bkg_calib_guess_passed,
                                   2.0 * n_bkg_calib_guess_passed);
             n_bkg_passed.setVal(n_bkg_calib_guess_passed);
-            n_bkg_failed.setRange(0.1 * n_bkg_calib_guess_failed,
+            n_bkg_failed.setRange(0.4 * n_bkg_calib_guess_failed,
                                   2.0 * n_bkg_calib_guess_failed);
             n_bkg_failed.setVal(n_bkg_calib_guess_failed);
             // Calib signal
             const double n_sig_guess =
                 (n_calib_passed + n_calib_failed) -
                 (n_bkg_calib_guess_passed + n_bkg_calib_guess_failed);
-            n_sig.setRange(0.1 * n_sig_guess, 2.0 * n_sig_guess);
+            n_sig.setRange(0.5 * n_sig_guess, 2.0 * n_sig_guess);
             n_sig.setVal(n_sig_guess);
             const double n_sig_guess_passed = f_guess_passed * n_calib_passed;
             const double eff_guess          = n_sig_guess_passed / n_sig_guess;
             eff.setVal(eff_guess);
             // MC
-            n_mc_passed.setRange(0.95 * n_mc_guess_passed,
-                                 1.05 * n_mc_guess_passed);
+            // These normalizations are known so they are set as constant at
+            // construction
             n_mc_passed.setVal(n_mc_guess_passed);
-            n_mc_failed.setRange(0.95 * n_mc_guess_failed,
-                                 1.05 * n_mc_guess_failed);
             n_mc_failed.setVal(n_mc_guess_failed);
+
+            // Estimate exponential coefficients
+            const double dx = 1897.5 - 1827.5;
+
+            const double y1_passed = dataset_calib_passed->sumEntries(
+                "(d0_m_var > 1825) && (d0_m_var < 1830)");
+            const double y2_passed = dataset_calib_passed->sumEntries(
+                "(d0_m_var > 1895) && (d0_m_var < 1900)");
+            const double k_passed_guess = log(y2_passed / y1_passed) / dx;
+            if (k_passed_guess < 0) {
+              // k_comb_all_passed.setVal(k_passed_guess);
+              k_part_reco_passed.setVal(k_passed_guess);
+            } else {
+              // k_comb_all_passed.setVal(-1e-4);
+              k_part_reco_passed.setVal(-1e-4);
+            }
+
+            const double y1_failed = dataset_calib_failed->sumEntries(
+                "(d0_m_var > 1825) && (d0_m_var < 1830)");
+            const double y2_failed = dataset_calib_failed->sumEntries(
+                "(d0_m_var > 1895) && (d0_m_var < 1900)");
+            const double k_failed_guess = log(y2_failed / y1_failed) / dx;
+            if (k_passed_guess < 0) {
+              k_comb_all.setVal(k_failed_guess);
+              k_part_reco_failed.setVal(k_failed_guess);
+            } else {
+              k_comb_all.setVal(-1e-4);
+              k_part_reco_failed.setVal(-1e-4);
+            }
+
+            // Fine tuning
+            if ((probe == "pi") && (p_idx <= 1)) {
+              // Use reduced fit range excluding higher D0 mass region to avoid
+              // mass threshold in certain kinematic bins
+              d0_m_var.setRange("fit", 1825, 1900);
+              dm_var.setRange("fit", 141, 153);
+            } else {
+              // Use full fit range
+              d0_m_var.setRange("fit", 1825, 1910);
+              dm_var.setRange("fit", 141, 153);
+            }
+
+            //
 
             RooCmdArg fit_strat  = Strategy(2);
             RooCmdArg numcpu     = NumCPU(8);
-            RooCmdArg batchmode  = BatchMode();
             RooCmdArg offset     = Offset();
             RooCmdArg extended   = Extended();
             RooCmdArg printlevel = PrintLevel(0);
-            // RooCmdArg minos      = Minos(eff);
-            RooCmdArg timer = Timer();
-            RooCmdArg save  = Save();
-            RooCmdArg range = (probe == "pi") && (p_idx <= 1)
-                                  ? Range("fit_calib")
-                                  : Range("");
+            RooCmdArg minos      = Minos(argset_minos);
+            RooCmdArg timer      = Timer();
+            RooCmdArg save       = Save();
+            RooCmdArg range      = Range("fit");
+            RooCmdArg minimize   = Minimizer("Minuit", "minimize");
 
             RooLinkedList fit_args;
             fit_args.Add(&fit_strat);
             fit_args.Add(&numcpu);
-            fit_args.Add(&batchmode);
             fit_args.Add(&offset);
             fit_args.Add(&extended);
             fit_args.Add(&printlevel);
             fit_args.Add(&timer);
             fit_args.Add(&save);
-
-            if (probe == "pi" && p_idx <= 1) {
-              // Exclude region with visible upper mass threshold
-              fit_args.Add(&range);
-              n_calib_passed =
-                  dataset_calib_passed->sumEntries("", "fit_calib");
-              n_calib_failed =
-                  dataset_calib_failed->sumEntries("", "fit_calib");
-            }
-
-            RooLinkedList fit_args_improve(fit_args);
-            RooLinkedList fit_args_simplex(fit_args);
-
-            RooCmdArg simplex  = Minimizer("Minuit", "simplex");
-            RooCmdArg minimize = Minimizer("Minuit", "minimize");
-            RooCmdArg improve  = Minimizer("Minuit", "migradimproved");
-
+            fit_args.Add(&range);
             fit_args.Add(&minimize);
-
-            fit_args_simplex.Add(&simplex);
-
-            fit_args_improve.Add(&improve);
-            // fit_args_improve.Add(&minos);
+            fit_args.Add(&minos);
 
             cout << "\n\nINFO Starting calib only fit " << suffix << endl;
 
-            model_calib.fitTo(dataset, fit_args);
-            RooFitResult *fit_res_calib =
-                model_calib.fitTo(dataset, fit_args_improve);
+            set_parameters_calib(probe);
+
+            if (!vmu && !fake_mu) {
+              if ((probe == "pi") && (p_idx < 1)) {
+                w_scale_d0_passed.setConstant();
+                m_shift_d0_passed.setConstant();
+                w_scale_dm_passed.setConstant();
+                m_shift_dm_passed.setConstant();
+                w_scale_d0_passed.setVal(1);
+                m_shift_d0_passed.setVal(0);
+                w_scale_dm_passed.setVal(1);
+                m_shift_dm_passed.setVal(0);
+              } else {
+                w_scale_d0_passed.setConstant(false);
+                m_shift_d0_passed.setConstant(false);
+                w_scale_dm_passed.setConstant(false);
+                m_shift_dm_passed.setConstant(false);
+              }
+            }
+
+            // if (probe == "k") {
+            //   f2_bkg_failed.setConstant();
+            //   f2_bkg_passed.setConstant();
+            //   k_part_reco_failed.setConstant();
+            //   k_part_reco_passed.setConstant();
+            //   f2_bkg_failed.setVal(0);
+            //   f2_bkg_passed.setVal(0);
+            // } else {
+            //   f2_bkg_failed.setConstant(false);
+            //   f2_bkg_passed.setConstant(false);
+            //   k_part_reco_failed.setConstant(false);
+            //   k_part_reco_passed.setConstant(false);
+            // }
+
+            RooFitResult *fit_res_calib = model_calib.fitTo(dataset, fit_args);
 
             int calib_fit_reattempts = 0;
             while (!fit_ok(fit_res_calib) &&
@@ -1601,19 +1630,46 @@ int main(int argc, char **argv) {
                    << endl;
               cout << "INFO Previous cov matrix status: "
                    << fit_res_calib->covQual() << endl;
-              model_calib.fitTo(dataset, fit_args_simplex);
+
+              model_calib.fitTo(dataset, Extended(), NumCPU(8), PrintLevel(0),
+                                Offset(), Range("fit"),
+                                Minimizer("Minuit", "scan"), Timer(),
+                                Hesse(false));
               fit_res_calib = model_calib.fitTo(dataset, fit_args);
             }
 
             calib_retries.Fill(calib_fit_reattempts);
 
             if (fit_ok(fit_res_calib)) {
-              ds_params_calib.add(RooArgSet(
-                  m_shift_d0_failed, m_shift_d0_passed, w_scale_d0_failed,
-                  w_scale_d0_passed, m_shift_dm_failed, m_shift_dm_passed,
-                  w_scale_dm_failed, w_scale_dm_passed, th_pwrlaw_failed,
-                  th_pwrlaw_passed, k_failed, k_passed, eff, f1_bkg_passed,
-                  f2_bkg_passed, f1_bkg_failed, f2_bkg_failed));
+              m_shift_d0_delta =
+                  -(m_shift_d0_passed.getVal() - m_shift_d0_failed.getVal()) /
+                  (sqrt(m_shift_d0_passed.getError() *
+                            m_shift_d0_passed.getError() +
+                        m_shift_d0_failed.getError() *
+                            m_shift_d0_failed.getError()));
+
+              m_shift_dm_delta =
+                  -(m_shift_dm_passed.getVal() - m_shift_dm_failed.getVal()) /
+                  (sqrt(m_shift_dm_passed.getError() *
+                            m_shift_dm_passed.getError() +
+                        m_shift_dm_failed.getError() *
+                            m_shift_dm_failed.getError()));
+
+              w_scale_d0_delta =
+                  -(w_scale_d0_passed.getVal() - w_scale_d0_failed.getVal()) /
+                  (sqrt(w_scale_d0_passed.getError() *
+                            w_scale_d0_passed.getError() +
+                        w_scale_d0_failed.getError() *
+                            w_scale_d0_failed.getError()));
+
+              w_scale_dm_delta =
+                  -(w_scale_dm_passed.getVal() - w_scale_dm_failed.getVal()) /
+                  (sqrt(w_scale_dm_passed.getError() *
+                            w_scale_dm_passed.getError() +
+                        w_scale_dm_failed.getError() *
+                            w_scale_dm_failed.getError()));
+
+              ds_params_calib.addFast(params_calib);
             }
 
             fit_status_calib->SetBinContent(kin_bin, fit_res_calib->status());
@@ -1630,30 +1686,30 @@ int main(int argc, char **argv) {
             RooPlot *frame_dm_calib_only_failed =
                 dm_var.frame(Title("dm Calib Failed " + tag));
 
-            // FIXME
+            // TODO
             // https://root-forum.cern.ch/t/simultaneous-fit-normalization-issue/33965
             dataset.plotOn(frame_d0_calib_only_passed,
                            Binning(bins_d0_m_passed),
                            Cut("sample==sample::calib_passed"));
             dataset.plotOn(frame_d0_calib_only_failed, Binning(bins_d0_m),
                            Cut("sample==sample::calib_failed"));
-            dataset.plotOn(frame_dm_calib_only_passed, Binning(bins_dm),
+            dataset.plotOn(frame_dm_calib_only_passed, Binning(bins_dm_passed),
                            Cut("sample==sample::calib_passed"));
             dataset.plotOn(frame_dm_calib_only_failed, Binning(bins_dm),
                            Cut("sample==sample::calib_failed"));
 
             model_calib.plotOn(frame_d0_calib_only_passed,
                                Slice(sample, "calib_passed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_d0_calib_only_failed,
                                Slice(sample, "calib_failed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_dm_calib_only_passed,
                                Slice(sample, "calib_passed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_dm_calib_only_failed,
                                Slice(sample, "calib_failed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
 
             c_four.cd(1);
             frame_d0_calib_only_passed->Draw();
@@ -1699,7 +1755,7 @@ int main(int argc, char **argv) {
               f_dm_passed.setConstant(false);
               f_dm_failed.setConstant(false);
 
-              RooFitResult *fit_res = model.fitTo(dataset, fit_args_improve);
+              RooFitResult *fit_res = model.fitTo(dataset, fit_args);
 
               int full_fit_reattempts = 0;
               while (!fit_ok(fit_res) &&
@@ -1711,8 +1767,10 @@ int main(int argc, char **argv) {
                      << endl;
                 cout << "INFO Previous cov matrix status: "
                      << fit_res->covQual() << endl;
-                model.fitTo(dataset, fit_args_simplex);
-                fit_res = model_calib.fitTo(dataset, fit_args_improve);
+                model.fitTo(dataset, Strategy(2), Extended(), NumCPU(8),
+                            PrintLevel(0), Offset(), Range("fit"),
+                            Minimizer("Minuit", "scan"), Timer());
+                fit_res = model_calib.fitTo(dataset, fit_args);
               }
 
               fit_status->SetBinContent(kin_bin, fit_res->status());
@@ -1722,14 +1780,12 @@ int main(int argc, char **argv) {
             histo_pid->SetBinContent(kin_bin, eff.getVal());
             // Asymmetric eff errors are calculated with MINOS. As in our
             // pidcalib wrapper, use largest as symmetric error.
-            // TODO check if MINOS errors differ significantly from parabolic
-            // errors; If so, disable MINOS.
             const double eff_error = std::max(std::abs(eff.getErrorHi()),
                                               std::abs(eff.getErrorLo()));
             histo_pid->SetBinError(kin_bin, eff_error);
 
             // Check normalization estimates
-            cout << "\nINFO Fitted normalizations vs estimated:" << endl;
+            cout << "\nINFO Fitted vs estimated:" << endl;
             cout << " - Fitted n_sig = " << n_sig.getVal() << " vs estimated "
                  << n_sig_guess << " (" << n_sig.getVal() / n_sig_guess << ")"
                  << endl;
@@ -1741,6 +1797,23 @@ int main(int argc, char **argv) {
                  << " vs estimated " << n_bkg_calib_guess_passed << " ("
                  << n_bkg_passed.getVal() / n_bkg_calib_guess_passed << ")\n"
                  << endl;
+
+            cout << " - Fitted k_part_reco_passed = "
+                 << k_part_reco_passed.getVal() << " vs estimated "
+                 << k_passed_guess << " ("
+                 << k_part_reco_passed.getVal() / k_passed_guess << ")" << endl;
+            cout << " - Fitted k_comb_passed = " << k_comb_all.getVal()
+                 << " vs estimated " << k_passed_guess << " ("
+                 << k_comb_all.getVal() / k_passed_guess << ")" << endl;
+            cout << " - Fitted k_part_reco_failed = "
+                 << k_part_reco_failed.getVal() << " vs estimated "
+                 << k_failed_guess << " ("
+                 << k_part_reco_failed.getVal() / k_failed_guess << ")" << endl;
+            // cout << " - Fitted k_comb_failed = " <<
+            // k_comb_all_failed.getVal()
+            //      << " vs estimated " << k_failed_guess << " ("
+            //      << k_comb_all_failed.getVal() / k_failed_guess << ")\n"
+            //      << endl;
 
             // Plot fit results
             RooPlot *frame_d0_mc_passed =
@@ -1768,35 +1841,35 @@ int main(int argc, char **argv) {
                            Cut("sample==sample::calib_passed"));
             dataset.plotOn(frame_d0_calib_failed, Binning(bins_d0_m),
                            Cut("sample==sample::calib_failed"));
-            dataset.plotOn(frame_dm_mc_passed, Binning(bins_dm),
+            dataset.plotOn(frame_dm_mc_passed, Binning(bins_dm_passed),
                            Cut("sample==sample::mc_passed"));
             dataset.plotOn(frame_dm_mc_failed, Binning(bins_dm),
                            Cut("sample==sample::mc_failed"));
-            dataset.plotOn(frame_dm_calib_passed, Binning(bins_dm),
+            dataset.plotOn(frame_dm_calib_passed, Binning(bins_dm_passed),
                            Cut("sample==sample::calib_passed"));
             dataset.plotOn(frame_dm_calib_failed, Binning(bins_dm),
                            Cut("sample==sample::calib_failed"));
 
             d0_model_mc.plotOn(frame_d0_mc_passed, Slice(sample, "mc_passed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             d0_model_mc.plotOn(frame_d0_mc_failed, Slice(sample, "mc_failed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_d0_calib_passed,
                                Slice(sample, "calib_passed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_d0_calib_failed,
                                Slice(sample, "calib_failed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             dm_model_mc.plotOn(frame_dm_mc_passed, Slice(sample, "mc_passed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             dm_model_mc.plotOn(frame_dm_mc_failed, Slice(sample, "mc_failed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_dm_calib_passed,
                                Slice(sample, "calib_passed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_dm_calib_failed,
                                Slice(sample, "calib_failed"),
-                               ProjWData(sample, dataset), LineWidth(1), range);
+                               ProjWData(sample, dataset), LineWidth(1));
 
             c_mult.cd(1);
             frame_d0_mc_passed->Draw();

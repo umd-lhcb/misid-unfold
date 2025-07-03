@@ -114,18 +114,21 @@ build-rdx-misid-mc-corrections: $(BINPATH)/GetMisIDCorrections
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections)
 	@mkdir -p $(OUT_DIR)/figs/params
 	@mkdir -p $(OUT_DIR)/figs/fits
+	@mkdir -p $(OUT_DIR)/figs/calib
 	$< -o $(OUT_DIR) -c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-misid-mc-corrections-vmu: $(BINPATH)/GetMisIDCorrections
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-vmu)
 	@mkdir -p $(OUT_DIR)/figs/params
 	@mkdir -p $(OUT_DIR)/figs/fits
+	@mkdir -p $(OUT_DIR)/figs/calib
 	$< -o $(OUT_DIR) -c $(YML_FILE) --vmu true 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-misid-mc-corrections-fake_mu: $(BINPATH)/GetMisIDCorrections
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-fake_mu)
 	@mkdir -p $(OUT_DIR)/figs/params
 	@mkdir -p $(OUT_DIR)/figs/fits
+	@mkdir -p $(OUT_DIR)/figs/calib
 	$< -o $(OUT_DIR) -c $(YML_FILE) --fake_mu true 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
