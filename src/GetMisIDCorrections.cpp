@@ -60,6 +60,7 @@ constexpr int    DM_nbins  = 60;
 constexpr int    D0_ID     = 421;
 constexpr double D0_M_min  = 1825.0;
 constexpr double D0_M_max  = 1910.0;
+constexpr double D0_M      = 1864.84;
 constexpr int    D0_nbins  = 40;
 constexpr int    PI_ID     = 211;
 constexpr double PI_M      = 139.57039;
@@ -469,57 +470,55 @@ int main(int argc, char **argv) {
   // dm comb model: threshold function
   RooConstVar dm0("dm0", "dm0", PI_M);
 
-  // RooRealVar c_comb_spi_failed("c_comb_spi_failed", "c_comb_spi_failed", 0,
-  // 1,
-  //                              "");
-  // RooRealVar c_comb_spi_passed("c_comb_spi_passed", "c_comb_spi_passed", 0,
-  // 1,
-  //                              "");
-  RooRealVar c_comb_spi("c_comb_spi", "c_comb_spi", 0, 1, "");
+  RooRealVar c_comb_spi_failed("c_comb_spi_failed", "c_comb_spi_failed", 0, 1,
+                               "");
+  RooRealVar c_comb_spi_passed("c_comb_spi_passed", "c_comb_spi_passed", 0, 1,
+                               "");
 
-  // RooRealVar c_comb_all_failed("c_comb_all_failed", "c_comb_all_failed", 0,
-  // 1,
-  //                              "");
-  // RooRealVar c_comb_all_passed("c_comb_all_passed", "c_comb_all_passed", 0,
-  // 1,
-  //                              "");
-  RooRealVar c_comb_all("c_comb_all", "c_comb_all", 0, 1, "");
+  RooRealVar c_comb_all_failed("c_comb_all_failed", "c_comb_all_failed", 0, 1,
+                               "");
+  RooRealVar c_comb_all_passed("c_comb_all_passed", "c_comb_all_passed", 0, 1,
+                               "");
 
   RooPowerLaw dm_comb_spi_failed("dm_comb_spi_failed", "dm_comb_spi_failed",
-                                 dm_var, dm0, c_comb_spi);
+                                 dm_var, dm0, c_comb_spi_failed);
   RooPowerLaw dm_comb_spi_passed("dm_comb_spi_passed", "dm_comb_spi_passed",
-                                 dm_var, dm0, c_comb_spi);
+                                 dm_var, dm0, c_comb_spi_passed);
 
   RooPowerLaw dm_comb_all_failed("dm_comb_all_failed", "dm_comb_all_failed",
-                                 dm_var, dm0, c_comb_all);
+                                 dm_var, dm0, c_comb_all_failed);
   RooPowerLaw dm_comb_all_passed("dm_comb_all_passed", "dm_comb_all_passed",
-                                 dm_var, dm0, c_comb_all);
+                                 dm_var, dm0, c_comb_all_passed);
 
   // D0 comb model: exponential distribution
-  RooRealVar k_part_reco_failed("k_part_reco_failed", "k_part_reco_failed",
-                                -0.10, 0, "");
-  RooRealVar k_part_reco_passed("k_part_reco_passed", "k_part_reco_passed",
-                                -0.10, 0, "");
+  RooRealVar k_part_reco_failed("k_part_reco_failed", "k_part_reco_failed", -1,
+                                0, "");
+  RooRealVar k_part_reco_passed("k_part_reco_passed", "k_part_reco_passed", -1,
+                                0, "");
 
-  // RooRealVar k_comb_all_failed("k_comb_all_failed", "k_comb_all_failed",
-  // -0.10,
-  //                              0, "");
-  // RooRealVar k_comb_all_passed("k_comb_all_passed", "k_comb_all_passed",
-  // -0.10,
-  //                              0, "");
-  RooRealVar k_comb_all("k_comb_all", "k_comb_all", -0.10, 0, "");
+  RooRealVar k_comb_all_failed("k_comb_all_failed", "k_comb_all_failed", -0.10,
+                               0, "");
+  RooRealVar k_comb_all_passed("k_comb_all_passed", "k_comb_all_passed", -0.10,
+                               0, "");
+
+  // Use shifted d0_m for exponentials to avoid hitting numerical precision
+  // limits. Amounts to a simply normalizations change which is cancelled out by
+  // Roofit.
+  RooConstVar   d0_m_pdg("d0_m_pdg", "d0_m_pdg", D0_M);
+  RooFormulaVar d0_m_var_shifted("d0_m_var_shifted", "d0_m_var_shifted",
+                                 "x[0] - x[1]", RooArgList(d0_m_var, d0_m_pdg));
 
   RooExponential d0_part_reco_failed("d0_part_reco_failed",
-                                     "d0_part_reco_failed", d0_m_var,
+                                     "d0_part_reco_failed", d0_m_var_shifted,
                                      k_part_reco_failed);
   RooExponential d0_part_reco_passed("d0_part_reco_passed",
-                                     "d0_part_reco_passed", d0_m_var,
+                                     "d0_part_reco_passed", d0_m_var_shifted,
                                      k_part_reco_passed);
 
   RooExponential d0_comb_all_failed("d0_comb_all_failed", "d0_comb_all_failed",
-                                    d0_m_var, k_comb_all);
+                                    d0_m_var_shifted, k_comb_all_failed);
   RooExponential d0_comb_all_passed("d0_comb_all_passed", "d0_comb_all_passed",
-                                    d0_m_var, k_comb_all);
+                                    d0_m_var_shifted, k_comb_all_passed);
 
   ///////////////////////////
   // PDFs for MC-only fits //
@@ -712,19 +711,15 @@ int main(int argc, char **argv) {
     w_scale_dm_failed.setVal(1);
     w_scale_dm_passed.setVal(1);
     if (probe == "k") {
-      // c_comb_spi_failed.setVal(0.49);
-      // c_comb_spi_passed.setVal(0.50);
-      // c_comb_all_failed.setVal(0.32);
-      // c_comb_all_passed.setVal(0.40);
-      c_comb_spi.setVal(0.50);
-      c_comb_all.setVal(0.35);
+      c_comb_spi_failed.setVal(0.49);
+      c_comb_spi_passed.setVal(0.50);
+      c_comb_all_failed.setVal(0.32);
+      c_comb_all_passed.setVal(0.40);
     } else if (probe == "pi") {
-      // c_comb_spi_failed.setVal(0.50);
-      // c_comb_spi_passed.setVal(0.50);
-      // c_comb_all_failed.setVal(0.33);
-      // c_comb_all_passed.setVal(0.35);
-      c_comb_spi.setVal(0.50);
-      c_comb_all.setVal(0.34);
+      c_comb_spi_failed.setVal(0.50);
+      c_comb_spi_passed.setVal(0.50);
+      c_comb_all_failed.setVal(0.33);
+      c_comb_all_passed.setVal(0.35);
     }
   };
 
@@ -742,17 +737,22 @@ int main(int argc, char **argv) {
                       n_L_dm_passed, alpha_R_dm_failed, alpha_R_dm_passed,
                       n_R_dm_failed, n_R_dm_passed, f_dm_passed, f_dm_failed);
 
-  RooRealVar m_shift_d0_delta("m_shift_d0_delta", "m_shift_d0_delta", 1, "");
-  RooRealVar m_shift_dm_delta("m_shift_dm_delta", "m_shift_dm_delta", 1, "");
-  RooRealVar w_scale_d0_delta("w_scale_d0_delta", "w_scale_d0_delta", 1, "");
-  RooRealVar w_scale_dm_delta("w_scale_dm_delta", "w_scale_dm_delta", 1, "");
-  RooArgSet params_calib(m_shift_d0_failed, m_shift_d0_passed, m_shift_d0_delta,
-                         w_scale_d0_failed, w_scale_d0_passed, w_scale_d0_delta,
-                         m_shift_dm_failed, m_shift_dm_passed, m_shift_dm_delta,
-                         w_scale_dm_failed, w_scale_dm_passed, w_scale_dm_delta,
-                         c_comb_spi, c_comb_all, k_part_reco_failed,
-                         k_part_reco_passed, k_comb_all, eff, f1_bkg_passed,
-                         f2_bkg_passed, f1_bkg_failed, f2_bkg_failed);
+  RooRealVar m_shift_d0_delta("m_shift_d0_delta", "m_shift_d0_delta", -5, 5,
+                              "");
+  RooRealVar m_shift_dm_delta("m_shift_dm_delta", "m_shift_dm_delta", -5, 5,
+                              "");
+  RooRealVar w_scale_d0_delta("w_scale_d0_delta", "w_scale_d0_delta", -5, 5,
+                              "");
+  RooRealVar w_scale_dm_delta("w_scale_dm_delta", "w_scale_dm_delta", -5, 5,
+                              "");
+  RooArgSet  params_calib(
+      m_shift_d0_failed, m_shift_d0_passed, m_shift_d0_delta, w_scale_d0_failed,
+      w_scale_d0_passed, w_scale_d0_delta, m_shift_dm_failed, m_shift_dm_passed,
+      m_shift_dm_delta, w_scale_dm_failed, w_scale_dm_passed, w_scale_dm_delta,
+      c_comb_spi_failed, c_comb_spi_passed, c_comb_all_failed,
+      c_comb_all_passed, k_part_reco_failed, k_part_reco_passed,
+      k_comb_all_failed, k_comb_all_passed, eff, f1_bkg_passed, f2_bkg_passed,
+      f1_bkg_failed, f2_bkg_failed);
 
   for (auto probe : particles) {
     cout << "INFO Selecting " << probe << endl;
@@ -1525,10 +1525,10 @@ int main(int argc, char **argv) {
                 "(d0_m_var > 1895) && (d0_m_var < 1900)");
             const double k_passed_guess = log(y2_passed / y1_passed) / dx;
             if (k_passed_guess < 0) {
-              // k_comb_all_passed.setVal(k_passed_guess);
+              k_comb_all_passed.setVal(k_passed_guess);
               k_part_reco_passed.setVal(k_passed_guess);
             } else {
-              // k_comb_all_passed.setVal(-1e-4);
+              k_comb_all_passed.setVal(-1e-4);
               k_part_reco_passed.setVal(-1e-4);
             }
 
@@ -1538,10 +1538,10 @@ int main(int argc, char **argv) {
                 "(d0_m_var > 1895) && (d0_m_var < 1900)");
             const double k_failed_guess = log(y2_failed / y1_failed) / dx;
             if (k_passed_guess < 0) {
-              k_comb_all.setVal(k_failed_guess);
+              k_comb_all_failed.setVal(k_failed_guess);
               k_part_reco_failed.setVal(k_failed_guess);
             } else {
-              k_comb_all.setVal(-1e-4);
+              k_comb_all_failed.setVal(-1e-4);
               k_part_reco_failed.setVal(-1e-4);
             }
 
@@ -1590,17 +1590,11 @@ int main(int argc, char **argv) {
               if ((probe == "pi") && (p_idx < 1)) {
                 w_scale_d0_passed.setConstant();
                 m_shift_d0_passed.setConstant();
-                w_scale_dm_passed.setConstant();
-                m_shift_dm_passed.setConstant();
                 w_scale_d0_passed.setVal(1);
                 m_shift_d0_passed.setVal(0);
-                w_scale_dm_passed.setVal(1);
-                m_shift_dm_passed.setVal(0);
               } else {
                 w_scale_d0_passed.setConstant(false);
                 m_shift_d0_passed.setConstant(false);
-                w_scale_dm_passed.setConstant(false);
-                m_shift_dm_passed.setConstant(false);
               }
             }
 
@@ -1694,22 +1688,77 @@ int main(int argc, char **argv) {
             dataset.plotOn(frame_d0_calib_only_failed, Binning(bins_d0_m),
                            Cut("sample==sample::calib_failed"));
             dataset.plotOn(frame_dm_calib_only_passed, Binning(bins_dm_passed),
-                           Cut("sample==sample::calib_passed"));
+                           Cut("sample==sample::calib_passed"),
+                           CutRange("fit"));
             dataset.plotOn(frame_dm_calib_only_failed, Binning(bins_dm),
-                           Cut("sample==sample::calib_failed"));
+                           Cut("sample==sample::calib_failed"),
+                           CutRange("fit"));
 
             model_calib.plotOn(frame_d0_calib_only_passed,
                                Slice(sample, "calib_passed"),
                                ProjWData(sample, dataset), LineWidth(1));
+            model_calib.plotOn(frame_d0_calib_only_passed,
+                               Slice(sample, "calib_passed"),
+                               ProjWData(sample, dataset), LineWidth(1),
+                               Components(d0_comb_passed), LineColor(kMagenta));
+            model_calib.plotOn(frame_d0_calib_only_passed,
+                               Slice(sample, "calib_passed"),
+                               ProjWData(sample, dataset), LineWidth(1),
+                               Components(dm_comb_passed), LineColor(kGreen));
+            model_calib.plotOn(frame_d0_calib_only_passed,
+                               Slice(sample, "calib_passed"),
+                               ProjWData(sample, dataset), LineWidth(1),
+                               Components(dmd0_comb_passed), LineColor(kRed));
+
             model_calib.plotOn(frame_d0_calib_only_failed,
                                Slice(sample, "calib_failed"),
                                ProjWData(sample, dataset), LineWidth(1));
+            model_calib.plotOn(frame_d0_calib_only_failed,
+                               Slice(sample, "calib_failed"),
+                               ProjWData(sample, dataset), LineWidth(1),
+                               Components(d0_comb_failed), LineColor(kMagenta));
+            model_calib.plotOn(frame_d0_calib_only_failed,
+                               Slice(sample, "calib_failed"),
+                               ProjWData(sample, dataset), LineWidth(1),
+                               Components(dm_comb_failed), LineColor(kGreen));
+            model_calib.plotOn(frame_d0_calib_only_failed,
+                               Slice(sample, "calib_failed"),
+                               ProjWData(sample, dataset), LineWidth(1),
+                               Components(dmd0_comb_failed), LineColor(kRed));
+
             model_calib.plotOn(frame_dm_calib_only_passed,
                                Slice(sample, "calib_passed"),
-                               ProjWData(sample, dataset), LineWidth(1));
+                               ProjWData(sample, dataset),
+                               ProjectionRange("fit"), LineWidth(1));
+            model_calib.plotOn(
+                frame_dm_calib_only_passed, Slice(sample, "calib_passed"),
+                ProjWData(sample, dataset), ProjectionRange("fit"),
+                LineWidth(1), Components(d0_comb_passed), LineColor(kMagenta));
+            model_calib.plotOn(
+                frame_dm_calib_only_passed, Slice(sample, "calib_passed"),
+                ProjWData(sample, dataset), ProjectionRange("fit"),
+                LineWidth(1), Components(dm_comb_passed), LineColor(kGreen));
+            model_calib.plotOn(
+                frame_dm_calib_only_passed, Slice(sample, "calib_passed"),
+                ProjWData(sample, dataset), ProjectionRange("fit"),
+                LineWidth(1), Components(dmd0_comb_passed), LineColor(kRed));
+
             model_calib.plotOn(frame_dm_calib_only_failed,
                                Slice(sample, "calib_failed"),
-                               ProjWData(sample, dataset), LineWidth(1));
+                               ProjWData(sample, dataset),
+                               ProjectionRange("fit"), LineWidth(1));
+            model_calib.plotOn(
+                frame_dm_calib_only_failed, Slice(sample, "calib_failed"),
+                ProjWData(sample, dataset), ProjectionRange("fit"),
+                LineWidth(1), Components(d0_comb_failed), LineColor(kMagenta));
+            model_calib.plotOn(
+                frame_dm_calib_only_failed, Slice(sample, "calib_failed"),
+                ProjWData(sample, dataset), ProjectionRange("fit"),
+                LineWidth(1), Components(dm_comb_failed), LineColor(kGreen));
+            model_calib.plotOn(
+                frame_dm_calib_only_failed, Slice(sample, "calib_failed"),
+                ProjWData(sample, dataset), ProjectionRange("fit"),
+                LineWidth(1), Components(dmd0_comb_failed), LineColor(kRed));
 
             c_four.cd(1);
             frame_d0_calib_only_passed->Draw();
@@ -1802,18 +1851,17 @@ int main(int argc, char **argv) {
                  << k_part_reco_passed.getVal() << " vs estimated "
                  << k_passed_guess << " ("
                  << k_part_reco_passed.getVal() / k_passed_guess << ")" << endl;
-            cout << " - Fitted k_comb_passed = " << k_comb_all.getVal()
+            cout << " - Fitted k_comb_passed = " << k_comb_all_passed.getVal()
                  << " vs estimated " << k_passed_guess << " ("
-                 << k_comb_all.getVal() / k_passed_guess << ")" << endl;
+                 << k_comb_all_passed.getVal() / k_passed_guess << ")" << endl;
             cout << " - Fitted k_part_reco_failed = "
                  << k_part_reco_failed.getVal() << " vs estimated "
                  << k_failed_guess << " ("
                  << k_part_reco_failed.getVal() / k_failed_guess << ")" << endl;
-            // cout << " - Fitted k_comb_failed = " <<
-            // k_comb_all_failed.getVal()
-            //      << " vs estimated " << k_failed_guess << " ("
-            //      << k_comb_all_failed.getVal() / k_failed_guess << ")\n"
-            //      << endl;
+            cout << " - Fitted k_comb_failed = " << k_comb_all_failed.getVal()
+                 << " vs estimated " << k_failed_guess << " ("
+                 << k_comb_all_failed.getVal() / k_failed_guess << ")\n"
+                 << endl;
 
             // Plot fit results
             RooPlot *frame_d0_mc_passed =
@@ -1846,9 +1894,11 @@ int main(int argc, char **argv) {
             dataset.plotOn(frame_dm_mc_failed, Binning(bins_dm),
                            Cut("sample==sample::mc_failed"));
             dataset.plotOn(frame_dm_calib_passed, Binning(bins_dm_passed),
-                           Cut("sample==sample::calib_passed"));
+                           Cut("sample==sample::calib_passed"),
+                           CutRange("fit"));
             dataset.plotOn(frame_dm_calib_failed, Binning(bins_dm),
-                           Cut("sample==sample::calib_failed"));
+                           Cut("sample==sample::calib_failed"),
+                           CutRange("fit"));
 
             d0_model_mc.plotOn(frame_d0_mc_passed, Slice(sample, "mc_passed"),
                                ProjWData(sample, dataset), LineWidth(1));
@@ -1866,10 +1916,12 @@ int main(int argc, char **argv) {
                                ProjWData(sample, dataset), LineWidth(1));
             model_calib.plotOn(frame_dm_calib_passed,
                                Slice(sample, "calib_passed"),
-                               ProjWData(sample, dataset), LineWidth(1));
+                               ProjWData(sample, dataset),
+                               ProjectionRange("fit"), LineWidth(1));
             model_calib.plotOn(frame_dm_calib_failed,
                                Slice(sample, "calib_failed"),
-                               ProjWData(sample, dataset), LineWidth(1));
+                               ProjWData(sample, dataset),
+                               ProjectionRange("fit"), LineWidth(1));
 
             c_mult.cd(1);
             frame_d0_mc_passed->Draw();
