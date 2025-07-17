@@ -39,8 +39,8 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES := ./histos/default/rdx-25_06_17_09_36-merged-2016/merged.root
-EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-25_06_17_09_36-merged-2016/merged.root
+EFFICIENCIES := ./histos/default/rdx-25_07_17_05_20-merged-2016/merged.root
+EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-25_07_17_05_21-merged-2016/merged.root
 UNFOLDED := ./histos/rdx-25_06_17_09_38-unfolded-2016/unfolded.root
 TAGGED := ./histos/default/rdx-24_12_03_05_56-tag-2016/tagged.root
 DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
@@ -71,12 +71,12 @@ test-nix:
 build-rdx-true-to-tag-2016-glacier:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-true-to-tag-2016-lxplus:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
@@ -91,13 +91,13 @@ test-pidcalib2-wrapper-lxplus:
 build-rdx-true-to-tag-2016-local:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 .PHONY: build-rdx-merged-2016
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: build-generic-dif-smearing
@@ -108,7 +108,8 @@ build-generic-dif-smearing:
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
-		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
+		2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-misid-mc-corrections: $(BINPATH)/GetMisIDCorrections
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections)
@@ -137,14 +138,14 @@ build-rdx-misid-mc-corrections-fake_mu: $(BINPATH)/GetMisIDCorrections
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
+	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 5 \
 		--effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU) -y $(TAGGED) -o $(OUT_DIR) \
-		-c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+		-c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-unfold
