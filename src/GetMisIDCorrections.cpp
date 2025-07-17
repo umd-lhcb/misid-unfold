@@ -1816,9 +1816,9 @@ int main(int argc, char **argv) {
                      << endl;
                 cout << "INFO Previous cov matrix status: "
                      << fit_res->covQual() << endl;
-                model.fitTo(dataset, Strategy(2), Extended(), NumCPU(8),
-                            PrintLevel(0), Offset(), Range("fit"),
-                            Minimizer("Minuit", "scan"), Timer());
+                model.fitTo(dataset, Extended(), NumCPU(8), PrintLevel(0),
+                            Offset(), Range("fit"), Minimizer("Minuit", "scan"),
+                            Timer(), Hesse(false));
                 fit_res = model_calib.fitTo(dataset, fit_args);
               }
 
