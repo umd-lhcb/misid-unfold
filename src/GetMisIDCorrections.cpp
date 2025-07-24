@@ -840,6 +840,8 @@ int main(int argc, char **argv) {
 
         // Calib sample cuts
         // See tables 36 and 48 in LHCb-PUB-2016-005
+        // See also https://lhcb-pid-wgp-plots.web.cern.ch/lhcb-pid-wgp-plots/Run2/ and
+        // https://gitlab.cern.ch/lhcb-datapkg/WG/SemilepConfig/-/blob/master/options/Filter_Dstar2D02KpiNoPID_2016MC.py?ref_type=heads
         if (tag_p < 2000 || tag_pt < 250) continue;
         if (probe_p < 2000 || probe_pt < 250) continue;
         if (spi_p < 1000 || spi_pt < 100) continue;
