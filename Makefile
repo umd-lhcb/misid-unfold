@@ -168,11 +168,44 @@ test-apply-rdx-weights-2016: \
 		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
 
 
-# Aux. efficiencies for ProbNNk > 2 on true ghost
-.PHONY: build-rdx-aux-probnnk-on-ghost
+# Aux. efficiencies for iso track PID cuts on true ghost
+.PHONY: build-rdx-aux-isoPID-on-ghost build-rdx-aux-probnnk-on-ghost build-rdx-aux-probnnp-on-ghost build-rdx-aux-probnnpnng_gtlt-on-ghost build-rdx-aux-probnnknng_ltlt-on-ghost build-rdx-aux-probnnknng_lt02lt02-on-ghost build-rdx-aux-probnnknng_gtlt-on-ghost build-rdx-aux-probnnknng_gt02lt02-on-ghost
+build-rdx-aux-isoPID-on-ghost: build-rdx-aux-probnnk-on-ghost build-rdx-aux-probnnp-on-ghost build-rdx-aux-probnnpnng_gtlt-on-ghost build-rdx-aux-probnnknng_ltlt-on-ghost build-rdx-aux-probnnknng_lt02lt02-on-ghost build-rdx-aux-probnnknng_gtlt-on-ghost build-rdx-aux-probnnknng_gt02lt02-on-ghost
 build-rdx-aux-probnnk-on-ghost:
-	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_oldcut_ghost)
-	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2016 -o $(OUT_DIR)
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnk_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnp-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnp_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnp.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnp.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnp.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnpnng_gtlt-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnpnng_gtlt_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnpnng_gtlt.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnpnng_gtlt.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnpnng_gtlt.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_ltlt-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_ltlt_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_ltlt.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_ltlt.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_ltlt.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_lt02lt02-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_lt02lt02_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_lt02lt02.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_lt02lt02.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_lt02lt02.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_gtlt-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_gtlt_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gtlt.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gtlt.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gtlt.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_gt02lt02-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_gt02lt02_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gt02lt02.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gt02lt02.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gt02lt02.yml -y 2018 -o $(OUT_DIR)_2018
 
 
 ###############################

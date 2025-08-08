@@ -1,6 +1,7 @@
 # this is for obtaining:
 #   Brunel_MC15TuneV1_ProbNNk > 0.2
 # cut efficiency on TRUE ghost particles
+# Note: conventions in this spec are non-obvious, just chosen to re-use the machinery that references the rdx-run2.yml spec
 
 binning:  # mostly from Phoebe's run 1 kISOeff histo
     P: [3.e+3, 6.e+3, 9.3e+3, 10.e+3, 15.6e+3, 20.e+3, 40.e+3, 100.e+3]
@@ -13,17 +14,29 @@ tags: {}  # dummy
 
 local_pid_config:
     2016:
-        MagDown:
-            samples: "../ntuples/0.9.7-rdx_production/Dst_D0-mc_ghost-step2/ghost-*md.root:tree"
+        MagDownUp:
+            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/*ghost--*--2016--*.root:tree"
             tags_addon:
-                k:
+                iso:
                     eff:
                         cut: "is_ghost"  # dummy actually
-                        pid_cut: "Brunel_MC15TuneV1_ProbNNk > 0.2"
-        MagUp:
-            samples: "../ntuples/0.9.7-rdx_production/Dst_D0-mc_ghost-step2/ghost-*mu.root:tree"
+                        pid_cut: 
+                            default: "Brunel_MC15TuneV1_ProbNNk > 0.2"
+    2017:
+        MagDownUp:
+            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/*ghost--*--2017--*.root:tree"
             tags_addon:
-                k:
+                iso:
                     eff:
                         cut: "is_ghost"  # dummy actually
-                        pid_cut: "Brunel_MC15TuneV1_ProbNNk > 0.2"
+                        pid_cut: 
+                            default: "Brunel_MC15TuneV1_ProbNNk > 0.2"
+    2018:
+        MagDownUp:
+            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/*ghost--*--2018--*.root:tree"
+            tags_addon:
+                iso:
+                    eff:
+                        cut: "is_ghost"  # dummy actually
+                        pid_cut: 
+                            default: "Brunel_MC15TuneV1_ProbNNk > 0.2"
