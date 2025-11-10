@@ -35,7 +35,7 @@
             // They are currently hardcoded and since some appear multiple times in the
             // store (such as boost-1.75.0-dev), I'm not sure which one is the correct
             // (they look equivalent, but they have different hashes so there is some difference).
-            "/nix/store/ny5k70sdxs19i7mn4r80r0g518hrf56n-root-6.24.02/include/*",
+            "/nix/store/dlwb9al8d40rllzbhfbzj28jips65lr6-root-6.32.16/include/*",
             "/nix/store/rbvd1cq9gy7vbkds7v2w968vmrl5a9vd-roounfold-2.1/include/",
             "/nix/store/3zvgb0wgvbjal65sb4mz50r0dzsgsdn4-libyaml-cpp-0.6.3/include/",
             "/nix/store/hnawcrf4iigsk47pxz0bg5mg1w1szfir-boost-1.75.0-dev/include",

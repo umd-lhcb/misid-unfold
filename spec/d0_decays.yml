@@ -1,0 +1,237 @@
+fake_mu:
+  k:
+    failed:
+      0:
+        signal: 3128
+        total: 3730
+      1:
+        signal: 5507
+        total: 6001
+      2:
+        signal: 3849
+        total: 4055
+      3:
+        signal: 4263
+        total: 4382
+      4:
+        signal: 3677
+        total: 3734
+      5:
+        signal: 833
+        total: 845
+    passed:
+      0:
+        signal: 38848
+        total: 45204
+      1:
+        signal: 108051
+        total: 116566
+      2:
+        signal: 162087
+        total: 169631
+      3:
+        signal: 286240
+        total: 292830
+      4:
+        signal: 395568
+        total: 399965
+      5:
+        signal: 126561
+        total: 127610
+  pi:
+    failed:
+      0:
+        signal: 7151
+        total: 7396
+      1:
+        signal: 6631
+        total: 6895
+      2:
+        signal: 3107
+        total: 3409
+      3:
+        signal: 2597
+        total: 3269
+      4:
+        signal: 1810
+        total: 2737
+      5:
+        signal: 378
+        total: 642
+    passed:
+      0:
+        signal: 75292
+        total: 75730
+      1:
+        signal: 134352
+        total: 134828
+      2:
+        signal: 170215
+        total: 171754
+      3:
+        signal: 274600
+        total: 282645
+      4:
+        signal: 360186
+        total: 377622
+      5:
+        signal: 107676
+        total: 113518
+iso_ctrl:
+  k:
+    failed:
+      0:
+        signal: 41838
+        total: 48725
+      1:
+        signal: 113324
+        total: 122250
+      2:
+        signal: 165758
+        total: 173444
+      3:
+        signal: 290331
+        total: 297000
+      4:
+        signal: 398716
+        total: 403157
+      5:
+        signal: 127104
+        total: 128161
+    passed:
+      0:
+        signal: 138
+        total: 209
+      1:
+        signal: 234
+        total: 317
+      2:
+        signal: 178
+        total: 242
+      3:
+        signal: 172
+        total: 212
+      4:
+        signal: 529
+        total: 542
+      5:
+        signal: 290
+        total: 294
+  pi:
+    failed:
+      0:
+        signal: 82352
+        total: 82838
+      1:
+        signal: 140537
+        total: 141058
+      2:
+        signal: 172448
+        total: 174031
+      3:
+        signal: 276063
+        total: 284245
+      4:
+        signal: 360931
+        total: 378528
+      5:
+        signal: 107873
+        total: 113752
+    passed:
+      0:
+        signal: 91
+        total: 288
+      1:
+        signal: 446
+        total: 665
+      2:
+        signal: 874
+        total: 1132
+      3:
+        signal: 1134
+        total: 1669
+      4:
+        signal: 1065
+        total: 1831
+      5:
+        signal: 181
+        total: 408
+vmu:
+  k:
+    failed:
+      0:
+        signal: 41473
+        total: 48411
+      1:
+        signal: 112216
+        total: 121193
+      2:
+        signal: 164465
+        total: 172205
+      3:
+        signal: 288391
+        total: 295079
+      4:
+        signal: 397336
+        total: 401771
+      5:
+        signal: 127124
+        total: 128184
+    passed:
+      0:
+        signal: 503
+        total: 523
+      1:
+        signal: 1342
+        total: 1374
+      2:
+        signal: 1471
+        total: 1481
+      3:
+        signal: 2112
+        total: 2133
+      4:
+        signal: 1909
+        total: 1928
+      5:
+        signal: 270
+        total: 271
+  pi:
+    failed:
+      0:
+        signal: 82379
+        total: 83055
+      1:
+        signal: 140747
+        total: 141476
+      2:
+        signal: 173187
+        total: 175023
+      3:
+        signal: 277082
+        total: 285771
+      4:
+        signal: 361895
+        total: 380210
+      5:
+        signal: 108016
+        total: 114107
+    passed:
+      0:
+        signal: 64
+        total: 71
+      1:
+        signal: 236
+        total: 247
+      2:
+        signal: 135
+        total: 140
+      3:
+        signal: 115
+        total: 143
+      4:
+        signal: 101
+        total: 149
+      5:
+        signal: 38
+        total: 53

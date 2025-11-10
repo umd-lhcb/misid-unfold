@@ -206,15 +206,53 @@ weight_brs:
 
 misid_corrections:
     mc_ntps:
-        2016:
-            k: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_05_15--mc--27163974--2016*.root"
-            pi: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_05_15--mc--27163974--2016*.root"
-        2017:
-            k: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_06_02--mc--27163974--2017*.root"
-            pi: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_06_02--mc--27163974--2017*.root"
-        2018:
-            k: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_05_30--mc--27163974--2018*.root"
-            pi: "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_05_30--mc--27163974--2018*.root"
+        signal:
+            2016:
+                k:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_07_31--mc--27163974--2016*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2016*.root"
+                pi:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_07_31--mc--27163974--2016*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2016*.root"
+            2017:
+                k:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_07_31--mc--27163974--2017*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2017*.root"
+                pi:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_07_31--mc--27163974--2017*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2017*.root"
+            2018:
+                k:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_07_31--mc--27163974--2018*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2018*.root"
+                pi:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_07_31--mc--27163974--2018*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2018*.root"
+        pipipi0:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pipipi0_dalitz-misid_corrections-k/Dst_ANNK--25_09_16--mc--27163404--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pipipi0_dalitz-misid_corrections-pi/Dst_ANNPi--25_09_16--mc--27163404--201*.root"
+        pimunu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pimunu-misid_corrections-k/Dst_ANNK--25_09_16--mc--27573001--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pimunu-misid_corrections-pi/Dst_ANNPi--25_09_16--mc--27573001--201*.root"
+        kmunu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_kmunu-misid_corrections-k/Dst_ANNK--25_09_16--mc--27173001--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_kmunu-misid_corrections-pi/Dst_ANNPi--25_09_16--mc--27173001--201*.root"
+        pienu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pienu-misid_corrections-k/Dst_ANNK--25_10_24--mc--27583000--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pienu-misid_corrections-pi/Dst_ANNPi--25_10_24--mc--27583000--201*.root"
+        kenu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_kenu-misid_corrections-k/Dst_ANNK--25_10_23--mc--27583002--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_kenu-misid_corrections-pi/Dst_ANNPi--25_10_23--mc--27583002--201*.root"
+        pipi:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pipi-misid_corrections-k/Dst_ANNK--25_09_16--mc--27163001--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pipi-misid_corrections-pi/Dst_ANNPi--25_09_17--mc--27163001--201*.root"
+        kspipi:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_kspipi-misid_corrections-k/Dst_ANNK--25_10_31--mc--27165100--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_kspipi-misid_corrections-pi/Dst_ANNPi--25_10_31--mc--27165100--201*.root"
+        mb:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg-mb-misid_corrections-k/Dst_ANNK--25_11_03--mc--10000000--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg-mb-misid_corrections-pi/Dst_ANNPi--25_11_04--mc--10000000--201*.root"
+
     pid_calib:
         trees:
             k:

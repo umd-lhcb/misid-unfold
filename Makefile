@@ -111,26 +111,29 @@ build-generic-dif-smearing:
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		2>&1 | tee $(OUT_DIR)/stdout.log
 
+build-d0-decays: $(BINPATH)/d0BkgDecays
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-d0_decays)
+	@mkdir -p $(OUT_DIR)
+	@touch $(OUT_DIR)/d0_decays.yml
+	$< -o $(OUT_DIR) -c $(YML_FILE) -f d0_decays.yml 2>&1 | tee $(OUT_DIR)/stdout.log
+
 build-rdx-misid-mc-corrections: $(BINPATH)/GetMisIDCorrections
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections)
 	@mkdir -p $(OUT_DIR)/figs/params
 	@mkdir -p $(OUT_DIR)/figs/fits
-	@mkdir -p $(OUT_DIR)/figs/calib
-	$< -o $(OUT_DIR) -c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-misid-mc-corrections-vmu: $(BINPATH)/GetMisIDCorrections
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-vmu)
 	@mkdir -p $(OUT_DIR)/figs/params
 	@mkdir -p $(OUT_DIR)/figs/fits
-	@mkdir -p $(OUT_DIR)/figs/calib
-	$< -o $(OUT_DIR) -c $(YML_FILE) --vmu true 2>&1 | tee $(OUT_DIR)/stdout.log
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml --vmu true 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-misid-mc-corrections-fake_mu: $(BINPATH)/GetMisIDCorrections
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-fake_mu)
 	@mkdir -p $(OUT_DIR)/figs/params
 	@mkdir -p $(OUT_DIR)/figs/fits
-	@mkdir -p $(OUT_DIR)/figs/calib
-	$< -o $(OUT_DIR) -c $(YML_FILE) --fake_mu true 2>&1 | tee $(OUT_DIR)/stdout.log
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml --fake_mu true 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 # Unfold the misID weights
@@ -283,7 +286,10 @@ $(BINPATH)/compareEffs: compareEffs.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
 
 $(BINPATH)/GetMisIDCorrections: GetMisIDCorrections.cpp
-	$(COMPILER) $(CXXFLAGS) -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp -lRooFitCore -lRooFit
+	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp -lRooFitCore -lRooFit
+
+$(BINPATH)/d0BkgDecays: d0BkgDecays.cpp
+	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp
 
 $(BINPATH)/%: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)
