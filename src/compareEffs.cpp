@@ -9,10 +9,8 @@
 #include "TH3.h"
 #include "TLegend.h"
 #include "TMultiGraph.h"
-#include "TROOT.h"
 #include "TRatioPlot.h"
 #include "TString.h"
-#include "TStyle.h"
 
 #include <cxxopts.hpp>
 
@@ -25,14 +23,12 @@ int main(int argc, char** argv) {
   // clang-format off
   argOpts.add_options()
     ("h,help", "print help")
-    ("p,particles", "specify probed particle",
-     cxxopts::value<vector<string>>()->default_value("pi,k"))
     ("o,output", "specify output folder",
-     cxxopts::value<string>()->default_value("gen/"))
-    ("vmu", "flag misid validation PID cuts",
-     cxxopts::value<bool>()->default_value("false"))
-    ("fake_mu", "flag fake muon sample PID cuts",
-     cxxopts::value<bool>()->default_value("false"))
+     cxxopts::value<string>())
+    ("r,refPath", "specify path to old efficiencies",
+     cxxopts::value<string>())
+    ("n,newPath", "specify path to new efficiencies",
+     cxxopts::value<string>())
     ;
   // clang-format on
 
@@ -43,203 +39,91 @@ int main(int argc, char** argv) {
   }
 
   // Read arguments
-  const auto    particles = parsedArgs["particles"].as<vector<string>>();
-  const TString opath     = parsedArgs["output"].as<string>();
-  const auto    vmu       = parsedArgs["vmu"].as<bool>();
-  const auto    fake_mu   = parsedArgs["fake_mu"].as<bool>();
+  const TString opath   = parsedArgs["output"].as<string>();
+  const TString pathRef = parsedArgs["refPath"].as<string>();
+  const TString pathNew = parsedArgs["newPath"].as<string>();
 
-  // // VMU
-  // const TString path_ref_k =
-  //     "/home/lmeyerga/misid-unfold/histos/ctrl_sample/"
-  //     "rdx-25_04_08_11_31-true_to_tag_glacier-2016/kTrueToMuTag_nom.root";
-  // const TString path_ref_pi =
-  //     "/home/lmeyerga/misid-unfold/histos/ctrl_sample/"
-  //     "rdx-25_04_08_11_31-true_to_tag_glacier-2016/piTrueToMuTag_nom.root";
-  // const TString path_new_k =
-  //     "/home/lmeyerga/misid-unfold/histos/"
-  //     "rdx-25_07_09_03_44-misid-mc-corrections-vmu/"
-  //     "kTrueToMuTag_nom.root";
-  // const TString path_new_pi =
-  //     "/home/lmeyerga/misid-unfold/histos/"
-  //     "rdx-25_07_09_03_44-misid-mc-corrections-vmu/"
-  //     "piTrueToMuTag_nom.root";
+  // Get efficiencies to be compared
+  TFile ifile_ref(pathRef, "READ");
+  TFile ifile_new(pathNew, "READ");
 
-  // ISO+CTRL
-  const TString path_ref_k =
-      "/home/lmeyerga/misid-unfold/histos/default/"
-      "rdx-25_04_08_06_47-true_to_tag_glacier-2016/kTrueToMuTag_nom.root";
-  const TString path_ref_pi =
-      "/home/lmeyerga/misid-unfold/histos/default/"
-      "rdx-25_04_08_06_47-true_to_tag_glacier-2016/piTrueToMuTag_nom.root";
-  const TString path_new_k =
-      "/home/lmeyerga/misid-unfold/histos/rdx-25_07_09_03_44-misid-mc-corrections/"
-      "kTrueToMuTag_nom.root";
-  const TString path_new_pi =
-      "/home/lmeyerga/misid-unfold/histos/rdx-25_07_09_03_44-misid-mc-corrections/"
-      "piTrueToMuTag_nom.root";
+  TH1* histo_ref = nullptr;
+  TH1* histo_new = nullptr;
 
-  // // FAKE_MU
-  // const TString path_ref_k =
-  //     "/home/lmeyerga/misid-unfold/histos/default/"
-  //     "rdx-25_04_08_06_47-true_to_tag_glacier-2016/kTrueToMuTag_denom.root";
-  // const TString path_ref_pi =
-  //     "/home/lmeyerga/misid-unfold/histos/default/"
-  //     "rdx-25_04_08_06_47-true_to_tag_glacier-2016/piTrueToMuTag_denom.root";
-  // const TString path_new_k =
-  //     "/home/lmeyerga/misid-unfold/histos/"
-  //     "rdx-25_07_11_03_06-misid-mc-corrections-fake_mu/"
-  //     "kTrueToMuTag_denom.root";
-  // const TString path_new_pi =
-  //     "/home/lmeyerga/misid-unfold/histos/"
-  //     "rdx-25_07_11_03_06-misid-mc-corrections-fake_mu/"
-  //     "piTrueToMuTag_denom.root";
+  ifile_ref.GetObject("eff", histo_ref);
 
-  TFile ifile_ref_k(path_ref_k, "READ");
-  TFile ifile_ref_pi(path_ref_pi, "READ");
-  TFile ifile_new_k(path_new_k, "READ");
-  TFile ifile_new_pi(path_new_pi, "READ");
+  if (!histo_ref) {
+    cout << "FATAL Could not find histogram 'eff' in " << pathRef << endl;
+    exit(1);
+  }
 
-  TH3D* histo_ref_k;
-  TH3D* histo_ref_pi;
-  TH3D* histo_new_k;
-  TH3D* histo_new_pi;
+  ifile_new.GetObject("eff", histo_new);
 
-  ifile_ref_k.GetObject("eff", histo_ref_k);
-  ifile_ref_pi.GetObject("eff", histo_ref_pi);
-  ifile_new_k.GetObject("eff", histo_new_k);
-  ifile_new_pi.GetObject("eff", histo_new_pi);
+  if (!histo_new) {
+    cout << "FATAL Could not find histogram 'eff' in " << pathNew << endl;
+    exit(1);
+  }
 
-  // cout << "DEBUG Printing histo_new_k contents:" << endl;
-  // histo_new_k->Print("all");
-  // cout << endl;
+  const int n_p_bins       = histo_ref->GetNbinsX();
+  const int n_eta_bins     = histo_ref->GetNbinsY();
+  const int n_ntracks_bins = histo_ref->GetNbinsZ();
 
-  // c.cd();
-  // histo_ref_k->Draw("BOX2");
-  // c.SaveAs(opath + "/th3_k_ref.pdf");
-  // histo_ref_pi->Draw("BOX2");
-  // c.SaveAs(opath + "/th3_pi_ref.pdf");
-  // histo_new_k->Draw("BOX2");
-  // c.SaveAs(opath + "/th3_k_new.pdf");
-  // histo_new_pi->Draw("BOX2");
-  // c.SaveAs(opath + "/th3_pi_new.pdf");
-
-  const int n_p_bins       = histo_ref_k->GetNbinsX();
-  const int n_eta_bins     = histo_ref_k->GetNbinsY();
-  const int n_ntracks_bins = histo_ref_k->GetNbinsZ();
+  TCanvas c("c", "c", 640, 480);
+  TCanvas c_ratio("c_ratio", "c_ratio", 640, 640);
 
   for (int ntrks_idx = 0; ntrks_idx < n_ntracks_bins; ntrks_idx++) {
     for (int eta_idx = 0; eta_idx < n_eta_bins; eta_idx++) {
+      c.cd();
+
       TString suffix = TString::Format("%d_%d", ntrks_idx, eta_idx);
 
       // I tried using histo_ref_k->ProjectionX("_px", eta_idx + 1, eta_idx + 1,
       // ntrks_idx + 1, ntrks_idx + 1) to get a 1D slice of the 3D histogram,
       // but for some reason it produces wrong results. To be sure, let's do it
       // manually
-      TH1D histo_ref_k_proj("histo_ref_k_proj" + suffix, "", n_p_bins,
-                            histo_ref_k->GetXaxis()->GetXbins()->GetArray());
-      TH1D histo_ref_pi_proj("histo_ref_pi_proj" + suffix, "", n_p_bins,
-                             histo_ref_pi->GetXaxis()->GetXbins()->GetArray());
-      TH1D histo_new_k_proj("histo_new_k_proj" + suffix, "", n_p_bins,
-                            histo_new_k->GetXaxis()->GetXbins()->GetArray());
-      TH1D histo_new_pi_proj("histo_new_pi_proj" + suffix, "", n_p_bins,
-                             histo_new_pi->GetXaxis()->GetXbins()->GetArray());
+      TH1D histo_ref_proj("histo_ref_proj" + suffix, "", n_p_bins,
+                          histo_ref->GetXaxis()->GetXbins()->GetArray());
+      TH1D histo_new_proj("histo_new_proj" + suffix, "", n_p_bins,
+                          histo_new->GetXaxis()->GetXbins()->GetArray());
 
       for (int p_idx = 0; p_idx < n_p_bins; p_idx++) {
         const int bin_idx =
-            histo_ref_k->GetBin(p_idx + 1, eta_idx + 1, ntrks_idx + 1);
+            histo_ref->GetBin(p_idx + 1, eta_idx + 1, ntrks_idx + 1);
 
-        histo_ref_k_proj.SetBinContent(p_idx + 1,
-                                       histo_ref_k->GetBinContent(bin_idx));
-        histo_ref_pi_proj.SetBinContent(p_idx + 1,
-                                        histo_ref_pi->GetBinContent(bin_idx));
-        histo_new_k_proj.SetBinContent(p_idx + 1,
-                                       histo_new_k->GetBinContent(bin_idx));
-        histo_new_pi_proj.SetBinContent(p_idx + 1,
-                                        histo_new_pi->GetBinContent(bin_idx));
+        histo_ref_proj.SetBinContent(p_idx + 1,
+                                     histo_ref->GetBinContent(bin_idx));
+        histo_new_proj.SetBinContent(p_idx + 1,
+                                     histo_new->GetBinContent(bin_idx));
 
-        histo_ref_k_proj.SetBinError(p_idx + 1,
-                                     histo_ref_k->GetBinError(bin_idx));
-        histo_ref_pi_proj.SetBinError(p_idx + 1,
-                                      histo_ref_pi->GetBinError(bin_idx));
-        histo_new_k_proj.SetBinError(p_idx + 1,
-                                     histo_new_k->GetBinError(bin_idx));
-        histo_new_pi_proj.SetBinError(p_idx + 1,
-                                      histo_new_pi->GetBinError(bin_idx));
+        histo_ref_proj.SetBinError(p_idx + 1, histo_ref->GetBinError(bin_idx));
+        histo_new_proj.SetBinError(p_idx + 1, histo_new->GetBinError(bin_idx));
       }
 
-      histo_ref_k_proj.SetLineColor(kBlack);
-      histo_ref_pi_proj.SetLineColor(kBlack);
-      histo_new_k_proj.SetLineColor(kRed);
-      histo_new_pi_proj.SetLineColor(kRed);
+      histo_ref_proj.SetLineColor(kBlack);
+      histo_new_proj.SetLineColor(kRed);
 
-      // cout << "DEBUG Printing histo_new_k_slice " << suffix
-      //      << " contents:" << endl;
-      // histo_new_k_slice->Print("all");
-      // cout << endl;
+      TGraphErrors tge_ref(&histo_ref_proj);
+      tge_ref.SetName("tge_ref");
+      tge_ref.SetLineColor(kBlack);
+      tge_ref.SetMarkerColor(kBlack);
+      tge_ref.SetMarkerStyle(8);
 
-      // cout << "DEBUG Printing histo_new_k_slice FIX " << suffix
-      //      << " contents:" << endl;
-      // histo_new_k_proj.Print("all");
-      // cout << endl;
+      TGraphErrors tge_new(&histo_new_proj);
+      tge_new.SetName("tge_new");
+      tge_new.SetLineColor(kRed);
+      tge_new.SetMarkerColor(kRed);
+      tge_new.SetMarkerStyle(8);
 
-      // cout << "DEBUG Printing histo_ref_k_slice " << suffix
-      //      << " contents:" << endl;
-      // histo_ref_k_slice->Print("all");
-      // cout << endl;
+      tge_ref.SetTitle("ref");
+      tge_new.SetTitle("new");
 
-      // cout << "DEBUG Printing histo_ref_k_slice FIX " << suffix
-      //      << " contents:" << endl;
-      // histo_ref_k_proj.Print("all");
-      // cout << endl;
+      TMultiGraph mg("mg", "");
 
-      // c.cd();
-      // histo_ref_k_proj.Draw("");
-      // c.SaveAs(opath + "/histo_k_ref_" + suffix + ".pdf");
-      // histo_ref_pi_proj.Draw("");
-      // c.SaveAs(opath + "/histo_pi_ref_" + suffix + ".pdf");
-      // histo_new_k_proj.Draw("");
-      // c.SaveAs(opath + "/histo_k_new_" + suffix + ".pdf");
-      // histo_new_pi_proj.Draw("");
-      // c.SaveAs(opath + "/histo_pi_new_" + suffix + ".pdf");
+      mg.Add(&tge_ref);
+      mg.Add(&tge_new);
 
-      TCanvas c("c", "c", 640, 480);
-
-      TGraphErrors tge_ref_k(&histo_ref_k_proj);
-      tge_ref_k.SetName("tge_ref_k");
-      tge_ref_k.SetLineColor(kBlack);
-      tge_ref_k.SetMarkerColor(kAzure);
-      tge_ref_k.SetMarkerStyle(8);
-      TGraphErrors tge_ref_pi(&histo_ref_pi_proj);
-      tge_ref_pi.SetName("tge_ref_pi");
-      tge_ref_pi.SetLineColor(kBlack);
-      tge_ref_pi.SetMarkerColor(kAzure);
-      tge_ref_pi.SetMarkerStyle(8);
-      TGraphErrors tge_new_k(&histo_new_k_proj);
-      tge_new_k.SetName("tge_new_k");
-      tge_new_k.SetLineColor(kBlack);
-      tge_new_k.SetMarkerColor(kRed);
-      tge_new_k.SetMarkerStyle(8);
-      TGraphErrors tge_new_pi(&histo_new_pi_proj);
-      tge_new_pi.SetName("tge_new_pi");
-      tge_new_pi.SetLineColor(kBlack);
-      tge_new_pi.SetMarkerColor(kRed);
-      tge_new_pi.SetMarkerStyle(8);
-
-      tge_ref_k.SetTitle("K ref");
-      tge_ref_pi.SetTitle("#pi ref");
-      tge_new_k.SetTitle("K new");
-      tge_new_pi.SetTitle("#pi new");
-
-      TMultiGraph mg_k("mg_k", "");
-      TMultiGraph mg_pi("mg_pi", "");
-
-      mg_k.Add(&tge_new_k);
-      mg_k.Add(&tge_ref_k);
-      mg_pi.Add(&tge_new_pi);
-      mg_pi.Add(&tge_ref_pi);
-
-      const auto    axis_eta     = histo_ref_k->GetYaxis();
-      const auto    axis_ntracks = histo_ref_k->GetZaxis();
+      const auto    axis_eta     = histo_ref->GetYaxis();
+      const auto    axis_ntracks = histo_ref->GetZaxis();
       const TString tag =
           TString::Format("(%.0f < nTracks < %.0f, %.1f < #eta < %.1f)",
                           axis_ntracks->GetBinLowEdge(ntrks_idx + 1),
@@ -247,48 +131,32 @@ int main(int argc, char** argv) {
                           axis_eta->GetBinLowEdge(eta_idx + 1),
                           axis_eta->GetBinUpEdge(eta_idx + 1));
 
-      mg_k.SetTitle("K " + tag);
-      mg_k.Draw("AP");
+      mg.SetTitle(tag);
+      mg.Draw("AP");
       c.BuildLegend();
-      c.SaveAs(opath + "/comparison_k_" + suffix + ".pdf");
+      c.SaveAs(opath + "/comparison_" + suffix + ".pdf");
 
-      mg_pi.SetTitle("#pi " + tag);
-      mg_pi.Draw("AP");
-      c.BuildLegend();
-      c.SaveAs(opath + "/comparison_pi_" + suffix + ".pdf");
+      c_ratio.cd();
 
-      c.cd();
-      TRatioPlot rp_k(&histo_new_k_proj, &histo_ref_k_proj);
-      rp_k.Draw();
-      double max_k = 1.1 * std::max(histo_new_k_proj.GetMaximum(),
-                                    histo_ref_k_proj.GetMaximum());
-      rp_k.GetUpperRefYaxis()->SetRangeUser(0, max_k);
-      rp_k.GetLowerRefYaxis()->SetTitle("New/Ref");
-      rp_k.GetUpperPad()->cd();
-      TLegend legend_k(0.3, 0.7, 0.7, 0.85);
-      legend_k.AddEntry(histo_new_k_proj.GetName(), "New", "l");
-      legend_k.AddEntry(histo_ref_k_proj.GetName(), "Ref", "le");
-      legend_k.Draw();
-      c.SaveAs(opath + "/ratio_k_" + suffix + ".pdf");
+      TRatioPlot rp(&histo_new_proj, &histo_ref_proj);
+      rp.Draw();
+      const double max = 1.1 * std::max(histo_new_proj.GetMaximum(),
+                                        histo_ref_proj.GetMaximum());
+      rp.GetUpperRefYaxis()->SetRangeUser(0, max);
+      rp.GetLowerRefYaxis()->SetTitle("New/Ref");
+      rp.GetLowerRefGraph()->SetMarkerStyle(kFullDotLarge);
+      rp.GetLowerRefGraph()->SetMarkerColor(kBlue);
+      rp.GetLowerRefGraph()->SetLineColor(kBlue);
+      rp.GetUpperPad()->cd();
+      TLegend legend(0.3, 0.7, 0.7, 0.85);
+      legend.AddEntry(histo_new_proj.GetName(), "New", "l");
+      legend.AddEntry(histo_ref_proj.GetName(), "Ref", "le");
+      legend.Draw();
 
-      c.cd();
-      TRatioPlot rp_pi(&histo_new_pi_proj, &histo_ref_pi_proj);
-      rp_pi.Draw();
-      double max_pi = 1.1 * std::max(histo_new_pi_proj.GetMaximum(),
-                                     histo_ref_pi_proj.GetMaximum());
-      rp_pi.GetUpperRefYaxis()->SetRangeUser(0, max_pi);
-      rp_pi.GetLowerRefYaxis()->SetTitle("New/Ref");
-      rp_pi.GetUpperPad()->cd();
-      TLegend legend_pi(0.3, 0.7, 0.7, 0.85);
-      legend_pi.AddEntry(histo_new_pi_proj.GetName(), "New", "l");
-      legend_pi.AddEntry(histo_ref_pi_proj.GetName(), "Ref", "le");
-      legend_pi.Draw();
-      c.SaveAs(opath + "/ratio_pi_" + suffix + ".pdf");
+      c_ratio.SaveAs(opath + "/ratio_" + suffix + ".pdf");
     }
   }
 
-  ifile_ref_k.Close();
-  ifile_ref_pi.Close();
-  ifile_new_k.Close();
-  ifile_new_pi.Close();
+  ifile_ref.Close();
+  ifile_new.Close();
 }

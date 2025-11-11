@@ -250,14 +250,6 @@ plot-rdx-bin_vars-ana-2016:
 		--show-title 0 1 0 --show-legend 1 0 0 \
 		-p D0 D0_bsb Dst Dst_bsb Dst_dsb Dst_dsb_bsb Dst_ws_Mu_dsb_bsb
 
-#########
-# Plots #
-#########
-
-compare-efficiencies: $(BINPATH)/compareEffs
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-compare-efficiencies)
-	@mkdir $(OUT_DIR)
-	$< -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 ########
 # Test #
@@ -283,7 +275,7 @@ $(BINPATH)/ApplyMisIDWeight: ApplyMisIDWeight.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
 
 $(BINPATH)/compareEffs: compareEffs.cpp
-	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
+	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS)
 
 $(BINPATH)/GetMisIDCorrections: GetMisIDCorrections.cpp
 	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp -lRooFitCore -lRooFit
