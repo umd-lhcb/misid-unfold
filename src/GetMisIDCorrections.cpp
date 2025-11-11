@@ -1330,7 +1330,7 @@ int main(int argc, char **argv) {
         // PID
         bool pid_ok;
         if (fake_mu) {
-          // For FAKE_MU, we  calculate the complementary efficiency so that
+          // For FAKE_MU, we calculate the complementary efficiency so that
           // the "passed" sample always corresponds to the K/pi misid case
           pid_ok = probe_ismuon;
         } else if (vmu) {
@@ -1939,21 +1939,20 @@ int main(int argc, char **argv) {
             double d0_bkg_sum_passed = 0., d0_bkg_sum_failed = 0.,
                    d0_bkg_sum_extended_passed = 0.,
                    d0_bkg_sum_extended_failed = 0.;
+
             for (const auto &d0_decay : d0_bkg_decays) {
               // Total counts over extended range
-              d0_bkg_sum_passed +=
+              d0_bkg_sum_extended_passed +=
                   w_d0_decays.at(d0_decay) *
                   datasets_d0_bkg_mc_passed[d0_decay][p_idx].numEntries();
-              d0_bkg_sum_failed +=
+              d0_bkg_sum_extended_failed +=
                   w_d0_decays.at(d0_decay) *
                   datasets_d0_bkg_mc_failed[d0_decay][p_idx].numEntries();
               // Total counts in pidcalib mass window
-              d0_bkg_sum_extended_passed +=
-                  w_d0_decays.at(d0_decay) *
-                  d0_bkg_counts_passed[probe][p_idx][d0_decay];
-              d0_bkg_sum_extended_failed +=
-                  w_d0_decays.at(d0_decay) *
-                  d0_bkg_counts_failed[probe][p_idx][d0_decay];
+              d0_bkg_sum_passed += w_d0_decays.at(d0_decay) *
+                                   d0_bkg_counts_passed[probe][p_idx][d0_decay];
+              d0_bkg_sum_failed += w_d0_decays.at(d0_decay) *
+                                   d0_bkg_counts_failed[probe][p_idx][d0_decay];
             }
 
             for (const auto &d0_decay : d0_bkg_decays) {
@@ -2108,7 +2107,7 @@ int main(int argc, char **argv) {
                         "d0_f_d0_bkg_passed_" + suffix_bkg,
                         w_d0_decays.at(d0_decay) *
                             d0_bkg_counts_passed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_extended_passed,
+                            d0_bkg_sum_passed,
                         ""));
 
                 d0m_fs_d0_bkg_failed.emplace(
@@ -2118,7 +2117,7 @@ int main(int argc, char **argv) {
                         "d0_f_d0_bkg_failed_" + suffix_bkg,
                         w_d0_decays.at(d0_decay) *
                             d0_bkg_counts_failed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_extended_failed,
+                            d0_bkg_sum_failed,
                         ""));
 
                 d0m_f_list_d0_bkg_passed.add(d0m_fs_d0_bkg_passed.at(d0_decay));
@@ -2129,13 +2128,15 @@ int main(int argc, char **argv) {
                     d0_decay,
                     RooRealVar("d0_f_extended_d0_bkg_passed_" + suffix_bkg,
                                "d0_f_extended_d0_bkg_passed_" + suffix_bkg,
-                               n_passed_d0_decay / d0_bkg_sum_passed, ""));
+                               n_passed_d0_decay / d0_bkg_sum_extended_passed,
+                               ""));
 
                 d0m_fs_extended_d0_bkg_failed.emplace(
                     d0_decay,
                     RooRealVar("d0_f_extended_d0_bkg_failed_" + suffix_bkg,
                                "d0_f_extended_d0_bkg_failed_" + suffix_bkg,
-                               n_failed_d0_decay / d0_bkg_sum_failed, ""));
+                               n_failed_d0_decay / d0_bkg_sum_extended_failed,
+                               ""));
 
                 d0m_f_extended_list_d0_bkg_passed.add(
                     d0m_fs_extended_d0_bkg_passed.at(d0_decay));
@@ -2472,7 +2473,7 @@ int main(int argc, char **argv) {
                         "dm_f_d0_bkg_passed_" + suffix_bkg,
                         w_d0_decays.at(d0_decay) *
                             d0_bkg_counts_passed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_extended_passed,
+                            d0_bkg_sum_passed,
                         ""));
 
                 dm_fs_d0_bkg_failed.emplace(
@@ -2482,7 +2483,7 @@ int main(int argc, char **argv) {
                         "dm_f_d0_bkg_failed_" + suffix_bkg,
                         w_d0_decays.at(d0_decay) *
                             d0_bkg_counts_failed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_extended_failed,
+                            d0_bkg_sum_failed,
                         ""));
                 dm_f_list_d0_bkg_passed.add(dm_fs_d0_bkg_passed.at(d0_decay));
                 dm_f_list_d0_bkg_failed.add(dm_fs_d0_bkg_failed.at(d0_decay));
@@ -2492,13 +2493,15 @@ int main(int argc, char **argv) {
                     d0_decay,
                     RooRealVar("dm_f_extended_d0_bkg_passed_" + suffix_bkg,
                                "dm_f_extended_d0_bkg_passed_" + suffix_bkg,
-                               n_passed_d0_decay / d0_bkg_sum_passed, ""));
+                               n_passed_d0_decay / d0_bkg_sum_extended_passed,
+                               ""));
 
                 dm_fs_extended_d0_bkg_failed.emplace(
                     d0_decay,
                     RooRealVar("dm_f_extended_d0_bkg_failed_" + suffix_bkg,
                                "dm_f_extended_d0_bkg_failed_" + suffix_bkg,
-                               n_failed_d0_decay / d0_bkg_sum_failed, ""));
+                               n_failed_d0_decay / d0_bkg_sum_extended_failed,
+                               ""));
                 dm_f_extended_list_d0_bkg_passed.add(
                     dm_fs_extended_d0_bkg_passed.at(d0_decay));
                 dm_f_extended_list_d0_bkg_failed.add(
