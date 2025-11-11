@@ -34,33 +34,36 @@ The output folders are located in `gen` folder.
 2. Generate $K\to\mu$ and $\pi\to\mu$ misid efficiencies through fits to the modified `pidcalib` samples.
 
     1. Clone this project on `glacier`
-    2. Run `nix develop` in the project root
-    3. In the resulting shell, run `make build-d0-decays` to produce constraints for the fits. The output files will be saved in `gen/rdx-<timestamp>-d0_decays`.
-    4. Copy `d0_decays.yml` from the output folder to `spec/`.
-    5. Now run `make build-rdx-misid-mc-corrections` and `make build-rdx-misid-mc-corrections-fake_mu` to actually perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections` and `gen/rdx-<timestamp>-misid-mc-corrections-fake_mu`, respectively.
-    6. Copy the `*TrueToMuTag.root` files from the output folders into the `-corrected` folder produced in step $1.5$ along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
+    2. Modify your `flake.nix` file replacing `root-curated.url = "github:umd-lhcb/root-curated"` with `root-curated.url = "github:umd-lhcb/root-curated/lmg_misid_validation_fit_v6_36"`, then run `nix flake lock --update-input root-curated`.
+    3. Run `nix develop` in the project root
+    4. In the resulting shell, run `make build-d0-decays` to produce constraints for the fits. The output files will be saved in `gen/rdx-<timestamp>-d0_decays`.
+    5. Copy `d0_decays.yml` from the output folder to `spec/`.
+    6. Now run `make build-rdx-misid-mc-corrections` and `make build-rdx-misid-mc-corrections-fake_mu` to actually perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections` and `gen/rdx-<timestamp>-misid-mc-corrections-fake_mu`, respectively.
+    7. Copy the `*TrueToMuTag.root` files from the output folders into the `-corrected` folder produced in step $1.5$ along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
+    8. You may revert to the usual root-curated version by reverting the changes to `flake.nix` and running `nix flake lock --update-input root-curated` again.
 
-    > [!TIP]
-    > The two `make` commands in step $2.5$ may be executed concurrently, and this is probably preferable since each takes about 12 hours!
-    > One alternative is to use `screen` sessions:
-    >
-    > ```shell
-    > screen -S misid-iso # Create named screen session
-    > cd misid-unfold
-    > nix develop
-    > make build-rdx-misid-mc-corrections
-    > # Detach session with CTRL+A+D
-    > # Repeat for `make build-rdx-misid-mc-corrections-fake_mu`
-    > ```
-    >
-    > The screen sessions may be reattached with e.g. `screen -r misid-iso`, and killed from inside with CTRL+A+K.
 
-    > [!IMPORTANT]
-    > To run step 2 with different PID cuts, changes must be made to two C++ files: `src/d0BkgDecays.cpp` and `src/GetMisIDCorrection.cpp`.
-    >
-    > In `src/d0BkgDecays.cpp`, the event loop must be modified around lines 248-259.
-    >
-    > In `src/GetMisIDCorrection.cpp`, the **three** event loops must be modified similarly, around lines 999-1010, 1336-1347 and 1514-1526.
+> [!TIP]
+> The two `make` commands in step $2.5$ may be executed concurrently, and this is probably preferable since each takes about 12 hours!
+> One alternative is to use `screen` sessions:
+>
+> ```shell
+> screen -S misid-iso # Create named screen session
+> cd misid-unfold
+> nix develop
+> make build-rdx-misid-mc-corrections
+> # Detach session with CTRL+A+D
+> # Repeat for `make build-rdx-misid-mc-corrections-fake_mu`
+> ```
+>
+> The screen sessions may be reattached with e.g. `screen -r misid-iso`, and killed from inside with CTRL+A+K.
+
+> [!IMPORTANT]
+> To run step 2 with different PID cuts, changes must be made to two C++ files: `src/d0BkgDecays.cpp` and `src/GetMisIDCorrection.cpp`.
+>
+> In `src/d0BkgDecays.cpp`, the event loop must be modified around lines 248-259.
+>
+> In `src/GetMisIDCorrection.cpp`, the **three** event loops must be modified similarly, around lines 999-1010, 1336-1347 and 1514-1526.
 
 3. Generate $e$ efficiencies with _original_ `pidcalib` samples (i.e. ntuples that lack UBDT branch, so we need to account for this later).
 
