@@ -2,25 +2,6 @@ fake_mu:
   k:
     failed:
       0:
-        signal: 3128
-        total: 3730
-      1:
-        signal: 5507
-        total: 6001
-      2:
-        signal: 3849
-        total: 4055
-      3:
-        signal: 4263
-        total: 4382
-      4:
-        signal: 3677
-        total: 3734
-      5:
-        signal: 833
-        total: 845
-    passed:
-      0:
         signal: 38848
         total: 45204
       1:
@@ -38,33 +19,33 @@ fake_mu:
       5:
         signal: 126561
         total: 127610
+    passed:
+      0:
+        signal: 3128
+        total: 3730
+      1:
+        signal: 5507
+        total: 6001
+      2:
+        signal: 3849
+        total: 4055
+      3:
+        signal: 4263
+        total: 4382
+      4:
+        signal: 3677
+        total: 3734
+      5:
+        signal: 833
+        total: 845
   pi:
     failed:
       0:
-        signal: 7151
-        total: 7396
+        signal: 75111
+        total: 75497
       1:
-        signal: 6631
-        total: 6895
-      2:
-        signal: 3107
-        total: 3409
-      3:
-        signal: 2597
-        total: 3269
-      4:
-        signal: 1810
-        total: 2737
-      5:
-        signal: 378
-        total: 642
-    passed:
-      0:
-        signal: 75292
-        total: 75730
-      1:
-        signal: 134352
-        total: 134828
+        signal: 133997
+        total: 134415
       2:
         signal: 170215
         total: 171754
@@ -77,6 +58,25 @@ fake_mu:
       5:
         signal: 107676
         total: 113518
+    passed:
+      0:
+        signal: 7130
+        total: 7369
+      1:
+        signal: 6612
+        total: 6870
+      2:
+        signal: 3107
+        total: 3409
+      3:
+        signal: 2597
+        total: 3269
+      4:
+        signal: 1810
+        total: 2737
+      5:
+        signal: 378
+        total: 642
 iso_ctrl:
   k:
     failed:
@@ -120,11 +120,11 @@ iso_ctrl:
   pi:
     failed:
       0:
-        signal: 82352
-        total: 82838
+        signal: 82150
+        total: 82579
       1:
-        signal: 140537
-        total: 141058
+        signal: 140163
+        total: 140621
       2:
         signal: 172448
         total: 174031
@@ -140,10 +140,10 @@ iso_ctrl:
     passed:
       0:
         signal: 91
-        total: 288
+        total: 287
       1:
         signal: 446
-        total: 665
+        total: 664
       2:
         signal: 874
         total: 1132
@@ -199,11 +199,11 @@ vmu:
   pi:
     failed:
       0:
-        signal: 82379
-        total: 83055
+        signal: 82178
+        total: 82796
       1:
-        signal: 140747
-        total: 141476
+        signal: 140374
+        total: 141040
       2:
         signal: 173187
         total: 175023
@@ -218,11 +218,11 @@ vmu:
         total: 114107
     passed:
       0:
-        signal: 64
-        total: 71
+        signal: 63
+        total: 70
       1:
-        signal: 236
-        total: 247
+        signal: 235
+        total: 245
       2:
         signal: 135
         total: 140

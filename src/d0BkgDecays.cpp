@@ -9,7 +9,6 @@
 
 #include "TCanvas.h"
 #include "TChain.h"
-#include "TChainElement.h"
 #include "TEfficiency.h"
 #include "TH1D.h"
 #include "TString.h"
@@ -29,6 +28,11 @@ using std::string, std::unique_ptr, std::unordered_map, std::vector, std::map;
 constexpr int Dst_ID = 413;
 
 constexpr double ONE_SIGMA = 0.682689492137086;
+
+constexpr double DM_min   = 0.141;  // GeV
+constexpr double DM_max   = 0.153;  // GeV
+constexpr double D0_M_min = 1.825;  // GeV
+constexpr double D0_M_max = 1.910;  // GeV
 
 const std::unordered_map<int, std::string> id_to_string{
     {1000070140, "N14"},
@@ -143,7 +147,7 @@ int main(int argc, char **argv) {
 
   int dst_trueid, d0_trueid, d0_dauther0_id, d0_dauther1_id, d0_dauther2_id,
       d0_dauther3_id, d0_dauther4_id, ntracks;
-  double probe_p, probe_pz, k_track_chi2ndof, pi_track_chi2ndof,
+  double dst_m, d0_m, probe_p, probe_pz, k_track_chi2ndof, pi_track_chi2ndof,
       spi_track_chi2ndof, probe_mudll, probe_edll;
   float probe_mu_ubdt;
   bool  probe_ismuon, probe_hasmuon;
@@ -179,12 +183,11 @@ int main(int argc, char **argv) {
       cout << "INFO Opened MC files:" << endl;
       print_files(ch_mc);
 
-      // TChain ch_mc("ch_mc");
-      // ch_mc.Add("./mc_mb_30000000_all_years.root/TupleDst/DecayTree");
-
       ch_mc.SetBranchStatus("*", false);
       ch_mc.SetBranchAddress("dst_TRUEID", &dst_trueid);
+      ch_mc.SetBranchAddress("dst_M", &dst_m);
       ch_mc.SetBranchAddress("d0_TRUEID", &d0_trueid);
+      ch_mc.SetBranchAddress("d0_M", &d0_m);
       ch_mc.SetBranchAddress("d0_DAUGHTER0_ID", &d0_dauther0_id);
       ch_mc.SetBranchAddress("d0_DAUGHTER1_ID", &d0_dauther1_id);
       ch_mc.SetBranchAddress("d0_DAUGHTER2_ID", &d0_dauther2_id);
@@ -221,17 +224,32 @@ int main(int argc, char **argv) {
 
         const double probe_eta =
             0.5 * log((probe_p + probe_pz) / (probe_p - probe_pz));
-        // if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
-        // if (probe_eta < 1.7 || probe_eta >= 3.6) continue;
-        if (probe_eta < 3.6 || probe_eta >= 5.0) continue;
+        if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
 
         if ((k_track_chi2ndof > 3.) || (pi_track_chi2ndof > 3.) ||
             (spi_track_chi2ndof > 3.))
           continue;
 
+        // Determine kinematical bin
+        const int p_bin = histo_binning.FindBin(probe_p);
+
+        const bool reduced_fit_range = (probe == "pi") && (p_bin <= 2);
+
+        const double dm = (dst_m - d0_m) * 0.001;
+        d0_m            = d0_m * 0.001;
+
+        const bool in_fit_window = reduced_fit_range
+                                       ? in_range(D0_M_min, d0_m, 1.900) &&
+                                             in_range(DM_min, dm, DM_max)
+                                       : in_range(D0_M_min, d0_m, D0_M_max) &&
+                                             in_range(DM_min, dm, DM_max);
+        if (!in_fit_window) continue;
+
         bool pid_ok;
         if (sample == "fake_mu") {
-          pid_ok = !probe_ismuon;
+          // For FAKE_MU, we calculate the complementary efficiency so that
+          // the "passed" sample always corresponds to the K/pi misid case
+          pid_ok = probe_ismuon;
         } else if (sample == "vmu") {
           pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < 1.0 &&
                    probe_mu_ubdt < 0.25;
@@ -242,7 +260,7 @@ int main(int argc, char **argv) {
 
         const int sign = (d0_trueid >= 0) ? 1 : -1;
 
-        const int p_idx = histo_binning.FindBin(probe_p) - 1;
+        const int p_idx = p_bin - 1;
 
         vector<int> daughter_ids{d0_dauther0_id * sign, d0_dauther1_id * sign,
                                  d0_dauther2_id * sign, d0_dauther3_id * sign,
@@ -268,7 +286,7 @@ int main(int argc, char **argv) {
       }
     }
 
-    // Probably not the most efficient solution, ut avoids duplicating the loop
+    // Probably not the most efficient solution, but avoids duplicating the loop
     // below
     const unordered_map<string, unordered_map<string, vector<map<string, int>>>>
         counts_particles_all{{"passed", counts_particles_passed},
@@ -327,8 +345,6 @@ int main(int argc, char **argv) {
                << bin_total << ")\n"
                << endl;
 
-          // ymlBkg[sample][particle][subsample][p_bin]["signal"] = bin_signal;
-          // ymlBkg[sample][particle][subsample][p_bin]["total"]  = bin_total;
           ymlContent[sample][particle][subsample][p_bin]["signal"] = bin_signal;
           ymlContent[sample][particle][subsample][p_bin]["total"]  = bin_total;
         }

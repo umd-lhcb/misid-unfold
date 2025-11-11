@@ -367,7 +367,7 @@ int main(int argc, char **argv) {
     ("d,debug", "Enable debug mode",
      cxxopts::value<bool>()->default_value("false"))
     ("p,particles", "Specify probed particle",
-     cxxopts::value<vector<string>>()->default_value("k,pi"))
+     cxxopts::value<vector<string>>()->default_value("pi,k"))
     ("c,config", "Specify input YAML config file",
      cxxopts::value<string>())
     ("b,bkgfile", "Specify input YAML with D0 bkg constraints",
@@ -984,12 +984,12 @@ int main(int argc, char **argv) {
         const bool in_extended_window =
             in_var_range(d0_m_var, d0_m) && in_var_range(dm_var, dm);
 
-        const bool in_pidcalib_window =
-            reduced_fit_range ? in_range(D0_M_min, d0_m, 1.900) &&
-                                    in_range(DM_min, dm, DM_max)
-                              : in_range(D0_M_min, d0_m, D0_M_max) &&
-                                    in_range(DM_min, dm, DM_max);
-        if (in_pidcalib_window) count_mw++;
+        const bool in_fit_window = reduced_fit_range
+                                       ? in_range(D0_M_min, d0_m, 1.900) &&
+                                             in_range(DM_min, dm, DM_max)
+                                       : in_range(D0_M_min, d0_m, D0_M_max) &&
+                                             in_range(DM_min, dm, DM_max);
+        if (in_fit_window) count_mw++;
 
         // Check for decay in flight of probe hadron
         const bool dif = (std::abs(probe_trueid) == MU_ID) ||
@@ -1018,7 +1018,7 @@ int main(int argc, char **argv) {
               d0_m_var.setVal(d0_m);
               dm_var.setVal(dm);
               datasets_mc_passed_dif[eta_bin - 1][p_bin - 1]->addFast(fit_vars);
-              if (in_pidcalib_window) {
+              if (in_fit_window) {
                 count_in_mw_passed_dif[year_idx.at(year)][ntrks_bin - 1]
                                       [eta_bin - 1][p_bin - 1]++;
               }
@@ -1031,7 +1031,7 @@ int main(int argc, char **argv) {
               dm_var.setVal(dm);
               datasets_mc_passed_nondif[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
                   ->addFast(fit_vars);
-              if (in_pidcalib_window) {
+              if (in_fit_window) {
                 count_in_mw_passed_nondif[year_idx.at(year)][ntrks_bin - 1]
                                          [eta_bin - 1][p_bin - 1]++;
               }
@@ -1046,7 +1046,7 @@ int main(int argc, char **argv) {
               d0_m_var.setVal(d0_m);
               dm_var.setVal(dm);
               datasets_mc_failed_dif[eta_bin - 1][p_bin - 1]->addFast(fit_vars);
-              if (in_pidcalib_window) {
+              if (in_fit_window) {
                 count_in_mw_failed_dif[year_idx.at(year)][ntrks_bin - 1]
                                       [eta_bin - 1][p_bin - 1]++;
               }
@@ -1059,7 +1059,7 @@ int main(int argc, char **argv) {
               dm_var.setVal(dm);
               datasets_mc_failed_nondif[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
                   ->addFast(fit_vars);
-              if (in_pidcalib_window) {
+              if (in_fit_window) {
                 count_in_mw_failed_nondif[year_idx.at(year)][ntrks_bin - 1]
                                          [eta_bin - 1][p_bin - 1]++;
               }
@@ -1323,9 +1323,14 @@ int main(int argc, char **argv) {
             in_var_range(d0_m_var, d0_m) && in_var_range(dm_var, dm);
         if (!in_extended_window) continue;
 
-        const bool in_pidcalib_window =
-            in_range(D0_M_min, d0_m, D0_M_max) && in_range(DM_min, dm, DM_max);
-        if (!in_pidcalib_window) count_mw++;
+        const bool reduced_fit_range = (probe == "pi") && (p_bin <= 2);
+
+        const bool in_fit_window = reduced_fit_range
+                                       ? in_range(D0_M_min, d0_m, 1.900) &&
+                                             in_range(DM_min, dm, DM_max)
+                                       : in_range(D0_M_min, d0_m, D0_M_max) &&
+                                             in_range(DM_min, dm, DM_max);
+        if (in_fit_window) count_mw++;
 
         // PID
         bool pid_ok;
@@ -1347,13 +1352,13 @@ int main(int argc, char **argv) {
         if (pid_ok) {
           // Fill "passed" samples
           datasets_d0_bkg_mc_passed.at(d0_decay)[(p_bin - 1)].addFast(fit_vars);
-          if (in_pidcalib_window) {
+          if (in_fit_window) {
             d0_bkg_counts_passed[probe][p_bin - 1][d0_decay]++;
           }
         } else {
           // Fill "failed" samples
           datasets_d0_bkg_mc_failed.at(d0_decay)[(p_bin - 1)].addFast(fit_vars);
-          if (in_pidcalib_window) {
+          if (in_fit_window) {
             d0_bkg_counts_failed[probe][p_bin - 1][d0_decay]++;
           }
         }
