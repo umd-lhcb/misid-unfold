@@ -102,11 +102,11 @@ input_histos:
     2016:
         true_to_tag:
             default:
-                - "../histos/default/rdx-25_04_08_06_47-true_to_tag_glacier-2016"
+                - "../histos/default/rdx-25_07_17_05_15-true_to_tag_glacier-2016-corrected"
                 - "../histos/default/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
                 - "../histos/default/rdx-25_04_03_06_55-true_to_tag_local-2016"
             misid_ctrl:
-                - "../histos/ctrl_sample/rdx-25_04_08_11_31-true_to_tag_glacier-2016"
+                - "../histos/ctrl_sample/rdx-25_07_17_05_15-true_to_tag_glacier-2016-corrected"
                 - "../histos/ctrl_sample/rdx-25_04_08_19_22-true_to_tag_lxplus-2016"
                 - "../histos/ctrl_sample/rdx-25_04_03_06_57-true_to_tag_local-2016"
         # extra:
@@ -203,3 +203,81 @@ weight_brs:
             - prefix: Dst_dsb_bsb
               file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
               name: wmis_dsb_bsb
+
+misid_corrections:
+    mc_ntps:
+        signal:
+            2016:
+                k:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_07_31--mc--27163974--2016*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2016*.root"
+                pi:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_07_31--mc--27163974--2016*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2016*.root"
+            2017:
+                k:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_07_31--mc--27163974--2017*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2017*.root"
+                pi:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_07_31--mc--27163974--2017*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2017*.root"
+            2018:
+                k:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-k/Dst_ANNK--25_07_31--mc--27163974--2018*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2018*.root"
+                pi:
+                    - "ntuples/0.9.15-incl_b/incl_b_dst_mc-misid_corrections-pi/Dst_ANNPi--25_07_31--mc--27163974--2018*.root"
+                    - "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2018*.root"
+        pipipi0:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pipipi0_dalitz-misid_corrections-k/Dst_ANNK--25_09_16--mc--27163404--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pipipi0_dalitz-misid_corrections-pi/Dst_ANNPi--25_09_16--mc--27163404--201*.root"
+        pimunu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pimunu-misid_corrections-k/Dst_ANNK--25_09_16--mc--27573001--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pimunu-misid_corrections-pi/Dst_ANNPi--25_09_16--mc--27573001--201*.root"
+        kmunu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_kmunu-misid_corrections-k/Dst_ANNK--25_09_16--mc--27173001--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_kmunu-misid_corrections-pi/Dst_ANNPi--25_09_16--mc--27173001--201*.root"
+        pienu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pienu-misid_corrections-k/Dst_ANNK--25_10_24--mc--27583000--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pienu-misid_corrections-pi/Dst_ANNPi--25_10_24--mc--27583000--201*.root"
+        kenu:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_kenu-misid_corrections-k/Dst_ANNK--25_10_23--mc--27583002--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_kenu-misid_corrections-pi/Dst_ANNPi--25_10_23--mc--27583002--201*.root"
+        pipi:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_pipi-misid_corrections-k/Dst_ANNK--25_09_16--mc--27163001--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_pipi-misid_corrections-pi/Dst_ANNPi--25_09_17--mc--27163001--201*.root"
+        kspipi:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg_kspipi-misid_corrections-k/Dst_ANNK--25_10_31--mc--27165100--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg_kspipi-misid_corrections-pi/Dst_ANNPi--25_10_31--mc--27165100--201*.root"
+        mb:
+            k: "ntuples/0.9.16-d0_bkg/d0_bkg-mb-misid_corrections-k/Dst_ANNK--25_11_03--mc--10000000--201*.root"
+            pi: "ntuples/0.9.16-d0_bkg/d0_bkg-mb-misid_corrections-pi/Dst_ANNPi--25_11_04--mc--10000000--201*.root"
+
+    pid_calib:
+        trees:
+            k:
+                - "DSt_KPTuple/DecayTree"
+                - "DSt_KMTuple/DecayTree"
+            pi:
+                - "DSt_PiPTuple/DecayTree"
+                - "DSt_PiMTuple/DecayTree"
+        calib_samples:
+            2016:
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2016-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2016-MagDown/*.root"
+            2017:
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2017-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2017-MagDown/*.root"
+            2018:
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2018-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/remote/KPiMu-2018-MagDown/*.root"
+        friends:
+            2016:
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2016-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2016-MagDown/*.root"
+            2017:
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2017-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2017-MagDown/*.root"
+            2018:
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2018-MagUp/*.root"
+                - "/home/public/pidcalib_ntuples/friends-all_cuts/KPiMu-2018-MagDown/*.root"

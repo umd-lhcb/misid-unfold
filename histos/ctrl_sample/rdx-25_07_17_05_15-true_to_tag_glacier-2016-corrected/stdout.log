@@ -1,0 +1,397 @@
+Using MisID validation PID cuts
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/piTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle Pi \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0" --pid-cut "Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToPiTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToKTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToPTag.pkl --pid-cut "Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToETag.pkl --pid-cut "(Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0" --pkl-name piTrueToGTag.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToKTag.pkl"
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToGTag.root" ./piTrueToGTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToPiTag.root" ./piTrueToPiTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToPTag.root" ./piTrueToPTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToETag.root" ./piTrueToETag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToKTag.root" ./piTrueToKTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/kTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle K \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0" --pid-cut "Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToPiTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToKTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToPTag.pkl --pid-cut "Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToETag.pkl --pid-cut "(Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0" --pkl-name kTrueToGTag.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToETag.pkl"
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToPiTag.root" ./kTrueToPiTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToETag.root" ./kTrueToETag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToKTag.root" ./kTrueToKTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToPTag.root" ./kTrueToPTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToGTag.root" ./kTrueToGTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/pTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle P \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0" --pid-cut "Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToPiTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToKTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToPTag.pkl --pid-cut "Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToETag.pkl --pid-cut "(Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0" --pkl-name pTrueToGTag.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToETag.pkl"
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToETag.root" ./pTrueToETag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToKTag.root" ./pTrueToKTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToPTag.root" ./pTrueToPTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToGTag.root" ./pTrueToGTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToPiTag.root" ./pTrueToPiTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/piTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle Pi \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25" --pkl-name piTrueToMuTag_nom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToKTag.pkl"
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToGTag.root" ./piTrueToGTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToPiTag.root" ./piTrueToPiTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToPTag.root" ./piTrueToPTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToETag.root" ./piTrueToETag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToKTag.root" ./piTrueToKTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToMuTag_nom.root" ./piTrueToMuTag_nom.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/piTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle Pi \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 0.0" --pkl-name piTrueToMuTag_denom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToMuTag_denom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2016/piTrueToKTag.pkl"
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToGTag.root" ./piTrueToGTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToPiTag.root" ./piTrueToPiTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToPTag.root" ./piTrueToPTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToMuTag_denom.root" ./piTrueToMuTag_denom.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToETag.root" ./piTrueToETag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToKTag.root" ./piTrueToKTag.root
+
+
+cp "raw_histos/piTrueTo-2016/piTrueToMuTag_nom.root" ./piTrueToMuTag_nom.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/kTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle K \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25" --pkl-name kTrueToMuTag_nom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToETag.pkl"
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToPiTag.root" ./kTrueToPiTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToMuTag_nom.root" ./kTrueToMuTag_nom.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToETag.root" ./kTrueToETag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToKTag.root" ./kTrueToKTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToPTag.root" ./kTrueToPTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToGTag.root" ./kTrueToGTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/kTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle K \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 0.0" --pkl-name kTrueToMuTag_denom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToMuTag_denom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2016/kTrueToETag.pkl"
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToMuTag_denom.root" ./kTrueToMuTag_denom.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToPiTag.root" ./kTrueToPiTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToMuTag_nom.root" ./kTrueToMuTag_nom.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToETag.root" ./kTrueToETag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToKTag.root" ./kTrueToKTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToPTag.root" ./kTrueToPTag.root
+
+
+cp "raw_histos/kTrueTo-2016/kTrueToGTag.root" ./kTrueToGTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/pTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle P \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25" --pkl-name pTrueToMuTag_nom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToETag.pkl"
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToMuTag_nom.root" ./pTrueToMuTag_nom.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToETag.root" ./pTrueToETag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToKTag.root" ./pTrueToKTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToPTag.root" ./pTrueToPTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToGTag.root" ./pTrueToGTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToPiTag.root" ./pTrueToPiTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/pTrueTo-2016 \
+    --sample Turbo16 --magnet both \
+    --particle P \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 0.0" --pkl-name pTrueToMuTag_denom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToMuTag_denom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2016/pTrueToETag.pkl"
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToMuTag_nom.root" ./pTrueToMuTag_nom.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToETag.root" ./pTrueToETag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToKTag.root" ./pTrueToKTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToPTag.root" ./pTrueToPTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToGTag.root" ./pTrueToGTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToPiTag.root" ./pTrueToPiTag.root
+
+
+cp "raw_histos/pTrueTo-2016/pTrueToMuTag_denom.root" ./pTrueToMuTag_denom.root
+

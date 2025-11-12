@@ -39,9 +39,9 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES := ./histos/default/rdx-25_04_08_14_19-merged-2016/merged.root
-EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-25_04_08_14_18-merged-2016/merged.root
-UNFOLDED := ./histos/rdx-25_04_08_14_19-unfolded-2016/unfolded.root
+EFFICIENCIES := ./histos/default/rdx-25_07_17_05_20-merged-2016/merged.root
+EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-25_07_17_05_21-merged-2016/merged.root
+UNFOLDED := ./histos/rdx-25_06_17_09_38-unfolded-2016/unfolded.root
 TAGGED := ./histos/default/rdx-24_12_03_05_56-tag-2016/tagged.root
 DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
 
@@ -71,12 +71,12 @@ test-nix:
 build-rdx-true-to-tag-2016-glacier:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-true-to-tag-2016-lxplus:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
@@ -91,14 +91,13 @@ test-pidcalib2-wrapper-lxplus:
 build-rdx-true-to-tag-2016-local:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
-
+	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 .PHONY: build-rdx-merged-2016
 build-rdx-merged-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) | tee $(OUT_DIR)/stdout.log
+	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: build-generic-dif-smearing
@@ -109,7 +108,32 @@ build-generic-dif-smearing:
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
-		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
+		2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-d0-decays: $(BINPATH)/d0BkgDecays
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-d0_decays)
+	@mkdir -p $(OUT_DIR)
+	@touch $(OUT_DIR)/d0_decays.yml
+	$< -o $(OUT_DIR) -c $(YML_FILE) -f d0_decays.yml 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-vmu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-vmu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml --vmu true 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-fake_mu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-fake_mu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml --fake_mu true 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 # Unfold the misID weights
@@ -117,14 +141,14 @@ build-generic-dif-smearing:
 build-rdx-tag-2016:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 | tee $(OUT_DIR)/stdout.log
+	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
 	@mkdir -p $(OUT_DIR)
 	$< --debug --iteration 5 \
 		--effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU) -y $(TAGGED) -o $(OUT_DIR) \
-		-c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+		-c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 .PHONY: test-unfold
@@ -147,11 +171,44 @@ test-apply-rdx-weights-2016: \
 		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
 
 
-# Aux. efficiencies for ProbNNk > 2 on true ghost
-.PHONY: build-rdx-aux-probnnk-on-ghost
+# Aux. efficiencies for iso track PID cuts on true ghost
+.PHONY: build-rdx-aux-isoPID-on-ghost build-rdx-aux-probnnk-on-ghost build-rdx-aux-probnnp-on-ghost build-rdx-aux-probnnpnng_gtlt-on-ghost build-rdx-aux-probnnknng_ltlt-on-ghost build-rdx-aux-probnnknng_lt02lt02-on-ghost build-rdx-aux-probnnknng_gtlt-on-ghost build-rdx-aux-probnnknng_gt02lt02-on-ghost
+build-rdx-aux-isoPID-on-ghost: build-rdx-aux-probnnk-on-ghost build-rdx-aux-probnnp-on-ghost build-rdx-aux-probnnpnng_gtlt-on-ghost build-rdx-aux-probnnknng_ltlt-on-ghost build-rdx-aux-probnnknng_lt02lt02-on-ghost build-rdx-aux-probnnknng_gtlt-on-ghost build-rdx-aux-probnnknng_gt02lt02-on-ghost
 build-rdx-aux-probnnk-on-ghost:
-	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_oldcut_ghost)
-	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2016 -o $(OUT_DIR)
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnk_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnk.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnp-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnp_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnp.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnp.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_probnnp.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnpnng_gtlt-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnpnng_gtlt_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnpnng_gtlt.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnpnng_gtlt.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnpnng_gtlt.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_ltlt-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_ltlt_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_ltlt.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_ltlt.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_ltlt.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_lt02lt02-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_lt02lt02_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_lt02lt02.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_lt02lt02.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_lt02lt02.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_gtlt-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_gtlt_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gtlt.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gtlt.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gtlt.yml -y 2018 -o $(OUT_DIR)_2018
+build-rdx-aux-probnnknng_gt02lt02-on-ghost:
+	$(eval OUT_DIR	:=	$(GENPATH)/root-run2-rdx_iso_nnknng_gt02lt02_ghost)
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gt02lt02.yml -y 2016 -o $(OUT_DIR)_2016
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gt02lt02.yml -y 2017 -o $(OUT_DIR)_2017
+	@./scripts/build_histo_eff.py -c ./spec/rdx-run2-iso_nnknng_gt02lt02.yml -y 2018 -o $(OUT_DIR)_2018
 
 
 ###############################
@@ -216,6 +273,15 @@ test-get-particle-name: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-st
 
 $(BINPATH)/ApplyMisIDWeight: ApplyMisIDWeight.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
+
+$(BINPATH)/compareEffs: compareEffs.cpp
+	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS)
+
+$(BINPATH)/GetMisIDCorrections: GetMisIDCorrections.cpp
+	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp -lRooFitCore -lRooFit
+
+$(BINPATH)/d0BkgDecays: d0BkgDecays.cpp
+	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp
 
 $(BINPATH)/%: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)
