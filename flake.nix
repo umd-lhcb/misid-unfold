@@ -2,7 +2,7 @@
   description = "Unfolding Muon misID samples.";
 
   inputs = {
-    root-curated.url = "github:umd-lhcb/root-curated";
+    root-curated.url = "github:umd-lhcb/root-curated/lmg_misid_validation_fit_v6_36";
     nixpkgs.follows = "root-curated/nixpkgs";
     flake-utils.follows = "root-curated/flake-utils";
     pyTuplingUtils.url = "github:umd-lhcb/pyTuplingUtils";
