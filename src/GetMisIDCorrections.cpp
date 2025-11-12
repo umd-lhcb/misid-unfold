@@ -182,7 +182,7 @@ constexpr int N_disk_pipi =
 constexpr int N_disk_pienu  = 1756658 + 1751546 + 1750623 + 1979092;
 constexpr int N_disk_kenu   = 1875792 + 1754493 + 1748598 + 1875587;
 constexpr int N_disk_kspipi = 2231960 + 2283875;
-constexpr int N_disk_klpipi = N_disk_kspipi;  //
+constexpr int N_disk_klpipi = N_disk_kspipi;
 
 ////////////////////////////////
 // Number of simulated events //
@@ -367,7 +367,7 @@ int main(int argc, char **argv) {
     ("d,debug", "Enable debug mode",
      cxxopts::value<bool>()->default_value("false"))
     ("p,particles", "Specify probed particle",
-     cxxopts::value<vector<string>>()->default_value("pi,k"))
+     cxxopts::value<vector<string>>()->default_value("k,pi"))
     ("c,config", "Specify input YAML config file",
      cxxopts::value<string>())
     ("b,bkgfile", "Specify input YAML with D0 bkg constraints",
@@ -471,7 +471,6 @@ int main(int argc, char **argv) {
   TCanvas c_double("c_double", "c_double", 640, 960);
   TCanvas c3("c3", "c3", 1920, 480);
   TCanvas c_four("c_four", "c_four", 1280, 960);
-  TCanvas c_mult("c_mult", "c_mult", 2560, 960);
   c_four.Divide(2, 2);
   c3.Divide(3, 1);
   c_double.Divide(1, 2);
@@ -2271,11 +2270,13 @@ int main(int argc, char **argv) {
             const double d0_bkg_norm_failed_d0m =
                 ds_d0m_d0_bkg_failed_sum.sumEntries("", "fitRange");
             d0_model_d0_bkg_passed_ext.plotOn(
-                frame_d0_mc_d0_bkg_passed.get(), LineWidth(2), Range("fitRange"),
+                frame_d0_mc_d0_bkg_passed.get(), LineWidth(2),
+                Range("fitRange"),
                 Normalization(d0_bkg_norm_passed_d0m, RooAbsReal::NumEvent),
                 ProjectionRange("fitRange"));
             d0_model_d0_bkg_failed_ext.plotOn(
-                frame_d0_mc_d0_bkg_failed.get(), LineWidth(2), Range("fitRange"),
+                frame_d0_mc_d0_bkg_failed.get(), LineWidth(2),
+                Range("fitRange"),
                 Normalization(d0_bkg_norm_failed_d0m, RooAbsReal::NumEvent),
                 ProjectionRange("fitRange"));
 
@@ -2634,11 +2635,13 @@ int main(int argc, char **argv) {
             const double d0_bkg_norm_failed_dm =
                 ds_dm_d0_bkg_failed_sum.sumEntries("", "fitRange");
             dm_model_d0_bkg_passed_ext.plotOn(
-                frame_dm_mc_d0_bkg_passed.get(), LineWidth(2), Range("fitRange"),
+                frame_dm_mc_d0_bkg_passed.get(), LineWidth(2),
+                Range("fitRange"),
                 Normalization(d0_bkg_norm_passed_dm, RooAbsReal::NumEvent),
                 ProjectionRange("fitRange"));
             dm_model_d0_bkg_failed_ext.plotOn(
-                frame_dm_mc_d0_bkg_failed.get(), LineWidth(2), Range("fitRange"),
+                frame_dm_mc_d0_bkg_failed.get(), LineWidth(2),
+                Range("fitRange"),
                 Normalization(d0_bkg_norm_failed_dm, RooAbsReal::NumEvent),
                 ProjectionRange("fitRange"));
 
