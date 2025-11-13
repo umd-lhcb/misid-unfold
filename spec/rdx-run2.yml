@@ -69,7 +69,7 @@ pidcalib_config:
 local_pid_config:
     2016:
         g:
-            samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/ghost_Jpsi*.root:tree"
+            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
             tags:
                 cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
             tags_addon:
@@ -85,7 +85,7 @@ local_pid_config:
                             default: "IsMuon == 0.0"
                             misid_ctrl: "IsMuon == 0.0"
         e:
-            samples: "../ntuples/ref-RJpsi-run2/Jpsi-ghost-step2/e_Jpsi*.root:tree"
+            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
             tags_addon:
                 mu:
                     rel:
@@ -102,13 +102,13 @@ input_histos:
     2016:
         true_to_tag:
             default:
-                - "../histos/default/rdx-25_07_17_05_15-true_to_tag_glacier-2016-corrected"
+                - "../histos/default/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
                 - "../histos/default/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
-                - "../histos/default/rdx-25_04_03_06_55-true_to_tag_local-2016"
+                - "../histos/default/rdx-25_11_12_09_27-true_to_tag_local-2016"
             misid_ctrl:
-                - "../histos/ctrl_sample/rdx-25_07_17_05_15-true_to_tag_glacier-2016-corrected"
+                - "../histos/ctrl_sample/rdx-25_11_12_11_31-true_to_tag_glacier-2016-corrected"
                 - "../histos/ctrl_sample/rdx-25_04_08_19_22-true_to_tag_lxplus-2016"
-                - "../histos/ctrl_sample/rdx-25_04_03_06_57-true_to_tag_local-2016"
+                - "../histos/ctrl_sample/rdx-25_11_12_09_36-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
         #         H2H_Ghost_TO_Pi: gTrueToPiTag
