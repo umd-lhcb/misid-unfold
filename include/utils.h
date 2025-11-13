@@ -9,6 +9,7 @@
 #include <string>
 
 #include "TCanvas.h"
+#include "TChain.h"
 #include "TChainElement.h"
 #include "TObjArray.h"
 #include "TObject.h"
