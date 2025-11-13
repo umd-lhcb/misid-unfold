@@ -10,11 +10,23 @@ If you haven't cloned this project, do these steps first:
 git clone git@github.com:umd-lhcb/misid-unfold
 cd misid-unfold
 
-# do this only once, right after cloning
+# Do this only once, right after cloning
 git remote add glacier git@10.229.60.85:misid-unfold
 git annex init --version=7
+# Before proceeding, make sure you do not have uncommitted/unstashed changes in the repo,
+# because 'git annex sync' commits and then pushes everything
 git annex sync
 ```
+
+> [!TIP]
+> If you have local changes you do not wish to commit yet, you can stash them and recover them later:
+>
+> ```shell
+> # Inside git the git repository
+> git stash # Stashed all uncomitted changes
+> git annex sync # Run sync without pushing unwanted changes
+> git stash pop # Recover stashed changes
+> ```
 
 ## The misID unfolding procedure
 
