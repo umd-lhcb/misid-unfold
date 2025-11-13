@@ -93,12 +93,10 @@
     "pidcalib2": {
       "inputs": {
         "flake-utils": [
-          "pidcalib2",
           "root-curated",
           "flake-utils"
         ],
         "nixpkgs": [
-          "pidcalib2",
           "root-curated",
           "nixpkgs"
         ],
@@ -121,12 +119,10 @@
     "pyTuplingUtils": {
       "inputs": {
         "flake-utils": [
-          "pyTuplingUtils",
           "root-curated",
           "flake-utils"
         ],
         "nixpkgs": [
-          "pyTuplingUtils",
           "root-curated",
           "nixpkgs"
         ],
