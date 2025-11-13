@@ -146,10 +146,10 @@ int main(int argc, char **argv) {
   cout << "INFO Output will be saved in " << opath << endl;
 
   int dst_trueid, d0_trueid, d0_dauther0_id, d0_dauther1_id, d0_dauther2_id,
-    d0_dauther3_id, d0_dauther4_id, ntracks;
+      d0_dauther3_id, d0_dauther4_id, ntracks;
   double dst_m, d0_m, probe_p, probe_pz, k_track_chi2ndof, pi_track_chi2ndof,
       spi_track_chi2ndof, probe_mudll, probe_edll;
-  float probe_mu_ubdt, nshared;
+  float probe_mu_ubdt;
   bool  probe_ismuon, probe_hasmuon;
 
   TH1D histo_binning("histo_binning", ";p", N_BINS_P, BINS_P);
@@ -204,8 +204,7 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress("spi_TRACK_CHI2NDOF", &spi_track_chi2ndof);
       ch_mc.SetBranchAddress((probe + "_bdt_mu").c_str(), &probe_mu_ubdt);
       ch_mc.SetBranchAddress("nTracks", &ntracks);
-      ch_mc.SetBranchAddress("MuonNShared", &nshared);
-      
+
       const int entries_mc = ch_mc.GetEntries();
       cout << "INFO Starting MC event loop over " << entries_mc << " entries"
            << endl;
@@ -252,13 +251,11 @@ int main(int argc, char **argv) {
           // the "passed" sample always corresponds to the K/pi misid case
           pid_ok = probe_ismuon;
         } else if (sample == "vmu") {
-          pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < -1.0 &&
-                   probe_mu_ubdt < 0.65 && nshared==1;
-          // pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < 1.0 &&
-          //          probe_mu_ubdt < 0.25;
+          pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < 1.0 &&
+                   probe_mu_ubdt < 0.25;
         } else {
-          pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < -1.0 &&
-                   probe_mu_ubdt > 0.65 && nshared==1;
+          pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < 1.0 &&
+                   probe_mu_ubdt > 0.25;
         }
 
         const int sign = (d0_trueid >= 0) ? 1 : -1;

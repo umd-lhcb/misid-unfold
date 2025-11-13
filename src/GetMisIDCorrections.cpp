@@ -854,7 +854,7 @@ int main(int argc, char **argv) {
           spi_p, spi_pt, tag_p, tag_pz, tag_pt, k_track_chi2ndof,
           pi_track_chi2ndof, spi_track_chi2ndof, k_px, k_py, pi_px, pi_py;
 
-      float probe_mu_ubdt, nShared;
+      float probe_mu_ubdt;
 
       bool probe_ismuon, probe_hasmuon;
 
@@ -887,7 +887,6 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress("pi_TRACK_CHI2NDOF", &pi_track_chi2ndof);
       ch_mc.SetBranchAddress("spi_TRACK_CHI2NDOF", &spi_track_chi2ndof);
       ch_mc.SetBranchAddress("nTracks", &ntracks);
-      ch_mc.SetBranchAddress("MuonNShared", &nShared);
 
       int count_tm = 0, count_cond = 0, count_calib_sel = 0, count_range = 0,
           count_mw = 0;
@@ -1166,7 +1165,7 @@ int main(int argc, char **argv) {
           spi_p, spi_pt, tag_p, tag_pz, tag_pt, k_track_chi2ndof,
           pi_track_chi2ndof, spi_track_chi2ndof, k_px, k_py, pi_px, pi_py;
 
-      float probe_mu_ubdt, nshared;
+      float probe_mu_ubdt;
 
       bool probe_ismuon, probe_hasmuon;
 
@@ -1206,7 +1205,6 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress("pi_TRACK_CHI2NDOF", &pi_track_chi2ndof);
       ch_mc.SetBranchAddress("spi_TRACK_CHI2NDOF", &spi_track_chi2ndof);
       ch_mc.SetBranchAddress("nTracks", &ntracks);
-      ch_mc.SetBranchAddress("MuonNShared", &nShared);
 
       int count_tm = 0, count_cond = 0, count_calib_sel = 0, count_range = 0,
           count_mw = 0;
@@ -1340,11 +1338,11 @@ int main(int argc, char **argv) {
           // the "passed" sample always corresponds to the K/pi misid case
           pid_ok = probe_ismuon;
         } else if (vmu) {
-          pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < -1.0 &&
-                   probe_mu_ubdt < 0.65 && nshared==1;
+          pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
+                   probe_mu_ubdt < 0.25;
         } else {
-          pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < -1.0 &&
-                   probe_mu_ubdt > 0.65 && nshared==1;
+          pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
+                   probe_mu_ubdt > 0.25;
         }
 
         d0_m_var.setVal(d0_m);
@@ -1458,8 +1456,6 @@ int main(int argc, char **argv) {
 
           bool probe_ismuon, probe_hasmuon;
 
-	  int nShared_calib;
-
           cout << "INFO Setting input branches " << endl;
           ch_calib.SetBranchStatus("*", 0);
           ch_calib.SetBranchAddress("Dst_M", &dst_m);
@@ -1476,7 +1472,6 @@ int main(int argc, char **argv) {
                                     &probe_mu_unbiased);
           ch_calib.SetBranchAddress("probe_UBDT", &probe_mu_ubdt);
           ch_calib.SetBranchAddress("nTracks_Brunel", &ntracks_calib);
-          ch_calib.SetBranchAddress("probe_NShared", &nShared_calib);
 
           int count_tis = 0, count_cond = 0, count_range = 0;
 
@@ -1522,11 +1517,11 @@ int main(int argc, char **argv) {
               // case
               pid_ok = probe_ismuon;
             } else if (vmu) {
-              pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < -1.0 &&
-                       probe_mu_ubdt < 0.65 && nShared_calib==0;
+              pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
+                       probe_mu_ubdt < 0.25;
             } else {
-              pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < -1.0 &&
-                       probe_mu_ubdt > 0.65 && nShared_calib==0;
+              pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
+                       probe_mu_ubdt > 0.25;
             }
 
             if (pid_ok) {

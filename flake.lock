@@ -93,10 +93,12 @@
     "pidcalib2": {
       "inputs": {
         "flake-utils": [
+          "pidcalib2",
           "root-curated",
           "flake-utils"
         ],
         "nixpkgs": [
+          "pidcalib2",
           "root-curated",
           "nixpkgs"
         ],
@@ -119,10 +121,12 @@
     "pyTuplingUtils": {
       "inputs": {
         "flake-utils": [
+          "pyTuplingUtils",
           "root-curated",
           "flake-utils"
         ],
         "nixpkgs": [
+          "pyTuplingUtils",
           "root-curated",
           "nixpkgs"
         ],
@@ -201,16 +205,15 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1761823957,
-        "narHash": "sha256-CF5svcNDEUBB4NwHhW7FPw+8aD5KThLJAHSLHbsZ8p4=",
+        "lastModified": 1742242108,
+        "narHash": "sha256-gDgZpfj3DjXNT1Lz4o+5omHnr2NXAk4fVSJ/3UKQsQ0=",
         "owner": "umd-lhcb",
         "repo": "root-curated",
-        "rev": "84f50482887026fc75410a6b663917a2ebc0d432",
+        "rev": "1c439a111dc3c6f29990aa2a8c197850cef19dd2",
         "type": "github"
       },
       "original": {
         "owner": "umd-lhcb",
-        "ref": "lmg_misid_validation_fit_v6_36",
         "repo": "root-curated",
         "type": "github"
       }
