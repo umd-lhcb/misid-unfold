@@ -58,42 +58,50 @@ pidcalib_config:
             nom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"  # this is the acceptance cut
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                add_pid_cut:
-                    default: "UBDT > 0.25"
-                    misid_ctrl: "UBDT < 0.25"
+                add_pid_cut: "UBDT > 0.25"
+            nom_vmu:
+                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
+                add_pid_cut: "UBDT < 0.25"
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
                 pid_cut: "IsMuon == 0.0"
 
 # Used by (E)
 local_pid_config:
-    2016:
-        g:
-            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
-            tags:
-                cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
-            tags_addon:
-                mu:
-                    nom:
-                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
-                        pid_cut:
-                            default: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
-                            misid_ctrl: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
-                    denom:
-                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
-                        pid_cut:
-                            default: "IsMuon == 0.0"
-                            misid_ctrl: "IsMuon == 0.0"
-        e:
-            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
-            tags_addon:
-                mu:
-                    rel:
-                        projection_p: True
-                        cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
-                        pid_cut:
-                            default: "UBDT > 0.25"
-                            misid_ctrl: "UBDT < 0.25"
+    g:
+        samples:
+            2016: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
+            2017: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2017--m*--incl_b.root:tree"
+            2018: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2018--m*--incl_b.root:tree"
+        tags:
+            cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
+        tags_addon:
+            mu:
+                nom:
+                    cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
+                nom_vmu:
+                    cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
+                denom:
+                    cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "IsMuon == 0.0"
+    e:
+        samples:
+            2016: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
+            2017: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2017--m*--incl_b.root:tree"
+            2018: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2018--m*--incl_b.root:tree"
+        tags_addon:
+            mu:
+                rel:
+                    projection_p: True
+                    cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "UBDT > 0.25"
+                rel_vmu:
+                    projection_p: True
+                    cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "UBDT < 0.25"
 
 # specify additional source of histograms
 # used by the efficiency histogram merger (M)
@@ -117,6 +125,16 @@ input_histos:
         #         H2H_Ghost_TO_e: gTrueToETag
         #         H2H_Ghost_TO_Ghost: gTrueToGTag
         #         H2H_Ghost_TO_Mu: gTrueToMuTag
+    2017:
+        true_to_tag:
+            - "../histos/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
+            - "../histos/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
+            - "../histos/rdx-25_11_12_09_27-true_to_tag_local-2016"
+    2018:
+        true_to_tag:
+            - "../histos/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
+            - "../histos/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
+            - "../histos/rdx-25_11_12_09_27-true_to_tag_local-2016"
 
 
 # building tagged histograms, used by (T), and (U)

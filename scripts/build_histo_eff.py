@@ -36,10 +36,6 @@ def parse_input():
 
     parser.add_argument("-y", "--year", type=int, default=2016, help="specify year.")
 
-    parser.add_argument(
-        "--ctrl-sample", action="store_true", help="Use control sample uBDT cut."
-    )
-
     return parser.parse_args()
 
 
@@ -159,11 +155,11 @@ if __name__ == "__main__":
     with open(args.config, "r") as f:
         config = safe_load(f)
     binning_scheme = config["binning"]
-    pid_config = config["local_pid_config"][args.year]
+    pid_config = config["local_pid_config"]
     tagged_config = config["tags"]
 
     for p_true, subconfig in pid_config.items():
-        input_ntps, tree = ntp_tree(subconfig["samples"], config_dir_path)
+        input_ntps, tree = ntp_tree(subconfig["samples"][args.year], config_dir_path)
         chain = TChain(tree)
         for n in input_ntps:
             chain.Add(n)
@@ -207,10 +203,7 @@ if __name__ == "__main__":
                     print(f"  cut: {global_cut}")
                     print(f"  # of event passing 'cut': {histo_all.GetEntries()}")
 
-                    if args.ctrl_sample:
-                        cuts = global_cut + " && " + subsubconfig["pid_cut"]["misid_ctrl"].replace("&", "&&")
-                    else:
-                        cuts = global_cut + " && " + subsubconfig["pid_cut"]["default"].replace("&", "&&")
+                    cuts = global_cut + " && " + subsubconfig["pid_cut"].replace("&", "&&")
                     histo_passed = histo_builder(binning_scheme, df, cuts, "passed")
                     print(f"  pid_cut: {cuts}")
                     print(

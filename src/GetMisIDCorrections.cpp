@@ -372,8 +372,8 @@ int main(int argc, char **argv) {
      cxxopts::value<string>())
     ("b,bkgfile", "Specify input YAML with D0 bkg constraints",
      cxxopts::value<string>())
-    ("years", "Specify input YAML config file",
-     cxxopts::value<vector<string>>()->default_value("2016,2017,2018"))
+    ("y,year", "Specify data-taking year",
+     cxxopts::value<string>()->default_value("2016"))
     ("o,output", "Specify output folder",
      cxxopts::value<string>()->default_value("gen/"))
     ("n,dry-run", "Do not perform fits",
@@ -398,7 +398,6 @@ int main(int argc, char **argv) {
   // Read arguments
   const auto ymlFile   = parsedArgs["config"].as<string>();
   const auto d0BkgFile = parsedArgs["bkgfile"].as<string>();
-  const auto years     = parsedArgs["years"].as<vector<string>>();
   const auto particles = parsedArgs["particles"].as<vector<string>>();
   const auto dry_run   = parsedArgs["dry-run"].as<bool>();
   const auto vmu       = parsedArgs["vmu"].as<bool>();
@@ -406,6 +405,9 @@ int main(int argc, char **argv) {
   const auto use_minos = parsedArgs["minos"].as<bool>();
   const auto debug     = parsedArgs["debug"].as<bool>();
   const auto float_dif = parsedArgs["float_dif"].as<bool>();
+  const auto year      = parsedArgs["year"].as<string>();
+
+  const vector<string> years_mc = {"2016", "2017", "2018"};
 
   const TString opath = parsedArgs["output"].as<string>();
 
@@ -832,7 +834,7 @@ int main(int argc, char **argv) {
 
     // Loop over MC files first to build combined MC sample,
     // but calculating separate mass window efficiencies
-    for (auto year : years) {
+    for (auto year : years_mc) {
       // Open and loop over MC files
       const auto mc_paths =
           ymlConfig["mc_ntps"]["signal"][year][probe].as<vector<string>>();
@@ -1390,9 +1392,6 @@ int main(int argc, char **argv) {
     }
 
     // Now loop over calib samples and make fits
-    for (auto year : years) {
-      // TODO Run all years
-      if (year != "2016") continue;
 
       // Define calib datasets
       RooDataSet *datasets_calib_passed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] =
@@ -3524,7 +3523,6 @@ int main(int argc, char **argv) {
           }
         }
       }
-    }
 
     // Delete MC datasets
     cout << "INFO Deleting MC datasets " << endl;
