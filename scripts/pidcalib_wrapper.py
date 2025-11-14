@@ -24,9 +24,9 @@ CURR_DIR = dirname(abspath(__file__))
 JSON_BIN_FILENAME = "binning.json"
 SAMPLE_ALIAS = lambda p: "Electron" if p == "e_B_Jpsi" else "Turbo"
 BINNING_ALIAS = {
-    "P": lambda sample: "Brunel_P",
-    "ETA": lambda sample: "Brunel_ETA",
-    "nTracks": lambda sample: "nTracks" if sample == "e_B_Jpsi" else "nTracks_Brunel",
+    "P": lambda sample, year: "Brunel_P",
+    "ETA": lambda sample, year: "Brunel_ETA",
+    "nTracks": lambda sample, year: "nTracks" if (sample == "e_B_Jpsi" and year == "2016") else "nTracks_Brunel",
 }
 
 MODES = {
@@ -99,12 +99,12 @@ PidDirective = namedtuple(
 )
 
 
-def dump_binning(yml_bins, samples, output):
+def dump_binning(yml_bins, samples, year, output):
     with open(output, "w") as f:
         json.dump(
             {
                 s: {
-                    BINNING_ALIAS[bin_name](s): bin_range
+                    BINNING_ALIAS[bin_name](s, year): bin_range
                     for bin_name, bin_range in yml_bins.items()
                 }
                 for s in samples
@@ -195,7 +195,7 @@ def true_to_tag_directive_gen(
         cut = config["pidcalib_config"]["tags"]["cut"]
         pid_cut_arr = []
         pkl_names = []
-        bin_vars = [BINNING_ALIAS[b](sample_name) for b in config["binning"]]
+        bin_vars = [BINNING_ALIAS[b](sample_name, year) for b in config["binning"]]
 
         folder_name = f"{output_folder}/{p_true}TrueTo-{year}"
         sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
@@ -223,7 +223,7 @@ def true_to_tag_directive_gen(
         if p_true in blocked_particles:
             continue
 
-        bin_vars = [BINNING_ALIAS[b](sample_name) for b in config["binning"]]
+        bin_vars = [BINNING_ALIAS[b](sample_name, year) for b in config["binning"]]
         folder_name = f"{output_folder}/{p_true}TrueTo-{year}"
         sample_file = SAMPLE_ALIAS(sample_name) + year[2:]
 
@@ -277,7 +277,8 @@ if __name__ == "__main__":
     dump_binning(
         config["binning"],
         config["pidcalib_config"]["samples"].values(),
-        f"./tmp/{JSON_BIN_FILENAME}",
+        args.year,
+        f"./tmp/{JSON_BIN_FILENAME}"
     )
 
     # Generate efficiency histograms with pidcalib2
