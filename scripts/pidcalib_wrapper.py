@@ -28,6 +28,9 @@ BINNING_ALIAS = {
     "ETA": lambda sample, year: "Brunel_ETA",
     "nTracks": lambda sample, year: "nTracks" if (sample == "e_B_Jpsi" and year == "2016") else "nTracks_Brunel",
 }
+# For the electron 2016 sample only, the correct multiplicity branch
+# is nTracks instead of nTracks_Brunel (which doesn't event exist)
+# https://mattermost.web.cern.ch/lhcb/pl/3apdrgday3fkjea3wak7a1rmdc
 
 MODES = {
     "glacier": {"blocked_particles": ["e", "g"]},
