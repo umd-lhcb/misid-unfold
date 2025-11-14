@@ -1,0 +1,975 @@
+[I 251113 16:16:41 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 16:16:41 utils:117] ===============
+[I 251113 16:16:41 utils:120] sample         : Turbo17
+[I 251113 16:16:41 utils:120] magnet         : both
+[I 251113 16:16:41 utils:120] particle       : Pi
+[I 251113 16:16:41 utils:120] pid_cuts       : ['Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0']
+[I 251113 16:16:41 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0']
+[I 251113 16:16:41 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 16:16:41 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 16:16:41 utils:120] output_dir     : raw_histos/piTrueTo-2017
+[I 251113 16:16:41 utils:120] verbose        : False
+[I 251113 16:16:41 utils:120] pkl_name       : ['piTrueToPiTag.pkl', 'piTrueToKTag.pkl', 'piTrueToPTag.pkl', 'piTrueToETag.pkl', 'piTrueToGTag.pkl']
+[I 251113 16:16:41 utils:120] version        : N/A
+[I 251113 16:16:41 utils:121] ===============
+[I 251113 16:16:41 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 16:16:41 binning:245] The following custom binnings are not being used: [{'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 16:16:41 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 16:16:41 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'Brunel_MC15TuneV1_ProbNNpi': 'probe_Brunel_MC15TuneV1_ProbNNpi', 'Brunel_DLLK': 'probe_Brunel_PIDK', 'Brunel_DLLp': 'probe_Brunel_PIDp', 'Brunel_DLLe': 'probe_Brunel_PIDe', 'Brunel_MC15TuneV1_ProbNNghost': 'probe_Brunel_MC15TuneV1_ProbNNghost', 'Brunel_MC15TuneV1_ProbNNk': 'probe_Brunel_MC15TuneV1_ProbNNk', 'Brunel_MC15TuneV1_ProbNNp': 'probe_Brunel_MC15TuneV1_ProbNNp', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'IsMuon': 'probe_isMuon', 'InMuonAcc': 'probe_InMuonAcc', 'MuonUnbiased': 'probe_MuonUnbiased'}
+[I 251113 16:16:41 utils:462] 246 calibration files from EOS will be processed
+[I 251113 16:43:20 utils:517] Processed 246/246 files
+[I 251113 16:43:20 utils:596] 129770472/141600400 (91.6%) events passed binning range cut
+[I 251113 16:43:20 utils:596] 70672188/129770472 (54.5%) events passed user cut
+[I 251113 16:43:20 utils:596] 59716168/70672188 (84.5%) events passed 'Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 16:43:20 utils:596] 3157893/70672188 (4.5%) events passed 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 16:43:20 utils:596] 1535239/70672188 (2.2%) events passed 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 16:43:20 utils:596] 1348020/70672188 (1.9%) events passed 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 16:43:20 utils:596] 4914868/70672188 (7.0%) events passed '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0' cut
+[I 251113 16:43:20 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 16:43:20 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'Brunel_MC15TuneV1_ProbNNpi': 'probe_Brunel_MC15TuneV1_ProbNNpi', 'Brunel_DLLK': 'probe_Brunel_PIDK', 'Brunel_DLLp': 'probe_Brunel_PIDp', 'Brunel_DLLe': 'probe_Brunel_PIDe', 'Brunel_MC15TuneV1_ProbNNghost': 'probe_Brunel_MC15TuneV1_ProbNNghost', 'Brunel_MC15TuneV1_ProbNNk': 'probe_Brunel_MC15TuneV1_ProbNNk', 'Brunel_MC15TuneV1_ProbNNp': 'probe_Brunel_MC15TuneV1_ProbNNp', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'IsMuon': 'probe_isMuon', 'InMuonAcc': 'probe_InMuonAcc', 'MuonUnbiased': 'probe_MuonUnbiased'}
+[I 251113 16:43:20 utils:462] 207 calibration files from EOS will be processed
+[I 251113 17:14:10 utils:517] Processed 207/207 files
+[I 251113 17:14:10 utils:596] 109501250/119514652 (91.6%) events passed binning range cut
+[I 251113 17:14:10 utils:596] 59582525/109501250 (54.4%) events passed user cut
+[I 251113 17:14:10 utils:596] 50359891/59582525 (84.5%) events passed 'Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:14:10 utils:596] 2583898/59582525 (4.3%) events passed 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:14:10 utils:596] 1280345/59582525 (2.1%) events passed 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:14:10 utils:596] 1159412/59582525 (1.9%) events passed 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:14:10 utils:596] 4198979/59582525 (7.0%) events passed '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0' cut
+[I 251113 17:14:10 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/piTrueTo-2017/piTrueToPiTag.pkl'
+[I 251113 17:14:10 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/piTrueTo-2017/piTrueToKTag.pkl'
+[I 251113 17:14:10 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/piTrueTo-2017/piTrueToPTag.pkl'
+[I 251113 17:14:10 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/piTrueTo-2017/piTrueToETag.pkl'
+[I 251113 17:14:10 make_eff_histo_mod:239] Efficiency histogram of cut (Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0 saved to 'raw_histos/piTrueTo-2017/piTrueToGTag.pkl'
+[I 251113 17:14:24 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 17:14:24 utils:117] ===============
+[I 251113 17:14:24 utils:120] sample         : Turbo17
+[I 251113 17:14:24 utils:120] magnet         : both
+[I 251113 17:14:24 utils:120] particle       : K
+[I 251113 17:14:24 utils:120] pid_cuts       : ['Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0']
+[I 251113 17:14:24 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0']
+[I 251113 17:14:24 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 17:14:24 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 17:14:24 utils:120] output_dir     : raw_histos/kTrueTo-2017
+[I 251113 17:14:24 utils:120] verbose        : False
+[I 251113 17:14:24 utils:120] pkl_name       : ['kTrueToPiTag.pkl', 'kTrueToKTag.pkl', 'kTrueToPTag.pkl', 'kTrueToETag.pkl', 'kTrueToGTag.pkl']
+[I 251113 17:14:24 utils:120] version        : N/A
+[I 251113 17:14:24 utils:121] ===============
+[I 251113 17:14:24 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 17:14:24 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 17:14:24 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 17:14:24 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'Brunel_MC15TuneV1_ProbNNpi': 'probe_Brunel_MC15TuneV1_ProbNNpi', 'Brunel_DLLK': 'probe_Brunel_PIDK', 'Brunel_DLLp': 'probe_Brunel_PIDp', 'Brunel_DLLe': 'probe_Brunel_PIDe', 'Brunel_MC15TuneV1_ProbNNghost': 'probe_Brunel_MC15TuneV1_ProbNNghost', 'Brunel_MC15TuneV1_ProbNNk': 'probe_Brunel_MC15TuneV1_ProbNNk', 'Brunel_MC15TuneV1_ProbNNp': 'probe_Brunel_MC15TuneV1_ProbNNp', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'IsMuon': 'probe_isMuon', 'InMuonAcc': 'probe_InMuonAcc', 'MuonUnbiased': 'probe_MuonUnbiased'}
+[I 251113 17:14:24 utils:462] 246 calibration files from EOS will be processed
+[I 251113 17:50:57 utils:517] Processed 246/246 files
+[I 251113 17:50:57 utils:596] 128591098/141600400 (90.8%) events passed binning range cut
+[I 251113 17:50:57 utils:596] 64784351/128591098 (50.4%) events passed user cut
+[I 251113 17:50:57 utils:596] 5696944/64784351 (8.8%) events passed 'Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:50:57 utils:596] 47664881/64784351 (73.6%) events passed 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:50:57 utils:596] 1967212/64784351 (3.0%) events passed 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:50:57 utils:596] 245967/64784351 (0.4%) events passed 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 17:50:57 utils:596] 9209347/64784351 (14.2%) events passed '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0' cut
+[I 251113 17:50:57 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 17:50:57 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'Brunel_MC15TuneV1_ProbNNpi': 'probe_Brunel_MC15TuneV1_ProbNNpi', 'Brunel_DLLK': 'probe_Brunel_PIDK', 'Brunel_DLLp': 'probe_Brunel_PIDp', 'Brunel_DLLe': 'probe_Brunel_PIDe', 'Brunel_MC15TuneV1_ProbNNghost': 'probe_Brunel_MC15TuneV1_ProbNNghost', 'Brunel_MC15TuneV1_ProbNNk': 'probe_Brunel_MC15TuneV1_ProbNNk', 'Brunel_MC15TuneV1_ProbNNp': 'probe_Brunel_MC15TuneV1_ProbNNp', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'IsMuon': 'probe_isMuon', 'InMuonAcc': 'probe_InMuonAcc', 'MuonUnbiased': 'probe_MuonUnbiased'}
+[I 251113 17:50:57 utils:462] 207 calibration files from EOS will be processed
+[I 251113 18:20:38 utils:517] Processed 207/207 files
+[I 251113 18:20:38 utils:596] 108493444/119514652 (90.8%) events passed binning range cut
+[I 251113 18:20:38 utils:596] 54644713/108493444 (50.4%) events passed user cut
+[I 251113 18:20:38 utils:596] 4850716/54644713 (8.9%) events passed 'Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:20:38 utils:596] 40045018/54644713 (73.3%) events passed 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:20:38 utils:596] 1660796/54644713 (3.0%) events passed 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:20:38 utils:596] 210463/54644713 (0.4%) events passed 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:20:38 utils:596] 7877720/54644713 (14.4%) events passed '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0' cut
+[I 251113 18:20:38 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/kTrueTo-2017/kTrueToPiTag.pkl'
+[I 251113 18:20:38 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/kTrueTo-2017/kTrueToKTag.pkl'
+[I 251113 18:20:38 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/kTrueTo-2017/kTrueToPTag.pkl'
+[I 251113 18:20:38 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/kTrueTo-2017/kTrueToETag.pkl'
+[I 251113 18:20:38 make_eff_histo_mod:239] Efficiency histogram of cut (Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0 saved to 'raw_histos/kTrueTo-2017/kTrueToGTag.pkl'
+[I 251113 18:20:46 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 18:20:46 utils:117] ===============
+[I 251113 18:20:46 utils:120] sample         : Turbo17
+[I 251113 18:20:46 utils:120] magnet         : both
+[I 251113 18:20:46 utils:120] particle       : P
+[I 251113 18:20:46 utils:120] pid_cuts       : ['Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25', '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0']
+[I 251113 18:20:46 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0']
+[I 251113 18:20:46 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 18:20:46 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 18:20:46 utils:120] output_dir     : raw_histos/pTrueTo-2017
+[I 251113 18:20:46 utils:120] verbose        : False
+[I 251113 18:20:46 utils:120] pkl_name       : ['pTrueToPiTag.pkl', 'pTrueToKTag.pkl', 'pTrueToPTag.pkl', 'pTrueToETag.pkl', 'pTrueToGTag.pkl']
+[I 251113 18:20:46 utils:120] version        : N/A
+[I 251113 18:20:46 utils:121] ===============
+[I 251113 18:20:46 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 18:20:46 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 18:20:46 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 18:20:46 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'Brunel_MC15TuneV1_ProbNNpi': 'probe_Brunel_MC15TuneV1_ProbNNpi', 'Brunel_DLLK': 'probe_Brunel_PIDK', 'Brunel_DLLp': 'probe_Brunel_PIDp', 'Brunel_DLLe': 'probe_Brunel_PIDe', 'Brunel_MC15TuneV1_ProbNNghost': 'probe_Brunel_MC15TuneV1_ProbNNghost', 'Brunel_MC15TuneV1_ProbNNk': 'probe_Brunel_MC15TuneV1_ProbNNk', 'Brunel_MC15TuneV1_ProbNNp': 'probe_Brunel_MC15TuneV1_ProbNNp', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'IsMuon': 'probe_isMuon', 'InMuonAcc': 'probe_InMuonAcc', 'MuonUnbiased': 'probe_MuonUnbiased'}
+[I 251113 18:20:46 utils:462] 73 calibration files from EOS will be processed
+[I 251113 18:47:46 utils:517] Processed 73/73 files
+[I 251113 18:47:46 utils:596] 92322813/103674787 (89.1%) events passed binning range cut
+[I 251113 18:47:46 utils:596] 23304549/92322813 (25.2%) events passed user cut
+[I 251113 18:47:46 utils:596] 1266253/23304549 (5.4%) events passed 'Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:47:46 utils:596] 1910891/23304549 (8.2%) events passed 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:47:46 utils:596] 14068049/23304549 (60.4%) events passed 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:47:46 utils:596] 56969/23304549 (0.2%) events passed 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 18:47:46 utils:596] 6002387/23304549 (25.8%) events passed '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0' cut
+[I 251113 18:47:46 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 18:47:46 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'Brunel_MC15TuneV1_ProbNNpi': 'probe_Brunel_MC15TuneV1_ProbNNpi', 'Brunel_DLLK': 'probe_Brunel_PIDK', 'Brunel_DLLp': 'probe_Brunel_PIDp', 'Brunel_DLLe': 'probe_Brunel_PIDe', 'Brunel_MC15TuneV1_ProbNNghost': 'probe_Brunel_MC15TuneV1_ProbNNghost', 'Brunel_MC15TuneV1_ProbNNk': 'probe_Brunel_MC15TuneV1_ProbNNk', 'Brunel_MC15TuneV1_ProbNNp': 'probe_Brunel_MC15TuneV1_ProbNNp', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'IsMuon': 'probe_isMuon', 'InMuonAcc': 'probe_InMuonAcc', 'MuonUnbiased': 'probe_MuonUnbiased'}
+[I 251113 18:47:46 utils:462] 85 calibration files from EOS will be processed
+[I 251113 19:18:31 utils:517] Processed 85/85 files
+[I 251113 19:18:31 utils:596] 108680690/121910080 (89.1%) events passed binning range cut
+[I 251113 19:18:31 utils:596] 27358326/108680690 (25.2%) events passed user cut
+[I 251113 19:18:31 utils:596] 1483705/27358326 (5.4%) events passed 'Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 19:18:31 utils:596] 2272279/27358326 (8.3%) events passed 'Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 19:18:31 utils:596] 16569390/27358326 (60.6%) events passed 'Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 19:18:31 utils:596] 67152/27358326 (0.2%) events passed 'Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25' cut
+[I 251113 19:18:31 utils:596] 6965800/27358326 (25.5%) events passed '(Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0' cut
+[I 251113 19:18:31 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/pTrueTo-2017/pTrueToPiTag.pkl'
+[I 251113 19:18:31 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/pTrueTo-2017/pTrueToKTag.pkl'
+[I 251113 19:18:31 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/pTrueTo-2017/pTrueToPTag.pkl'
+[I 251113 19:18:31 make_eff_histo_mod:239] Efficiency histogram of cut Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25 saved to 'raw_histos/pTrueTo-2017/pTrueToETag.pkl'
+[I 251113 19:18:31 make_eff_histo_mod:239] Efficiency histogram of cut (Brunel_MC15TuneV1_ProbNNpi>0.1&Brunel_DLLK<0.0&Brunel_DLLp<0.0&Brunel_DLLe<2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNk>0.1&Brunel_DLLK>0.0&(Brunel_DLLp-Brunel_DLLK)<0.0&(Brunel_DLLe-Brunel_DLLK)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_MC15TuneV1_ProbNNp>0.1&Brunel_DLLp>0.0&(Brunel_DLLp-Brunel_DLLK)>2.0&(Brunel_DLLe-Brunel_DLLp)<-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0&(Brunel_DLLe>2.0&(Brunel_DLLe-Brunel_DLLK)>-2.0&(Brunel_DLLe-Brunel_DLLp)>-2.0&Brunel_MC15TuneV1_ProbNNghost<0.25)==0.0 saved to 'raw_histos/pTrueTo-2017/pTrueToGTag.pkl'
+[I 251113 19:18:39 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 19:18:39 utils:117] ===============
+[I 251113 19:18:39 utils:120] sample         : Turbo17
+[I 251113 19:18:39 utils:120] magnet         : both
+[I 251113 19:18:39 utils:120] particle       : Pi
+[I 251113 19:18:39 utils:120] pid_cuts       : ['IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25']
+[I 251113 19:18:39 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 19:18:39 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 19:18:39 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 19:18:39 utils:120] output_dir     : raw_histos/piTrueTo-2017
+[I 251113 19:18:39 utils:120] verbose        : False
+[I 251113 19:18:39 utils:120] pkl_name       : ['piTrueToMuTag_nom.pkl']
+[I 251113 19:18:39 utils:120] version        : N/A
+[I 251113 19:18:39 utils:121] ===============
+[I 251113 19:18:39 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 19:18:39 binning:245] The following custom binnings are not being used: [{'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 19:18:39 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 19:18:39 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 19:18:39 utils:462] 246 calibration files from EOS will be processed
+[I 251113 19:44:33 utils:517] Processed 246/246 files
+[I 251113 19:44:33 utils:596] 129770472/141600400 (91.6%) events passed binning range cut
+[I 251113 19:44:33 utils:596] 72414495/129770472 (55.8%) events passed user cut
+[I 251113 19:44:33 utils:596] 395838/72414495 (0.5%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' cut
+[I 251113 19:44:33 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 19:44:33 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 19:44:33 utils:462] 207 calibration files from EOS will be processed
+[I 251113 20:08:02 utils:517] Processed 207/207 files
+[I 251113 20:08:02 utils:596] 109501250/119514652 (91.6%) events passed binning range cut
+[I 251113 20:08:02 utils:596] 61049149/109501250 (55.8%) events passed user cut
+[I 251113 20:08:02 utils:596] 339481/61049149 (0.6%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' cut
+[W 251113 20:08:02 utils:97] There are 2 negative bins in the 'eff_IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' efficiency histogram! You might want to change the binning.
+[I 251113 20:08:02 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25 saved to 'raw_histos/piTrueTo-2017/piTrueToMuTag_nom.pkl'
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/piTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle Pi \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0" --pid-cut "Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToPiTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToKTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToPTag.pkl --pid-cut "Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name piTrueToETag.pkl --pid-cut "(Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0" --pkl-name piTrueToGTag.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToKTag.pkl"
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToGTag.root" ./piTrueToGTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPiTag.root" ./piTrueToPiTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPTag.root" ./piTrueToPTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToETag.root" ./piTrueToETag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToKTag.root" ./piTrueToKTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/kTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle K \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0" --pid-cut "Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToPiTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToKTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToPTag.pkl --pid-cut "Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name kTrueToETag.pkl --pid-cut "(Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0" --pkl-name kTrueToGTag.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToETag.pkl"
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPiTag.root" ./kTrueToPiTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToETag.root" ./kTrueToETag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToKTag.root" ./kTrueToKTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPTag.root" ./kTrueToPTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToGTag.root" ./kTrueToGTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/pTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle P \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0" --pid-cut "Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToPiTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToKTag.pkl --pid-cut "Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToPTag.pkl --pid-cut "Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25" --pkl-name pTrueToETag.pkl --pid-cut "(Brunel_MC15TuneV1_ProbNNpi > 0.1 & Brunel_DLLK < 0.0 & Brunel_DLLp < 0.0 & Brunel_DLLe < 2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNk > 0.1 & Brunel_DLLK > 0.0 & (Brunel_DLLp - Brunel_DLLK) < 0.0 & (Brunel_DLLe - Brunel_DLLK) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_MC15TuneV1_ProbNNp > 0.1 & Brunel_DLLp > 0.0 & (Brunel_DLLp - Brunel_DLLK) > 2.0 & (Brunel_DLLe - Brunel_DLLp) < -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0 & (Brunel_DLLe > 2.0 & (Brunel_DLLe - Brunel_DLLK) > -2.0 & (Brunel_DLLe - Brunel_DLLp) > -2.0 & Brunel_MC15TuneV1_ProbNNghost < 0.25) == 0.0" --pkl-name pTrueToGTag.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToETag.pkl"
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToETag.root" ./pTrueToETag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToKTag.root" ./pTrueToKTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPTag.root" ./pTrueToPTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToGTag.root" ./pTrueToGTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPiTag.root" ./pTrueToPiTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/piTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle Pi \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25" --pkl-name piTrueToMuTag_nom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToGTag.pkl"
+
+[I 251113 20:08:11 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 20:08:11 utils:117] ===============
+[I 251113 20:08:11 utils:120] sample         : Turbo17
+[I 251113 20:08:11 utils:120] magnet         : both
+[I 251113 20:08:11 utils:120] particle       : Pi
+[I 251113 20:08:11 utils:120] pid_cuts       : ['IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25']
+[I 251113 20:08:11 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 20:08:11 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 20:08:11 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 20:08:11 utils:120] output_dir     : raw_histos/piTrueTo-2017
+[I 251113 20:08:11 utils:120] verbose        : False
+[I 251113 20:08:11 utils:120] pkl_name       : ['piTrueToMuTag_nom_vmu.pkl']
+[I 251113 20:08:11 utils:120] version        : N/A
+[I 251113 20:08:11 utils:121] ===============
+[I 251113 20:08:11 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 20:08:11 binning:245] The following custom binnings are not being used: [{'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 20:08:11 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 20:08:11 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 20:08:11 utils:462] 246 calibration files from EOS will be processed
+[I 251113 20:29:19 utils:517] Processed 246/246 files
+[I 251113 20:29:19 utils:596] 129770472/141600400 (91.6%) events passed binning range cut
+[I 251113 20:29:19 utils:596] 72414495/129770472 (55.8%) events passed user cut
+[I 251113 20:29:19 utils:596] 110387/72414495 (0.2%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25' cut
+[I 251113 20:29:19 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 20:29:19 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 20:29:19 utils:462] 207 calibration files from EOS will be processed
+[I 251113 20:48:51 utils:517] Processed 207/207 files
+[I 251113 20:48:51 utils:596] 109501250/119514652 (91.6%) events passed binning range cut
+[I 251113 20:48:51 utils:596] 61049149/109501250 (55.8%) events passed user cut
+[I 251113 20:48:51 utils:596] 98673/61049149 (0.2%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25' cut
+[I 251113 20:48:51 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25 saved to 'raw_histos/piTrueTo-2017/piTrueToMuTag_nom_vmu.pkl'
+[I 251113 20:49:01 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 20:49:01 utils:117] ===============
+[I 251113 20:49:01 utils:120] sample         : Turbo17
+[I 251113 20:49:01 utils:120] magnet         : both
+[I 251113 20:49:01 utils:120] particle       : Pi
+[I 251113 20:49:01 utils:120] pid_cuts       : ['IsMuon==0.0']
+[I 251113 20:49:01 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 20:49:01 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 20:49:01 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 20:49:01 utils:120] output_dir     : raw_histos/piTrueTo-2017
+[I 251113 20:49:01 utils:120] verbose        : False
+[I 251113 20:49:01 utils:120] pkl_name       : ['piTrueToMuTag_denom.pkl']
+[I 251113 20:49:01 utils:120] version        : N/A
+[I 251113 20:49:01 utils:121] ===============
+[I 251113 20:49:01 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 20:49:01 binning:245] The following custom binnings are not being used: [{'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 20:49:01 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 20:49:01 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 20:49:01 utils:462] 246 calibration files from EOS will be processed
+[I 251113 21:05:48 utils:517] Processed 246/246 files
+[I 251113 21:05:48 utils:596] 129770472/141600400 (91.6%) events passed binning range cut
+[I 251113 21:05:48 utils:596] 72414495/129770472 (55.8%) events passed user cut
+[I 251113 21:05:48 utils:596] 70672188/72414495 (97.6%) events passed 'IsMuon==0.0' cut
+[I 251113 21:05:48 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 21:05:48 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 21:05:48 utils:462] 207 calibration files from EOS will be processed
+[I 251113 21:19:10 utils:517] Processed 207/207 files
+[I 251113 21:19:10 utils:596] 109501250/119514652 (91.6%) events passed binning range cut
+[I 251113 21:19:10 utils:596] 61049149/109501250 (55.8%) events passed user cut
+[I 251113 21:19:10 utils:596] 59582525/61049149 (97.6%) events passed 'IsMuon==0.0' cut
+[I 251113 21:19:10 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==0.0 saved to 'raw_histos/piTrueTo-2017/piTrueToMuTag_denom.pkl'
+[I 251113 21:19:21 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 21:19:21 utils:117] ===============
+[I 251113 21:19:21 utils:120] sample         : Turbo17
+[I 251113 21:19:21 utils:120] magnet         : both
+[I 251113 21:19:21 utils:120] particle       : K
+[I 251113 21:19:21 utils:120] pid_cuts       : ['IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25']
+[I 251113 21:19:21 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 21:19:21 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 21:19:21 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 21:19:21 utils:120] output_dir     : raw_histos/kTrueTo-2017
+[I 251113 21:19:21 utils:120] verbose        : False
+[I 251113 21:19:21 utils:120] pkl_name       : ['kTrueToMuTag_nom.pkl']
+[I 251113 21:19:21 utils:120] version        : N/A
+[I 251113 21:19:21 utils:121] ===============
+[I 251113 21:19:21 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 21:19:21 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 21:19:21 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 21:19:21 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 21:19:21 utils:462] 246 calibration files from EOS will be processed
+[I 251113 21:43:38 utils:517] Processed 246/246 files
+[I 251113 21:43:38 utils:596] 128591098/141600400 (90.8%) events passed binning range cut
+[I 251113 21:43:38 utils:596] 66444102/128591098 (51.7%) events passed user cut
+[I 251113 21:43:38 utils:596] 315972/66444102 (0.5%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' cut
+[I 251113 21:43:38 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 21:43:38 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 21:43:38 utils:462] 207 calibration files from EOS will be processed
+[I 251113 22:03:18 utils:517] Processed 207/207 files
+[I 251113 22:03:18 utils:596] 108493444/119514652 (90.8%) events passed binning range cut
+[I 251113 22:03:18 utils:596] 56046532/108493444 (51.7%) events passed user cut
+[I 251113 22:03:18 utils:596] 270435/56046532 (0.5%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' cut
+[I 251113 22:03:18 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25 saved to 'raw_histos/kTrueTo-2017/kTrueToMuTag_nom.pkl'
+[I 251113 22:03:26 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 22:03:26 utils:117] ===============
+[I 251113 22:03:26 utils:120] sample         : Turbo17
+[I 251113 22:03:26 utils:120] magnet         : both
+[I 251113 22:03:26 utils:120] particle       : K
+[I 251113 22:03:26 utils:120] pid_cuts       : ['IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25']
+[I 251113 22:03:26 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 22:03:26 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 22:03:26 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 22:03:26 utils:120] output_dir     : raw_histos/kTrueTo-2017
+[I 251113 22:03:26 utils:120] verbose        : False
+[I 251113 22:03:26 utils:120] pkl_name       : ['kTrueToMuTag_nom_vmu.pkl']
+[I 251113 22:03:26 utils:120] version        : N/A
+[I 251113 22:03:26 utils:121] ===============
+[I 251113 22:03:26 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 22:03:26 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 22:03:26 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 22:03:26 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 22:03:26 utils:462] 246 calibration files from EOS will be processed
+[I 251113 22:22:53 utils:517] Processed 246/246 files
+[I 251113 22:22:53 utils:596] 128591098/141600400 (90.8%) events passed binning range cut
+[I 251113 22:22:53 utils:596] 66444102/128591098 (51.7%) events passed user cut
+[I 251113 22:22:53 utils:596] 510867/66444102 (0.8%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25' cut
+[I 251113 22:22:53 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 22:22:53 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 22:22:53 utils:462] 207 calibration files from EOS will be processed
+[I 251113 22:40:47 utils:517] Processed 207/207 files
+[I 251113 22:40:47 utils:596] 108493444/119514652 (90.8%) events passed binning range cut
+[I 251113 22:40:47 utils:596] 56046532/108493444 (51.7%) events passed user cut
+[I 251113 22:40:47 utils:596] 432175/56046532 (0.8%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25' cut
+[I 251113 22:40:47 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25 saved to 'raw_histos/kTrueTo-2017/kTrueToMuTag_nom_vmu.pkl'
+[I 251113 22:40:57 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 22:40:57 utils:117] ===============
+[I 251113 22:40:57 utils:120] sample         : Turbo17
+[I 251113 22:40:57 utils:120] magnet         : both
+[I 251113 22:40:57 utils:120] particle       : K
+[I 251113 22:40:57 utils:120] pid_cuts       : ['IsMuon==0.0']
+[I 251113 22:40:57 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 22:40:57 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 22:40:57 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 22:40:57 utils:120] output_dir     : raw_histos/kTrueTo-2017
+[I 251113 22:40:57 utils:120] verbose        : False
+[I 251113 22:40:57 utils:120] pkl_name       : ['kTrueToMuTag_denom.pkl']
+[I 251113 22:40:57 utils:120] version        : N/A
+[I 251113 22:40:57 utils:121] ===============
+[I 251113 22:40:57 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 22:40:57 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'P', 'bin_var': 'Brunel_P'}, {'particle': 'P', 'bin_var': 'Brunel_ETA'}, {'particle': 'P', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 22:40:57 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 22:40:57 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 22:40:57 utils:462] 246 calibration files from EOS will be processed
+[I 251113 22:57:53 utils:517] Processed 246/246 files
+[I 251113 22:57:53 utils:596] 128591098/141600400 (90.8%) events passed binning range cut
+[I 251113 22:57:53 utils:596] 66444102/128591098 (51.7%) events passed user cut
+[I 251113 22:57:53 utils:596] 64784351/66444102 (97.5%) events passed 'IsMuon==0.0' cut
+[I 251113 22:57:53 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 22:57:53 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 22:57:53 utils:462] 207 calibration files from EOS will be processed
+[I 251113 23:12:12 utils:517] Processed 207/207 files
+[I 251113 23:12:12 utils:596] 108493444/119514652 (90.8%) events passed binning range cut
+[I 251113 23:12:12 utils:596] 56046532/108493444 (51.7%) events passed user cut
+[I 251113 23:12:12 utils:596] 54644713/56046532 (97.5%) events passed 'IsMuon==0.0' cut
+[I 251113 23:12:12 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==0.0 saved to 'raw_histos/kTrueTo-2017/kTrueToMuTag_denom.pkl'
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToKTag.pkl"
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToGTag.root" ./piTrueToGTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPiTag.root" ./piTrueToPiTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPTag.root" ./piTrueToPTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToETag.root" ./piTrueToETag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToKTag.root" ./piTrueToKTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToMuTag_nom.root" ./piTrueToMuTag_nom.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/piTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle Pi \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25" --pkl-name piTrueToMuTag_nom_vmu.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToMuTag_nom_vmu.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToKTag.pkl"
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToGTag.root" ./piTrueToGTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPiTag.root" ./piTrueToPiTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPTag.root" ./piTrueToPTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToETag.root" ./piTrueToETag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToKTag.root" ./piTrueToKTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToMuTag_nom_vmu.root" ./piTrueToMuTag_nom_vmu.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToMuTag_nom.root" ./piTrueToMuTag_nom.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/piTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle Pi \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 0.0" --pkl-name piTrueToMuTag_denom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToMuTag_denom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToMuTag_nom_vmu.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/piTrueTo-2017/piTrueToKTag.pkl"
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToGTag.root" ./piTrueToGTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPiTag.root" ./piTrueToPiTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToPTag.root" ./piTrueToPTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToMuTag_denom.root" ./piTrueToMuTag_denom.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToETag.root" ./piTrueToETag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToKTag.root" ./piTrueToKTag.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToMuTag_nom_vmu.root" ./piTrueToMuTag_nom_vmu.root
+
+
+cp "raw_histos/piTrueTo-2017/piTrueToMuTag_nom.root" ./piTrueToMuTag_nom.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/kTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle K \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25" --pkl-name kTrueToMuTag_nom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToETag.pkl"
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPiTag.root" ./kTrueToPiTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToMuTag_nom.root" ./kTrueToMuTag_nom.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToETag.root" ./kTrueToETag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToKTag.root" ./kTrueToKTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPTag.root" ./kTrueToPTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToGTag.root" ./kTrueToGTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/kTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle K \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25" --pkl-name kTrueToMuTag_nom_vmu.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToMuTag_nom_vmu.pkl"
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToMuTag_nom_vmu.root" ./kTrueToMuTag_nom_vmu.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPiTag.root" ./kTrueToPiTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToMuTag_nom.root" ./kTrueToMuTag_nom.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToETag.root" ./kTrueToETag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToKTag.root" ./kTrueToKTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPTag.root" ./kTrueToPTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToGTag.root" ./kTrueToGTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/kTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle K \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 0.0" --pkl-name kTrueToMuTag_denom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToMuTag_denom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToETag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/kTrueTo-2017/kTrueToMuTag_nom_vmu.pkl"
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToMuTag_denom.root" ./kTrueToMuTag_denom.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToMuTag_nom_vmu.root" ./kTrueToMuTag_nom_vmu.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPiTag.root" ./kTrueToPiTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToMuTag_nom.root" ./kTrueToMuTag_nom.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToETag.root" ./kTrueToETag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToKTag.root" ./kTrueToKTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToPTag.root" ./kTrueToPTag.root
+
+
+cp "raw_histos/kTrueTo-2017/kTrueToGTag.root" ./kTrueToGTag.root
+
+[I 251113 23:12:24 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 23:12:24 utils:117] ===============
+[I 251113 23:12:24 utils:120] sample         : Turbo17
+[I 251113 23:12:24 utils:120] magnet         : both
+[I 251113 23:12:24 utils:120] particle       : P
+[I 251113 23:12:24 utils:120] pid_cuts       : ['IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25']
+[I 251113 23:12:24 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 23:12:24 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 23:12:24 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 23:12:24 utils:120] output_dir     : raw_histos/pTrueTo-2017
+[I 251113 23:12:24 utils:120] verbose        : False
+[I 251113 23:12:24 utils:120] pkl_name       : ['pTrueToMuTag_nom.pkl']
+[I 251113 23:12:24 utils:120] version        : N/A
+[I 251113 23:12:24 utils:121] ===============
+[I 251113 23:12:24 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 23:12:24 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 23:12:24 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 23:12:24 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 23:12:24 utils:462] 73 calibration files from EOS will be processed
+[I 251113 23:29:27 utils:517] Processed 73/73 files
+[I 251113 23:29:27 utils:596] 92322813/103674787 (89.1%) events passed binning range cut
+[I 251113 23:29:27 utils:596] 23554078/92322813 (25.5%) events passed user cut
+[I 251113 23:29:27 utils:596] 23152/23554078 (0.1%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' cut
+[I 251113 23:29:27 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251113 23:29:27 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 23:29:27 utils:462] 85 calibration files from EOS will be processed
+[I 251113 23:50:57 utils:517] Processed 85/85 files
+[I 251113 23:50:57 utils:596] 108680690/121910080 (89.1%) events passed binning range cut
+[I 251113 23:50:57 utils:596] 27647544/108680690 (25.4%) events passed user cut
+[I 251113 23:50:57 utils:596] 26923/27647544 (0.1%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' cut
+[W 251113 23:50:57 utils:97] There are 1 negative bins in the 'eff_IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25' efficiency histogram! You might want to change the binning.
+[I 251113 23:50:57 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT>0.25 saved to 'raw_histos/pTrueTo-2017/pTrueToMuTag_nom.pkl'
+[I 251113 23:51:06 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251113 23:51:06 utils:117] ===============
+[I 251113 23:51:06 utils:120] sample         : Turbo17
+[I 251113 23:51:06 utils:120] magnet         : both
+[I 251113 23:51:06 utils:120] particle       : P
+[I 251113 23:51:06 utils:120] pid_cuts       : ['IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25']
+[I 251113 23:51:06 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251113 23:51:06 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251113 23:51:06 utils:120] binning_file   : ./tmp/binning.json
+[I 251113 23:51:06 utils:120] output_dir     : raw_histos/pTrueTo-2017
+[I 251113 23:51:06 utils:120] verbose        : False
+[I 251113 23:51:06 utils:120] pkl_name       : ['pTrueToMuTag_nom_vmu.pkl']
+[I 251113 23:51:06 utils:120] version        : N/A
+[I 251113 23:51:06 utils:121] ===============
+[I 251113 23:51:06 binning:205] Loading binnings from ./tmp/binning.json
+[W 251113 23:51:06 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251113 23:51:06 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251113 23:51:06 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251113 23:51:06 utils:462] 73 calibration files from EOS will be processed
+[I 251114 00:05:05 utils:517] Processed 73/73 files
+[I 251114 00:05:05 utils:596] 92322813/103674787 (89.1%) events passed binning range cut
+[I 251114 00:05:05 utils:596] 23554078/92322813 (25.5%) events passed user cut
+[I 251114 00:05:05 utils:596] 46281/23554078 (0.2%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25' cut
+[I 251114 00:05:05 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251114 00:05:05 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'DLLmu': 'probe_PIDmu', 'DLLe': 'probe_PIDe', 'UBDT': 'probe_UBDT', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251114 00:05:05 utils:462] 85 calibration files from EOS will be processed
+[I 251114 00:21:49 utils:517] Processed 85/85 files
+[I 251114 00:21:49 utils:596] 108680690/121910080 (89.1%) events passed binning range cut
+[I 251114 00:21:49 utils:596] 27647544/108680690 (25.4%) events passed user cut
+[I 251114 00:21:49 utils:596] 54036/27647544 (0.2%) events passed 'IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25' cut
+[W 251114 00:21:49 utils:97] There are 1 negative bins in the 'eff_IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25' efficiency histogram! You might want to change the binning.
+[I 251114 00:21:49 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==1.0&DLLmu>2.0&DLLe<1.0&UBDT<0.25 saved to 'raw_histos/pTrueTo-2017/pTrueToMuTag_nom_vmu.pkl'
+[I 251114 00:21:59 make_eff_histo_mod:189] Running PIDCalib2 make_eff_hists with the following config:
+[I 251114 00:21:59 utils:117] ===============
+[I 251114 00:21:59 utils:120] sample         : Turbo17
+[I 251114 00:21:59 utils:120] magnet         : both
+[I 251114 00:21:59 utils:120] particle       : P
+[I 251114 00:21:59 utils:120] pid_cuts       : ['IsMuon==0.0']
+[I 251114 00:21:59 utils:120] cuts           : ['TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0']
+[I 251114 00:21:59 utils:120] bin_vars       : ['Brunel_P', 'Brunel_ETA', 'nTracks_Brunel']
+[I 251114 00:21:59 utils:120] binning_file   : ./tmp/binning.json
+[I 251114 00:21:59 utils:120] output_dir     : raw_histos/pTrueTo-2017
+[I 251114 00:21:59 utils:120] verbose        : False
+[I 251114 00:21:59 utils:120] pkl_name       : ['pTrueToMuTag_denom.pkl']
+[I 251114 00:21:59 utils:120] version        : N/A
+[I 251114 00:21:59 utils:121] ===============
+[I 251114 00:21:59 binning:205] Loading binnings from ./tmp/binning.json
+[W 251114 00:21:59 binning:245] The following custom binnings are not being used: [{'particle': 'Pi', 'bin_var': 'Brunel_P'}, {'particle': 'Pi', 'bin_var': 'Brunel_ETA'}, {'particle': 'Pi', 'bin_var': 'nTracks_Brunel'}, {'particle': 'K', 'bin_var': 'Brunel_P'}, {'particle': 'K', 'bin_var': 'Brunel_ETA'}, {'particle': 'K', 'bin_var': 'nTracks_Brunel'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_P'}, {'particle': 'e_B_Jpsi', 'bin_var': 'Brunel_ETA'}, {'particle': 'e_B_Jpsi', 'bin_var': 'nTracks'}]
+[I 251114 00:21:59 make_eff_histo_mod:215] Processing MapUp calibration samples
+[I 251114 00:21:59 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251114 00:21:59 utils:462] 73 calibration files from EOS will be processed
+[I 251114 00:31:39 utils:517] Processed 73/73 files
+[I 251114 00:31:39 utils:596] 92322813/103674787 (89.1%) events passed binning range cut
+[I 251114 00:31:39 utils:596] 23554078/92322813 (25.5%) events passed user cut
+[I 251114 00:31:39 utils:596] 23304549/23554078 (98.9%) events passed 'IsMuon==0.0' cut
+[I 251114 00:31:39 make_eff_histo_mod:220] Processing MagDown calibration samples
+[I 251114 00:31:39 utils:461] Branches to be read: {'sWeight': 'probe_sWeight', 'IsMuon': 'probe_isMuon', 'Brunel_P': 'probe_Brunel_P', 'Brunel_ETA': 'probe_Brunel_ETA', 'nTracks_Brunel': 'nTracks_Brunel', 'TRACK_GHOSTPROB': 'probe_TRACK_GHOSTPROB', 'MuonUnbiased': 'probe_MuonUnbiased', 'InMuonAcc': 'probe_InMuonAcc'}
+[I 251114 00:31:39 utils:462] 85 calibration files from EOS will be processed
+[I 251114 00:42:53 utils:517] Processed 85/85 files
+[I 251114 00:42:53 utils:596] 108680690/121910080 (89.1%) events passed binning range cut
+[I 251114 00:42:53 utils:596] 27647544/108680690 (25.4%) events passed user cut
+[I 251114 00:42:53 utils:596] 27358326/27647544 (99.0%) events passed 'IsMuon==0.0' cut
+[I 251114 00:42:53 make_eff_histo_mod:239] Efficiency histogram of cut IsMuon==0.0 saved to 'raw_histos/pTrueTo-2017/pTrueToMuTag_denom.pkl'
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/pTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle P \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25" --pkl-name pTrueToMuTag_nom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToETag.pkl"
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToMuTag_nom.root" ./pTrueToMuTag_nom.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToETag.root" ./pTrueToETag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToKTag.root" ./pTrueToKTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPTag.root" ./pTrueToPTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToGTag.root" ./pTrueToGTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPiTag.root" ./pTrueToPiTag.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/pTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle P \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25" --pkl-name pTrueToMuTag_nom_vmu.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToMuTag_nom_vmu.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToETag.pkl"
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToMuTag_nom.root" ./pTrueToMuTag_nom.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToETag.root" ./pTrueToETag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToKTag.root" ./pTrueToKTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPTag.root" ./pTrueToPTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToGTag.root" ./pTrueToGTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPiTag.root" ./pTrueToPiTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToMuTag_nom_vmu.root" ./pTrueToMuTag_nom_vmu.root
+
+
+/home/lmeyerga/misid-unfold/scripts/make_eff_histo_mod.py \
+    --output-dir raw_histos/pTrueTo-2017 \
+    --sample Turbo17 --magnet both \
+    --particle P \
+    --binning-file ./tmp/binning.json \
+    --cut "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0" --pid-cut "IsMuon == 0.0" --pkl-name pTrueToMuTag_denom.pkl --bin-var Brunel_P --bin-var Brunel_ETA --bin-var nTracks_Brunel
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToGTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToMuTag_nom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToMuTag_denom.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToMuTag_nom_vmu.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToPiTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToKTag.pkl"
+
+
+pidcalib2.pklhisto2root "raw_histos/pTrueTo-2017/pTrueToETag.pkl"
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToMuTag_nom.root" ./pTrueToMuTag_nom.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToETag.root" ./pTrueToETag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToKTag.root" ./pTrueToKTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPTag.root" ./pTrueToPTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToGTag.root" ./pTrueToGTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToPiTag.root" ./pTrueToPiTag.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToMuTag_denom.root" ./pTrueToMuTag_denom.root
+
+
+cp "raw_histos/pTrueTo-2017/pTrueToMuTag_nom_vmu.root" ./pTrueToMuTag_nom_vmu.root
+
