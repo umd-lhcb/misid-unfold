@@ -191,11 +191,11 @@ build-rdx-misid-mc-corrections-2018-fake_mu: $(BINPATH)/GetMisIDCorrections
 	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2018 --fake_mu 2>&1 | tee $(OUT_DIR)/stdout.log
 
 # Merge efficiencies into single file
-.PHONY: build-rdx-merged-2016
-build-rdx-merged-2016:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
+.PHONY: build-rdx-merged
+build-rdx-merged:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged)
 	@mkdir -p $(OUT_DIR)
-	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
+	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 # Produce dif smearing sample
 .PHONY: build-generic-dif-smearing
