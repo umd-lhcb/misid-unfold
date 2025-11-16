@@ -109,14 +109,9 @@ local_pid_config:
 input_histos:
     2016:
         true_to_tag:
-            default:
-                - "../histos/default/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
-                - "../histos/default/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
-                - "../histos/default/rdx-25_11_12_09_27-true_to_tag_local-2016"
-            misid_ctrl:
-                - "../histos/ctrl_sample/rdx-25_11_12_11_31-true_to_tag_glacier-2016-corrected"
-                - "../histos/ctrl_sample/rdx-25_04_08_19_22-true_to_tag_lxplus-2016"
-                - "../histos/ctrl_sample/rdx-25_11_12_09_36-true_to_tag_local-2016"
+            - "../histos/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
+            - "../histos/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
+            - "../histos/rdx-25_11_12_09_27-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
         #         H2H_Ghost_TO_Pi: gTrueToPiTag
@@ -127,14 +122,14 @@ input_histos:
         #         H2H_Ghost_TO_Mu: gTrueToMuTag
     2017:
         true_to_tag:
-            - "../histos/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
-            - "../histos/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
-            - "../histos/rdx-25_11_12_09_27-true_to_tag_local-2016"
+            - "../histos/rdx-25_11_13_16_16-true_to_tag_glacier-2017-corrected"
+            - "../histos/rdx-25_11_14_11_17-true_to_tag_lxplus-2017"
+            - "../histos/rdx-25_11_13_15_35-true_to_tag_local-2017"
     2018:
         true_to_tag:
-            - "../histos/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
-            - "../histos/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
-            - "../histos/rdx-25_11_12_09_27-true_to_tag_local-2016"
+            - "../histos/rdx-25_11_13_16_16-true_to_tag_glacier-2018-corrected"
+            - "../histos/rdx-25_11_14_11_22-true_to_tag_lxplus-2018"
+            - "../histos/rdx-25_11_13_15_39-true_to_tag_local-2018"
 
 
 # building tagged histograms, used by (T), and (U)
