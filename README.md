@@ -40,8 +40,8 @@ The output folders are located in `gen` folder.
     1. Clone this project on `glacier`
     2. Run `nix develop` in the project root
     3. In the resulting shell, run `make build-rdx-true-to-tag-2016-glacier`. The output files will be saved in `gen/rdx-<timestamp>-true_to_tag_glacier-2016`.
-    4. Copy the output to `histos/default`.
-    5. Also in `histos/default`, make a copy of the folder produced above with `-corrected` appended to its name.
+    4. Copy the output to `histos`.
+    5. Also in `histos`, make a copy of the folder produced above with `-corrected` appended to its name.
 
 2. Generate $K\to\mu$ and $\pi\to\mu$ misid efficiencies through fits to the modified `pidcalib` samples.
 
@@ -50,13 +50,13 @@ The output folders are located in `gen` folder.
     3. Run `nix develop` in the project root
     4. In the resulting shell, run `make build-d0-decays` to produce constraints for the fits. The output files will be saved in `gen/rdx-<timestamp>-d0_decays`.
     5. Copy `d0_decays.yml` from the output folder to `spec/`.
-    6. Now run `make build-rdx-misid-mc-corrections` and `make build-rdx-misid-mc-corrections-fake_mu` to actually perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections` and `gen/rdx-<timestamp>-misid-mc-corrections-fake_mu`, respectively.
-    7. Copy the `*TrueToMuTag.root` files from the output folders into the `-corrected` folder produced in step $1.5$ along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
+    6. Now run `make build-rdx-misid-mc-corrections-2016`, `make build-rdx-misid-mc-corrections-fake_mu-2016` and `make build-rdx-misid-mc-corrections-2016-vmu` to actually perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections-2016`, `gen/rdx-<timestamp>-misid-mc-corrections-2016-fake_mu` and `gen/rdx-<timestamp>-misid-mc-corrections-2016-vmu`, respectively.
+    7. Each of the three output folders above will contain two root files `*TrueToMuTag*`. Copy them into the `-corrected` folder produced in step $1.5$ along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
     8. You may revert to the usual root-curated version by reverting the changes to `flake.nix` and running `nix flake lock --update-input root-curated` again.
 
 
 > [!TIP]
-> The two `make` commands in step $2.5$ may be executed concurrently, and this is probably preferable since each takes about 12 hours!
+> The three `make` commands in step $2.5$ may be executed concurrently, and this is probably preferable since each takes about 12 hours!
 > One alternative is to use `screen` sessions:
 >
 > ```shell
@@ -81,7 +81,7 @@ The output folders are located in `gen` folder.
 
     1. Clone this project on `lxplus`
     2. In the project root, run `make build-rdx-true-to-tag-2016-lxplus`. The output files will be saved in `gen/rdx-<timestamp>-true_to_tag_lxplus-2016`.
-    3. Copy the output to `histos/default`.
+    3. Copy the output to `histos`.
 
     Note that you might need to use a specific version of `pidcalib`. Edit `cmd_prefix` in `scripts/pidcalib_wrapper.py` and replace it with:
 
@@ -91,46 +91,30 @@ The output folders are located in `gen` folder.
 
     `pidcalib/2022-09-02` corresponds to version `1.0.6`.
 
-4. Generate ghost efficiencies and $e$ conditional efficiencies with local incl. $J/\psi$ MC samples. These $e$ conditional efficiencies will be used to account for the missing UBDT cuts in step 2.
+4. Generate ghost efficiencies and $e$ conditional efficiencies with local b-inclusive $D^*$ MC samples. These $e$ conditional efficiencies will be used to account for the missing UBDT cuts in step 2.
 
     1. Clone this project on `glacier` (in this step, running on `glacier` is not a requirement)
     2. Run `nix develop` in the project root
     3. In the resulting shell, run `make build-rdx-true-to-tag-2016-local`. The output files will be saved in `gen/rdx-<timestamp>-true_to_tag_local-2016`.
-    4. Copy the output to `histos/default`.
+    4. Copy the output to `histos`.
+
+> [!IMPORTANT]
+> The steps above will produce the necessary efficiencies for 2016 data.
+> You must repeat them for the other years by replacing 2016 with 2017 and then 2018.
 
 Starting from the next step, all operations are done locally or on `glacier` and `nix develop` is always assumed.
 
-5. Merge all efficiencies obtained above into a single file locally with `make build-rdx-merged-2016`.
+5. Merge all efficiencies obtained above into a single file locally with `make build-rdx-merged`.
 
-    1. If not done already, copy the output folders from the previous steps from `gen` to `histos/default` folder.
-    2. The inputs to this step are listed in the `input_histos/2016/true_to_tag/default` section of `rdx-run2.yml`, so
+    1. If not done already, copy the output folders from the previous steps from `gen` to `histos` folder.
+    2. The inputs to this step are listed in the `input_histos/<year>/true_to_tag/default` section of `rdx-run2.yml`, so
     make sure to update it before you run the `make` command!
-    3. This stage will produce `gen/rdx-<timestamp>-merged-2016/merged.root` as output. Copy it to `histos/default` as well.
+    3. This stage will produce `gen/rdx-<timestamp>-merged/merged.root` as output. Copy it to `histos/default` as well.
     4. Update the `EFFICIENCIES` variable in `Makefile`.
-
-> [!IMPORTANT]
-> The efficiencies produced in the steps above assume the nominal UBDT cut `mu_uBDT > 0.25`.
-> For the misid validation sample (which requires `mu_uBDT < 0.25` instead) you should repeat the steps above (**except step 2!**) setting the ```USE_CTRL_SAMPLE``` variable appropriately, e.g.:
->
-> ```shell
-> make build-rdx-true-to-tag-2016-glacier USE_CTRL_SAMPLE=true
-> ```
->
-> Assigning unexpected values to this variable will generate a warning and will cause the nominal uBDT cut to be used.
->
-> For step 2, instead of `make build-rdx-misid-mc-corrections` you should run `make build-rdx-misid-mc-corrections-vmu`.
-> The `-fake_mu` command is not affected by the change in the uBDT cut, so you don't need to run it again.
->
-> Furthermore:
->
-> 1. The outputs of steps 1 through 5 should be placed in `histos/ctrl_sample`.
-> 2. After step 4, you should update `input_histos/2016/true_to_tag/misid_ctrl` in `rdx-run2.yml`
-> 3. After step 5, you should update the `EFFICIENCIES_VMU` variable in `Makefile`.
->
 
 6. Extract $K$ and $\pi$ momentum smearing info into a small ntuple with `make build-generic-dif-smearing`.
 
-    1. This stage will produce `gen/generic-<timestamp>-dif_smearing/dif.root` as output. Copy it to `histos` (not `histos/default` or `histos/ctrl_sample`! Those are reserved for nominal- or vmu-specific ntuples).
+    1. This stage will produce `gen/generic-<timestamp>-dif_smearing/dif.root` as output. Copy it to `histos`.
     2. Update the `DiF` variable in `Makefile`.
 
 #### Remark on negative efficiencies
@@ -161,8 +145,8 @@ The cuts and pid_cuts are defined in `rdx-run2.yml` as described below.
     - Note that `nom` also has an `add_pid_cut` entry; The requirement listed here is appended to `pid_cut`.
 
 - For step 3, the cuts are listed in `local_pid_config`, however the structure is similar:
-  - For non-muon tags (in this step, only $g$), the pid_cuts are defined in `tags`->`tag`, while the cuts are defined in `local_pid_config`->`2016`->`g`->`tags`->`cut`.
-  - For the muon tags, both cuts and pid_cuts are defined in `local_pid_config`->`2016`->`g`->`tags_addon`->`nom`/`denom` and `local_pid_config`->`2016`->`e`->`tags_addon`->`rel`.
+  - For non-muon tags (in this step, only $g$), the pid_cuts are defined in `tags`->`<tag>`, while the cuts are defined in `local_pid_config`->`g`->`tags`->`cut`.
+  - For the muon tags, both cuts and pid_cuts are defined in `local_pid_config`->`g`->`tags_addon`->`nom`/`denom` and `local_pid_config`->`e`->`tags_addon`->`rel`.
     Recall that, in this step, for $e$ we only calculate corrections to account for the missing uBDT information in step 2, hence the single `rel` correction for the `nom` efficiency computed in step 2.
 
 #### Remark on test run
@@ -184,31 +168,32 @@ The special process is needed so that we can apply the same cuts on
 these ntuples as if we are applying cuts on PIDCalib ntuples, eliminating
 the need to translate branch names.
 
-To build these special ntuples, go to `lhcb-ntuples-gen`, then type:
+To build these special ntuples, go to `lhcb-ntuples-gen`, then run:
 
 ```shell
-make rdx-ntuple-run2-misid_study
+make rdx-ntuple-run2-misid_study-all
 ```
 
-Once that is done, configure `spec/rdx-run2.yml` properly, then:
+Once it finishes, copy the produced ntuple to misid-unfold and configure `spec/rdx-run2.yml` properly by modifying the `input_ntps` section.
+You may then produced the histograsm with tagged yields:
 
 ```shell
-make build-rdx-tag-2016
+make build-rdx-tag
 ```
 
-This will produce `gen/generic-<timestamp>-tag/tagged.root` as output, which you should also copy to `histos`.
+This will produce `gen/rdx-<timestamp>-tag/tagged.root` as output, which you should also copy to `histos`.
 Finally, update the `TAGGED` variable in `Makefile`.
 
 ### Unfold the misID efficiencies
 
 Make sure to download all required ntuples with `git annex get`!
-Then, make sure to set the inputs to this step correctly. The unfolding procedure requires the `merged.root` and `tagged.root` produced above. Go to `Makefile` and set the `EFFICIENCIES`, `EFFICIENCIES_VMU` and `TAGGED` variables to point to your `merged.root` and `tagged.root` files, respectively, as explained above.
+Then, make sure to set the inputs to this step correctly. The unfolding procedure requires the `merged.root` and `tagged.root` produced above. Go to `Makefile` and set the `EFFICIENCIES` and `TAGGED` variables to point to your `merged.root` and `tagged.root` files, respectively, as explained above.
 
 ```shell
-make build-rdx-unfolded-2016
+make build-rdx-unfolded
 ```
 
-This will produce `gen/generic-<timestamp>-unfoled/unfolded.root` as output, which you should (you guessed!) copy to `histos`.
+This will produce `gen/rdx-<timestamp>-unfolded/unfolded.root` as output, which you should (you guessed!) copy to `histos`.
 Once copied, update the `UNFOLDED` variable in `Makefile`.
 
 One can also test-run the unfolding (w/o actually doing unfolding!)
@@ -221,7 +206,7 @@ by `make test-unfold`.
 ### Apply misID and DiF smearing weights
 
 ```shell
-make build-rdx-weights-2016
+make build-rdx-weights
 ```
 
 This compiles and runs `src/ApplyMisIDWeight.cpp` to apply misID weights and momentum smearing on misID control samples.
