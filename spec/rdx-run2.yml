@@ -301,27 +301,26 @@ input_ntps:
 
 # Used by (A)
 weight_brs:
-    2016:
-        TupleBminus/DecayTree:
-            - prefix: D0
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_norm
-            - prefix: D0_bsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_bsb
-        TupleB0/DecayTree:
-            - prefix: Dst
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_norm
-            - prefix: Dst_dsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_dsb
-            - prefix: Dst_bsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_bsb
-            - prefix: Dst_dsb_bsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_dsb_bsb
+    TupleBminus/DecayTree:
+        - prefix: D0
+          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          name: wmis_norm
+        - prefix: D0_bsb
+          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          name: wmis_bsb
+    TupleB0/DecayTree:
+        - prefix: Dst
+          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          name: wmis_norm
+        - prefix: Dst_dsb
+          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          name: wmis_dsb
+        - prefix: Dst_bsb
+          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          name: wmis_bsb
+        - prefix: Dst_dsb_bsb
+          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          name: wmis_dsb_bsb
 
 misid_corrections:
     mc_ntps:

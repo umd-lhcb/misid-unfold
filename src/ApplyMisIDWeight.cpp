@@ -149,13 +149,14 @@ pair<vPStrStr, vector<string>> genTaggedCutDirective(
 
 vector<TString> buildHistoWtNames(string                 targetParticle,
                                   const vector<TString>& skims,
+                                  const string& year,
                                   YAML::Node             node) {
   vector<TString> result{};
   for (const auto& skim : skims) {
     for (auto it = node.begin(); it != node.end(); it++) {
       auto srcPtcl = it->first.as<string>();
       auto name =
-          srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag_" + skim;
+          srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag_" + year.substr(2, 2) + "_" + skim;
       result.emplace_back(name);
       for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
         auto srcPtclSingle = itTrue->first.as<string>();
@@ -167,14 +168,13 @@ vector<TString> buildHistoWtNames(string                 targetParticle,
   return result;
 }
 
-template <typename T, typename C = decay_t<decltype(*begin(declval<T>()))>>
 tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
     RNode df, TFile* ntpHisto, string histoPrefix, string weightBrPrefix,
-    T iterable, const bool& debug = false) {
+    vector<TString> histoWtNames, const bool& debug = false) {
   auto outputBrs = vector<string>{};
   auto histos    = vector<TH3D*>{};
 
-  for (const auto& h : iterable) {
+  for (const auto& h : histoWtNames) {
     auto histoName = string(histoPrefix + "__" + h);
     if (debug) cout << "  Loading histo " << histoName << endl;
     auto histoWt = static_cast<TH3D*>(ntpHisto->Get(histoName.data()));
@@ -192,7 +192,9 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
       prescale = PRE_SCALE_CORRECTION;
     }
 
-    auto brName = weightBrPrefix + "_" + h;
+    const auto year_idx = h.First("1"); // Relies on the fact that year comes before skim
+    const TString h_noyear = TString(h).Replace(year_idx-1, 3, 0);
+    auto brName = weightBrPrefix + "_" + h_noyear;
     if (debug) cout << "  Generating " << brName << "..." << endl;
     df = df.Define(brName,
                    [histoWt, prescale](double& x, double& y, double& z) {
@@ -447,7 +449,7 @@ int main(int argc, char** argv) {
   auto ymlConfig       = YAML::LoadFile(ymlFile);
   auto year            = parsedArgs["year"].as<string>();
   auto ymlDirPath      = absDirPath(parsedArgs["config"].as<string>());
-  auto outputDirective = ymlConfig["weight_brs"][year];
+  auto outputDirective = ymlConfig["weight_brs"];
   auto filePrefix      = absDirPath(ymlFile);
 
   // snapshot option
@@ -459,7 +461,7 @@ int main(int argc, char** argv) {
   const vector<TString> skims = {"iso", "1os", "2os", "dd", "vmu"};
 
   // Generate names of histograms to be imported from unfolded.root
-  auto histoWtNames = buildHistoWtNames(particle, skims, ymlConfig["tags"]);
+  const vector<TString> histoWtNames = buildHistoWtNames(particle, skims, year, ymlConfig["tags"]);
   cout << "\nEfficiency histograms: " << endl;
   for (auto h : histoWtNames) cout << "\t" << h << endl;
 

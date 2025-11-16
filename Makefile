@@ -234,15 +234,35 @@ test-unfold: $(BINPATH)/UnfoldMisID
 
 
 # Test of application of misID weights
-.PHONY: test-apply-rdx-weights-2016
-test-apply-rdx-weights-2016: \
-	$(BINPATH)/ApplyMisIDWeight \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
+test-apply-rdx-weights: test-apply-rdx-weights-2016 test-apply-rdx-weights-2017 test-apply-rdx-weights-2018
+
+test-apply-rdx-weights-2016: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--000-dv.root \
 	$(DIF)
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
 	$< --debug -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+
+test-apply-rdx-weights-2017: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision17_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco17_Stripping29r2_90000000_SEMILEPTONIC.DST--000-dv.root \
+	$(DIF)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2017)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
+	@mkdir -p $(OUT_DIR)
+	$< --debug -a -Y 2017 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+
+test-apply-rdx-weights-2018: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision18_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco18_Stripping34_90000000_SEMILEPTONIC.DST--000-dv.root \
+	$(DIF)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2018)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
+	@mkdir -p $(OUT_DIR)
+	$< --debug -a -Y 2018 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
 		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
 
