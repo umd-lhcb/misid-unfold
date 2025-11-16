@@ -3461,7 +3461,7 @@ int main(int argc, char **argv) {
 
       // Define output file por PID efficiency
       // File name matches the output of PIDCalib
-      const TString fname_suffix = fake_mu ? "_denom" : "_nom";
+      const TString fname_suffix = fake_mu ? "_denom" : (vmu ? "_nom_vmu" : "_nom");
       const TString opath_full_probe =
           opath + "/" + probe + "TrueToMuTag" + fname_suffix + ".root";
       cout << "INFO Creating output file: " << opath_full_probe << endl;
