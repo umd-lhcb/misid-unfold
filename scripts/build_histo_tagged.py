@@ -28,6 +28,8 @@ SKIM_CUTS = {
     "vmu": "1"
 }
 
+YEARS = ["2016", "2017", "2018"]
+
 #######################
 # Command line parser #
 #######################
@@ -45,8 +47,6 @@ def parse_input():
                         "--output",
                         required=True,
                         help="specify output dir.")
-
-    parser.add_argument("-y", "--year", default="2016", help="specify year.")
 
     return parser.parse_args()
 
@@ -84,38 +84,40 @@ if __name__ == "__main__":
     with open(args.config, "r") as f:
         config = safe_load(f)
 
-    for particle, subconfig in config["input_ntps"][int(args.year)].items():
-        input_files = subconfig["files"]
-        print(f"Working on {particle} using files {input_files}")
-        evaluator = BooleanEvaluator(
-            *ntp_tree(input_files, dir_abs_path=config_dir_path))
+    for year in YEARS:
+        print(f"Working on {year} samples")
+        for particle, subconfig in config["input_ntps"][int(year)].items():
+            input_files = subconfig["files"]
+            print(f"Working on {particle} using files {input_files}")
+            evaluator = BooleanEvaluator(
+                *ntp_tree(input_files, dir_abs_path=config_dir_path))
 
-        # load branches needed to build histos
-        histo_brs = []
-        for br_name in config["binning"]:
-            histo_brs.append(evaluator.eval(br_name))
+            # load branches needed to build histos
+            histo_brs = []
+            for br_name in config["binning"]:
+                histo_brs.append(evaluator.eval(br_name))
 
-        global_cut_expr = subconfig["cuts"]
-        global_cut = evaluator.eval(global_cut_expr)
-        print(f"  Global cuts: {global_cut_expr}")
+            global_cut_expr = subconfig["cuts"]
+            global_cut = evaluator.eval(global_cut_expr)
+            print(f"  Global cuts: {global_cut_expr}")
 
-        for s, skim_cut_expr in SKIM_CUTS.items():
-            skim_cut = evaluator.eval(skim_cut_expr)
-            print(f"    Skim cuts: {skim_cut_expr}")
+            for s, skim_cut_expr in SKIM_CUTS.items():
+                skim_cut = evaluator.eval(skim_cut_expr)
+                print(f"    Skim cuts: {skim_cut_expr}")
 
-            for sp, cut_expr in config["tags"].items():
-                print(
-                    f"    Species {histo_name_gen(sp)} has the following cuts: {cut_expr}"
-                )
-                cut = evaluator.eval(cut_expr)
+                for sp, cut_expr in config["tags"].items():
+                    print(
+                        f"    Species {histo_name_gen(sp)} has the following cuts: {cut_expr}"
+                    )
+                    cut = evaluator.eval(cut_expr)
 
-                # Make sure the evaluator is aware of the new variable
-                evaluator.transformer.known_symb[sp] = cut
-                evaluator.transformer.cache[sp] = cut
+                    # Make sure the evaluator is aware of the new variable
+                    evaluator.transformer.known_symb[sp] = cut
+                    evaluator.transformer.cache[sp] = cut
 
-                # Now build histograms
-                ntp[f"{particle}__{histo_name_gen(sp)}__{s}"] = np.histogramdd(
-                    histo_brs,
-                    bins=list(config["binning"].values()),
-                    weights=(cut & global_cut & skim_cut),
-                )
+                    # Now build histograms
+                    ntp[f"{particle}__{histo_name_gen(sp)}__{s}__{year[2:]}"] = np.histogramdd(
+                        histo_brs,
+                        bins=list(config["binning"].values()),
+                        weights=(cut & global_cut & skim_cut),
+                    )

@@ -140,56 +140,162 @@ input_ntps:
     2016:
         # each entry should be a key-list pair, where list provides path to ntuples, with tree names
         D0:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         D0_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         ####
         D0_ws_Mu:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         D0_ws_Mu_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         ####
         Dst:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         Dst_dsb:  # D* comb, within deltaM window
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         Dst_dsb_bsb: # D* comb, outside deltaM window
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
         ####
         Dst_ws_Mu:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Mu_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         Dst_ws_Mu_dsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Mu_dsb_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
         ####
         Dst_ws_Pi:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Pi_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         Dst_ws_Pi_dsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Pi_dsb_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+    2017:
+        D0:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        D0_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        Dst:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Mu_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Pi:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Pi_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+    2018:
+        D0:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        D0_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        Dst:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Mu_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Pi:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Pi_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
 
 

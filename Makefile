@@ -216,11 +216,11 @@ build-rdx-misid-nondif-scale: $(BINPATH)/NonDiFMisIDCorrection
 
 
 # Unfold the misID weights
-.PHONY: build-rdx-tag-2016
-build-rdx-tag-2016:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
+.PHONY: build-rdx-tag
+build-rdx-tag:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 2>&1 | tee $(OUT_DIR)/stdout.log
+	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
