@@ -11,15 +11,6 @@ TEX_FILES := $(wildcard docs/*.tex)
 PDF_FILES := $(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
 YML_FILE  := ./spec/rdx-run2.yml
 
-CTRL_SAMPLE_FLAG :=
-ifdef USE_CTRL_SAMPLE
-	ifeq ($(USE_CTRL_SAMPLE), true)
-		CTRL_SAMPLE_FLAG = --ctrl-sample
-	else
-		$(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default uBDT file.)
-	endif
-endif
-
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
 COMPILER     := $(shell root-config --cxx)
@@ -48,7 +39,7 @@ DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
 ###########
 # General #
 ###########
-.PHONY: exe applyer clean build-test build-test-lxplus build-test-nix plot-test
+.PHONY: clean build-test
 
 exe: $(EXE_FILES)
 
@@ -103,10 +94,10 @@ build-rdx-true-to-tag-2018-lxplus:
 
 .PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
 test-pidcalib2-wrapper-glacier:
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m glacier $(CTRL_SAMPLE_FLAG)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m glacier
 
 test-pidcalib2-wrapper-lxplus:
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m lxplus $(CTRL_SAMPLE_FLAG)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m lxplus
 
 # ghost efficincies and e conditional efficiencies
 .PHONY: build-rdx-true-to-tag-2016-local build-rdx-true-to-tag-2017-local build-rdx-true-to-tag-2018-local
@@ -207,11 +198,6 @@ build-generic-dif-smearing:
 		./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root \
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		2>&1 | tee $(OUT_DIR)/stdout.log
-
-build-rdx-misid-nondif-scale: $(BINPATH)/NonDiFMisIDCorrection
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-nondif-scale)
-	@mkdir -p $(OUT_DIR)/figs/fits
-	$< -o $(OUT_DIR) -c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 # Unfold the misID weights
@@ -378,9 +364,6 @@ $(BINPATH)/GetMisIDCorrections: GetMisIDCorrections.cpp
 
 $(BINPATH)/d0BkgDecays: d0BkgDecays.cpp
 	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp
-
-$(BINPATH)/NonDiFMisIDCorrection: NonDiFMisIDCorrection.cpp
-	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp -lRooFitCore -lRooFit
 
 $(BINPATH)/%: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)
