@@ -20,16 +20,6 @@ from pyTuplingUtils.boolean.eval import BooleanEvaluator
 
 HISTO_NAME = "tagged.root"
 
-SKIM_CUTS = {
-    "iso": "is_iso_loose",
-    "1os": "is_1os_loose",
-    "2os": "is_2os_loose",
-    "dd": "is_dd_loose",
-    "vmu": "1"
-}
-
-YEARS = ["2016", "2017", "2018"]
-
 #######################
 # Command line parser #
 #######################
@@ -84,9 +74,9 @@ if __name__ == "__main__":
     with open(args.config, "r") as f:
         config = safe_load(f)
 
-    for year in YEARS:
+    for year in config["input_ntps"]:
         print(f"Working on {year} samples")
-        for particle, subconfig in config["input_ntps"][int(year)].items():
+        for particle, subconfig in config["input_ntps"][year].items():
             input_files = subconfig["files"]
             print(f"Working on {particle} using files {input_files}")
             evaluator = BooleanEvaluator(
@@ -101,9 +91,9 @@ if __name__ == "__main__":
             global_cut = evaluator.eval(global_cut_expr)
             print(f"  Global cuts: {global_cut_expr}")
 
-            for s, skim_cut_expr in SKIM_CUTS.items():
+            for s, skim_cut_expr in config["skims"].items():
                 skim_cut = evaluator.eval(skim_cut_expr)
-                print(f"    Skim cuts: {skim_cut_expr}")
+                print(f"    Skim cuts for {s}: {skim_cut_expr}")
 
                 for sp, cut_expr in config["tags"].items():
                     print(
@@ -116,7 +106,7 @@ if __name__ == "__main__":
                     evaluator.transformer.cache[sp] = cut
 
                     # Now build histograms
-                    ntp[f"{particle}__{histo_name_gen(sp)}__{s}__{year[2:]}"] = np.histogramdd(
+                    ntp[f"{particle}__{histo_name_gen(sp)}__{s}__{str(year)[2:]}"] = np.histogramdd(
                         histo_brs,
                         bins=list(config["binning"].values()),
                         weights=(cut & global_cut & skim_cut),

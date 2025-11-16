@@ -458,7 +458,7 @@ int main(int argc, char** argv) {
 
   // Produce list of skims. Currently, only tagged yields are different.
   // For vmu, no skim cuts are applied.
-  const vector<TString> skims = {"iso", "1os", "2os", "dd", "vmu"};
+  const vector<TString> skims = {"iso", "1os", "2os", "dd", "vmu", "prot"};
 
   // Generate names of histograms to be imported from unfolded.root
   const vector<TString> histoWtNames =

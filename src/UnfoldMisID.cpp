@@ -601,7 +601,7 @@ int main(int argc, char** argv) {
     ("Y,years", "list of sample years",
      cxxopts::value<vector<string>>()->default_value("2016,2017,2018"))
     ("s,skims", "list of skims",
-     cxxopts::value<vector<string>>()->default_value("iso,1os,2os,dd,vmu"))
+     cxxopts::value<vector<string>>()->default_value("iso,1os,2os,dd,vmu,prot"))
     // input/output
     ("e,effHisto", "specify input ntuple containing efficiency histos",
      cxxopts::value<string>())

@@ -13,6 +13,14 @@ binning:
     ETA: [1.7, 3.6, 5.0]
     nTracks: [0, 200, 600]
 
+skims:
+    iso:  "is_iso_loose"
+    1os:  "is_1os_loose"
+    2os:  "is_2os_loose"
+    dd:   "is_dd_loose"
+    vmu:  "1"
+    prot: "is_prot_loose"
+
 
 # cuts for each tagged species, used by ALL
 tags:
@@ -303,23 +311,23 @@ input_ntps:
 weight_brs:
     TupleBminus/DecayTree:
         - prefix: D0
-          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
           name: wmis_norm
         - prefix: D0_bsb
-          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
           name: wmis_bsb
     TupleB0/DecayTree:
         - prefix: Dst
-          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
           name: wmis_norm
         - prefix: Dst_dsb
-          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
           name: wmis_dsb
         - prefix: Dst_bsb
-          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
           name: wmis_bsb
         - prefix: Dst_dsb_bsb
-          file: "../gen/rdx-25_11_15_05_37-unfolded/unfolded.root"
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
           name: wmis_dsb_bsb
 
 misid_corrections:
