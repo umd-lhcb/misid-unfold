@@ -276,14 +276,19 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
 
   // These are used to stored measured yields (a vector) and response matrix (a
   // 2D matrix)
-  TH1D histMea(("histMea_"+year).c_str(), ("histMea_"+year).c_str(), totSize, 0, totSize);
-  TH2D histRes(("histRes_"+year).c_str(), ("histRes_"+year).c_str(), totSize, 0, totSize, totSize, 0, totSize);
-  TH2D histInv(("histInv_"+year).c_str(), ("histInv_"+year).c_str(), totSize, 0, totSize, totSize, 0,
+  TH1D histMea(("histMea_" + year).c_str(), ("histMea_" + year).c_str(),
+               totSize, 0, totSize);
+  TH2D histRes(("histRes_" + year).c_str(), ("histRes_" + year).c_str(),
+               totSize, 0, totSize, totSize, 0, totSize);
+  TH2D histInv(("histInv_" + year).c_str(), ("histInv_" + year).c_str(),
+               totSize, 0, totSize, totSize, 0,
                totSize);  // conceptually inverted matrix of histRes
-  TH1D histProb(("histProb_"+year).c_str(), ("histProb_"+year).c_str(), totSize, 0, totSize);
+  TH1D histProb(("histProb_" + year).c_str(), ("histProb_" + year).c_str(),
+                totSize, 0, totSize);
 
   // This is used to provide dimension info for response matrix only
-  TH1D histDim(("histDim_"+year).c_str(), ("histDim_"+year).c_str(), totSize, 0, totSize);
+  TH1D histDim(("histDim_" + year).c_str(), ("histDim_" + year).c_str(),
+               totSize, 0, totSize);
   for (int i = 1; i <= totSize; i++) histDim.SetBinContent(i, 1);
 
   // Main unfolding procedure
@@ -292,8 +297,8 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
       for (int z = 1; z <= nbins[2]; z++) {
         for (auto& pref : prefix) {
           for (const auto& skim : skims) {
-            cout << "\nINFO Unfolding bin " << x << " " << y << " " << z << " of "
-                 << pref << " " << skim << endl;
+            cout << "\nINFO Unfolding bin " << x << " " << y << " " << z
+                 << " of " << pref << " " << skim << endl;
 
             // build yield vector
             for (int idx = 0; idx != totSize; idx++) {

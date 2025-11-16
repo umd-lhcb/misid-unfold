@@ -149,14 +149,13 @@ pair<vPStrStr, vector<string>> genTaggedCutDirective(
 
 vector<TString> buildHistoWtNames(string                 targetParticle,
                                   const vector<TString>& skims,
-                                  const string& year,
-                                  YAML::Node             node) {
+                                  const string& year, YAML::Node node) {
   vector<TString> result{};
   for (const auto& skim : skims) {
     for (auto it = node.begin(); it != node.end(); it++) {
       auto srcPtcl = it->first.as<string>();
-      auto name =
-          srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag_" + year.substr(2, 2) + "_" + skim;
+      auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag_" +
+                  year.substr(2, 2) + "_" + skim;
       result.emplace_back(name);
       for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
         auto srcPtclSingle = itTrue->first.as<string>();
@@ -192,9 +191,10 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
       prescale = PRE_SCALE_CORRECTION;
     }
 
-    const auto year_idx = h.First("1"); // Relies on the fact that year comes before skim
-    const TString h_noyear = TString(h).Replace(year_idx-1, 3, 0);
-    auto brName = weightBrPrefix + "_" + h_noyear;
+    // Relies on the fact that year comes before skim
+    const auto    year_idx = h.First("1");
+    const TString h_noyear = TString(h).Replace(year_idx - 1, 3, 0);
+    auto          brName   = weightBrPrefix + "_" + h_noyear;
     if (debug) cout << "  Generating " << brName << "..." << endl;
     df = df.Define(brName,
                    [histoWt, prescale](double& x, double& y, double& z) {
@@ -461,7 +461,8 @@ int main(int argc, char** argv) {
   const vector<TString> skims = {"iso", "1os", "2os", "dd", "vmu"};
 
   // Generate names of histograms to be imported from unfolded.root
-  const vector<TString> histoWtNames = buildHistoWtNames(particle, skims, year, ymlConfig["tags"]);
+  const vector<TString> histoWtNames =
+      buildHistoWtNames(particle, skims, year, ymlConfig["tags"]);
   cout << "\nEfficiency histograms: " << endl;
   for (auto h : histoWtNames) cout << "\t" << h << endl;
 

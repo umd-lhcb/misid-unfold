@@ -1393,1681 +1393,1673 @@ int main(int argc, char **argv) {
 
     // Now loop over calib samples and make fits
 
-      // Define calib datasets
-      RooDataSet *datasets_calib_passed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] =
-          {{{nullptr}}};
-      RooDataSet *datasets_calib_failed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] =
-          {{{nullptr}}};
+    // Define calib datasets
+    RooDataSet *datasets_calib_passed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] = {
+        {{nullptr}}};
+    RooDataSet *datasets_calib_failed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] = {
+        {{nullptr}}};
 
-      // Initialize calib datasets
-      cout << "INFO Initializing calib datasets " << endl;
-      for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
-        for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
-          for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
-            TString suffix =
-                TString::Format("%s_%s_%d_%d_%d", year.c_str(), probe.c_str(),
-                                ntrks_idx, eta_idx, p_idx);
-            datasets_calib_passed[ntrks_idx][eta_idx][p_idx] =
-                new RooDataSet("dataset_calib_passed_" + suffix,
-                               "dataset_calib_passed_" + suffix, fit_vars);
-            datasets_calib_failed[ntrks_idx][eta_idx][p_idx] =
-                new RooDataSet("dataset_calib_failed_" + suffix,
-                               "dataset_calib_failed_" + suffix, fit_vars);
-          }
-        }
-      }
-
-      // Open and loop over PIDCalib files
-      const auto tree_names =
-          ymlConfig["pid_calib"]["trees"][probe].as<vector<string>>();
-      const auto calib_paths =
-          ymlConfig["pid_calib"]["calib_samples"][year].as<vector<string>>();
-      const auto friends_paths =
-          ymlConfig["pid_calib"]["friends"][year].as<vector<string>>();
-
-      for (unsigned p = 0; p < calib_paths.size(); p++) {
-        auto calib_path   = calib_paths[p];
-        auto friends_path = friends_paths[p];
-        cout << "INFO Opening PIDCalib files: " << calib_path << endl;
-
-        for (auto tree_name : tree_names) {
-          TChain ch_calib(tree_name.c_str());
-
-          ch_calib.Add(calib_path.c_str());
-          cout << "INFO Opened PIDCalib files:" << endl;
-          print_files(ch_calib);
-
-          cout << "INFO Opening friend ntuples with uBDT: " << friends_path
-               << endl;
-          TChain ch_friends(tree_name.c_str());
-          ch_friends.Add(friends_path.c_str());
-          cout << "INFO Opened friend input files:" << endl;
-          print_files(ch_friends);
-
-          // TODO Make sure order is correct
-          ch_calib.AddFriend(&ch_friends);
-
-          // Define variable to access input ntuples
-          double dst_m, d0_m, probe_p, probe_eta, probe_dllmu, probe_dlle,
-              probe_ghostprob, probe_mu_unbiased, ntracks_calib;
-
-          float probe_mu_ubdt;
-
-          bool probe_ismuon, probe_hasmuon;
-
-          cout << "INFO Setting input branches " << endl;
-          ch_calib.SetBranchStatus("*", 0);
-          ch_calib.SetBranchAddress("Dst_M", &dst_m);
-          ch_calib.SetBranchAddress("Dz_M", &d0_m);
-          ch_calib.SetBranchAddress("probe_Brunel_P", &probe_p);
-          ch_calib.SetBranchAddress("probe_Brunel_ETA", &probe_eta);
-          ch_calib.SetBranchAddress("probe_Brunel_isMuon", &probe_ismuon);
-          ch_calib.SetBranchAddress("probe_Brunel_hasMuon", &probe_hasmuon);
-          ch_calib.SetBranchAddress("probe_Brunel_PIDmu", &probe_dllmu);
-          ch_calib.SetBranchAddress("probe_Brunel_PIDe", &probe_dlle);
-          ch_calib.SetBranchAddress("probe_Brunel_TRACK_GHOSTPROB",
-                                    &probe_ghostprob);
-          ch_calib.SetBranchAddress("probe_Brunel_MuonUnbiased",
-                                    &probe_mu_unbiased);
-          ch_calib.SetBranchAddress("probe_UBDT", &probe_mu_ubdt);
-          ch_calib.SetBranchAddress("nTracks_Brunel", &ntracks_calib);
-
-          int count_tis = 0, count_cond = 0, count_range = 0;
-
-          int eta_bin = 0, p_bin = 0, ntrks_bin = 0;
-
-          const int entries_calib = ch_calib.GetEntries();
-          cout << "INFO Starting PIDCalib event loop over " << entries_calib
-               << " entries in tree " << tree_name << endl;
-          auto start_calib_loop = high_resolution_clock::now();
-          for (int evt = 0; evt < entries_calib; evt++) {
-            ch_calib.GetEntry(evt);
-
-            // Trigger decorrelation
-            if (!probe_mu_unbiased) continue;
-            count_tis++;
-
-            // Conditional cuts
-            if (!probe_hasmuon || probe_ghostprob > 0.5) continue;
-            count_cond++;
-
-            // Kinematical range cuts
-            if (probe_p < 3000. || probe_p >= 100000. || ntracks_calib >= 600)
-              continue;
-
-            if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
-            count_range++;
-
-            // Fill histograms
-
-            d0_m_var.setVal(d0_m * 0.001);
-            dm_var.setVal((dst_m - d0_m) * 0.001);
-
-            // Determine kinematical bin
-            const int kin_bin =
-                histo_binning.FindBin(probe_p, probe_eta, ntracks_calib);
-
-            histo_binning.GetBinXYZ(kin_bin, p_bin, eta_bin, ntrks_bin);
-
-            bool pid_ok;
-            if (fake_mu) {
-              // For FAKE_MU, we calculate the complementary efficiency so
-              // that the "passed" sample always corresponds to the K/pi misid
-              // case
-              pid_ok = probe_ismuon;
-            } else if (vmu) {
-              pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
-                       probe_mu_ubdt < 0.25;
-            } else {
-              pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
-                       probe_mu_ubdt > 0.25;
-            }
-
-            if (pid_ok) {
-              datasets_calib_passed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
-                  ->addFast(fit_vars);
-            } else {
-              datasets_calib_failed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
-                  ->addFast(fit_vars);
-            }
-          }
-
-          auto stop_calib_loop = high_resolution_clock::now();
-
-          const int duration_calib_loop =
-              duration_cast<seconds>(stop_calib_loop - start_calib_loop)
-                  .count();
-          cout << "INFO Calib loop took " << format_time(duration_calib_loop)
-               << endl;
-
-          cout << "INFO Calib cutflow:\n";
-          cout << " - Total MC events:              " << entries_calib << "\n";
-          cout << " - After probe unbiased  cut:    " << count_tis << "("
-               << count_tis * 100. / entries_calib << "%)\n";
-          cout << " - After conditional cuts:       " << count_cond << "("
-               << count_cond * 100. / count_tis << "%)\n";
-          cout << " - After range cuts:             " << count_range << "("
-               << count_range * 100. / count_cond << "%)\n";
-          cout << " Overall: " << "(" << count_range * 100. / entries_calib
-               << "%)\n"
-               << endl;
-        }
-      }
-
-      // Create histograms to store efficiency of PIDCalib mass windows
-      cout << "INFO Initializing efficiency histograms " << endl;
-      TString suffix = TString::Format("%s_%s", year.c_str(), probe.c_str());
-
-      TH3D effs_mw_passed(histo_binning);
-      effs_mw_passed.SetName("effs_mw_passed_" + suffix);
-
-      TH3D effs_mw_failed(histo_binning);
-      effs_mw_failed.SetName("effs_mw_failed_" + suffix);
-
-      // Check distribution of fitted parameters
-      RooDataSet ds_params_calib("ds_params_calib", "ds_params_calib",
-                                 params_calib);
-
-      TH3D fit_status_calib(histo_binning);
-      fit_status_calib.SetName("fit_status_calib_" + suffix);
-      fit_status_calib.SetMinimum(-0.1);
-      fit_status_calib.SetMaximum(12.);
-
-      TH3D fit_cov_qual_calib(histo_binning);
-      fit_cov_qual_calib.SetName("fit_cov_qual_calib_" + suffix);
-      fit_cov_qual_calib.SetMinimum(-0.1);
-      fit_cov_qual_calib.SetMaximum(6.);
-
-      TH1D calib_retries("calib_retries", "calib fit #retries;#retries;;",
-                         max_fix_reattempts + 1, 0., max_fix_reattempts + 1.);
-
-      ofile.cd();
-
-      cout << "INFO Calculating efficiencies " << endl;
-
-      // Create histogram to hold PID efficiency
-      // Use "eff" as name to match PIDCalib output
-      TH3D histo_pid(histo_binning);
-      histo_pid.SetName("eff");
-
-      TH3D histo_pid_raw(histo_binning);
-      histo_pid_raw.SetName("eff_raw");
-
-      // Create histogram to store fitted DiF fractions
-      TH3D histo_f_dif(histo_binning);
-      histo_f_dif.SetName("f_dif_" + TString(probe));
-
+    // Initialize calib datasets
+    cout << "INFO Initializing calib datasets " << endl;
+    for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
       for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
         for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
-          for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
-            // Use ntrks_idx as inner loop because we combine ntrack bins in the
-            // DiF samples
-
-            suffix.Form("%s_%s_%d_%d_%d", year.c_str(), probe.c_str(),
-                        ntrks_idx, eta_idx, p_idx);
-            const TString tag = TString::Format(
-                "(%.0f < nTracks < %.0f, %.1f < #eta < %.1f, %.0f < p < %.0f)",
-                BINS_NTRACKS[ntrks_idx], BINS_NTRACKS[ntrks_idx + 1],
-                BINS_ETA[eta_idx], BINS_ETA[eta_idx + 1], BINS_P[p_idx],
-                BINS_P[p_idx + 1]);
-
-            const TString fit_dir_path = opath + "/figs/fits/" + suffix;
-            gSystem->mkdir(fit_dir_path);
-
-            // Get kinematical bin
-            const int kin_bin =
-                histo_binning.GetBin(p_idx + 1, eta_idx + 1, ntrks_idx + 1);
-
-            // Get datasets
-            const auto &dataset_calib_passed =
-                datasets_calib_passed[ntrks_idx][eta_idx][p_idx];
-            const auto &dataset_calib_failed =
-                datasets_calib_failed[ntrks_idx][eta_idx][p_idx];
-
-            if ((probe == "pi") && (p_idx <= 1)) {
-              // Use reduced fit range excluding higher D0 mass region to avoid
-              // upper mass threshold in some kinematic bins
-              d0_m_var.setRange("fitRange", 1.825, 1.900);
-              dm_var.setRange("fitRange", 0.141, 0.153);
-            } else {
-              // Use full fit range
-              d0_m_var.setRange("fitRange", 1.825, 1.910);
-              dm_var.setRange("fitRange", 0.141, 0.153);
-            }
-
-            const int n_calib_passed =
-                dataset_calib_passed->sumEntries("", "fitRange");
-            const int n_calib_failed =
-                dataset_calib_failed->sumEntries("", "fitRange");
-
-            // Recover fit limits
-            const double d0m_range_max = d0_m_var.getMax("fitRange");
-            const double d0m_range_min = d0_m_var.getMin("fitRange");
-            const double dm_range_max  = dm_var.getMax("fitRange");
-            const double dm_range_min  = dm_var.getMin("fitRange");
-
-            // Plot 2D distributions in calib sample
-            d0_m_var.setRange(D0_M_min, D0_M_max);
-            dm_var.setRange(DM_min, DM_max);
-
-            unique_ptr<TH2F> th2_calib_passed(
-                dataset_calib_passed->createHistogram(
-                    d0_m_var, dm_var, 30, 30, "",
-                    "th2_calib_passed_" + suffix));
-            unique_ptr<TH2F> th2_calib_failed(
-                dataset_calib_failed->createHistogram(
-                    d0_m_var, dm_var, 60, 60, "",
-                    "th2_calib_failed_" + suffix));
-
-            c_single.cd();
-            th2_calib_passed->Draw("LEGO2Z 0");
-            c_single.SaveAs(fit_dir_path + "/th2_" + suffix + "_passed.pdf");
-            th2_calib_failed->Draw("LEGO2Z 0");
-            c_single.SaveAs(fit_dir_path + "/th2_" + suffix + "_failed.pdf");
-
-            d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
-            dm_var.setRange(extended_dm_min, extended_dm_max);
-
-            d0_m_shift.setVal(0.);
-            dm_shift.setVal(0.);
-            d0_m_scale.setVal(1.);
-            dm_scale.setVal(1.);
-
-            ////////////////////////////
-            // Non-DiF d0_m template  //
-            ////////////////////////////
-
-            cout << "\nINFO Building D0 MC template without dif " << suffix
-                 << endl;
-
-            const auto &ds_mc_passed_nondif =
-                datasets_mc_passed_nondif[ntrks_idx][eta_idx][p_idx];
-            const auto &ds_mc_failed_nondif =
-                datasets_mc_failed_nondif[ntrks_idx][eta_idx][p_idx];
-
-            // The mass distributions for non-dif events are not correlated with
-            // muon PID, so let's merge the two datasets
-            RooDataSet ds_mc_nondif_merged("ds_mc_nondif_merged_" + suffix,
-                                           "ds_mc_nondif_merged_" + suffix,
-                                           fit_vars);
-            ds_mc_nondif_merged.append(*ds_mc_passed_nondif);
-            ds_mc_nondif_merged.append(*ds_mc_failed_nondif);
-
-            cout << "INFO Building RooKeysPdf d0_model_passed_nondif with "
-                 << ds_mc_nondif_merged.numEntries() << " entries" << endl;
-            RooKeysPdf d0_model_passed_nondif(
-                "d0_model_passed_nondif_" + suffix,
-                "d0_model_passed_nondif_" + suffix, d0_m_var, d0_m_var,
-                d0_m_pdg, d0_m_scale, d0_m_shift, ds_mc_nondif_merged,
-                RooKeysPdf::NoMirror, 1.6, true, n_bins_keys);
-
-            cout << "INFO Building RooKeysPdf d0_model_failed_nondif with "
-                 << ds_mc_nondif_merged.numEntries() << " entries" << endl;
-            RooKeysPdf d0_model_failed_nondif(
-                "d0_model_failed_nondif_" + suffix,
-                "d0_model_failed_nondif_" + suffix, d0_m_var, d0_m_var,
-                d0_m_pdg, d0_m_scale, d0_m_shift, ds_mc_nondif_merged,
-                RooKeysPdf::NoMirror, 1.6, true, n_bins_keys);
-
-            // Plot fit results
-            // PDF from merged dataset is compared to separate distribution
-            // in individual samples
-            unique_ptr<RooPlot> frame_d0_passed_nondif(
-                d0_m_var.frame(Title("D0 M Passed " + tag)));
-            unique_ptr<RooPlot> frame_d0_failed_nondif(
-                d0_m_var.frame(Title("D0 M Failed " + tag)));
-            ds_mc_passed_nondif->plotOn(frame_d0_passed_nondif.get(),
-                                        Binning("bins_histos_d0_m_passed"));
-            ds_mc_failed_nondif->plotOn(frame_d0_failed_nondif.get(),
-                                        Binning("bins_histos_d0_m_failed"));
-            d0_model_passed_nondif.plotOn(frame_d0_passed_nondif.get(),
-                                          LineWidth(1), Range("data"),
-                                          LineColor(kRed), VLines());
-            d0_model_passed_nondif.plotOn(frame_d0_passed_nondif.get(),
-                                          LineWidth(2), NormRange("data"));
-            d0_model_failed_nondif.plotOn(frame_d0_failed_nondif.get(),
-                                          LineWidth(1), Range("data"),
-                                          LineColor(kRed), VLines());
-            d0_model_failed_nondif.plotOn(frame_d0_failed_nondif.get(),
-                                          LineWidth(2), NormRange("data"));
-
-            // Note: All MC PDFs built with RooKeysPdf are plotted with
-            // NormRange("data") i.e. normalization is calculated only in fit
-            // range. This is because the RooKeysPdf estimate gets weird near
-            // the boundaries (and we don't use that region in the fit anyways).
-
-            c_double.cd(1);
-            frame_d0_passed_nondif->Draw();
-            c_double.cd(2);
-            frame_d0_failed_nondif->Draw();
-            c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_nondif.pdf");
-
-            ///////////////////////
-            // DiF d0_m template //
-            ///////////////////////
-
-            cout << "\nINFO Building D0 MC template with dif " << suffix
-                 << endl;
-
-            const auto &ds_mc_passed_dif =
-                datasets_mc_passed_dif[eta_idx][p_idx];
-            const auto &ds_mc_failed_dif =
-                datasets_mc_failed_dif[eta_idx][p_idx];
-
-            cout << "INFO Building RooKeysPdf d0_model_passed_dif with "
-                 << ds_mc_passed_dif->numEntries() << " entries" << endl;
-            RooKeysPdf d0_model_passed_dif(
-                "d0_model_passed_dif_" + suffix,
-                "d0_model_passed_dif_" + suffix, d0_m_var, d0_m_var, d0_m_pdg,
-                d0_m_scale, d0_m_shift, *ds_mc_passed_dif, RooKeysPdf::NoMirror,
-                1.8, true, n_bins_keys);
-
-            cout << "INFO Building RooKeysPdf d0_model_failed_dif with "
-                 << ds_mc_failed_dif->numEntries() << " entries" << endl;
-            RooKeysPdf d0_model_failed_dif(
-                "d0_model_failed_dif_" + suffix,
-                "d0_model_failed_dif_" + suffix, d0_m_var, d0_m_var, d0_m_pdg,
-                d0_m_scale, d0_m_shift, *ds_mc_failed_dif, RooKeysPdf::NoMirror,
-                1.8, true, n_bins_keys);
-
-            // Plot fit results
-            unique_ptr<RooPlot> frame_d0_passed_dif(
-                d0_m_var.frame(Title("D0 M Passed " + tag)));
-            unique_ptr<RooPlot> frame_d0_failed_dif(
-                d0_m_var.frame(Title("D0 M Failed " + tag)));
-            ds_mc_passed_dif->plotOn(frame_d0_passed_dif.get(),
-                                     Binning("bins_histos_d0_m_passed"));
-            ds_mc_failed_dif->plotOn(frame_d0_failed_dif.get(),
-                                     Binning("bins_histos_d0_m_failed"));
-            d0_model_passed_dif.plotOn(frame_d0_passed_dif.get(), LineWidth(1),
-                                       Range("data"), LineColor(kRed),
-                                       VLines());
-            d0_model_passed_dif.plotOn(frame_d0_passed_dif.get(), LineWidth(2),
-                                       NormRange("data"));
-            d0_model_failed_dif.plotOn(frame_d0_failed_dif.get(), LineWidth(1),
-                                       Range("data"), LineColor(kRed),
-                                       VLines());
-            d0_model_failed_dif.plotOn(frame_d0_failed_dif.get(), LineWidth(2),
-                                       NormRange("data"));
-
-            c_double.cd(1);
-            frame_d0_passed_dif->Draw();
-            c_double.cd(2);
-            frame_d0_failed_dif->Draw();
-            c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_dif.pdf");
-
-            /////////////////////////
-            // Non-DiF dm template //
-            /////////////////////////
-
-            cout << "\nINFO Building dm MC template without dif " << suffix
-                 << endl;
-
-            cout << "INFO Building RooKeysPdf dm_model_passed_nondif with "
-                 << ds_mc_nondif_merged.numEntries() << " entries" << endl;
-            RooKeysPdf dm_model_passed_nondif(
-                "dm_model_passed_nondif_" + suffix,
-                "dm_model_passed_nondif_" + suffix, dm_var, dm_var, dm_pdg,
-                dm_scale, dm_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
-                1.6, true, n_bins_keys);
-
-            cout << "INFO Building RooKeysPdf dm_model_failed_nondif with "
-                 << ds_mc_nondif_merged.numEntries() << " entries" << endl;
-            RooKeysPdf dm_model_failed_nondif(
-                "dm_model_failed_nondif_" + suffix,
-                "dm_model_failed_nondif_" + suffix, dm_var, dm_var, dm_pdg,
-                dm_scale, dm_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
-                1.6, true, n_bins_keys);
-
-            // Plot fit results
-            // PDF from merged dataset is compared to separate distribution
-            // in individual samples
-            unique_ptr<RooPlot> frame_dm_passed_nondif(
-                dm_var.frame(Title("dm Passed " + tag)));
-            unique_ptr<RooPlot> frame_dm_failed_nondif(
-                dm_var.frame(Title("dm Failed " + tag)));
-            ds_mc_passed_nondif->plotOn(frame_dm_passed_nondif.get(),
-                                        Binning("bins_histos_dm_passed"));
-            ds_mc_failed_nondif->plotOn(frame_dm_failed_nondif.get(),
-                                        Binning("bins_histos_dm_failed"));
-            dm_model_passed_nondif.plotOn(frame_dm_passed_nondif.get(),
-                                          LineWidth(1), Range("data"),
-                                          LineColor(kRed), VLines());
-            dm_model_passed_nondif.plotOn(frame_dm_passed_nondif.get(),
-                                          LineWidth(2), NormRange("data"));
-            dm_model_failed_nondif.plotOn(frame_dm_failed_nondif.get(),
-                                          LineWidth(1), Range("data"),
-                                          LineColor(kRed), VLines());
-            dm_model_failed_nondif.plotOn(frame_dm_failed_nondif.get(),
-                                          LineWidth(2), NormRange("data"));
-
-            c_double.cd(1);
-            frame_dm_passed_nondif->Draw();
-            c_double.cd(2);
-            frame_dm_failed_nondif->Draw();
-            c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_nondif.pdf");
-
-            /////////////////////
-            // DiF dm template //
-            /////////////////////
-
-            cout << "\nINFO Building dm MC template with dif " << suffix
-                 << endl;
-
-            cout << "INFO Building RooKeysPdf dm_model_passed_dif with "
-                 << ds_mc_passed_dif->numEntries() << " entries" << endl;
-            RooKeysPdf dm_model_passed_dif(
-                "dm_model_passed_dif_" + suffix,
-                "dm_model_passed_dif_" + suffix, dm_var, dm_var, dm_pdg,
-                dm_scale, dm_shift, *ds_mc_passed_dif, RooKeysPdf::NoMirror,
-                1.6, true, n_bins_keys);
-
-            cout << "INFO Building RooKeysPdf dm_model_failed_dif with "
-                 << ds_mc_failed_dif->numEntries() << " entries" << endl;
-            RooKeysPdf dm_model_failed_dif(
-                "dm_model_failed_dif_" + suffix,
-                "dm_model_failed_dif_" + suffix, dm_var, dm_var, dm_pdg,
-                dm_scale, dm_shift, *ds_mc_failed_dif, RooKeysPdf::NoMirror,
-                1.6, true, n_bins_keys);
-
-            // https://root-forum.cern.ch/t/fit-an-offset-for-roohistpdf/9641
-
-            // Plot fit results
-            unique_ptr<RooPlot> frame_dm_passed_dif(
-                dm_var.frame(Title("dm Passed " + tag)));
-            unique_ptr<RooPlot> frame_dm_failed_dif(
-                dm_var.frame(Title("dm Failed " + tag)));
-            ds_mc_passed_dif->plotOn(frame_dm_passed_dif.get(),
-                                     Binning("bins_histos_dm_passed"));
-            ds_mc_failed_dif->plotOn(frame_dm_failed_dif.get(),
-                                     Binning("bins_histos_dm_failed"));
-            dm_model_passed_dif.plotOn(frame_dm_passed_dif.get(), LineWidth(1),
-                                       Range("data"), LineColor(kRed),
-                                       VLines());
-            dm_model_passed_dif.plotOn(frame_dm_passed_dif.get(), LineWidth(2),
-                                       NormRange("data"));
-            dm_model_failed_dif.plotOn(frame_dm_failed_dif.get(), LineWidth(1),
-                                       Range("data"), LineColor(kRed),
-                                       VLines());
-            dm_model_failed_dif.plotOn(frame_dm_failed_dif.get(), LineWidth(2),
-                                       NormRange("data"));
-
-            c_double.cd(1);
-            frame_dm_passed_dif->Draw();
-            c_double.cd(2);
-            frame_dm_failed_dif->Draw();
-            c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_dif.pdf");
-
-            ////////////////////////////////////////////////////
-            // d0_m templates for mis-reconstructed D0 decays //
-            ////////////////////////////////////////////////////
-
-            cout << "\nINFO Building d0_m MC template for D0 bkg " << suffix
-                 << endl;
-
-            unordered_map<string, RooKeysPdf> d0m_pdfs_d0_bkg_passed;
-            unordered_map<string, RooKeysPdf> d0m_pdfs_d0_bkg_failed;
-            unordered_map<string, RooRealVar> d0m_fs_d0_bkg_passed;
-            unordered_map<string, RooRealVar> d0m_fs_d0_bkg_failed;
-            unordered_map<string, RooRealVar> d0m_fs_extended_d0_bkg_passed;
-            unordered_map<string, RooRealVar> d0m_fs_extended_d0_bkg_failed;
-            RooArgList d0m_pdf_list_d0_bkg_passed, d0m_pdf_list_d0_bkg_failed,
-                d0m_f_list_d0_bkg_passed, d0m_f_list_d0_bkg_failed,
-                d0m_f_extended_list_d0_bkg_passed,
-                d0m_f_extended_list_d0_bkg_failed;
-
-            RooDataSet ds_d0m_d0_bkg_passed_sum(
-                "ds_d0m_d0_bkg_passed_sum_" + suffix,
-                "ds_d0m_d0_bkg_passed_sum_" + suffix, fit_vars_w,
-                WeightVar(w_d0_bkg));
-            RooDataSet ds_d0m_d0_bkg_failed_sum(
-                "ds_d0m_d0_bkg_failed_sum_" + suffix,
-                "ds_d0m_d0_bkg_failed_sum_" + suffix, fit_vars_w,
-                WeightVar(w_d0_bkg));
-
-            unordered_map<string, TH1D> d0m_histos_d0_bkg_passed;
-            unordered_map<string, TH1D> d0m_histos_d0_bkg_failed;
-            TH1D    h_d0m_d0_bkg_passed("h_d0m_d0_bkg_passed_" + suffix,
-                                        "h_d0m_d0_bkg_passed_" + suffix,
-                                        bins_histos_d0_m_d0_bkg.numBins(),
-                                        bins_histos_d0_m_d0_bkg.lowBound(),
-                                        bins_histos_d0_m_d0_bkg.highBound());
-            TH1D    h_d0m_d0_bkg_failed("h_d0m_d0_bkg_failed_" + suffix,
-                                        "h_d0m_d0_bkg_failed_" + suffix,
-                                        bins_histos_d0_m_d0_bkg.numBins(),
-                                        bins_histos_d0_m_d0_bkg.lowBound(),
-                                        bins_histos_d0_m_d0_bkg.highBound());
-            THStack ths_d0m_d0_bkg_passed("ths_d0m_d0_bkg_passed_" + suffix,
-                                          "ths_d0m_d0_bkg_passed_" + suffix);
-            THStack ths_d0m_d0_bkg_failed("ths_d0m_d0_bkg_failed_" + suffix,
-                                          "ths_d0m_d0_bkg_failed_" + suffix);
-
-            double sum_f_passed_d0m = 0., sum_f_failed_d0m = 0.,
-                   sum_f_ext_passed_d0m = 0., sum_f_ext_failed_d0m = 0.;
-
-            double d0_bkg_sum_passed = 0., d0_bkg_sum_failed = 0.,
-                   d0_bkg_sum_extended_passed = 0.,
-                   d0_bkg_sum_extended_failed = 0.;
-
-            for (const auto &d0_decay : d0_bkg_decays) {
-              // Total counts over extended range
-              d0_bkg_sum_extended_passed +=
-                  w_d0_decays.at(d0_decay) *
-                  datasets_d0_bkg_mc_passed[d0_decay][p_idx].numEntries();
-              d0_bkg_sum_extended_failed +=
-                  w_d0_decays.at(d0_decay) *
-                  datasets_d0_bkg_mc_failed[d0_decay][p_idx].numEntries();
-              // Total counts in pidcalib mass window
-              d0_bkg_sum_passed += w_d0_decays.at(d0_decay) *
-                                   d0_bkg_counts_passed[probe][p_idx][d0_decay];
-              d0_bkg_sum_failed += w_d0_decays.at(d0_decay) *
-                                   d0_bkg_counts_failed[probe][p_idx][d0_decay];
-            }
-
-            for (const auto &d0_decay : d0_bkg_decays) {
-              cout << "\nINFO Producing d0_M PDFs for " << d0_decay << endl;
-              const TString suffix_bkg = d0_decay + "_" + suffix;
-
-              RooDataSet &ds_passed =
-                  datasets_d0_bkg_mc_passed[d0_decay][p_idx];
-              RooDataSet &ds_failed =
-                  datasets_d0_bkg_mc_failed[d0_decay][p_idx];
-
-              const double n_passed_d0_decay =
-                  ds_passed.numEntries() * w_d0_decays.at(d0_decay);
-              const double n_failed_d0_decay =
-                  ds_failed.numEntries() * w_d0_decays.at(d0_decay);
-
-              w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_passed_d0_decay /
-                              (n_passed_d0_decay + n_failed_d0_decay));
-              append_to_dataset(ds_passed, ds_d0m_d0_bkg_passed_sum, w_d0_bkg);
-              append_to_dataset(ds_failed, ds_d0m_d0_bkg_passed_sum, w_d0_bkg);
-
-              w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_failed_d0_decay /
-                              (n_passed_d0_decay + n_failed_d0_decay));
-              append_to_dataset(ds_passed, ds_d0m_d0_bkg_failed_sum, w_d0_bkg);
-              append_to_dataset(ds_failed, ds_d0m_d0_bkg_failed_sum, w_d0_bkg);
-
-              RooDataSet ds_d0m_d0_bkg("ds_d0m_d0_bkg_" + suffix_bkg,
-                                       "ds_d0m_d0_bkg_" + suffix_bkg, fit_vars);
-
-              ds_d0m_d0_bkg.append(ds_passed);
-              ds_d0m_d0_bkg.append(ds_failed);
-
-              unique_ptr<TH1D> h_passed(static_cast<TH1D *>(
-                  ds_passed.createHistogram("h_passed_" + suffix_bkg, d0_m_var,
-                                            Binning(bins_histos_d0_m_d0_bkg))));
-              unique_ptr<TH1D> h_failed(static_cast<TH1D *>(
-                  ds_failed.createHistogram("h_failed_" + suffix_bkg, d0_m_var,
-                                            Binning(bins_histos_d0_m_d0_bkg))));
-
-              h_passed->SetFillColor(color_ids_d0_decays.at(d0_decay));
-              h_failed->SetFillColor(color_ids_d0_decays.at(d0_decay));
-
-              d0m_histos_d0_bkg_passed.emplace(
-                  d0_decay, TH1D("h_d0m_d0_bkg_passed_merged_" + suffix_bkg,
-                                 "h_d0m_d0_bkg_passed_merged_" + suffix_bkg,
-                                 bins_histos_d0_m_d0_bkg.numBins(),
-                                 bins_histos_d0_m_d0_bkg.lowBound(),
-                                 bins_histos_d0_m_d0_bkg.highBound()));
-              d0m_histos_d0_bkg_failed.emplace(
-                  d0_decay, TH1D("h_d0m_d0_bkg_failed_merged_" + suffix_bkg,
-                                 "h_d0m_d0_bkg_failed_merged_" + suffix_bkg,
-                                 bins_histos_d0_m_d0_bkg.numBins(),
-                                 bins_histos_d0_m_d0_bkg.lowBound(),
-                                 bins_histos_d0_m_d0_bkg.highBound()));
-
-              TH1D &h_passed_merged = d0m_histos_d0_bkg_passed[d0_decay];
-              TH1D &h_failed_merged = d0m_histos_d0_bkg_failed[d0_decay];
-
-              h_passed_merged.Add(h_passed.get(), h_failed.get());
-              h_failed_merged.Add(h_passed.get(), h_failed.get());
-
-              h_passed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
-              h_failed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
-
-              h_passed_merged.Scale(n_passed_d0_decay /
-                                    h_passed_merged.GetEntries());
-              h_failed_merged.Scale(n_failed_d0_decay /
-                                    h_failed_merged.GetEntries());
-              ths_d0m_d0_bkg_passed.Add(&h_passed_merged);
-              ths_d0m_d0_bkg_failed.Add(&h_failed_merged);
-              h_d0m_d0_bkg_passed.Add(&h_passed_merged);
-              h_d0m_d0_bkg_failed.Add(&h_failed_merged);
-
-              cout << "INFO Building RooKeysPdf d0_model_d0_bkg_passed with "
-                   << ds_d0m_d0_bkg.numEntries() << " entries" << endl;
-              d0m_pdfs_d0_bkg_passed.emplace(
-                  d0_decay,
-                  RooKeysPdf("d0_model_d0_bkg_passed_" + suffix_bkg,
-                             "d0_model_d0_bkg_passed_" + suffix_bkg, d0_m_var,
-                             d0_m_var, d0_m_pdg, d0_m_scale, d0_m_shift,
-                             ds_d0m_d0_bkg, RooKeysPdf::NoMirror, 1.5, true,
-                             n_bins_keys));
-
-              cout << "INFO Building RooKeysPdf d0_model_d0_bkg_failed with "
-                   << ds_d0m_d0_bkg.numEntries() << " entries" << endl;
-              d0m_pdfs_d0_bkg_failed.emplace(
-                  d0_decay,
-                  RooKeysPdf("d0_model_d0_bkg_failed_" + suffix_bkg,
-                             "d0_model_d0_bkg_failed_" + suffix_bkg, d0_m_var,
-                             d0_m_var, d0_m_pdg, d0_m_scale, d0_m_shift,
-                             ds_d0m_d0_bkg, RooKeysPdf::NoMirror, 1.5, true,
-                             n_bins_keys));
-
-              unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed(
-                  d0_m_var.frame(Title("d0_m Passed " + tag)));
-              unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed(
-                  d0_m_var.frame(Title("d0_m Failed " + tag)));
-              unique_ptr<RooPlot> frame_d0_mc_d0_bkg_total(
-                  d0_m_var.frame(Title("d0_m Total " + tag)));
-
-              ds_passed.plotOn(frame_d0_mc_d0_bkg_passed.get(),
-                               Binning(bins_histos_d0_m_d0_bkg));
-              ds_failed.plotOn(frame_d0_mc_d0_bkg_failed.get(),
-                               Binning(bins_histos_d0_m_d0_bkg));
-              ds_d0m_d0_bkg.plotOn(frame_d0_mc_d0_bkg_total.get(),
-                                   Binning(bins_histos_d0_m_d0_bkg));
-              d0m_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
-                  frame_d0_mc_d0_bkg_passed.get(), LineWidth(1),
-                  LineColor(kRed), Range("fitRange"), VLines());
-              d0m_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
-                  frame_d0_mc_d0_bkg_passed.get(), LineWidth(2),
-                  LineColor(color_ids_d0_decays.at(d0_decay)),
-                  NormRange("fitRange"));
-              d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_d0_mc_d0_bkg_failed.get(), LineWidth(1),
-                  LineColor(kRed), Range("fitRange"), VLines());
-              d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_d0_mc_d0_bkg_failed.get(), LineWidth(2),
-                  LineColor(color_ids_d0_decays.at(d0_decay)),
-                  NormRange("fitRange"));
-              d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_d0_mc_d0_bkg_total.get(), LineWidth(1), LineColor(kRed),
-                  Range("fitRange"), VLines());
-              d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_d0_mc_d0_bkg_total.get(), LineWidth(2),
-                  LineColor(color_ids_d0_decays.at(d0_decay)),
-                  NormRange("fitRange"));
-
-              c3.cd(1);
-              frame_d0_mc_d0_bkg_passed->Draw();
-              c3.cd(2);
-              frame_d0_mc_d0_bkg_failed->Draw();
-              c3.cd(3);
-              frame_d0_mc_d0_bkg_total->Draw();
-              c3.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg_keys_" +
-                        d0_decay + ".pdf");
-
-              d0m_pdf_list_d0_bkg_passed.add(
-                  d0m_pdfs_d0_bkg_passed.at(d0_decay));
-              d0m_pdf_list_d0_bkg_failed.add(
-                  d0m_pdfs_d0_bkg_failed.at(d0_decay));
-
-              if (d0_decay != d0_bkg_decays.back()) {
-                // Here we calculate fit fractions, so the this must be omitted
-                // for the last component
-
-                // Fit fractions within fit range
-                d0m_fs_d0_bkg_passed.emplace(
-                    d0_decay,
-                    RooRealVar(
-                        "d0_f_d0_bkg_passed_" + suffix_bkg,
-                        "d0_f_d0_bkg_passed_" + suffix_bkg,
-                        w_d0_decays.at(d0_decay) *
-                            d0_bkg_counts_passed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_passed,
-                        ""));
-
-                d0m_fs_d0_bkg_failed.emplace(
-                    d0_decay,
-                    RooRealVar(
-                        "d0_f_d0_bkg_failed_" + suffix_bkg,
-                        "d0_f_d0_bkg_failed_" + suffix_bkg,
-                        w_d0_decays.at(d0_decay) *
-                            d0_bkg_counts_failed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_failed,
-                        ""));
-
-                d0m_f_list_d0_bkg_passed.add(d0m_fs_d0_bkg_passed.at(d0_decay));
-                d0m_f_list_d0_bkg_failed.add(d0m_fs_d0_bkg_failed.at(d0_decay));
-
-                // Fit fractions over extended range
-                d0m_fs_extended_d0_bkg_passed.emplace(
-                    d0_decay,
-                    RooRealVar("d0_f_extended_d0_bkg_passed_" + suffix_bkg,
-                               "d0_f_extended_d0_bkg_passed_" + suffix_bkg,
-                               n_passed_d0_decay / d0_bkg_sum_extended_passed,
-                               ""));
-
-                d0m_fs_extended_d0_bkg_failed.emplace(
-                    d0_decay,
-                    RooRealVar("d0_f_extended_d0_bkg_failed_" + suffix_bkg,
-                               "d0_f_extended_d0_bkg_failed_" + suffix_bkg,
-                               n_failed_d0_decay / d0_bkg_sum_extended_failed,
-                               ""));
-
-                d0m_f_extended_list_d0_bkg_passed.add(
-                    d0m_fs_extended_d0_bkg_passed.at(d0_decay));
-                d0m_f_extended_list_d0_bkg_failed.add(
-                    d0m_fs_extended_d0_bkg_failed.at(d0_decay));
-
-                cout << "INFO " << d0_decay << " f passed: "
-                     << d0m_fs_d0_bkg_passed.at(d0_decay).getVal() << endl;
-                cout << "INFO " << d0_decay << " f failed: "
-                     << d0m_fs_d0_bkg_failed.at(d0_decay).getVal() << endl;
-                cout << "INFO " << d0_decay << " f ext passed: "
-                     << d0m_fs_extended_d0_bkg_passed.at(d0_decay).getVal()
-                     << endl;
-                cout << "INFO " << d0_decay << " f ext failed: "
-                     << d0m_fs_extended_d0_bkg_failed.at(d0_decay).getVal()
-                     << endl;
-
-                sum_f_passed_d0m += d0m_fs_d0_bkg_passed.at(d0_decay).getVal();
-                sum_f_failed_d0m += d0m_fs_d0_bkg_failed.at(d0_decay).getVal();
-                sum_f_ext_passed_d0m +=
-                    d0m_fs_extended_d0_bkg_passed.at(d0_decay).getVal();
-                sum_f_ext_failed_d0m +=
-                    d0m_fs_extended_d0_bkg_failed.at(d0_decay).getVal();
-              }
-            }
-
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f passed: " << 1. - sum_f_passed_d0m << endl;
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f failed: " << 1. - sum_f_failed_d0m << endl;
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f ext passed: " << 1. - sum_f_ext_passed_d0m << endl;
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f ext failed: " << 1. - sum_f_ext_failed_d0m << endl;
-
-            // Plot stacked histograms
-            h_d0m_d0_bkg_passed.SetLineColor(kBlack);
-            h_d0m_d0_bkg_failed.SetLineColor(kBlack);
-
-            c_double.cd(1);
-            ths_d0m_d0_bkg_passed.Draw("B HIST");
-            h_d0m_d0_bkg_passed.Draw("L SAME");
-
-            c_double.cd(2);
-            ths_d0m_d0_bkg_failed.Draw("B HIST");
-            h_d0m_d0_bkg_failed.Draw("L SAME");
-
-            c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix +
-                            "_d0_bkg_histos_stacked.pdf");
-
-            // Build pdfs with fit fractions calculated within the fit range
-            // This is the one we use for the fits!
-            RooAddPdf d0_model_d0_bkg_passed("d0_model_d0_bkg_passed_" + suffix,
-                                             "d0_model_d0_bkg_passed_" + suffix,
-                                             d0m_pdf_list_d0_bkg_passed,
-                                             d0m_f_list_d0_bkg_passed);
-
-            RooAddPdf d0_model_d0_bkg_failed("d0_model_d0_bkg_failed_" + suffix,
-                                             "d0_model_d0_bkg_failed_" + suffix,
-                                             d0m_pdf_list_d0_bkg_failed,
-                                             d0m_f_list_d0_bkg_failed);
-
-            // Build pdfs fit fractions calculated within the extended range
-            RooAddPdf d0_model_d0_bkg_passed_ext(
-                "d0_model_d0_bkg_passed_ext_" + suffix,
-                "d0_model_d0_bkg_passed_ext_" + suffix,
-                d0m_pdf_list_d0_bkg_passed, d0m_f_extended_list_d0_bkg_passed);
-
-            RooAddPdf d0_model_d0_bkg_failed_ext(
-                "d0_model_d0_bkg_failed_ext_" + suffix,
-                "d0_model_d0_bkg_failed_ext_" + suffix,
-                d0m_pdf_list_d0_bkg_failed, d0m_f_extended_list_d0_bkg_failed);
-
-            // Plot PDF over extended range
-            unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed_ext(
-                d0_m_var.frame(Title("d0_m Passed " + tag)));
-            unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed_ext(
-                d0_m_var.frame(Title("d0_m Failed " + tag)));
-            ds_d0m_d0_bkg_passed_sum.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
-                                            Binning(bins_histos_d0_m_d0_bkg));
-            ds_d0m_d0_bkg_failed_sum.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
-                                            Binning(bins_histos_d0_m_d0_bkg));
-
-            d0_model_d0_bkg_passed_ext.plotOn(
-                frame_d0_mc_d0_bkg_passed_ext.get(), LineWidth(1),
-                LineColor(kRed), Range("fitRange"), VLines());
-            d0_model_d0_bkg_passed_ext.plotOn(
-                frame_d0_mc_d0_bkg_passed_ext.get(), LineWidth(2),
-                NormRange("fitRange"));
-            d0_model_d0_bkg_failed_ext.plotOn(
-                frame_d0_mc_d0_bkg_failed_ext.get(), LineWidth(1),
-                LineColor(kRed), Range("fitRange"), VLines());
-            d0_model_d0_bkg_failed_ext.plotOn(
-                frame_d0_mc_d0_bkg_failed_ext.get(), LineWidth(2),
-                NormRange("fitRange"));
-
-            c_double.cd(1);
-            frame_d0_mc_d0_bkg_passed_ext->Draw();
-            c_double.cd(2);
-            frame_d0_mc_d0_bkg_failed_ext->Draw();
-            c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix +
-                            "_d0_bkg_ext.pdf");
-
-            // Plot PDF in fit range
-            d0_m_var.setRange(d0m_range_min, d0m_range_max);
-            dm_var.setRange(dm_range_min, dm_range_max);
+          TString suffix =
+              TString::Format("%s_%s_%d_%d_%d", year.c_str(), probe.c_str(),
+                              ntrks_idx, eta_idx, p_idx);
+          datasets_calib_passed[ntrks_idx][eta_idx][p_idx] =
+              new RooDataSet("dataset_calib_passed_" + suffix,
+                             "dataset_calib_passed_" + suffix, fit_vars);
+          datasets_calib_failed[ntrks_idx][eta_idx][p_idx] =
+              new RooDataSet("dataset_calib_failed_" + suffix,
+                             "dataset_calib_failed_" + suffix, fit_vars);
+        }
+      }
+    }
+
+    // Open and loop over PIDCalib files
+    const auto tree_names =
+        ymlConfig["pid_calib"]["trees"][probe].as<vector<string>>();
+    const auto calib_paths =
+        ymlConfig["pid_calib"]["calib_samples"][year].as<vector<string>>();
+    const auto friends_paths =
+        ymlConfig["pid_calib"]["friends"][year].as<vector<string>>();
+
+    for (unsigned p = 0; p < calib_paths.size(); p++) {
+      auto calib_path   = calib_paths[p];
+      auto friends_path = friends_paths[p];
+      cout << "INFO Opening PIDCalib files: " << calib_path << endl;
+
+      for (auto tree_name : tree_names) {
+        TChain ch_calib(tree_name.c_str());
+
+        ch_calib.Add(calib_path.c_str());
+        cout << "INFO Opened PIDCalib files:" << endl;
+        print_files(ch_calib);
+
+        cout << "INFO Opening friend ntuples with uBDT: " << friends_path
+             << endl;
+        TChain ch_friends(tree_name.c_str());
+        ch_friends.Add(friends_path.c_str());
+        cout << "INFO Opened friend input files:" << endl;
+        print_files(ch_friends);
+
+        // TODO Make sure order is correct
+        ch_calib.AddFriend(&ch_friends);
+
+        // Define variable to access input ntuples
+        double dst_m, d0_m, probe_p, probe_eta, probe_dllmu, probe_dlle,
+            probe_ghostprob, probe_mu_unbiased, ntracks_calib;
+
+        float probe_mu_ubdt;
+
+        bool probe_ismuon, probe_hasmuon;
+
+        cout << "INFO Setting input branches " << endl;
+        ch_calib.SetBranchStatus("*", 0);
+        ch_calib.SetBranchAddress("Dst_M", &dst_m);
+        ch_calib.SetBranchAddress("Dz_M", &d0_m);
+        ch_calib.SetBranchAddress("probe_Brunel_P", &probe_p);
+        ch_calib.SetBranchAddress("probe_Brunel_ETA", &probe_eta);
+        ch_calib.SetBranchAddress("probe_Brunel_isMuon", &probe_ismuon);
+        ch_calib.SetBranchAddress("probe_Brunel_hasMuon", &probe_hasmuon);
+        ch_calib.SetBranchAddress("probe_Brunel_PIDmu", &probe_dllmu);
+        ch_calib.SetBranchAddress("probe_Brunel_PIDe", &probe_dlle);
+        ch_calib.SetBranchAddress("probe_Brunel_TRACK_GHOSTPROB",
+                                  &probe_ghostprob);
+        ch_calib.SetBranchAddress("probe_Brunel_MuonUnbiased",
+                                  &probe_mu_unbiased);
+        ch_calib.SetBranchAddress("probe_UBDT", &probe_mu_ubdt);
+        ch_calib.SetBranchAddress("nTracks_Brunel", &ntracks_calib);
+
+        int count_tis = 0, count_cond = 0, count_range = 0;
+
+        int eta_bin = 0, p_bin = 0, ntrks_bin = 0;
+
+        const int entries_calib = ch_calib.GetEntries();
+        cout << "INFO Starting PIDCalib event loop over " << entries_calib
+             << " entries in tree " << tree_name << endl;
+        auto start_calib_loop = high_resolution_clock::now();
+        for (int evt = 0; evt < entries_calib; evt++) {
+          ch_calib.GetEntry(evt);
+
+          // Trigger decorrelation
+          if (!probe_mu_unbiased) continue;
+          count_tis++;
+
+          // Conditional cuts
+          if (!probe_hasmuon || probe_ghostprob > 0.5) continue;
+          count_cond++;
+
+          // Kinematical range cuts
+          if (probe_p < 3000. || probe_p >= 100000. || ntracks_calib >= 600)
+            continue;
+
+          if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
+          count_range++;
+
+          // Fill histograms
+
+          d0_m_var.setVal(d0_m * 0.001);
+          dm_var.setVal((dst_m - d0_m) * 0.001);
+
+          // Determine kinematical bin
+          const int kin_bin =
+              histo_binning.FindBin(probe_p, probe_eta, ntracks_calib);
+
+          histo_binning.GetBinXYZ(kin_bin, p_bin, eta_bin, ntrks_bin);
+
+          bool pid_ok;
+          if (fake_mu) {
+            // For FAKE_MU, we calculate the complementary efficiency so
+            // that the "passed" sample always corresponds to the K/pi misid
+            // case
+            pid_ok = probe_ismuon;
+          } else if (vmu) {
+            pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
+                     probe_mu_ubdt < 0.25;
+          } else {
+            pid_ok = probe_ismuon && probe_dllmu > 2.0 && probe_dlle < 1.0 &&
+                     probe_mu_ubdt > 0.25;
+          }
+
+          if (pid_ok) {
+            datasets_calib_passed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
+                ->addFast(fit_vars);
+          } else {
+            datasets_calib_failed[ntrks_bin - 1][eta_bin - 1][p_bin - 1]
+                ->addFast(fit_vars);
+          }
+        }
+
+        auto stop_calib_loop = high_resolution_clock::now();
+
+        const int duration_calib_loop =
+            duration_cast<seconds>(stop_calib_loop - start_calib_loop).count();
+        cout << "INFO Calib loop took " << format_time(duration_calib_loop)
+             << endl;
+
+        cout << "INFO Calib cutflow:\n";
+        cout << " - Total MC events:              " << entries_calib << "\n";
+        cout << " - After probe unbiased  cut:    " << count_tis << "("
+             << count_tis * 100. / entries_calib << "%)\n";
+        cout << " - After conditional cuts:       " << count_cond << "("
+             << count_cond * 100. / count_tis << "%)\n";
+        cout << " - After range cuts:             " << count_range << "("
+             << count_range * 100. / count_cond << "%)\n";
+        cout << " Overall: " << "(" << count_range * 100. / entries_calib
+             << "%)\n"
+             << endl;
+      }
+    }
+
+    // Create histograms to store efficiency of PIDCalib mass windows
+    cout << "INFO Initializing efficiency histograms " << endl;
+    TString suffix = TString::Format("%s_%s", year.c_str(), probe.c_str());
+
+    TH3D effs_mw_passed(histo_binning);
+    effs_mw_passed.SetName("effs_mw_passed_" + suffix);
+
+    TH3D effs_mw_failed(histo_binning);
+    effs_mw_failed.SetName("effs_mw_failed_" + suffix);
+
+    // Check distribution of fitted parameters
+    RooDataSet ds_params_calib("ds_params_calib", "ds_params_calib",
+                               params_calib);
+
+    TH3D fit_status_calib(histo_binning);
+    fit_status_calib.SetName("fit_status_calib_" + suffix);
+    fit_status_calib.SetMinimum(-0.1);
+    fit_status_calib.SetMaximum(12.);
+
+    TH3D fit_cov_qual_calib(histo_binning);
+    fit_cov_qual_calib.SetName("fit_cov_qual_calib_" + suffix);
+    fit_cov_qual_calib.SetMinimum(-0.1);
+    fit_cov_qual_calib.SetMaximum(6.);
+
+    TH1D calib_retries("calib_retries", "calib fit #retries;#retries;;",
+                       max_fix_reattempts + 1, 0., max_fix_reattempts + 1.);
+
+    ofile.cd();
+
+    cout << "INFO Calculating efficiencies " << endl;
+
+    // Create histogram to hold PID efficiency
+    // Use "eff" as name to match PIDCalib output
+    TH3D histo_pid(histo_binning);
+    histo_pid.SetName("eff");
+
+    TH3D histo_pid_raw(histo_binning);
+    histo_pid_raw.SetName("eff_raw");
+
+    // Create histogram to store fitted DiF fractions
+    TH3D histo_f_dif(histo_binning);
+    histo_f_dif.SetName("f_dif_" + TString(probe));
+
+    for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
+      for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
+        for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
+          // Use ntrks_idx as inner loop because we combine ntrack bins in the
+          // DiF samples
+
+          suffix.Form("%s_%s_%d_%d_%d", year.c_str(), probe.c_str(), ntrks_idx,
+                      eta_idx, p_idx);
+          const TString tag = TString::Format(
+              "(%.0f < nTracks < %.0f, %.1f < #eta < %.1f, %.0f < p < %.0f)",
+              BINS_NTRACKS[ntrks_idx], BINS_NTRACKS[ntrks_idx + 1],
+              BINS_ETA[eta_idx], BINS_ETA[eta_idx + 1], BINS_P[p_idx],
+              BINS_P[p_idx + 1]);
+
+          const TString fit_dir_path = opath + "/figs/fits/" + suffix;
+          gSystem->mkdir(fit_dir_path);
+
+          // Get kinematical bin
+          const int kin_bin =
+              histo_binning.GetBin(p_idx + 1, eta_idx + 1, ntrks_idx + 1);
+
+          // Get datasets
+          const auto &dataset_calib_passed =
+              datasets_calib_passed[ntrks_idx][eta_idx][p_idx];
+          const auto &dataset_calib_failed =
+              datasets_calib_failed[ntrks_idx][eta_idx][p_idx];
+
+          if ((probe == "pi") && (p_idx <= 1)) {
+            // Use reduced fit range excluding higher D0 mass region to avoid
+            // upper mass threshold in some kinematic bins
+            d0_m_var.setRange("fitRange", 1.825, 1.900);
+            dm_var.setRange("fitRange", 0.141, 0.153);
+          } else {
+            // Use full fit range
+            d0_m_var.setRange("fitRange", 1.825, 1.910);
+            dm_var.setRange("fitRange", 0.141, 0.153);
+          }
+
+          const int n_calib_passed =
+              dataset_calib_passed->sumEntries("", "fitRange");
+          const int n_calib_failed =
+              dataset_calib_failed->sumEntries("", "fitRange");
+
+          // Recover fit limits
+          const double d0m_range_max = d0_m_var.getMax("fitRange");
+          const double d0m_range_min = d0_m_var.getMin("fitRange");
+          const double dm_range_max  = dm_var.getMax("fitRange");
+          const double dm_range_min  = dm_var.getMin("fitRange");
+
+          // Plot 2D distributions in calib sample
+          d0_m_var.setRange(D0_M_min, D0_M_max);
+          dm_var.setRange(DM_min, DM_max);
+
+          unique_ptr<TH2F> th2_calib_passed(
+              dataset_calib_passed->createHistogram(
+                  d0_m_var, dm_var, 30, 30, "", "th2_calib_passed_" + suffix));
+          unique_ptr<TH2F> th2_calib_failed(
+              dataset_calib_failed->createHistogram(
+                  d0_m_var, dm_var, 60, 60, "", "th2_calib_failed_" + suffix));
+
+          c_single.cd();
+          th2_calib_passed->Draw("LEGO2Z 0");
+          c_single.SaveAs(fit_dir_path + "/th2_" + suffix + "_passed.pdf");
+          th2_calib_failed->Draw("LEGO2Z 0");
+          c_single.SaveAs(fit_dir_path + "/th2_" + suffix + "_failed.pdf");
+
+          d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
+          dm_var.setRange(extended_dm_min, extended_dm_max);
+
+          d0_m_shift.setVal(0.);
+          dm_shift.setVal(0.);
+          d0_m_scale.setVal(1.);
+          dm_scale.setVal(1.);
+
+          ////////////////////////////
+          // Non-DiF d0_m template  //
+          ////////////////////////////
+
+          cout << "\nINFO Building D0 MC template without dif " << suffix
+               << endl;
+
+          const auto &ds_mc_passed_nondif =
+              datasets_mc_passed_nondif[ntrks_idx][eta_idx][p_idx];
+          const auto &ds_mc_failed_nondif =
+              datasets_mc_failed_nondif[ntrks_idx][eta_idx][p_idx];
+
+          // The mass distributions for non-dif events are not correlated with
+          // muon PID, so let's merge the two datasets
+          RooDataSet ds_mc_nondif_merged("ds_mc_nondif_merged_" + suffix,
+                                         "ds_mc_nondif_merged_" + suffix,
+                                         fit_vars);
+          ds_mc_nondif_merged.append(*ds_mc_passed_nondif);
+          ds_mc_nondif_merged.append(*ds_mc_failed_nondif);
+
+          cout << "INFO Building RooKeysPdf d0_model_passed_nondif with "
+               << ds_mc_nondif_merged.numEntries() << " entries" << endl;
+          RooKeysPdf d0_model_passed_nondif(
+              "d0_model_passed_nondif_" + suffix,
+              "d0_model_passed_nondif_" + suffix, d0_m_var, d0_m_var, d0_m_pdg,
+              d0_m_scale, d0_m_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
+              1.6, true, n_bins_keys);
+
+          cout << "INFO Building RooKeysPdf d0_model_failed_nondif with "
+               << ds_mc_nondif_merged.numEntries() << " entries" << endl;
+          RooKeysPdf d0_model_failed_nondif(
+              "d0_model_failed_nondif_" + suffix,
+              "d0_model_failed_nondif_" + suffix, d0_m_var, d0_m_var, d0_m_pdg,
+              d0_m_scale, d0_m_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
+              1.6, true, n_bins_keys);
+
+          // Plot fit results
+          // PDF from merged dataset is compared to separate distribution
+          // in individual samples
+          unique_ptr<RooPlot> frame_d0_passed_nondif(
+              d0_m_var.frame(Title("D0 M Passed " + tag)));
+          unique_ptr<RooPlot> frame_d0_failed_nondif(
+              d0_m_var.frame(Title("D0 M Failed " + tag)));
+          ds_mc_passed_nondif->plotOn(frame_d0_passed_nondif.get(),
+                                      Binning("bins_histos_d0_m_passed"));
+          ds_mc_failed_nondif->plotOn(frame_d0_failed_nondif.get(),
+                                      Binning("bins_histos_d0_m_failed"));
+          d0_model_passed_nondif.plotOn(frame_d0_passed_nondif.get(),
+                                        LineWidth(1), Range("data"),
+                                        LineColor(kRed), VLines());
+          d0_model_passed_nondif.plotOn(frame_d0_passed_nondif.get(),
+                                        LineWidth(2), NormRange("data"));
+          d0_model_failed_nondif.plotOn(frame_d0_failed_nondif.get(),
+                                        LineWidth(1), Range("data"),
+                                        LineColor(kRed), VLines());
+          d0_model_failed_nondif.plotOn(frame_d0_failed_nondif.get(),
+                                        LineWidth(2), NormRange("data"));
+
+          // Note: All MC PDFs built with RooKeysPdf are plotted with
+          // NormRange("data") i.e. normalization is calculated only in fit
+          // range. This is because the RooKeysPdf estimate gets weird near
+          // the boundaries (and we don't use that region in the fit anyways).
+
+          c_double.cd(1);
+          frame_d0_passed_nondif->Draw();
+          c_double.cd(2);
+          frame_d0_failed_nondif->Draw();
+          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_nondif.pdf");
+
+          ///////////////////////
+          // DiF d0_m template //
+          ///////////////////////
+
+          cout << "\nINFO Building D0 MC template with dif " << suffix << endl;
+
+          const auto &ds_mc_passed_dif = datasets_mc_passed_dif[eta_idx][p_idx];
+          const auto &ds_mc_failed_dif = datasets_mc_failed_dif[eta_idx][p_idx];
+
+          cout << "INFO Building RooKeysPdf d0_model_passed_dif with "
+               << ds_mc_passed_dif->numEntries() << " entries" << endl;
+          RooKeysPdf d0_model_passed_dif(
+              "d0_model_passed_dif_" + suffix, "d0_model_passed_dif_" + suffix,
+              d0_m_var, d0_m_var, d0_m_pdg, d0_m_scale, d0_m_shift,
+              *ds_mc_passed_dif, RooKeysPdf::NoMirror, 1.8, true, n_bins_keys);
+
+          cout << "INFO Building RooKeysPdf d0_model_failed_dif with "
+               << ds_mc_failed_dif->numEntries() << " entries" << endl;
+          RooKeysPdf d0_model_failed_dif(
+              "d0_model_failed_dif_" + suffix, "d0_model_failed_dif_" + suffix,
+              d0_m_var, d0_m_var, d0_m_pdg, d0_m_scale, d0_m_shift,
+              *ds_mc_failed_dif, RooKeysPdf::NoMirror, 1.8, true, n_bins_keys);
+
+          // Plot fit results
+          unique_ptr<RooPlot> frame_d0_passed_dif(
+              d0_m_var.frame(Title("D0 M Passed " + tag)));
+          unique_ptr<RooPlot> frame_d0_failed_dif(
+              d0_m_var.frame(Title("D0 M Failed " + tag)));
+          ds_mc_passed_dif->plotOn(frame_d0_passed_dif.get(),
+                                   Binning("bins_histos_d0_m_passed"));
+          ds_mc_failed_dif->plotOn(frame_d0_failed_dif.get(),
+                                   Binning("bins_histos_d0_m_failed"));
+          d0_model_passed_dif.plotOn(frame_d0_passed_dif.get(), LineWidth(1),
+                                     Range("data"), LineColor(kRed), VLines());
+          d0_model_passed_dif.plotOn(frame_d0_passed_dif.get(), LineWidth(2),
+                                     NormRange("data"));
+          d0_model_failed_dif.plotOn(frame_d0_failed_dif.get(), LineWidth(1),
+                                     Range("data"), LineColor(kRed), VLines());
+          d0_model_failed_dif.plotOn(frame_d0_failed_dif.get(), LineWidth(2),
+                                     NormRange("data"));
+
+          c_double.cd(1);
+          frame_d0_passed_dif->Draw();
+          c_double.cd(2);
+          frame_d0_failed_dif->Draw();
+          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_dif.pdf");
+
+          /////////////////////////
+          // Non-DiF dm template //
+          /////////////////////////
+
+          cout << "\nINFO Building dm MC template without dif " << suffix
+               << endl;
+
+          cout << "INFO Building RooKeysPdf dm_model_passed_nondif with "
+               << ds_mc_nondif_merged.numEntries() << " entries" << endl;
+          RooKeysPdf dm_model_passed_nondif(
+              "dm_model_passed_nondif_" + suffix,
+              "dm_model_passed_nondif_" + suffix, dm_var, dm_var, dm_pdg,
+              dm_scale, dm_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
+              1.6, true, n_bins_keys);
+
+          cout << "INFO Building RooKeysPdf dm_model_failed_nondif with "
+               << ds_mc_nondif_merged.numEntries() << " entries" << endl;
+          RooKeysPdf dm_model_failed_nondif(
+              "dm_model_failed_nondif_" + suffix,
+              "dm_model_failed_nondif_" + suffix, dm_var, dm_var, dm_pdg,
+              dm_scale, dm_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
+              1.6, true, n_bins_keys);
+
+          // Plot fit results
+          // PDF from merged dataset is compared to separate distribution
+          // in individual samples
+          unique_ptr<RooPlot> frame_dm_passed_nondif(
+              dm_var.frame(Title("dm Passed " + tag)));
+          unique_ptr<RooPlot> frame_dm_failed_nondif(
+              dm_var.frame(Title("dm Failed " + tag)));
+          ds_mc_passed_nondif->plotOn(frame_dm_passed_nondif.get(),
+                                      Binning("bins_histos_dm_passed"));
+          ds_mc_failed_nondif->plotOn(frame_dm_failed_nondif.get(),
+                                      Binning("bins_histos_dm_failed"));
+          dm_model_passed_nondif.plotOn(frame_dm_passed_nondif.get(),
+                                        LineWidth(1), Range("data"),
+                                        LineColor(kRed), VLines());
+          dm_model_passed_nondif.plotOn(frame_dm_passed_nondif.get(),
+                                        LineWidth(2), NormRange("data"));
+          dm_model_failed_nondif.plotOn(frame_dm_failed_nondif.get(),
+                                        LineWidth(1), Range("data"),
+                                        LineColor(kRed), VLines());
+          dm_model_failed_nondif.plotOn(frame_dm_failed_nondif.get(),
+                                        LineWidth(2), NormRange("data"));
+
+          c_double.cd(1);
+          frame_dm_passed_nondif->Draw();
+          c_double.cd(2);
+          frame_dm_failed_nondif->Draw();
+          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_nondif.pdf");
+
+          /////////////////////
+          // DiF dm template //
+          /////////////////////
+
+          cout << "\nINFO Building dm MC template with dif " << suffix << endl;
+
+          cout << "INFO Building RooKeysPdf dm_model_passed_dif with "
+               << ds_mc_passed_dif->numEntries() << " entries" << endl;
+          RooKeysPdf dm_model_passed_dif(
+              "dm_model_passed_dif_" + suffix, "dm_model_passed_dif_" + suffix,
+              dm_var, dm_var, dm_pdg, dm_scale, dm_shift, *ds_mc_passed_dif,
+              RooKeysPdf::NoMirror, 1.6, true, n_bins_keys);
+
+          cout << "INFO Building RooKeysPdf dm_model_failed_dif with "
+               << ds_mc_failed_dif->numEntries() << " entries" << endl;
+          RooKeysPdf dm_model_failed_dif(
+              "dm_model_failed_dif_" + suffix, "dm_model_failed_dif_" + suffix,
+              dm_var, dm_var, dm_pdg, dm_scale, dm_shift, *ds_mc_failed_dif,
+              RooKeysPdf::NoMirror, 1.6, true, n_bins_keys);
+
+          // https://root-forum.cern.ch/t/fit-an-offset-for-roohistpdf/9641
+
+          // Plot fit results
+          unique_ptr<RooPlot> frame_dm_passed_dif(
+              dm_var.frame(Title("dm Passed " + tag)));
+          unique_ptr<RooPlot> frame_dm_failed_dif(
+              dm_var.frame(Title("dm Failed " + tag)));
+          ds_mc_passed_dif->plotOn(frame_dm_passed_dif.get(),
+                                   Binning("bins_histos_dm_passed"));
+          ds_mc_failed_dif->plotOn(frame_dm_failed_dif.get(),
+                                   Binning("bins_histos_dm_failed"));
+          dm_model_passed_dif.plotOn(frame_dm_passed_dif.get(), LineWidth(1),
+                                     Range("data"), LineColor(kRed), VLines());
+          dm_model_passed_dif.plotOn(frame_dm_passed_dif.get(), LineWidth(2),
+                                     NormRange("data"));
+          dm_model_failed_dif.plotOn(frame_dm_failed_dif.get(), LineWidth(1),
+                                     Range("data"), LineColor(kRed), VLines());
+          dm_model_failed_dif.plotOn(frame_dm_failed_dif.get(), LineWidth(2),
+                                     NormRange("data"));
+
+          c_double.cd(1);
+          frame_dm_passed_dif->Draw();
+          c_double.cd(2);
+          frame_dm_failed_dif->Draw();
+          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_dif.pdf");
+
+          ////////////////////////////////////////////////////
+          // d0_m templates for mis-reconstructed D0 decays //
+          ////////////////////////////////////////////////////
+
+          cout << "\nINFO Building d0_m MC template for D0 bkg " << suffix
+               << endl;
+
+          unordered_map<string, RooKeysPdf> d0m_pdfs_d0_bkg_passed;
+          unordered_map<string, RooKeysPdf> d0m_pdfs_d0_bkg_failed;
+          unordered_map<string, RooRealVar> d0m_fs_d0_bkg_passed;
+          unordered_map<string, RooRealVar> d0m_fs_d0_bkg_failed;
+          unordered_map<string, RooRealVar> d0m_fs_extended_d0_bkg_passed;
+          unordered_map<string, RooRealVar> d0m_fs_extended_d0_bkg_failed;
+          RooArgList d0m_pdf_list_d0_bkg_passed, d0m_pdf_list_d0_bkg_failed,
+              d0m_f_list_d0_bkg_passed, d0m_f_list_d0_bkg_failed,
+              d0m_f_extended_list_d0_bkg_passed,
+              d0m_f_extended_list_d0_bkg_failed;
+
+          RooDataSet ds_d0m_d0_bkg_passed_sum(
+              "ds_d0m_d0_bkg_passed_sum_" + suffix,
+              "ds_d0m_d0_bkg_passed_sum_" + suffix, fit_vars_w,
+              WeightVar(w_d0_bkg));
+          RooDataSet ds_d0m_d0_bkg_failed_sum(
+              "ds_d0m_d0_bkg_failed_sum_" + suffix,
+              "ds_d0m_d0_bkg_failed_sum_" + suffix, fit_vars_w,
+              WeightVar(w_d0_bkg));
+
+          unordered_map<string, TH1D> d0m_histos_d0_bkg_passed;
+          unordered_map<string, TH1D> d0m_histos_d0_bkg_failed;
+          TH1D    h_d0m_d0_bkg_passed("h_d0m_d0_bkg_passed_" + suffix,
+                                      "h_d0m_d0_bkg_passed_" + suffix,
+                                      bins_histos_d0_m_d0_bkg.numBins(),
+                                      bins_histos_d0_m_d0_bkg.lowBound(),
+                                      bins_histos_d0_m_d0_bkg.highBound());
+          TH1D    h_d0m_d0_bkg_failed("h_d0m_d0_bkg_failed_" + suffix,
+                                      "h_d0m_d0_bkg_failed_" + suffix,
+                                      bins_histos_d0_m_d0_bkg.numBins(),
+                                      bins_histos_d0_m_d0_bkg.lowBound(),
+                                      bins_histos_d0_m_d0_bkg.highBound());
+          THStack ths_d0m_d0_bkg_passed("ths_d0m_d0_bkg_passed_" + suffix,
+                                        "ths_d0m_d0_bkg_passed_" + suffix);
+          THStack ths_d0m_d0_bkg_failed("ths_d0m_d0_bkg_failed_" + suffix,
+                                        "ths_d0m_d0_bkg_failed_" + suffix);
+
+          double sum_f_passed_d0m = 0., sum_f_failed_d0m = 0.,
+                 sum_f_ext_passed_d0m = 0., sum_f_ext_failed_d0m = 0.;
+
+          double d0_bkg_sum_passed = 0., d0_bkg_sum_failed = 0.,
+                 d0_bkg_sum_extended_passed = 0.,
+                 d0_bkg_sum_extended_failed = 0.;
+
+          for (const auto &d0_decay : d0_bkg_decays) {
+            // Total counts over extended range
+            d0_bkg_sum_extended_passed +=
+                w_d0_decays.at(d0_decay) *
+                datasets_d0_bkg_mc_passed[d0_decay][p_idx].numEntries();
+            d0_bkg_sum_extended_failed +=
+                w_d0_decays.at(d0_decay) *
+                datasets_d0_bkg_mc_failed[d0_decay][p_idx].numEntries();
+            // Total counts in pidcalib mass window
+            d0_bkg_sum_passed += w_d0_decays.at(d0_decay) *
+                                 d0_bkg_counts_passed[probe][p_idx][d0_decay];
+            d0_bkg_sum_failed += w_d0_decays.at(d0_decay) *
+                                 d0_bkg_counts_failed[probe][p_idx][d0_decay];
+          }
+
+          for (const auto &d0_decay : d0_bkg_decays) {
+            cout << "\nINFO Producing d0_M PDFs for " << d0_decay << endl;
+            const TString suffix_bkg = d0_decay + "_" + suffix;
+
+            RooDataSet &ds_passed = datasets_d0_bkg_mc_passed[d0_decay][p_idx];
+            RooDataSet &ds_failed = datasets_d0_bkg_mc_failed[d0_decay][p_idx];
+
+            const double n_passed_d0_decay =
+                ds_passed.numEntries() * w_d0_decays.at(d0_decay);
+            const double n_failed_d0_decay =
+                ds_failed.numEntries() * w_d0_decays.at(d0_decay);
+
+            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_passed_d0_decay /
+                            (n_passed_d0_decay + n_failed_d0_decay));
+            append_to_dataset(ds_passed, ds_d0m_d0_bkg_passed_sum, w_d0_bkg);
+            append_to_dataset(ds_failed, ds_d0m_d0_bkg_passed_sum, w_d0_bkg);
+
+            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_failed_d0_decay /
+                            (n_passed_d0_decay + n_failed_d0_decay));
+            append_to_dataset(ds_passed, ds_d0m_d0_bkg_failed_sum, w_d0_bkg);
+            append_to_dataset(ds_failed, ds_d0m_d0_bkg_failed_sum, w_d0_bkg);
+
+            RooDataSet ds_d0m_d0_bkg("ds_d0m_d0_bkg_" + suffix_bkg,
+                                     "ds_d0m_d0_bkg_" + suffix_bkg, fit_vars);
+
+            ds_d0m_d0_bkg.append(ds_passed);
+            ds_d0m_d0_bkg.append(ds_failed);
+
+            unique_ptr<TH1D> h_passed(static_cast<TH1D *>(
+                ds_passed.createHistogram("h_passed_" + suffix_bkg, d0_m_var,
+                                          Binning(bins_histos_d0_m_d0_bkg))));
+            unique_ptr<TH1D> h_failed(static_cast<TH1D *>(
+                ds_failed.createHistogram("h_failed_" + suffix_bkg, d0_m_var,
+                                          Binning(bins_histos_d0_m_d0_bkg))));
+
+            h_passed->SetFillColor(color_ids_d0_decays.at(d0_decay));
+            h_failed->SetFillColor(color_ids_d0_decays.at(d0_decay));
+
+            d0m_histos_d0_bkg_passed.emplace(
+                d0_decay, TH1D("h_d0m_d0_bkg_passed_merged_" + suffix_bkg,
+                               "h_d0m_d0_bkg_passed_merged_" + suffix_bkg,
+                               bins_histos_d0_m_d0_bkg.numBins(),
+                               bins_histos_d0_m_d0_bkg.lowBound(),
+                               bins_histos_d0_m_d0_bkg.highBound()));
+            d0m_histos_d0_bkg_failed.emplace(
+                d0_decay, TH1D("h_d0m_d0_bkg_failed_merged_" + suffix_bkg,
+                               "h_d0m_d0_bkg_failed_merged_" + suffix_bkg,
+                               bins_histos_d0_m_d0_bkg.numBins(),
+                               bins_histos_d0_m_d0_bkg.lowBound(),
+                               bins_histos_d0_m_d0_bkg.highBound()));
+
+            TH1D &h_passed_merged = d0m_histos_d0_bkg_passed[d0_decay];
+            TH1D &h_failed_merged = d0m_histos_d0_bkg_failed[d0_decay];
+
+            h_passed_merged.Add(h_passed.get(), h_failed.get());
+            h_failed_merged.Add(h_passed.get(), h_failed.get());
+
+            h_passed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
+            h_failed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
+
+            h_passed_merged.Scale(n_passed_d0_decay /
+                                  h_passed_merged.GetEntries());
+            h_failed_merged.Scale(n_failed_d0_decay /
+                                  h_failed_merged.GetEntries());
+            ths_d0m_d0_bkg_passed.Add(&h_passed_merged);
+            ths_d0m_d0_bkg_failed.Add(&h_failed_merged);
+            h_d0m_d0_bkg_passed.Add(&h_passed_merged);
+            h_d0m_d0_bkg_failed.Add(&h_failed_merged);
+
+            cout << "INFO Building RooKeysPdf d0_model_d0_bkg_passed with "
+                 << ds_d0m_d0_bkg.numEntries() << " entries" << endl;
+            d0m_pdfs_d0_bkg_passed.emplace(
+                d0_decay,
+                RooKeysPdf("d0_model_d0_bkg_passed_" + suffix_bkg,
+                           "d0_model_d0_bkg_passed_" + suffix_bkg, d0_m_var,
+                           d0_m_var, d0_m_pdg, d0_m_scale, d0_m_shift,
+                           ds_d0m_d0_bkg, RooKeysPdf::NoMirror, 1.5, true,
+                           n_bins_keys));
+
+            cout << "INFO Building RooKeysPdf d0_model_d0_bkg_failed with "
+                 << ds_d0m_d0_bkg.numEntries() << " entries" << endl;
+            d0m_pdfs_d0_bkg_failed.emplace(
+                d0_decay,
+                RooKeysPdf("d0_model_d0_bkg_failed_" + suffix_bkg,
+                           "d0_model_d0_bkg_failed_" + suffix_bkg, d0_m_var,
+                           d0_m_var, d0_m_pdg, d0_m_scale, d0_m_shift,
+                           ds_d0m_d0_bkg, RooKeysPdf::NoMirror, 1.5, true,
+                           n_bins_keys));
 
             unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed(
-                d0_m_var.frame(Title("d0_m Passed " + tag), Range("fitRange")));
+                d0_m_var.frame(Title("d0_m Passed " + tag)));
             unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed(
-                d0_m_var.frame(Title("d0_m Failed " + tag), Range("fitRange")));
-            ds_d0m_d0_bkg_passed_sum.plotOn(frame_d0_mc_d0_bkg_passed.get(),
-                                            Binning(bins_histos_d0_m_d0_bkg),
-                                            CutRange("fitRange"));
-            ds_d0m_d0_bkg_failed_sum.plotOn(frame_d0_mc_d0_bkg_failed.get(),
-                                            Binning(bins_histos_d0_m_d0_bkg),
-                                            CutRange("fitRange"));
+                d0_m_var.frame(Title("d0_m Failed " + tag)));
+            unique_ptr<RooPlot> frame_d0_mc_d0_bkg_total(
+                d0_m_var.frame(Title("d0_m Total " + tag)));
 
-            const double d0_bkg_norm_passed_d0m =
-                ds_d0m_d0_bkg_passed_sum.sumEntries("", "fitRange");
-            const double d0_bkg_norm_failed_d0m =
-                ds_d0m_d0_bkg_failed_sum.sumEntries("", "fitRange");
-            d0_model_d0_bkg_passed_ext.plotOn(
+            ds_passed.plotOn(frame_d0_mc_d0_bkg_passed.get(),
+                             Binning(bins_histos_d0_m_d0_bkg));
+            ds_failed.plotOn(frame_d0_mc_d0_bkg_failed.get(),
+                             Binning(bins_histos_d0_m_d0_bkg));
+            ds_d0m_d0_bkg.plotOn(frame_d0_mc_d0_bkg_total.get(),
+                                 Binning(bins_histos_d0_m_d0_bkg));
+            d0m_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
+                frame_d0_mc_d0_bkg_passed.get(), LineWidth(1), LineColor(kRed),
+                Range("fitRange"), VLines());
+            d0m_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
                 frame_d0_mc_d0_bkg_passed.get(), LineWidth(2),
-                Range("fitRange"),
-                Normalization(d0_bkg_norm_passed_d0m, RooAbsReal::NumEvent),
-                ProjectionRange("fitRange"));
-            d0_model_d0_bkg_failed_ext.plotOn(
+                LineColor(color_ids_d0_decays.at(d0_decay)),
+                NormRange("fitRange"));
+            d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
+                frame_d0_mc_d0_bkg_failed.get(), LineWidth(1), LineColor(kRed),
+                Range("fitRange"), VLines());
+            d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
                 frame_d0_mc_d0_bkg_failed.get(), LineWidth(2),
-                Range("fitRange"),
-                Normalization(d0_bkg_norm_failed_d0m, RooAbsReal::NumEvent),
-                ProjectionRange("fitRange"));
+                LineColor(color_ids_d0_decays.at(d0_decay)),
+                NormRange("fitRange"));
+            d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
+                frame_d0_mc_d0_bkg_total.get(), LineWidth(1), LineColor(kRed),
+                Range("fitRange"), VLines());
+            d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
+                frame_d0_mc_d0_bkg_total.get(), LineWidth(2),
+                LineColor(color_ids_d0_decays.at(d0_decay)),
+                NormRange("fitRange"));
 
-            c_double.cd(1);
+            c3.cd(1);
             frame_d0_mc_d0_bkg_passed->Draw();
-            c_double.cd(2);
+            c3.cd(2);
             frame_d0_mc_d0_bkg_failed->Draw();
-            c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg.pdf");
+            c3.cd(3);
+            frame_d0_mc_d0_bkg_total->Draw();
+            c3.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg_keys_" +
+                      d0_decay + ".pdf");
 
-            d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
-            dm_var.setRange(extended_dm_min, extended_dm_max);
+            d0m_pdf_list_d0_bkg_passed.add(d0m_pdfs_d0_bkg_passed.at(d0_decay));
+            d0m_pdf_list_d0_bkg_failed.add(d0m_pdfs_d0_bkg_failed.at(d0_decay));
 
-            /////////////////////////////////////////////////
-            // dm template for mis-reconstructed D0 decays //
-            /////////////////////////////////////////////////
+            if (d0_decay != d0_bkg_decays.back()) {
+              // Here we calculate fit fractions, so the this must be omitted
+              // for the last component
 
-            cout << "\nINFO Building dm MC template for D0 bkg " << suffix
-                 << endl;
-
-            unordered_map<string, RooKeysPdf> dm_pdfs_d0_bkg_passed;
-            unordered_map<string, RooKeysPdf> dm_pdfs_d0_bkg_failed;
-            unordered_map<string, RooRealVar> dm_fs_d0_bkg_passed;
-            unordered_map<string, RooRealVar> dm_fs_d0_bkg_failed;
-            unordered_map<string, RooRealVar> dm_fs_extended_d0_bkg_passed;
-            unordered_map<string, RooRealVar> dm_fs_extended_d0_bkg_failed;
-            RooArgList dm_pdf_list_d0_bkg_passed, dm_pdf_list_d0_bkg_failed,
-                dm_f_list_d0_bkg_passed, dm_f_list_d0_bkg_failed,
-                dm_f_extended_list_d0_bkg_passed,
-                dm_f_extended_list_d0_bkg_failed;
-
-            RooDataSet ds_dm_d0_bkg_passed_sum(
-                "ds_dm_d0_bkg_passed_sum_" + suffix,
-                "ds_dm_d0_bkg_passed_sum_" + suffix, fit_vars_w,
-                WeightVar(w_d0_bkg));
-            RooDataSet ds_dm_d0_bkg_failed_sum(
-                "ds_dm_d0_bkg_failed_sum_" + suffix,
-                "ds_dm_d0_bkg_failed_sum_" + suffix, fit_vars_w,
-                WeightVar(w_d0_bkg));
-
-            unordered_map<string, TH1D> dm_histos_d0_bkg_passed;
-            unordered_map<string, TH1D> dm_histos_d0_bkg_failed;
-            TH1D    h_dm_d0_bkg_passed("h_dm_d0_bkg_passed_" + suffix,
-                                       "h_dm_d0_bkg_passed_" + suffix,
-                                       bins_histos_dm_d0_bkg.numBins(),
-                                       bins_histos_dm_d0_bkg.lowBound(),
-                                       bins_histos_dm_d0_bkg.highBound());
-            TH1D    h_dm_d0_bkg_failed("h_dm_d0_bkg_failed_" + suffix,
-                                       "h_dm_d0_bkg_failed_" + suffix,
-                                       bins_histos_dm_d0_bkg.numBins(),
-                                       bins_histos_dm_d0_bkg.lowBound(),
-                                       bins_histos_dm_d0_bkg.highBound());
-            THStack ths_dm_d0_bkg_passed("ths_dm_d0_bkg_passed_" + suffix,
-                                         "ths_dm_d0_bkg_passed_" + suffix);
-            THStack ths_dm_d0_bkg_failed("ths_dm_d0_bkg_failed_" + suffix,
-                                         "ths_dm_d0_bkg_failed_" + suffix);
-
-            double sum_f_passed_dm = 0., sum_f_failed_dm = 0.,
-                   sum_f_ext_passed_dm = 0., sum_f_ext_failed_dm = 0.;
-
-            for (const auto &d0_decay : d0_bkg_decays) {
-              cout << "\nINFO Producing dm PDFs for " << d0_decay << endl;
-              const TString suffix_bkg = d0_decay + "_" + suffix;
-
-              RooDataSet &ds_passed =
-                  datasets_d0_bkg_mc_passed[d0_decay][p_idx];
-              RooDataSet &ds_failed =
-                  datasets_d0_bkg_mc_failed[d0_decay][p_idx];
-
-              const double n_passed_d0_decay =
-                  ds_passed.numEntries() * w_d0_decays.at(d0_decay);
-              const double n_failed_d0_decay =
-                  ds_failed.numEntries() * w_d0_decays.at(d0_decay);
-
-              w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_passed_d0_decay /
-                              (n_passed_d0_decay + n_failed_d0_decay));
-              append_to_dataset(ds_passed, ds_dm_d0_bkg_passed_sum, w_d0_bkg);
-              append_to_dataset(ds_failed, ds_dm_d0_bkg_passed_sum, w_d0_bkg);
-
-              w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_failed_d0_decay /
-                              (n_passed_d0_decay + n_failed_d0_decay));
-              append_to_dataset(ds_passed, ds_dm_d0_bkg_failed_sum, w_d0_bkg);
-              append_to_dataset(ds_failed, ds_dm_d0_bkg_failed_sum, w_d0_bkg);
-
-              RooDataSet ds_dm_d0_bkg("ds_dm_d0_bkg_" + suffix,
-                                      "ds_dm_d0_bkg_" + suffix, fit_vars);
-
-              ds_dm_d0_bkg.append(ds_passed);
-              ds_dm_d0_bkg.append(ds_failed);
-
-              unique_ptr<TH1D> h_passed(static_cast<TH1D *>(
-                  ds_passed.createHistogram("h_passed_" + suffix_bkg, dm_var,
-                                            Binning(bins_histos_dm_d0_bkg))));
-              unique_ptr<TH1D> h_failed(static_cast<TH1D *>(
-                  ds_failed.createHistogram("h_failed_" + suffix_bkg, dm_var,
-                                            Binning(bins_histos_dm_d0_bkg))));
-
-              h_passed->SetFillColor(color_ids_d0_decays.at(d0_decay));
-              h_failed->SetFillColor(color_ids_d0_decays.at(d0_decay));
-
-              dm_histos_d0_bkg_passed.emplace(
-                  d0_decay, TH1D("h_dm_d0_bkg_passed_merged_" + suffix_bkg,
-                                 "h_dm_d0_bkg_passed_merged_" + suffix_bkg,
-                                 bins_histos_dm_d0_bkg.numBins(),
-                                 bins_histos_dm_d0_bkg.lowBound(),
-                                 bins_histos_dm_d0_bkg.highBound()));
-              dm_histos_d0_bkg_failed.emplace(
-                  d0_decay, TH1D("h_dm_d0_bkg_failed_merged_" + suffix_bkg,
-                                 "h_dm_d0_bkg_failed_merged_" + suffix_bkg,
-                                 bins_histos_dm_d0_bkg.numBins(),
-                                 bins_histos_dm_d0_bkg.lowBound(),
-                                 bins_histos_dm_d0_bkg.highBound()));
-
-              TH1D &h_passed_merged = dm_histos_d0_bkg_passed[d0_decay];
-              TH1D &h_failed_merged = dm_histos_d0_bkg_failed[d0_decay];
-
-              h_passed_merged.Add(h_passed.get(), h_failed.get());
-              h_failed_merged.Add(h_passed.get(), h_failed.get());
-
-              h_passed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
-              h_failed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
-
-              h_passed_merged.Scale(n_passed_d0_decay /
-                                    h_passed_merged.GetEntries());
-              h_failed_merged.Scale(n_failed_d0_decay /
-                                    h_failed_merged.GetEntries());
-              ths_dm_d0_bkg_passed.Add(&h_passed_merged);
-              ths_dm_d0_bkg_failed.Add(&h_failed_merged);
-              h_dm_d0_bkg_passed.Add(&h_passed_merged);
-              h_dm_d0_bkg_failed.Add(&h_failed_merged);
-
-              cout << "INFO Building RooKeysPdf dm_model_d0_bkg_passed with "
-                   << ds_dm_d0_bkg.numEntries() << " entries" << endl;
-              dm_pdfs_d0_bkg_passed.emplace(
+              // Fit fractions within fit range
+              d0m_fs_d0_bkg_passed.emplace(
                   d0_decay,
-                  RooKeysPdf("dm_model_d0_bkg_passed_" + suffix_bkg,
-                             "dm_model_d0_bkg_passed_" + suffix_bkg, dm_var,
-                             dm_var, dm_pdg, dm_scale, dm_shift, ds_dm_d0_bkg,
-                             RooKeysPdf::NoMirror, 1.6, true, n_bins_keys));
+                  RooRealVar("d0_f_d0_bkg_passed_" + suffix_bkg,
+                             "d0_f_d0_bkg_passed_" + suffix_bkg,
+                             w_d0_decays.at(d0_decay) *
+                                 d0_bkg_counts_passed[probe][p_idx][d0_decay] /
+                                 d0_bkg_sum_passed,
+                             ""));
 
-              cout << "INFO Building RooKeysPdf dm_model_d0_bkg_failed with "
-                   << ds_dm_d0_bkg.numEntries() << " entries" << endl;
-              dm_pdfs_d0_bkg_failed.emplace(
+              d0m_fs_d0_bkg_failed.emplace(
                   d0_decay,
-                  RooKeysPdf("dm_model_d0_bkg_failed_" + suffix_bkg,
-                             "dm_model_d0_bkg_failed_" + suffix_bkg, dm_var,
-                             dm_var, dm_pdg, dm_scale, dm_shift, ds_dm_d0_bkg,
-                             RooKeysPdf::NoMirror, 1.6, true, n_bins_keys));
+                  RooRealVar("d0_f_d0_bkg_failed_" + suffix_bkg,
+                             "d0_f_d0_bkg_failed_" + suffix_bkg,
+                             w_d0_decays.at(d0_decay) *
+                                 d0_bkg_counts_failed[probe][p_idx][d0_decay] /
+                                 d0_bkg_sum_failed,
+                             ""));
 
-              unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed(
-                  dm_var.frame(Title("dm Passed " + tag)));
-              unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed(
-                  dm_var.frame(Title("dm Failed " + tag)));
-              unique_ptr<RooPlot> frame_dm_mc_d0_bkg_total(
-                  dm_var.frame(Title("dm Total " + tag)));
+              d0m_f_list_d0_bkg_passed.add(d0m_fs_d0_bkg_passed.at(d0_decay));
+              d0m_f_list_d0_bkg_failed.add(d0m_fs_d0_bkg_failed.at(d0_decay));
 
-              ds_passed.plotOn(frame_dm_mc_d0_bkg_passed.get(),
-                               Binning(bins_histos_dm_d0_bkg));
-              ds_failed.plotOn(frame_dm_mc_d0_bkg_failed.get(),
-                               Binning(bins_histos_dm_d0_bkg));
-              ds_dm_d0_bkg.plotOn(frame_dm_mc_d0_bkg_total.get(),
-                                  Binning(bins_histos_dm_d0_bkg));
+              // Fit fractions over extended range
+              d0m_fs_extended_d0_bkg_passed.emplace(
+                  d0_decay,
+                  RooRealVar("d0_f_extended_d0_bkg_passed_" + suffix_bkg,
+                             "d0_f_extended_d0_bkg_passed_" + suffix_bkg,
+                             n_passed_d0_decay / d0_bkg_sum_extended_passed,
+                             ""));
 
-              dm_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
-                  frame_dm_mc_d0_bkg_passed.get(), LineWidth(1),
-                  LineColor(kRed), Range("fitRange"), VLines());
-              dm_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
-                  frame_dm_mc_d0_bkg_passed.get(), LineWidth(2),
-                  LineColor(color_ids_d0_decays.at(d0_decay)),
-                  NormRange("fitRange"));
-              dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_dm_mc_d0_bkg_failed.get(), LineWidth(1),
-                  LineColor(kRed), Range("fitRange"), VLines());
-              dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_dm_mc_d0_bkg_failed.get(), LineWidth(2),
-                  LineColor(color_ids_d0_decays.at(d0_decay)),
-                  NormRange("fitRange"));
-              dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_dm_mc_d0_bkg_total.get(), LineWidth(1), LineColor(kRed),
-                  Range("fitRange"), VLines());
-              dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                  frame_dm_mc_d0_bkg_total.get(), LineWidth(2),
-                  LineColor(color_ids_d0_decays.at(d0_decay)),
-                  NormRange("fitRange"));
+              d0m_fs_extended_d0_bkg_failed.emplace(
+                  d0_decay,
+                  RooRealVar("d0_f_extended_d0_bkg_failed_" + suffix_bkg,
+                             "d0_f_extended_d0_bkg_failed_" + suffix_bkg,
+                             n_failed_d0_decay / d0_bkg_sum_extended_failed,
+                             ""));
 
-              c3.cd(1);
-              frame_dm_mc_d0_bkg_passed->Draw();
-              c3.cd(2);
-              frame_dm_mc_d0_bkg_failed->Draw();
-              c3.cd(3);
-              frame_dm_mc_d0_bkg_total->Draw();
-              c3.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg_keys_" +
-                        d0_decay + ".pdf");
+              d0m_f_extended_list_d0_bkg_passed.add(
+                  d0m_fs_extended_d0_bkg_passed.at(d0_decay));
+              d0m_f_extended_list_d0_bkg_failed.add(
+                  d0m_fs_extended_d0_bkg_failed.at(d0_decay));
 
-              dm_pdf_list_d0_bkg_passed.add(dm_pdfs_d0_bkg_passed.at(d0_decay));
-              dm_pdf_list_d0_bkg_failed.add(dm_pdfs_d0_bkg_failed.at(d0_decay));
+              cout << "INFO " << d0_decay << " f passed: "
+                   << d0m_fs_d0_bkg_passed.at(d0_decay).getVal() << endl;
+              cout << "INFO " << d0_decay << " f failed: "
+                   << d0m_fs_d0_bkg_failed.at(d0_decay).getVal() << endl;
+              cout << "INFO " << d0_decay << " f ext passed: "
+                   << d0m_fs_extended_d0_bkg_passed.at(d0_decay).getVal()
+                   << endl;
+              cout << "INFO " << d0_decay << " f ext failed: "
+                   << d0m_fs_extended_d0_bkg_failed.at(d0_decay).getVal()
+                   << endl;
 
-              if (d0_decay != d0_bkg_decays.back()) {
-                // Here we calculate fit fractions, so the this must be omitted
-                // for the last component
-
-                // Fit fractions within fit range
-                dm_fs_d0_bkg_passed.emplace(
-                    d0_decay,
-                    RooRealVar(
-                        "dm_f_d0_bkg_passed_" + suffix_bkg,
-                        "dm_f_d0_bkg_passed_" + suffix_bkg,
-                        w_d0_decays.at(d0_decay) *
-                            d0_bkg_counts_passed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_passed,
-                        ""));
-
-                dm_fs_d0_bkg_failed.emplace(
-                    d0_decay,
-                    RooRealVar(
-                        "dm_f_d0_bkg_failed_" + suffix_bkg,
-                        "dm_f_d0_bkg_failed_" + suffix_bkg,
-                        w_d0_decays.at(d0_decay) *
-                            d0_bkg_counts_failed[probe][p_idx][d0_decay] /
-                            d0_bkg_sum_failed,
-                        ""));
-                dm_f_list_d0_bkg_passed.add(dm_fs_d0_bkg_passed.at(d0_decay));
-                dm_f_list_d0_bkg_failed.add(dm_fs_d0_bkg_failed.at(d0_decay));
-
-                // Fit fractions over extended range
-                dm_fs_extended_d0_bkg_passed.emplace(
-                    d0_decay,
-                    RooRealVar("dm_f_extended_d0_bkg_passed_" + suffix_bkg,
-                               "dm_f_extended_d0_bkg_passed_" + suffix_bkg,
-                               n_passed_d0_decay / d0_bkg_sum_extended_passed,
-                               ""));
-
-                dm_fs_extended_d0_bkg_failed.emplace(
-                    d0_decay,
-                    RooRealVar("dm_f_extended_d0_bkg_failed_" + suffix_bkg,
-                               "dm_f_extended_d0_bkg_failed_" + suffix_bkg,
-                               n_failed_d0_decay / d0_bkg_sum_extended_failed,
-                               ""));
-                dm_f_extended_list_d0_bkg_passed.add(
-                    dm_fs_extended_d0_bkg_passed.at(d0_decay));
-                dm_f_extended_list_d0_bkg_failed.add(
-                    dm_fs_extended_d0_bkg_failed.at(d0_decay));
-
-                cout << "INFO " << d0_decay << " f passed: "
-                     << dm_fs_d0_bkg_passed.at(d0_decay).getVal() << endl;
-                cout << "INFO " << d0_decay << " f failed: "
-                     << dm_fs_d0_bkg_failed.at(d0_decay).getVal() << endl;
-                cout << "INFO " << d0_decay << " f ext passed: "
-                     << dm_fs_extended_d0_bkg_passed.at(d0_decay).getVal()
-                     << endl;
-                cout << "INFO " << d0_decay << " f ext failed: "
-                     << dm_fs_extended_d0_bkg_failed.at(d0_decay).getVal()
-                     << endl;
-
-                sum_f_passed_dm += dm_fs_d0_bkg_passed.at(d0_decay).getVal();
-                sum_f_failed_dm += dm_fs_d0_bkg_failed.at(d0_decay).getVal();
-                sum_f_ext_passed_dm +=
-                    dm_fs_extended_d0_bkg_passed.at(d0_decay).getVal();
-                sum_f_ext_failed_dm +=
-                    dm_fs_extended_d0_bkg_failed.at(d0_decay).getVal();
-              }
+              sum_f_passed_d0m += d0m_fs_d0_bkg_passed.at(d0_decay).getVal();
+              sum_f_failed_d0m += d0m_fs_d0_bkg_failed.at(d0_decay).getVal();
+              sum_f_ext_passed_d0m +=
+                  d0m_fs_extended_d0_bkg_passed.at(d0_decay).getVal();
+              sum_f_ext_failed_d0m +=
+                  d0m_fs_extended_d0_bkg_failed.at(d0_decay).getVal();
             }
+          }
 
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f passed: " << 1. - sum_f_passed_dm << endl;
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f failed: " << 1. - sum_f_failed_dm << endl;
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f ext passed: " << 1. - sum_f_ext_passed_dm << endl;
-            cout << "INFO " << d0_bkg_decays.back()
-                 << " f ext failed: " << 1. - sum_f_ext_failed_dm << endl;
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f passed: " << 1. - sum_f_passed_d0m << endl;
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f failed: " << 1. - sum_f_failed_d0m << endl;
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f ext passed: " << 1. - sum_f_ext_passed_d0m << endl;
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f ext failed: " << 1. - sum_f_ext_failed_d0m << endl;
 
-            // Plot stacked histograms
-            h_dm_d0_bkg_passed.SetLineColor(kBlack);
-            h_dm_d0_bkg_failed.SetLineColor(kBlack);
+          // Plot stacked histograms
+          h_d0m_d0_bkg_passed.SetLineColor(kBlack);
+          h_d0m_d0_bkg_failed.SetLineColor(kBlack);
 
-            c_double.cd(1);
-            ths_dm_d0_bkg_passed.Draw("B HIST");
-            h_dm_d0_bkg_passed.Draw("L SAME");
+          c_double.cd(1);
+          ths_d0m_d0_bkg_passed.Draw("B HIST");
+          h_d0m_d0_bkg_passed.Draw("L SAME");
 
-            c_double.cd(2);
-            ths_dm_d0_bkg_failed.Draw("B HIST");
-            h_dm_d0_bkg_failed.Draw("L SAME");
+          c_double.cd(2);
+          ths_d0m_d0_bkg_failed.Draw("B HIST");
+          h_d0m_d0_bkg_failed.Draw("L SAME");
 
-            c_double.SaveAs(fit_dir_path + "/dm_" + suffix +
-                            "_d0_bkg_histos_stacked.pdf");
+          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix +
+                          "_d0_bkg_histos_stacked.pdf");
 
-            // Build pdfs with fit fractions calculated within the fit range
-            // This is the one we use for the fits!
-            RooAddPdf dm_model_d0_bkg_passed("dm_model_d0_bkg_passed_" + suffix,
-                                             "dm_model_d0_bkg_passed_" + suffix,
-                                             dm_pdf_list_d0_bkg_passed,
-                                             dm_f_list_d0_bkg_passed);
+          // Build pdfs with fit fractions calculated within the fit range
+          // This is the one we use for the fits!
+          RooAddPdf d0_model_d0_bkg_passed("d0_model_d0_bkg_passed_" + suffix,
+                                           "d0_model_d0_bkg_passed_" + suffix,
+                                           d0m_pdf_list_d0_bkg_passed,
+                                           d0m_f_list_d0_bkg_passed);
 
-            RooAddPdf dm_model_d0_bkg_failed("dm_model_d0_bkg_failed_" + suffix,
-                                             "dm_model_d0_bkg_failed_" + suffix,
-                                             dm_pdf_list_d0_bkg_failed,
-                                             dm_f_list_d0_bkg_failed);
+          RooAddPdf d0_model_d0_bkg_failed("d0_model_d0_bkg_failed_" + suffix,
+                                           "d0_model_d0_bkg_failed_" + suffix,
+                                           d0m_pdf_list_d0_bkg_failed,
+                                           d0m_f_list_d0_bkg_failed);
 
-            // Build pdfs fit fractions calculated within the extended range
-            RooAddPdf dm_model_d0_bkg_passed_ext(
-                "dm_model_d0_bkg_passed_ext_" + suffix,
-                "dm_model_d0_bkg_passed_ext_" + suffix,
-                dm_pdf_list_d0_bkg_passed, dm_f_extended_list_d0_bkg_passed);
+          // Build pdfs fit fractions calculated within the extended range
+          RooAddPdf d0_model_d0_bkg_passed_ext(
+              "d0_model_d0_bkg_passed_ext_" + suffix,
+              "d0_model_d0_bkg_passed_ext_" + suffix,
+              d0m_pdf_list_d0_bkg_passed, d0m_f_extended_list_d0_bkg_passed);
 
-            RooAddPdf dm_model_d0_bkg_failed_ext(
-                "dm_model_d0_bkg_failed_ext_" + suffix,
-                "dm_model_d0_bkg_failed_ext_" + suffix,
-                dm_pdf_list_d0_bkg_failed, dm_f_extended_list_d0_bkg_failed);
+          RooAddPdf d0_model_d0_bkg_failed_ext(
+              "d0_model_d0_bkg_failed_ext_" + suffix,
+              "d0_model_d0_bkg_failed_ext_" + suffix,
+              d0m_pdf_list_d0_bkg_failed, d0m_f_extended_list_d0_bkg_failed);
 
-            // Plot PDF over extended range
-            unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed_ext(
-                dm_var.frame(Title("dm Passed " + tag)));
-            unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed_ext(
-                dm_var.frame(Title("dm Failed " + tag)));
-            ds_dm_d0_bkg_passed_sum.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
-                                           Binning(bins_histos_dm_d0_bkg));
-            ds_dm_d0_bkg_failed_sum.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
-                                           Binning(bins_histos_dm_d0_bkg));
+          // Plot PDF over extended range
+          unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed_ext(
+              d0_m_var.frame(Title("d0_m Passed " + tag)));
+          unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed_ext(
+              d0_m_var.frame(Title("d0_m Failed " + tag)));
+          ds_d0m_d0_bkg_passed_sum.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
+                                          Binning(bins_histos_d0_m_d0_bkg));
+          ds_d0m_d0_bkg_failed_sum.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
+                                          Binning(bins_histos_d0_m_d0_bkg));
 
-            dm_model_d0_bkg_passed_ext.plotOn(
-                frame_dm_mc_d0_bkg_passed_ext.get(), LineWidth(1),
-                LineColor(kRed), Range("fitRange"), VLines());
-            dm_model_d0_bkg_passed_ext.plotOn(
-                frame_dm_mc_d0_bkg_passed_ext.get(), LineWidth(2),
-                NormRange("fitRange"));
-            dm_model_d0_bkg_failed_ext.plotOn(
-                frame_dm_mc_d0_bkg_failed_ext.get(), LineWidth(1),
-                LineColor(kRed), Range("fitRange"), VLines());
-            dm_model_d0_bkg_failed_ext.plotOn(
-                frame_dm_mc_d0_bkg_failed_ext.get(), LineWidth(2),
-                NormRange("fitRange"));
+          d0_model_d0_bkg_passed_ext.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
+                                            LineWidth(1), LineColor(kRed),
+                                            Range("fitRange"), VLines());
+          d0_model_d0_bkg_passed_ext.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
+                                            LineWidth(2),
+                                            NormRange("fitRange"));
+          d0_model_d0_bkg_failed_ext.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
+                                            LineWidth(1), LineColor(kRed),
+                                            Range("fitRange"), VLines());
+          d0_model_d0_bkg_failed_ext.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
+                                            LineWidth(2),
+                                            NormRange("fitRange"));
 
-            c_double.cd(1);
-            frame_dm_mc_d0_bkg_passed_ext->Draw();
-            c_double.cd(2);
-            frame_dm_mc_d0_bkg_failed_ext->Draw();
-            c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg_ext.pdf");
+          c_double.cd(1);
+          frame_d0_mc_d0_bkg_passed_ext->Draw();
+          c_double.cd(2);
+          frame_d0_mc_d0_bkg_failed_ext->Draw();
+          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg_ext.pdf");
 
-            // Plot PDF in fit range
-            d0_m_var.setRange(d0m_range_min, d0m_range_max);
-            dm_var.setRange(dm_range_min, dm_range_max);
+          // Plot PDF in fit range
+          d0_m_var.setRange(d0m_range_min, d0m_range_max);
+          dm_var.setRange(dm_range_min, dm_range_max);
+
+          unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed(
+              d0_m_var.frame(Title("d0_m Passed " + tag), Range("fitRange")));
+          unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed(
+              d0_m_var.frame(Title("d0_m Failed " + tag), Range("fitRange")));
+          ds_d0m_d0_bkg_passed_sum.plotOn(frame_d0_mc_d0_bkg_passed.get(),
+                                          Binning(bins_histos_d0_m_d0_bkg),
+                                          CutRange("fitRange"));
+          ds_d0m_d0_bkg_failed_sum.plotOn(frame_d0_mc_d0_bkg_failed.get(),
+                                          Binning(bins_histos_d0_m_d0_bkg),
+                                          CutRange("fitRange"));
+
+          const double d0_bkg_norm_passed_d0m =
+              ds_d0m_d0_bkg_passed_sum.sumEntries("", "fitRange");
+          const double d0_bkg_norm_failed_d0m =
+              ds_d0m_d0_bkg_failed_sum.sumEntries("", "fitRange");
+          d0_model_d0_bkg_passed_ext.plotOn(
+              frame_d0_mc_d0_bkg_passed.get(), LineWidth(2), Range("fitRange"),
+              Normalization(d0_bkg_norm_passed_d0m, RooAbsReal::NumEvent),
+              ProjectionRange("fitRange"));
+          d0_model_d0_bkg_failed_ext.plotOn(
+              frame_d0_mc_d0_bkg_failed.get(), LineWidth(2), Range("fitRange"),
+              Normalization(d0_bkg_norm_failed_d0m, RooAbsReal::NumEvent),
+              ProjectionRange("fitRange"));
+
+          c_double.cd(1);
+          frame_d0_mc_d0_bkg_passed->Draw();
+          c_double.cd(2);
+          frame_d0_mc_d0_bkg_failed->Draw();
+          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg.pdf");
+
+          d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
+          dm_var.setRange(extended_dm_min, extended_dm_max);
+
+          /////////////////////////////////////////////////
+          // dm template for mis-reconstructed D0 decays //
+          /////////////////////////////////////////////////
+
+          cout << "\nINFO Building dm MC template for D0 bkg " << suffix
+               << endl;
+
+          unordered_map<string, RooKeysPdf> dm_pdfs_d0_bkg_passed;
+          unordered_map<string, RooKeysPdf> dm_pdfs_d0_bkg_failed;
+          unordered_map<string, RooRealVar> dm_fs_d0_bkg_passed;
+          unordered_map<string, RooRealVar> dm_fs_d0_bkg_failed;
+          unordered_map<string, RooRealVar> dm_fs_extended_d0_bkg_passed;
+          unordered_map<string, RooRealVar> dm_fs_extended_d0_bkg_failed;
+          RooArgList dm_pdf_list_d0_bkg_passed, dm_pdf_list_d0_bkg_failed,
+              dm_f_list_d0_bkg_passed, dm_f_list_d0_bkg_failed,
+              dm_f_extended_list_d0_bkg_passed,
+              dm_f_extended_list_d0_bkg_failed;
+
+          RooDataSet ds_dm_d0_bkg_passed_sum(
+              "ds_dm_d0_bkg_passed_sum_" + suffix,
+              "ds_dm_d0_bkg_passed_sum_" + suffix, fit_vars_w,
+              WeightVar(w_d0_bkg));
+          RooDataSet ds_dm_d0_bkg_failed_sum(
+              "ds_dm_d0_bkg_failed_sum_" + suffix,
+              "ds_dm_d0_bkg_failed_sum_" + suffix, fit_vars_w,
+              WeightVar(w_d0_bkg));
+
+          unordered_map<string, TH1D> dm_histos_d0_bkg_passed;
+          unordered_map<string, TH1D> dm_histos_d0_bkg_failed;
+          TH1D                        h_dm_d0_bkg_passed(
+              "h_dm_d0_bkg_passed_" + suffix, "h_dm_d0_bkg_passed_" + suffix,
+              bins_histos_dm_d0_bkg.numBins(), bins_histos_dm_d0_bkg.lowBound(),
+              bins_histos_dm_d0_bkg.highBound());
+          TH1D h_dm_d0_bkg_failed(
+              "h_dm_d0_bkg_failed_" + suffix, "h_dm_d0_bkg_failed_" + suffix,
+              bins_histos_dm_d0_bkg.numBins(), bins_histos_dm_d0_bkg.lowBound(),
+              bins_histos_dm_d0_bkg.highBound());
+          THStack ths_dm_d0_bkg_passed("ths_dm_d0_bkg_passed_" + suffix,
+                                       "ths_dm_d0_bkg_passed_" + suffix);
+          THStack ths_dm_d0_bkg_failed("ths_dm_d0_bkg_failed_" + suffix,
+                                       "ths_dm_d0_bkg_failed_" + suffix);
+
+          double sum_f_passed_dm = 0., sum_f_failed_dm = 0.,
+                 sum_f_ext_passed_dm = 0., sum_f_ext_failed_dm = 0.;
+
+          for (const auto &d0_decay : d0_bkg_decays) {
+            cout << "\nINFO Producing dm PDFs for " << d0_decay << endl;
+            const TString suffix_bkg = d0_decay + "_" + suffix;
+
+            RooDataSet &ds_passed = datasets_d0_bkg_mc_passed[d0_decay][p_idx];
+            RooDataSet &ds_failed = datasets_d0_bkg_mc_failed[d0_decay][p_idx];
+
+            const double n_passed_d0_decay =
+                ds_passed.numEntries() * w_d0_decays.at(d0_decay);
+            const double n_failed_d0_decay =
+                ds_failed.numEntries() * w_d0_decays.at(d0_decay);
+
+            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_passed_d0_decay /
+                            (n_passed_d0_decay + n_failed_d0_decay));
+            append_to_dataset(ds_passed, ds_dm_d0_bkg_passed_sum, w_d0_bkg);
+            append_to_dataset(ds_failed, ds_dm_d0_bkg_passed_sum, w_d0_bkg);
+
+            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_failed_d0_decay /
+                            (n_passed_d0_decay + n_failed_d0_decay));
+            append_to_dataset(ds_passed, ds_dm_d0_bkg_failed_sum, w_d0_bkg);
+            append_to_dataset(ds_failed, ds_dm_d0_bkg_failed_sum, w_d0_bkg);
+
+            RooDataSet ds_dm_d0_bkg("ds_dm_d0_bkg_" + suffix,
+                                    "ds_dm_d0_bkg_" + suffix, fit_vars);
+
+            ds_dm_d0_bkg.append(ds_passed);
+            ds_dm_d0_bkg.append(ds_failed);
+
+            unique_ptr<TH1D> h_passed(static_cast<TH1D *>(
+                ds_passed.createHistogram("h_passed_" + suffix_bkg, dm_var,
+                                          Binning(bins_histos_dm_d0_bkg))));
+            unique_ptr<TH1D> h_failed(static_cast<TH1D *>(
+                ds_failed.createHistogram("h_failed_" + suffix_bkg, dm_var,
+                                          Binning(bins_histos_dm_d0_bkg))));
+
+            h_passed->SetFillColor(color_ids_d0_decays.at(d0_decay));
+            h_failed->SetFillColor(color_ids_d0_decays.at(d0_decay));
+
+            dm_histos_d0_bkg_passed.emplace(
+                d0_decay, TH1D("h_dm_d0_bkg_passed_merged_" + suffix_bkg,
+                               "h_dm_d0_bkg_passed_merged_" + suffix_bkg,
+                               bins_histos_dm_d0_bkg.numBins(),
+                               bins_histos_dm_d0_bkg.lowBound(),
+                               bins_histos_dm_d0_bkg.highBound()));
+            dm_histos_d0_bkg_failed.emplace(
+                d0_decay, TH1D("h_dm_d0_bkg_failed_merged_" + suffix_bkg,
+                               "h_dm_d0_bkg_failed_merged_" + suffix_bkg,
+                               bins_histos_dm_d0_bkg.numBins(),
+                               bins_histos_dm_d0_bkg.lowBound(),
+                               bins_histos_dm_d0_bkg.highBound()));
+
+            TH1D &h_passed_merged = dm_histos_d0_bkg_passed[d0_decay];
+            TH1D &h_failed_merged = dm_histos_d0_bkg_failed[d0_decay];
+
+            h_passed_merged.Add(h_passed.get(), h_failed.get());
+            h_failed_merged.Add(h_passed.get(), h_failed.get());
+
+            h_passed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
+            h_failed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
+
+            h_passed_merged.Scale(n_passed_d0_decay /
+                                  h_passed_merged.GetEntries());
+            h_failed_merged.Scale(n_failed_d0_decay /
+                                  h_failed_merged.GetEntries());
+            ths_dm_d0_bkg_passed.Add(&h_passed_merged);
+            ths_dm_d0_bkg_failed.Add(&h_failed_merged);
+            h_dm_d0_bkg_passed.Add(&h_passed_merged);
+            h_dm_d0_bkg_failed.Add(&h_failed_merged);
+
+            cout << "INFO Building RooKeysPdf dm_model_d0_bkg_passed with "
+                 << ds_dm_d0_bkg.numEntries() << " entries" << endl;
+            dm_pdfs_d0_bkg_passed.emplace(
+                d0_decay,
+                RooKeysPdf("dm_model_d0_bkg_passed_" + suffix_bkg,
+                           "dm_model_d0_bkg_passed_" + suffix_bkg, dm_var,
+                           dm_var, dm_pdg, dm_scale, dm_shift, ds_dm_d0_bkg,
+                           RooKeysPdf::NoMirror, 1.6, true, n_bins_keys));
+
+            cout << "INFO Building RooKeysPdf dm_model_d0_bkg_failed with "
+                 << ds_dm_d0_bkg.numEntries() << " entries" << endl;
+            dm_pdfs_d0_bkg_failed.emplace(
+                d0_decay,
+                RooKeysPdf("dm_model_d0_bkg_failed_" + suffix_bkg,
+                           "dm_model_d0_bkg_failed_" + suffix_bkg, dm_var,
+                           dm_var, dm_pdg, dm_scale, dm_shift, ds_dm_d0_bkg,
+                           RooKeysPdf::NoMirror, 1.6, true, n_bins_keys));
 
             unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed(
-                dm_var.frame(Title("dm Passed " + tag), Range("fitRange")));
+                dm_var.frame(Title("dm Passed " + tag)));
             unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed(
-                dm_var.frame(Title("dm Failed " + tag), Range("fitRange")));
-            ds_dm_d0_bkg_passed_sum.plotOn(frame_dm_mc_d0_bkg_passed.get(),
-                                           Binning(bins_histos_dm_d0_bkg),
-                                           CutRange("fitRange"));
-            ds_dm_d0_bkg_failed_sum.plotOn(frame_dm_mc_d0_bkg_failed.get(),
-                                           Binning(bins_histos_dm_d0_bkg),
-                                           CutRange("fitRange"));
+                dm_var.frame(Title("dm Failed " + tag)));
+            unique_ptr<RooPlot> frame_dm_mc_d0_bkg_total(
+                dm_var.frame(Title("dm Total " + tag)));
 
-            const double d0_bkg_norm_passed_dm =
-                ds_dm_d0_bkg_passed_sum.sumEntries("", "fitRange");
-            const double d0_bkg_norm_failed_dm =
-                ds_dm_d0_bkg_failed_sum.sumEntries("", "fitRange");
-            dm_model_d0_bkg_passed_ext.plotOn(
+            ds_passed.plotOn(frame_dm_mc_d0_bkg_passed.get(),
+                             Binning(bins_histos_dm_d0_bkg));
+            ds_failed.plotOn(frame_dm_mc_d0_bkg_failed.get(),
+                             Binning(bins_histos_dm_d0_bkg));
+            ds_dm_d0_bkg.plotOn(frame_dm_mc_d0_bkg_total.get(),
+                                Binning(bins_histos_dm_d0_bkg));
+
+            dm_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
+                frame_dm_mc_d0_bkg_passed.get(), LineWidth(1), LineColor(kRed),
+                Range("fitRange"), VLines());
+            dm_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
                 frame_dm_mc_d0_bkg_passed.get(), LineWidth(2),
-                Range("fitRange"),
-                Normalization(d0_bkg_norm_passed_dm, RooAbsReal::NumEvent),
-                ProjectionRange("fitRange"));
-            dm_model_d0_bkg_failed_ext.plotOn(
+                LineColor(color_ids_d0_decays.at(d0_decay)),
+                NormRange("fitRange"));
+            dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
+                frame_dm_mc_d0_bkg_failed.get(), LineWidth(1), LineColor(kRed),
+                Range("fitRange"), VLines());
+            dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
                 frame_dm_mc_d0_bkg_failed.get(), LineWidth(2),
-                Range("fitRange"),
-                Normalization(d0_bkg_norm_failed_dm, RooAbsReal::NumEvent),
-                ProjectionRange("fitRange"));
+                LineColor(color_ids_d0_decays.at(d0_decay)),
+                NormRange("fitRange"));
+            dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
+                frame_dm_mc_d0_bkg_total.get(), LineWidth(1), LineColor(kRed),
+                Range("fitRange"), VLines());
+            dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
+                frame_dm_mc_d0_bkg_total.get(), LineWidth(2),
+                LineColor(color_ids_d0_decays.at(d0_decay)),
+                NormRange("fitRange"));
 
-            c_double.cd(1);
+            c3.cd(1);
             frame_dm_mc_d0_bkg_passed->Draw();
-            c_double.cd(2);
+            c3.cd(2);
             frame_dm_mc_d0_bkg_failed->Draw();
-            c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg.pdf");
+            c3.cd(3);
+            frame_dm_mc_d0_bkg_total->Draw();
+            c3.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg_keys_" +
+                      d0_decay + ".pdf");
 
-            d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
-            dm_var.setRange(extended_dm_min, extended_dm_max);
+            dm_pdf_list_d0_bkg_passed.add(dm_pdfs_d0_bkg_passed.at(d0_decay));
+            dm_pdf_list_d0_bkg_failed.add(dm_pdfs_d0_bkg_failed.at(d0_decay));
 
-            //////////////////////
-            // Build full model //
-            //////////////////////
+            if (d0_decay != d0_bkg_decays.back()) {
+              // Here we calculate fit fractions, so the this must be omitted
+              // for the last component
 
-            RooAddPdf d0_model_passed(
-                "d0_model_passed_" + suffix, "d0_model_passed_" + suffix,
-                d0_model_passed_dif, d0_model_passed_nondif,
-                f_dif_calib_passed);
+              // Fit fractions within fit range
+              dm_fs_d0_bkg_passed.emplace(
+                  d0_decay,
+                  RooRealVar("dm_f_d0_bkg_passed_" + suffix_bkg,
+                             "dm_f_d0_bkg_passed_" + suffix_bkg,
+                             w_d0_decays.at(d0_decay) *
+                                 d0_bkg_counts_passed[probe][p_idx][d0_decay] /
+                                 d0_bkg_sum_passed,
+                             ""));
 
-            RooAddPdf dm_model_passed(
-                "dm_model_passed_" + suffix, "dm_model_passed_" + suffix,
-                dm_model_passed_dif, dm_model_passed_nondif,
-                f_dif_calib_passed);
+              dm_fs_d0_bkg_failed.emplace(
+                  d0_decay,
+                  RooRealVar("dm_f_d0_bkg_failed_" + suffix_bkg,
+                             "dm_f_d0_bkg_failed_" + suffix_bkg,
+                             w_d0_decays.at(d0_decay) *
+                                 d0_bkg_counts_failed[probe][p_idx][d0_decay] /
+                                 d0_bkg_sum_failed,
+                             ""));
+              dm_f_list_d0_bkg_passed.add(dm_fs_d0_bkg_passed.at(d0_decay));
+              dm_f_list_d0_bkg_failed.add(dm_fs_d0_bkg_failed.at(d0_decay));
 
-            RooAddPdf d0_model_failed(
-                "d0_model_failed_" + suffix, "d0_model_failed_" + suffix,
-                d0_model_failed_dif, d0_model_failed_nondif,
-                f_dif_calib_failed);
+              // Fit fractions over extended range
+              dm_fs_extended_d0_bkg_passed.emplace(
+                  d0_decay,
+                  RooRealVar("dm_f_extended_d0_bkg_passed_" + suffix_bkg,
+                             "dm_f_extended_d0_bkg_passed_" + suffix_bkg,
+                             n_passed_d0_decay / d0_bkg_sum_extended_passed,
+                             ""));
 
-            RooAddPdf dm_model_failed(
-                "dm_model_failed_" + suffix, "dm_model_failed_" + suffix,
-                dm_model_failed_dif, dm_model_failed_nondif,
-                f_dif_calib_failed);
+              dm_fs_extended_d0_bkg_failed.emplace(
+                  d0_decay,
+                  RooRealVar("dm_f_extended_d0_bkg_failed_" + suffix_bkg,
+                             "dm_f_extended_d0_bkg_failed_" + suffix_bkg,
+                             n_failed_d0_decay / d0_bkg_sum_extended_failed,
+                             ""));
+              dm_f_extended_list_d0_bkg_passed.add(
+                  dm_fs_extended_d0_bkg_passed.at(d0_decay));
+              dm_f_extended_list_d0_bkg_failed.add(
+                  dm_fs_extended_d0_bkg_failed.at(d0_decay));
 
-            RooProdPdf sig_passed("sig_passed_" + suffix,
-                                  "sig_passed_" + suffix, d0_model_passed,
-                                  dm_model_passed);
-            RooProdPdf sig_failed("sig_failed_" + suffix,
-                                  "sig_failed_" + suffix, d0_model_failed,
-                                  dm_model_failed);
+              cout << "INFO " << d0_decay
+                   << " f passed: " << dm_fs_d0_bkg_passed.at(d0_decay).getVal()
+                   << endl;
+              cout << "INFO " << d0_decay
+                   << " f failed: " << dm_fs_d0_bkg_failed.at(d0_decay).getVal()
+                   << endl;
+              cout << "INFO " << d0_decay << " f ext passed: "
+                   << dm_fs_extended_d0_bkg_passed.at(d0_decay).getVal()
+                   << endl;
+              cout << "INFO " << d0_decay << " f ext failed: "
+                   << dm_fs_extended_d0_bkg_failed.at(d0_decay).getVal()
+                   << endl;
 
-            RooProdPdf comb_spi_passed("comb_spi_passed_" + suffix,
-                                       "comb_spi_passed_" + suffix,
-                                       d0_model_passed, dm_comb_spi_passed);
-            RooProdPdf comb_spi_failed("comb_spi_failed_" + suffix,
-                                       "comb_spi_failed_" + suffix,
-                                       d0_model_failed, dm_comb_spi_failed);
+              sum_f_passed_dm += dm_fs_d0_bkg_passed.at(d0_decay).getVal();
+              sum_f_failed_dm += dm_fs_d0_bkg_failed.at(d0_decay).getVal();
+              sum_f_ext_passed_dm +=
+                  dm_fs_extended_d0_bkg_passed.at(d0_decay).getVal();
+              sum_f_ext_failed_dm +=
+                  dm_fs_extended_d0_bkg_failed.at(d0_decay).getVal();
+            }
+          }
 
-            RooProdPdf d0_bkg_passed(
-                "d0_bkg_passed_" + suffix, "d0_bkg_passed_" + suffix,
-                d0_model_d0_bkg_passed, dm_model_d0_bkg_passed);
-            RooProdPdf d0_bkg_failed(
-                "d0_bkg_failed_" + suffix, "d0_bkg_failed_" + suffix,
-                d0_model_d0_bkg_failed, dm_model_d0_bkg_failed);
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f passed: " << 1. - sum_f_passed_dm << endl;
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f failed: " << 1. - sum_f_failed_dm << endl;
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f ext passed: " << 1. - sum_f_ext_passed_dm << endl;
+          cout << "INFO " << d0_bkg_decays.back()
+               << " f ext failed: " << 1. - sum_f_ext_failed_dm << endl;
 
-            RooProdPdf comb_all_passed("comb_all_passed_" + suffix,
-                                       "comb_all_passed_" + suffix,
-                                       d0_comb_all_passed, dm_comb_all_passed);
-            RooProdPdf comb_all_failed("comb_all_failed_" + suffix,
-                                       "comb_all_failed_" + suffix,
-                                       d0_comb_all_failed, dm_comb_all_failed);
+          // Plot stacked histograms
+          h_dm_d0_bkg_passed.SetLineColor(kBlack);
+          h_dm_d0_bkg_failed.SetLineColor(kBlack);
 
-            RooAddPdf model_passed(
-                "model_passed_" + suffix, "model_passed_" + suffix,
-                RooArgList(sig_passed, d0_bkg_passed, comb_spi_passed,
-                           comb_all_passed),
-                RooArgList(f_sig_phys_passed, f_d0_bkg_passed,
-                           f_comb_spi_passed));
+          c_double.cd(1);
+          ths_dm_d0_bkg_passed.Draw("B HIST");
+          h_dm_d0_bkg_passed.Draw("L SAME");
 
-            RooAddPdf model_failed(
-                "model_failed_" + suffix, "model_failed_" + suffix,
-                RooArgList(sig_failed, d0_bkg_failed, comb_spi_failed,
-                           comb_all_failed),
-                RooArgList(f_sig_phys_failed, f_d0_bkg_failed,
-                           f_comb_spi_failed));
+          c_double.cd(2);
+          ths_dm_d0_bkg_failed.Draw("B HIST");
+          h_dm_d0_bkg_failed.Draw("L SAME");
 
-            ////////////////////
-            // Set parameters //
-            ////////////////////
+          c_double.SaveAs(fit_dir_path + "/dm_" + suffix +
+                          "_d0_bkg_histos_stacked.pdf");
 
-            // Set mass-window and total yields in MC for this kinematic bin.
-            // Together with the fitted alpha parameter, this allows the
-            // mass-window efficiencies to be calculated.
-            n_inmw_passed_dif.setVal(count_in_mw_passed_dif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
-            n_inmw_passed_nondif.setVal(count_in_mw_passed_nondif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
-            n_inmw_failed_dif.setVal(count_in_mw_failed_dif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
-            n_inmw_failed_nondif.setVal(count_in_mw_failed_nondif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
-            n_total_passed_dif.setVal(count_total_passed_dif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
-            n_total_passed_nondif.setVal(count_total_passed_nondif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
-            n_total_failed_dif.setVal(count_total_failed_dif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
-            n_total_failed_nondif.setVal(count_total_failed_nondif[year_idx.at(
-                year)][ntrks_idx][eta_idx][p_idx]);
+          // Build pdfs with fit fractions calculated within the fit range
+          // This is the one we use for the fits!
+          RooAddPdf dm_model_d0_bkg_passed("dm_model_d0_bkg_passed_" + suffix,
+                                           "dm_model_d0_bkg_passed_" + suffix,
+                                           dm_pdf_list_d0_bkg_passed,
+                                           dm_f_list_d0_bkg_passed);
 
-            // Roughly estimate amount of background
+          RooAddPdf dm_model_d0_bkg_failed("dm_model_d0_bkg_failed_" + suffix,
+                                           "dm_model_d0_bkg_failed_" + suffix,
+                                           dm_pdf_list_d0_bkg_failed,
+                                           dm_f_list_d0_bkg_failed);
 
-            // Define approximate signal region
-            const double d0m_sig_max = d0m_range_max - 0.015;  // GeV
-            const double d0m_sig_min = d0m_range_min + 0.015;  // GeV
-            const double dm_sig_max  = dm_range_max - 0.002;   // GeV
-            const double dm_sig_min  = dm_range_min + 0.002;   // GeV
+          // Build pdfs fit fractions calculated within the extended range
+          RooAddPdf dm_model_d0_bkg_passed_ext(
+              "dm_model_d0_bkg_passed_ext_" + suffix,
+              "dm_model_d0_bkg_passed_ext_" + suffix, dm_pdf_list_d0_bkg_passed,
+              dm_f_extended_list_d0_bkg_passed);
 
-            // Define ranges for each component
-            // Signal
-            d0_m_var.setRange("sig", d0m_sig_min, d0m_sig_max);
-            dm_var.setRange("sig", dm_sig_min, dm_sig_max);
-            // SB1: soft pi comb (+ all comb)
-            d0_m_var.setRange("sb1_1", d0m_sig_min, d0m_sig_max);
-            d0_m_var.setRange("sb1_2", d0m_sig_min, d0m_sig_max);
-            dm_var.setRange("sb1_1", dm_range_min, dm_sig_min);
-            dm_var.setRange("sb1_2", dm_sig_max, dm_range_max);
-            // SB2: part. reco. D0 comb (+ all comb)
-            d0_m_var.setRange("sb2_1", d0m_range_min, d0m_sig_min);
-            d0_m_var.setRange("sb2_2", d0m_sig_max, d0m_range_max);
-            dm_var.setRange("sb2_1", dm_sig_min, dm_sig_max);
-            dm_var.setRange("sb2_2", dm_sig_min, dm_sig_max);
-            // SB3: all comb
-            d0_m_var.setRange("sb3_1", d0m_range_min, d0m_sig_min);
-            d0_m_var.setRange("sb3_2", d0m_range_min, d0m_sig_min);
-            d0_m_var.setRange("sb3_3", d0m_sig_max, d0m_range_max);
-            d0_m_var.setRange("sb3_4", d0m_sig_max, d0m_range_max);
-            dm_var.setRange("sb3_1", dm_range_min, dm_sig_min);
-            dm_var.setRange("sb3_2", dm_sig_max, dm_range_max);
-            dm_var.setRange("sb3_3", dm_range_min, dm_sig_min);
-            dm_var.setRange("sb3_4", dm_sig_max, dm_range_max);
+          RooAddPdf dm_model_d0_bkg_failed_ext(
+              "dm_model_d0_bkg_failed_ext_" + suffix,
+              "dm_model_d0_bkg_failed_ext_" + suffix, dm_pdf_list_d0_bkg_failed,
+              dm_f_extended_list_d0_bkg_failed);
 
-            const double A_fit =
-                (d0m_range_max - d0m_range_min) * (dm_range_max - dm_range_min);
-            const double A_sig =
-                (d0m_sig_max - d0m_sig_min) * (dm_sig_max - dm_sig_min);
-            const double A_sb3 =
-                (dm_range_max - dm_sig_max) * (d0m_sig_min - d0m_range_min) +
-                (dm_range_max - dm_sig_max) * (d0m_range_max - d0m_sig_max) +
-                (dm_sig_min - dm_range_min) * (d0m_sig_min - d0m_range_min) +
-                (dm_sig_min - dm_range_min) * (d0m_range_max - d0m_sig_max);
-            // const double A_sb2 = (dm_sig_max - dm_sig_min) * (d0m_sig_min -
-            // d0m_range_min) +
-            //                          (dm_sig_max - dm_sig_min) *
-            //                          (d0m_range_max - d0m_sig_max);
-            const double A_sb1 =
-                (dm_range_max - dm_sig_max) * (d0m_sig_max - d0m_sig_min) +
-                (dm_sig_min - dm_range_min) * (d0m_sig_max - d0m_sig_min);
+          // Plot PDF over extended range
+          unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed_ext(
+              dm_var.frame(Title("dm Passed " + tag)));
+          unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed_ext(
+              dm_var.frame(Title("dm Failed " + tag)));
+          ds_dm_d0_bkg_passed_sum.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
+                                         Binning(bins_histos_dm_d0_bkg));
+          ds_dm_d0_bkg_failed_sum.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
+                                         Binning(bins_histos_dm_d0_bkg));
 
-            // Yields in each SB
-            const double n_sb1_calib_passed =
-                dataset_calib_passed->sumEntries("", "sb1_1,sb1_2");
-            const double n_sb1_calib_failed =
-                dataset_calib_failed->sumEntries("", "sb1_1,sb1_2");
-            // const double n_sb2_calib_passed =
-            //     dataset_calib_passed->sumEntries(sb2_cut);
-            // const double n_sb2_calib_failed =
-            //     dataset_calib_failed->sumEntries(sb2_cut);
-            const double n_sb3_calib_passed =
-                dataset_calib_passed->sumEntries("", "sb3_1,sb3_2,sb3_3,sb3_4");
-            const double n_sb3_calib_failed =
-                dataset_calib_failed->sumEntries("", "sb3_1,sb3_2,sb3_3,sb3_4");
+          dm_model_d0_bkg_passed_ext.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
+                                            LineWidth(1), LineColor(kRed),
+                                            Range("fitRange"), VLines());
+          dm_model_d0_bkg_passed_ext.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
+                                            LineWidth(2),
+                                            NormRange("fitRange"));
+          dm_model_d0_bkg_failed_ext.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
+                                            LineWidth(1), LineColor(kRed),
+                                            Range("fitRange"), VLines());
+          dm_model_d0_bkg_failed_ext.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
+                                            LineWidth(2),
+                                            NormRange("fitRange"));
 
-            // Estimated yields of each bkg component in full fit range
-            const double n_bkg1_calib_passed =
-                (n_sb1_calib_passed - n_sb3_calib_passed * A_sb1 / A_sb3) *
-                (A_sb1 + A_sig) / A_sb1;
-            const double n_bkg1_calib_failed =
-                (n_sb1_calib_failed - n_sb3_calib_failed * A_sb1 / A_sb3) *
-                (A_sb1 + A_sig) / A_sb1;
-            // const double n_bkg2_calib_passed =
-            //     (n_sb2_calib_passed - n_sb3_calib_passed * A_sb2 / A_sb3) *
-            //     (A_sb2 + A_sig) / A_sb2;
-            // const double n_bkg2_calib_failed =
-            //     (n_sb2_calib_failed - n_sb3_calib_failed * A_sb2 / A_sb3) *
-            //     (A_sb2 + A_sig) / A_sb2;
-            const double n_bkg3_calib_passed =
-                n_sb3_calib_passed * A_fit / A_sb3;
-            const double n_bkg3_calib_failed =
-                n_sb3_calib_failed * A_fit / A_sb3;
+          c_double.cd(1);
+          frame_dm_mc_d0_bkg_passed_ext->Draw();
+          c_double.cd(2);
+          frame_dm_mc_d0_bkg_failed_ext->Draw();
+          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg_ext.pdf");
 
-            const double n_comb_guess_passed =
-                n_bkg1_calib_passed + n_bkg3_calib_passed;
-            const double n_comb_guess_failed =
-                n_bkg1_calib_failed + n_bkg3_calib_failed;
+          // Plot PDF in fit range
+          d0_m_var.setRange(d0m_range_min, d0m_range_max);
+          dm_var.setRange(dm_range_min, dm_range_max);
 
-            const double f_phys_passed_guess =
-                1.0 - n_comb_guess_passed / n_calib_passed;
-            const double f_phys_failed_guess =
-                1.0 - n_comb_guess_failed / n_calib_failed;
+          unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed(
+              dm_var.frame(Title("dm Passed " + tag), Range("fitRange")));
+          unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed(
+              dm_var.frame(Title("dm Failed " + tag), Range("fitRange")));
+          ds_dm_d0_bkg_passed_sum.plotOn(frame_dm_mc_d0_bkg_passed.get(),
+                                         Binning(bins_histos_dm_d0_bkg),
+                                         CutRange("fitRange"));
+          ds_dm_d0_bkg_failed_sum.plotOn(frame_dm_mc_d0_bkg_failed.get(),
+                                         Binning(bins_histos_dm_d0_bkg),
+                                         CutRange("fitRange"));
 
-            f_phys_passed.setVal(f_phys_passed_guess);
-            f_phys_failed.setVal(f_phys_failed_guess);
+          const double d0_bkg_norm_passed_dm =
+              ds_dm_d0_bkg_passed_sum.sumEntries("", "fitRange");
+          const double d0_bkg_norm_failed_dm =
+              ds_dm_d0_bkg_failed_sum.sumEntries("", "fitRange");
+          dm_model_d0_bkg_passed_ext.plotOn(
+              frame_dm_mc_d0_bkg_passed.get(), LineWidth(2), Range("fitRange"),
+              Normalization(d0_bkg_norm_passed_dm, RooAbsReal::NumEvent),
+              ProjectionRange("fitRange"));
+          dm_model_d0_bkg_failed_ext.plotOn(
+              frame_dm_mc_d0_bkg_failed.get(), LineWidth(2), Range("fitRange"),
+              Normalization(d0_bkg_norm_failed_dm, RooAbsReal::NumEvent),
+              ProjectionRange("fitRange"));
 
-            const double f_spi_passed_guess =
-                n_bkg1_calib_passed / n_comb_guess_passed;
-            const double f_spi_failed_guess =
-                n_bkg1_calib_failed / n_comb_guess_failed;
+          c_double.cd(1);
+          frame_dm_mc_d0_bkg_passed->Draw();
+          c_double.cd(2);
+          frame_dm_mc_d0_bkg_failed->Draw();
+          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg.pdf");
 
-            f_spi_passed.setVal(f_spi_passed_guess);
-            f_spi_failed.setVal(f_spi_failed_guess);
+          d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
+          dm_var.setRange(extended_dm_min, extended_dm_max);
 
-            // Constrain yield of D0 bkg based on MC
-            const double d0_bkg_passed_signal =
-                ymlBkg[sample][probe]["passed"][p_idx]["signal"].as<double>();
-            const double d0_bkg_passed_total =
-                ymlBkg[sample][probe]["passed"][p_idx]["total"].as<double>();
-            const double d0_bkg_failed_signal =
-                ymlBkg[sample][probe]["failed"][p_idx]["signal"].as<double>();
-            const double d0_bkg_failed_total =
-                ymlBkg[sample][probe]["failed"][p_idx]["total"].as<double>();
+          //////////////////////
+          // Build full model //
+          //////////////////////
 
-            // Additional width on constraints to account for MC-data
-            // discrepancies and outdated BFs in decay.dec
-            constexpr double d0_bkg_syst_unc = 0.02;
+          RooAddPdf d0_model_passed(
+              "d0_model_passed_" + suffix, "d0_model_passed_" + suffix,
+              d0_model_passed_dif, d0_model_passed_nondif, f_dif_calib_passed);
 
-            const double f_sig_passed_guess =
-                d0_bkg_passed_signal / d0_bkg_passed_total;
-            const double f_sig_passed_guess_unc_hi =
-                TEfficiency::Wilson(d0_bkg_passed_total, d0_bkg_passed_signal,
-                                    ONE_SIGMA, true) -
-                f_sig_passed_guess;
-            const double f_sig_passed_guess_unc_lo =
-                f_sig_passed_guess - TEfficiency::Wilson(d0_bkg_passed_total,
-                                                         d0_bkg_passed_signal,
-                                                         ONE_SIGMA, false);
+          RooAddPdf dm_model_passed(
+              "dm_model_passed_" + suffix, "dm_model_passed_" + suffix,
+              dm_model_passed_dif, dm_model_passed_nondif, f_dif_calib_passed);
 
-            const double f_sig_passed_guess_unc_total_hi =
-                sqrt_sum_sq(f_sig_passed_guess_unc_hi, d0_bkg_syst_unc);
-            const double f_sig_passed_guess_unc_total_lo =
-                sqrt_sum_sq(f_sig_passed_guess_unc_lo, d0_bkg_syst_unc);
+          RooAddPdf d0_model_failed(
+              "d0_model_failed_" + suffix, "d0_model_failed_" + suffix,
+              d0_model_failed_dif, d0_model_failed_nondif, f_dif_calib_failed);
 
-            f_sig_passed_mean.setVal(f_sig_passed_guess);
-            f_sig_passed_unc_hi.setVal(std::min(f_sig_passed_guess_unc_total_hi,
-                                                1.0 - f_sig_passed_guess));
-            f_sig_passed_unc_lo.setVal(
-                std::min(f_sig_passed_guess_unc_total_lo, f_sig_passed_guess));
+          RooAddPdf dm_model_failed(
+              "dm_model_failed_" + suffix, "dm_model_failed_" + suffix,
+              dm_model_failed_dif, dm_model_failed_nondif, f_dif_calib_failed);
 
-            const double f_sig_failed_guess =
-                d0_bkg_failed_signal / d0_bkg_failed_total;
-            const double f_sig_failed_guess_unc_hi =
-                TEfficiency::Wilson(d0_bkg_failed_total, d0_bkg_failed_signal,
-                                    ONE_SIGMA, true) -
-                f_sig_failed_guess;
-            const double f_sig_failed_guess_unc_lo =
-                f_sig_failed_guess - TEfficiency::Wilson(d0_bkg_failed_total,
-                                                         d0_bkg_failed_signal,
-                                                         ONE_SIGMA, false);
+          RooProdPdf sig_passed("sig_passed_" + suffix, "sig_passed_" + suffix,
+                                d0_model_passed, dm_model_passed);
+          RooProdPdf sig_failed("sig_failed_" + suffix, "sig_failed_" + suffix,
+                                d0_model_failed, dm_model_failed);
 
-            const double f_sig_failed_guess_unc_total_hi =
-                sqrt_sum_sq(f_sig_failed_guess_unc_hi, d0_bkg_syst_unc);
-            const double f_sig_failed_guess_unc_total_lo =
-                sqrt_sum_sq(f_sig_failed_guess_unc_lo, d0_bkg_syst_unc);
+          RooProdPdf comb_spi_passed("comb_spi_passed_" + suffix,
+                                     "comb_spi_passed_" + suffix,
+                                     d0_model_passed, dm_comb_spi_passed);
+          RooProdPdf comb_spi_failed("comb_spi_failed_" + suffix,
+                                     "comb_spi_failed_" + suffix,
+                                     d0_model_failed, dm_comb_spi_failed);
 
-            f_sig_failed_mean.setVal(f_sig_failed_guess);
-            f_sig_failed_unc_hi.setVal(std::min(f_sig_failed_guess_unc_total_hi,
-                                                1.0 - f_sig_failed_guess));
-            f_sig_failed_unc_lo.setVal(
-                std::min(f_sig_failed_guess_unc_total_lo, f_sig_failed_guess));
+          RooProdPdf d0_bkg_passed(
+              "d0_bkg_passed_" + suffix, "d0_bkg_passed_" + suffix,
+              d0_model_d0_bkg_passed, dm_model_d0_bkg_passed);
+          RooProdPdf d0_bkg_failed(
+              "d0_bkg_failed_" + suffix, "d0_bkg_failed_" + suffix,
+              d0_model_d0_bkg_failed, dm_model_d0_bkg_failed);
 
-            f_sig_passed.setVal(f_sig_passed_guess);
-            f_sig_failed.setVal(f_sig_failed_guess);
+          RooProdPdf comb_all_passed("comb_all_passed_" + suffix,
+                                     "comb_all_passed_" + suffix,
+                                     d0_comb_all_passed, dm_comb_all_passed);
+          RooProdPdf comb_all_failed("comb_all_failed_" + suffix,
+                                     "comb_all_failed_" + suffix,
+                                     d0_comb_all_failed, dm_comb_all_failed);
 
-            cout << "\nINFO Constrained ratios of D0 bkg to signal:\n";
-            cout << "  - f_sig_passed: " << f_sig_passed_guess << " + "
-                 << f_sig_passed_unc_hi.getVal() << " - "
-                 << f_sig_passed_unc_lo.getVal() << "\n";
-            cout << "  - f_sig_failed: " << f_sig_failed_guess << " + "
-                 << f_sig_failed_unc_hi.getVal() << " - "
-                 << f_sig_failed_unc_lo.getVal() << endl;
+          RooAddPdf model_passed("model_passed_" + suffix,
+                                 "model_passed_" + suffix,
+                                 RooArgList(sig_passed, d0_bkg_passed,
+                                            comb_spi_passed, comb_all_passed),
+                                 RooArgList(f_sig_phys_passed, f_d0_bkg_passed,
+                                            f_comb_spi_passed));
 
-            // Set known normalizations
-            n_passed.setVal(n_calib_passed);
-            n_failed.setVal(n_calib_failed);
+          RooAddPdf model_failed("model_failed_" + suffix,
+                                 "model_failed_" + suffix,
+                                 RooArgList(sig_failed, d0_bkg_failed,
+                                            comb_spi_failed, comb_all_failed),
+                                 RooArgList(f_sig_phys_failed, f_d0_bkg_failed,
+                                            f_comb_spi_failed));
 
-            // Estimate exponential coefficients
-            constexpr double dx = (1.900 + 1.890) / 2. - (1.835 + 1.825) / 2.;
+          ////////////////////
+          // Set parameters //
+          ////////////////////
 
-            const double y1_comb_all_passed = dataset_calib_passed->sumEntries(
-                "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
-                "1.825) && (d0_m_var < 1.835)");
-            const double y1_comb_all_failed = dataset_calib_failed->sumEntries(
-                "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
-                "1.825) && (d0_m_var < 1.835)");
-            const double y2_comb_all_passed = dataset_calib_passed->sumEntries(
-                "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
-                "1.890) && (d0_m_var < 1.900)");
-            const double y2_comb_all_failed = dataset_calib_failed->sumEntries(
-                "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
-                "1.890) && (d0_m_var < 1.900)");
+          // Set mass-window and total yields in MC for this kinematic bin.
+          // Together with the fitted alpha parameter, this allows the
+          // mass-window efficiencies to be calculated.
+          n_inmw_passed_dif.setVal(count_in_mw_passed_dif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
+          n_inmw_passed_nondif.setVal(count_in_mw_passed_nondif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
+          n_inmw_failed_dif.setVal(count_in_mw_failed_dif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
+          n_inmw_failed_nondif.setVal(count_in_mw_failed_nondif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
+          n_total_passed_dif.setVal(count_total_passed_dif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
+          n_total_passed_nondif.setVal(count_total_passed_nondif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
+          n_total_failed_dif.setVal(count_total_failed_dif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
+          n_total_failed_nondif.setVal(count_total_failed_nondif[year_idx.at(
+              year)][ntrks_idx][eta_idx][p_idx]);
 
-            const double k_comb_all_failed_guess =
-                (y2_comb_all_failed > 0.) && (y1_comb_all_failed > 0.)
-                    ? log(y2_comb_all_failed / y1_comb_all_failed) / dx
-                    : 1.;
-            const double k_comb_all_passed_guess =
-                (y2_comb_all_passed > 0.) && (y1_comb_all_passed > 0.)
-                    ? log(y2_comb_all_passed / y1_comb_all_passed) / dx
-                    : 1.;
+          // Roughly estimate amount of background
 
-            if (k_comb_all_failed_guess < 0.) {
-              k_comb_all_failed.setVal(k_comb_all_failed_guess);
-            } else {
-              k_comb_all_failed.setVal(-1e-4);
+          // Define approximate signal region
+          const double d0m_sig_max = d0m_range_max - 0.015;  // GeV
+          const double d0m_sig_min = d0m_range_min + 0.015;  // GeV
+          const double dm_sig_max  = dm_range_max - 0.002;   // GeV
+          const double dm_sig_min  = dm_range_min + 0.002;   // GeV
+
+          // Define ranges for each component
+          // Signal
+          d0_m_var.setRange("sig", d0m_sig_min, d0m_sig_max);
+          dm_var.setRange("sig", dm_sig_min, dm_sig_max);
+          // SB1: soft pi comb (+ all comb)
+          d0_m_var.setRange("sb1_1", d0m_sig_min, d0m_sig_max);
+          d0_m_var.setRange("sb1_2", d0m_sig_min, d0m_sig_max);
+          dm_var.setRange("sb1_1", dm_range_min, dm_sig_min);
+          dm_var.setRange("sb1_2", dm_sig_max, dm_range_max);
+          // SB2: part. reco. D0 comb (+ all comb)
+          d0_m_var.setRange("sb2_1", d0m_range_min, d0m_sig_min);
+          d0_m_var.setRange("sb2_2", d0m_sig_max, d0m_range_max);
+          dm_var.setRange("sb2_1", dm_sig_min, dm_sig_max);
+          dm_var.setRange("sb2_2", dm_sig_min, dm_sig_max);
+          // SB3: all comb
+          d0_m_var.setRange("sb3_1", d0m_range_min, d0m_sig_min);
+          d0_m_var.setRange("sb3_2", d0m_range_min, d0m_sig_min);
+          d0_m_var.setRange("sb3_3", d0m_sig_max, d0m_range_max);
+          d0_m_var.setRange("sb3_4", d0m_sig_max, d0m_range_max);
+          dm_var.setRange("sb3_1", dm_range_min, dm_sig_min);
+          dm_var.setRange("sb3_2", dm_sig_max, dm_range_max);
+          dm_var.setRange("sb3_3", dm_range_min, dm_sig_min);
+          dm_var.setRange("sb3_4", dm_sig_max, dm_range_max);
+
+          const double A_fit =
+              (d0m_range_max - d0m_range_min) * (dm_range_max - dm_range_min);
+          const double A_sig =
+              (d0m_sig_max - d0m_sig_min) * (dm_sig_max - dm_sig_min);
+          const double A_sb3 =
+              (dm_range_max - dm_sig_max) * (d0m_sig_min - d0m_range_min) +
+              (dm_range_max - dm_sig_max) * (d0m_range_max - d0m_sig_max) +
+              (dm_sig_min - dm_range_min) * (d0m_sig_min - d0m_range_min) +
+              (dm_sig_min - dm_range_min) * (d0m_range_max - d0m_sig_max);
+          // const double A_sb2 = (dm_sig_max - dm_sig_min) * (d0m_sig_min -
+          // d0m_range_min) +
+          //                          (dm_sig_max - dm_sig_min) *
+          //                          (d0m_range_max - d0m_sig_max);
+          const double A_sb1 =
+              (dm_range_max - dm_sig_max) * (d0m_sig_max - d0m_sig_min) +
+              (dm_sig_min - dm_range_min) * (d0m_sig_max - d0m_sig_min);
+
+          // Yields in each SB
+          const double n_sb1_calib_passed =
+              dataset_calib_passed->sumEntries("", "sb1_1,sb1_2");
+          const double n_sb1_calib_failed =
+              dataset_calib_failed->sumEntries("", "sb1_1,sb1_2");
+          // const double n_sb2_calib_passed =
+          //     dataset_calib_passed->sumEntries(sb2_cut);
+          // const double n_sb2_calib_failed =
+          //     dataset_calib_failed->sumEntries(sb2_cut);
+          const double n_sb3_calib_passed =
+              dataset_calib_passed->sumEntries("", "sb3_1,sb3_2,sb3_3,sb3_4");
+          const double n_sb3_calib_failed =
+              dataset_calib_failed->sumEntries("", "sb3_1,sb3_2,sb3_3,sb3_4");
+
+          // Estimated yields of each bkg component in full fit range
+          const double n_bkg1_calib_passed =
+              (n_sb1_calib_passed - n_sb3_calib_passed * A_sb1 / A_sb3) *
+              (A_sb1 + A_sig) / A_sb1;
+          const double n_bkg1_calib_failed =
+              (n_sb1_calib_failed - n_sb3_calib_failed * A_sb1 / A_sb3) *
+              (A_sb1 + A_sig) / A_sb1;
+          // const double n_bkg2_calib_passed =
+          //     (n_sb2_calib_passed - n_sb3_calib_passed * A_sb2 / A_sb3) *
+          //     (A_sb2 + A_sig) / A_sb2;
+          // const double n_bkg2_calib_failed =
+          //     (n_sb2_calib_failed - n_sb3_calib_failed * A_sb2 / A_sb3) *
+          //     (A_sb2 + A_sig) / A_sb2;
+          const double n_bkg3_calib_passed = n_sb3_calib_passed * A_fit / A_sb3;
+          const double n_bkg3_calib_failed = n_sb3_calib_failed * A_fit / A_sb3;
+
+          const double n_comb_guess_passed =
+              n_bkg1_calib_passed + n_bkg3_calib_passed;
+          const double n_comb_guess_failed =
+              n_bkg1_calib_failed + n_bkg3_calib_failed;
+
+          const double f_phys_passed_guess =
+              1.0 - n_comb_guess_passed / n_calib_passed;
+          const double f_phys_failed_guess =
+              1.0 - n_comb_guess_failed / n_calib_failed;
+
+          f_phys_passed.setVal(f_phys_passed_guess);
+          f_phys_failed.setVal(f_phys_failed_guess);
+
+          const double f_spi_passed_guess =
+              n_bkg1_calib_passed / n_comb_guess_passed;
+          const double f_spi_failed_guess =
+              n_bkg1_calib_failed / n_comb_guess_failed;
+
+          f_spi_passed.setVal(f_spi_passed_guess);
+          f_spi_failed.setVal(f_spi_failed_guess);
+
+          // Constrain yield of D0 bkg based on MC
+          const double d0_bkg_passed_signal =
+              ymlBkg[sample][probe]["passed"][p_idx]["signal"].as<double>();
+          const double d0_bkg_passed_total =
+              ymlBkg[sample][probe]["passed"][p_idx]["total"].as<double>();
+          const double d0_bkg_failed_signal =
+              ymlBkg[sample][probe]["failed"][p_idx]["signal"].as<double>();
+          const double d0_bkg_failed_total =
+              ymlBkg[sample][probe]["failed"][p_idx]["total"].as<double>();
+
+          // Additional width on constraints to account for MC-data
+          // discrepancies and outdated BFs in decay.dec
+          constexpr double d0_bkg_syst_unc = 0.02;
+
+          const double f_sig_passed_guess =
+              d0_bkg_passed_signal / d0_bkg_passed_total;
+          const double f_sig_passed_guess_unc_hi =
+              TEfficiency::Wilson(d0_bkg_passed_total, d0_bkg_passed_signal,
+                                  ONE_SIGMA, true) -
+              f_sig_passed_guess;
+          const double f_sig_passed_guess_unc_lo =
+              f_sig_passed_guess - TEfficiency::Wilson(d0_bkg_passed_total,
+                                                       d0_bkg_passed_signal,
+                                                       ONE_SIGMA, false);
+
+          const double f_sig_passed_guess_unc_total_hi =
+              sqrt_sum_sq(f_sig_passed_guess_unc_hi, d0_bkg_syst_unc);
+          const double f_sig_passed_guess_unc_total_lo =
+              sqrt_sum_sq(f_sig_passed_guess_unc_lo, d0_bkg_syst_unc);
+
+          f_sig_passed_mean.setVal(f_sig_passed_guess);
+          f_sig_passed_unc_hi.setVal(std::min(f_sig_passed_guess_unc_total_hi,
+                                              1.0 - f_sig_passed_guess));
+          f_sig_passed_unc_lo.setVal(
+              std::min(f_sig_passed_guess_unc_total_lo, f_sig_passed_guess));
+
+          const double f_sig_failed_guess =
+              d0_bkg_failed_signal / d0_bkg_failed_total;
+          const double f_sig_failed_guess_unc_hi =
+              TEfficiency::Wilson(d0_bkg_failed_total, d0_bkg_failed_signal,
+                                  ONE_SIGMA, true) -
+              f_sig_failed_guess;
+          const double f_sig_failed_guess_unc_lo =
+              f_sig_failed_guess - TEfficiency::Wilson(d0_bkg_failed_total,
+                                                       d0_bkg_failed_signal,
+                                                       ONE_SIGMA, false);
+
+          const double f_sig_failed_guess_unc_total_hi =
+              sqrt_sum_sq(f_sig_failed_guess_unc_hi, d0_bkg_syst_unc);
+          const double f_sig_failed_guess_unc_total_lo =
+              sqrt_sum_sq(f_sig_failed_guess_unc_lo, d0_bkg_syst_unc);
+
+          f_sig_failed_mean.setVal(f_sig_failed_guess);
+          f_sig_failed_unc_hi.setVal(std::min(f_sig_failed_guess_unc_total_hi,
+                                              1.0 - f_sig_failed_guess));
+          f_sig_failed_unc_lo.setVal(
+              std::min(f_sig_failed_guess_unc_total_lo, f_sig_failed_guess));
+
+          f_sig_passed.setVal(f_sig_passed_guess);
+          f_sig_failed.setVal(f_sig_failed_guess);
+
+          cout << "\nINFO Constrained ratios of D0 bkg to signal:\n";
+          cout << "  - f_sig_passed: " << f_sig_passed_guess << " + "
+               << f_sig_passed_unc_hi.getVal() << " - "
+               << f_sig_passed_unc_lo.getVal() << "\n";
+          cout << "  - f_sig_failed: " << f_sig_failed_guess << " + "
+               << f_sig_failed_unc_hi.getVal() << " - "
+               << f_sig_failed_unc_lo.getVal() << endl;
+
+          // Set known normalizations
+          n_passed.setVal(n_calib_passed);
+          n_failed.setVal(n_calib_failed);
+
+          // Estimate exponential coefficients
+          constexpr double dx = (1.900 + 1.890) / 2. - (1.835 + 1.825) / 2.;
+
+          const double y1_comb_all_passed = dataset_calib_passed->sumEntries(
+              "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
+              "1.825) && (d0_m_var < 1.835)");
+          const double y1_comb_all_failed = dataset_calib_failed->sumEntries(
+              "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
+              "1.825) && (d0_m_var < 1.835)");
+          const double y2_comb_all_passed = dataset_calib_passed->sumEntries(
+              "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
+              "1.890) && (d0_m_var < 1.900)");
+          const double y2_comb_all_failed = dataset_calib_failed->sumEntries(
+              "((dm_var > 0.149) || (dm_var < 0.143)) && (d0_m_var > "
+              "1.890) && (d0_m_var < 1.900)");
+
+          const double k_comb_all_failed_guess =
+              (y2_comb_all_failed > 0.) && (y1_comb_all_failed > 0.)
+                  ? log(y2_comb_all_failed / y1_comb_all_failed) / dx
+                  : 1.;
+          const double k_comb_all_passed_guess =
+              (y2_comb_all_passed > 0.) && (y1_comb_all_passed > 0.)
+                  ? log(y2_comb_all_passed / y1_comb_all_passed) / dx
+                  : 1.;
+
+          if (k_comb_all_failed_guess < 0.) {
+            k_comb_all_failed.setVal(k_comb_all_failed_guess);
+          } else {
+            k_comb_all_failed.setVal(-1e-4);
+          }
+
+          if (k_comb_all_passed_guess < 0.) {
+            k_comb_all_passed.setVal(k_comb_all_passed_guess);
+          } else {
+            k_comb_all_passed.setVal(-1e-4);
+          }
+
+          /////////////
+          // Run fit //
+          /////////////
+
+          // As of 6.32.16, RooSimultaneous is broken for ranged fits
+          // https://github.com/root-project/root/issues/18718
+
+          cout << "\nINFO Starting calib fit " << suffix << endl;
+
+          d0_m_var.setRange(d0m_range_min, d0m_range_max);
+          dm_var.setRange(dm_range_min, dm_range_max);
+          set_parameters_calib(probe);
+
+          // Create RooFitResult pointer to track lastest data fit
+          unique_ptr<RooFitResult> fit_result(nullptr);
+
+          if (!dry_run) {
+            auto start_calib = high_resolution_clock::now();
+
+            // Prefit failed subsample floating all parameters except dif
+            // fraction
+            cout << "\nINFO Prefit failed calib sample " << suffix << endl;
+
+            scale_nondif_calib.setConstant();
+            d0_m_shift.setConstant(false);
+            d0_m_scale.setConstant(false);
+            dm_shift.setConstant(false);
+            dm_scale.setConstant(false);
+
+            unique_ptr<RooAbsReal> nll_failed(model_failed.createNLL(
+                *dataset_calib_failed, Range("fitRange"),
+                ExternalConstraints(
+                    RooArgSet(f_sig_failed_constrain, scale_nondif_constrain)),
+                GlobalObservables(
+                    RooArgSet(f_sig_failed, scale_nondif_calib))));
+            // Default nll name causes issues when combining the nlls below
+            nll_failed->SetName("nll_failed_" + suffix);
+
+            // In recent root releases (6.30+?), RooAbdPdf::fitTo() and
+            // RooAbdPdf::createNLL() accidentaly ignore some flags, such as
+            // Offset(). Setting it with RooMinizer::setOffsetting() works
+            // though (flags are ignored at NLL construction, but RooMinimizer
+            // back-propagates them).
+
+            RooMinimizer minuit_failed(*nll_failed);
+            minuit_failed.setPrintLevel(0);
+            minuit_failed.setStrategy(2);
+            minuit_failed.setOffsetting(true);
+            minuit_failed.optimizeConst(true);
+            minuit_failed.setMinimizerType("Minuit");
+
+            minuit_failed.migrad();
+
+            // Now prefit passed subsample also fixing d0_m and dm shifts and
+            // scalings
+            cout << "\nINFO Prefit passed calib sample " << suffix << endl;
+
+            scale_nondif_calib.setConstant();
+            d0_m_shift.setConstant();
+            d0_m_scale.setConstant();
+            dm_shift.setConstant();
+            dm_scale.setConstant();
+
+            unique_ptr<RooAbsReal> nll_passed(model_passed.createNLL(
+                *dataset_calib_passed, Range("fitRange"),
+                ExternalConstraints(
+                    RooArgSet(f_sig_passed_constrain, scale_nondif_constrain)),
+                GlobalObservables(
+                    RooArgSet(f_sig_passed, scale_nondif_calib))));
+            nll_passed->SetName("nll_passed_" + suffix);
+
+            RooMinimizer minuit_passed(*nll_passed);
+            minuit_passed.setPrintLevel(0);
+            minuit_passed.setStrategy(2);
+            minuit_passed.setOffsetting(true);
+            minuit_passed.optimizeConst(true);
+            minuit_passed.setMinimizerType("Minuit");
+
+            minuit_passed.migrad();
+
+            // Now build combined NLL and perform full fit
+            cout << "\nINFO Fit full calib sample " << suffix << endl;
+
+            RooAddition nll_combined("nll_combined", "nll_combined",
+                                     RooArgSet(*nll_passed, *nll_failed));
+
+            if (float_dif) scale_nondif_calib.setConstant(false);
+            d0_m_shift.setConstant(false);
+            d0_m_scale.setConstant(false);
+            dm_shift.setConstant(false);
+            dm_scale.setConstant(false);
+
+            cout << "INFO Initial nondif_yield_add_passed value: "
+                 << nondif_yield_add_passed.getVal() << endl;
+
+            RooMinimizer minuit(nll_combined);
+
+            minuit.setPrintLevel(0);
+            minuit.setStrategy(2);
+            minuit.setOffsetting(true);
+            minuit.optimizeConst(true);
+            minuit.setMinimizerType("Minuit");
+
+            minuit.migrad();
+            int fit_status = minuit.save()->status();
+
+            int cov_matrix_status = -1;
+            if (fit_status == 0 || fit_status == 4000) {
+              minuit.hesse();
+              cov_matrix_status = minuit.save()->covQual();
             }
 
-            if (k_comb_all_passed_guess < 0.) {
-              k_comb_all_passed.setVal(k_comb_all_passed_guess);
-            } else {
-              k_comb_all_passed.setVal(-1e-4);
+            int minos_status = -1;
+            if (use_minos && cov_matrix_status == 3) {
+              minos_status = minuit.minos();
             }
 
-            /////////////
-            // Run fit //
-            /////////////
+            cout << "\nINFO Fit status: " << fit_status << "\n";
+            cout << "INFO Covariance matrix status: " << cov_matrix_status
+                 << "\n";
+            cout << "INFO MINOS status: " << minos_status << "\n" << endl;
 
-            // As of 6.32.16, RooSimultaneous is broken for ranged fits
-            // https://github.com/root-project/root/issues/18718
+            int calib_fit_reattempts = 0;
+            while ((cov_matrix_status != 3) &&
+                   (calib_fit_reattempts < max_fix_reattempts)) {
+              calib_fit_reattempts++;
+              cov_matrix_status = -1;
+              minos_status      = -1;
+              cout << "INFO Retrying calib fit " << suffix << " (retry #"
+                   << calib_fit_reattempts << ")" << endl;
 
-            cout << "\nINFO Starting calib fit " << suffix << endl;
+              // Call SIMPLEX
+              minuit.simplex();
 
-            d0_m_var.setRange(d0m_range_min, d0m_range_max);
-            dm_var.setRange(dm_range_min, dm_range_max);
-            set_parameters_calib(probe);
-
-            // Create RooFitResult pointer to track lastest data fit
-            unique_ptr<RooFitResult> fit_result(nullptr);
-
-            if (!dry_run) {
-              auto start_calib = high_resolution_clock::now();
-
-              // Prefit failed subsample floating all parameters except dif
-              // fraction
-              cout << "\nINFO Prefit failed calib sample " << suffix << endl;
-
-              scale_nondif_calib.setConstant();
-              d0_m_shift.setConstant(false);
-              d0_m_scale.setConstant(false);
-              dm_shift.setConstant(false);
-              dm_scale.setConstant(false);
-
-              unique_ptr<RooAbsReal> nll_failed(model_failed.createNLL(
-                  *dataset_calib_failed, Range("fitRange"),
-                  ExternalConstraints(RooArgSet(f_sig_failed_constrain,
-                                                scale_nondif_constrain)),
-                  GlobalObservables(
-                      RooArgSet(f_sig_failed, scale_nondif_calib))));
-              // Default nll name causes issues when combining the nlls below
-              nll_failed->SetName("nll_failed_" + suffix);
-
-              // In recent root releases (6.30+?), RooAbdPdf::fitTo() and
-              // RooAbdPdf::createNLL() accidentaly ignore some flags, such as
-              // Offset(). Setting it with RooMinizer::setOffsetting() works
-              // though (flags are ignored at NLL construction, but RooMinimizer
-              // back-propagates them).
-
-              RooMinimizer minuit_failed(*nll_failed);
-              minuit_failed.setPrintLevel(0);
-              minuit_failed.setStrategy(2);
-              minuit_failed.setOffsetting(true);
-              minuit_failed.optimizeConst(true);
-              minuit_failed.setMinimizerType("Minuit");
-
-              minuit_failed.migrad();
-
-              // Now prefit passed subsample also fixing d0_m and dm shifts and
-              // scalings
-              cout << "\nINFO Prefit passed calib sample " << suffix << endl;
-
-              scale_nondif_calib.setConstant();
-              d0_m_shift.setConstant();
-              d0_m_scale.setConstant();
-              dm_shift.setConstant();
-              dm_scale.setConstant();
-
-              unique_ptr<RooAbsReal> nll_passed(model_passed.createNLL(
-                  *dataset_calib_passed, Range("fitRange"),
-                  ExternalConstraints(RooArgSet(f_sig_passed_constrain,
-                                                scale_nondif_constrain)),
-                  GlobalObservables(
-                      RooArgSet(f_sig_passed, scale_nondif_calib))));
-              nll_passed->SetName("nll_passed_" + suffix);
-
-              RooMinimizer minuit_passed(*nll_passed);
-              minuit_passed.setPrintLevel(0);
-              minuit_passed.setStrategy(2);
-              minuit_passed.setOffsetting(true);
-              minuit_passed.optimizeConst(true);
-              minuit_passed.setMinimizerType("Minuit");
-
-              minuit_passed.migrad();
-
-              // Now build combined NLL and perform full fit
-              cout << "\nINFO Fit full calib sample " << suffix << endl;
-
-              RooAddition nll_combined("nll_combined", "nll_combined",
-                                       RooArgSet(*nll_passed, *nll_failed));
-
-              if (float_dif) scale_nondif_calib.setConstant(false);
-              d0_m_shift.setConstant(false);
-              d0_m_scale.setConstant(false);
-              dm_shift.setConstant(false);
-              dm_scale.setConstant(false);
-
-              cout << "INFO Initial nondif_yield_add_passed value: "
-                   << nondif_yield_add_passed.getVal() << endl;
-
-              RooMinimizer minuit(nll_combined);
-
-              minuit.setPrintLevel(0);
-              minuit.setStrategy(2);
-              minuit.setOffsetting(true);
-              minuit.optimizeConst(true);
-              minuit.setMinimizerType("Minuit");
-
+              // Call MIGRAD
               minuit.migrad();
-              int fit_status = minuit.save()->status();
+              fit_status = minuit.save()->status();
 
-              int cov_matrix_status = -1;
               if (fit_status == 0 || fit_status == 4000) {
                 minuit.hesse();
                 cov_matrix_status = minuit.save()->covQual();
               }
 
-              int minos_status = -1;
               if (use_minos && cov_matrix_status == 3) {
                 minos_status = minuit.minos();
               }
@@ -3076,453 +3068,417 @@ int main(int argc, char **argv) {
               cout << "INFO Covariance matrix status: " << cov_matrix_status
                    << "\n";
               cout << "INFO MINOS status: " << minos_status << "\n" << endl;
-
-              int calib_fit_reattempts = 0;
-              while ((cov_matrix_status != 3) &&
-                     (calib_fit_reattempts < max_fix_reattempts)) {
-                calib_fit_reattempts++;
-                cov_matrix_status = -1;
-                minos_status      = -1;
-                cout << "INFO Retrying calib fit " << suffix << " (retry #"
-                     << calib_fit_reattempts << ")" << endl;
-
-                // Call SIMPLEX
-                minuit.simplex();
-
-                // Call MIGRAD
-                minuit.migrad();
-                fit_status = minuit.save()->status();
-
-                if (fit_status == 0 || fit_status == 4000) {
-                  minuit.hesse();
-                  cov_matrix_status = minuit.save()->covQual();
-                }
-
-                if (use_minos && cov_matrix_status == 3) {
-                  minos_status = minuit.minos();
-                }
-
-                cout << "\nINFO Fit status: " << fit_status << "\n";
-                cout << "INFO Covariance matrix status: " << cov_matrix_status
-                     << "\n";
-                cout << "INFO MINOS status: " << minos_status << "\n" << endl;
-              }
-
-              fit_result.reset(minuit.save());
-
-              auto stop_calib = high_resolution_clock::now();
-
-              const int duration_calib =
-                  duration_cast<seconds>(stop_calib - start_calib).count();
-
-              cout << "INFO Calib fits took " << format_time(duration_calib)
-                   << "\n";
-              cout << "INFO Needed " << calib_fit_reattempts << " retries with "
-                   << format_time(duration_calib / (calib_fit_reattempts + 1))
-                   << " on average\n"
-                   << endl;
-
-              calib_retries.Fill(calib_fit_reattempts);
-
-              if (cov_matrix_status == 3) {
-                // Monitor how much f_sig deviates from constraint
-                double f_sig_passed_sigma =
-                    f_sig_passed.getVal() - f_sig_passed_guess;
-                if (f_sig_passed_sigma >= 0.) {
-                  f_sig_passed_sigma /= f_sig_passed_unc_hi.getVal();
-                } else {
-                  f_sig_passed_sigma /= f_sig_passed_unc_lo.getVal();
-                }
-
-                double f_sig_failed_sigma =
-                    f_sig_failed.getVal() - f_sig_failed_guess;
-                if (f_sig_failed_sigma >= 0.) {
-                  f_sig_failed_sigma /= f_sig_failed_unc_hi.getVal();
-                } else {
-                  f_sig_failed_sigma /= f_sig_failed_unc_lo.getVal();
-                }
-
-                f_sig_passed_pull.setVal(f_sig_passed_sigma);
-                f_sig_failed_pull.setVal(f_sig_failed_sigma);
-
-                ds_params_calib.addFast(params_calib);
-              } else {
-                f_sig_passed_pull.setVal(-100.);
-                f_sig_failed_pull.setVal(-100.);
-              }
-
-              fit_status_calib.SetBinContent(kin_bin, fit_status);
-              fit_cov_qual_calib.SetBinContent(kin_bin, cov_matrix_status);
             }
 
-            //////////////////////
-            // Plot fit results //
-            //////////////////////
+            fit_result.reset(minuit.save());
 
-            // Build modified binning for data to match shifted/scaled PDFs
-            RooBinning bins_histos_d0_m_failed_mod(
-                nbins_failed + 2 * extra_bins_failed,
-                d0_m_scale.getVal() * (extended_d0_m_min - D0_M) + D0_M +
-                    d0_m_shift.getVal(),
-                d0_m_scale.getVal() * (extended_d0_m_max - D0_M) + D0_M +
-                    d0_m_shift.getVal(),
-                "bins_histos_d0_m_failed_mod");
-            RooBinning bins_histos_dm_failed_mod(
-                nbins_failed + 2 * extra_bins_failed,
-                dm_scale.getVal() * (extended_dm_min - DM) + DM +
-                    dm_shift.getVal(),
-                dm_scale.getVal() * (extended_dm_max - DM) + DM +
-                    dm_shift.getVal(),
-                "bins_histos_dm_failed_mod");
-            RooBinning bins_histos_d0_m_passed_mod(
-                nbins_passed + 2 * extra_bins_passed,
-                d0_m_scale.getVal() * (extended_d0_m_min - D0_M) + D0_M +
-                    d0_m_shift.getVal(),
-                d0_m_scale.getVal() * (extended_d0_m_max - D0_M) + D0_M +
-                    d0_m_shift.getVal(),
-                "bins_histos_d0_m_passed_mod");
-            RooBinning bins_histos_dm_passed_mod(
-                nbins_passed + 2 * extra_bins_passed,
-                dm_scale.getVal() * (extended_dm_min - DM) + DM +
-                    dm_shift.getVal(),
-                dm_scale.getVal() * (extended_dm_max - DM) + DM +
-                    dm_shift.getVal(),
-                "bins_histos_dm_passed_mod");
+            auto stop_calib = high_resolution_clock::now();
 
-            // Define lambda to plot fit results in different ranges
-            auto plot_fit_results = [&](const TString range,
-                                        const TString name_suffix) {
-              unique_ptr<RooPlot> frame_d0_calib_passed(d0_m_var.frame(
-                  Title("D0 M Calib Passed " + tag), Range("data")));
-              unique_ptr<RooPlot> frame_d0_calib_failed(d0_m_var.frame(
-                  Title("D0 M Calib Failed " + tag), Range("data")));
-              unique_ptr<RooPlot> frame_dm_calib_passed(
-                  dm_var.frame(Title("dm Calib Passed " + tag), Range("data")));
-              unique_ptr<RooPlot> frame_dm_calib_failed(
-                  dm_var.frame(Title("dm Calib Failed " + tag), Range("data")));
+            const int duration_calib =
+                duration_cast<seconds>(stop_calib - start_calib).count();
 
-              // TODO:
-              // https://root-forum.cern.ch/t/simultaneous-fit-normalization-issue/33965
-              if (range == "fitRange") {
-                // For plots over full range, also show high d0_M region in
-                // low-p pion fits
-                dataset_calib_passed->plotOn(frame_d0_calib_passed.get(),
-                                             Binning(bins_histos_d0_m_passed));
-                dataset_calib_failed->plotOn(frame_d0_calib_failed.get(),
-                                             Binning(bins_histos_d0_m_failed));
-              } else {
-                dataset_calib_passed->plotOn(frame_d0_calib_passed.get(),
-                                             Binning(bins_histos_d0_m_passed),
-                                             CutRange(range));
-                dataset_calib_failed->plotOn(frame_d0_calib_failed.get(),
-                                             Binning(bins_histos_d0_m_failed),
-                                             CutRange(range));
-              }
-              dataset_calib_passed->plotOn(frame_dm_calib_passed.get(),
-                                           Binning(bins_histos_dm_passed),
-                                           CutRange(range));
-              dataset_calib_failed->plotOn(frame_dm_calib_failed.get(),
-                                           Binning(bins_histos_dm_failed),
-                                           CutRange(range));
-
-              model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2));
-              model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(sig_passed),
-                                  LineColor(kTeal + 2));
-              model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(d0_bkg_passed),
-                                  LineColor(kViolet));
-              model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_spi_passed),
-                                  LineColor(kOrange));
-              model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_all_passed),
-                                  LineColor(kRed));
-
-              model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2));
-              model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(sig_failed),
-                                  LineColor(kTeal + 2));
-              model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(d0_bkg_failed),
-                                  LineColor(kViolet));
-              model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_spi_failed),
-                                  LineColor(kOrange));
-              model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_all_failed),
-                                  LineColor(kRed));
-
-              model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2));
-              model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(sig_passed),
-                                  LineColor(kTeal + 2));
-              model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(d0_bkg_passed),
-                                  LineColor(kViolet));
-              model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_spi_passed),
-                                  LineColor(kOrange));
-              model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_all_passed),
-                                  LineColor(kRed));
-
-              model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2));
-              model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(sig_failed),
-                                  LineColor(kTeal + 2));
-              model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(d0_bkg_failed),
-                                  LineColor(kViolet));
-              model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_spi_failed),
-                                  LineColor(kOrange));
-              model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                  ProjectionRange(range), NormRange("fitRange"),
-                                  LineWidth(2), Components(comb_all_failed),
-                                  LineColor(kRed));
-
-              c_four.cd(1);
-              frame_d0_calib_passed->Draw();
-              c_four.cd(2);
-              frame_dm_calib_passed->Draw();
-              c_four.cd(3);
-              frame_d0_calib_failed->Draw();
-              c_four.cd(4);
-              frame_dm_calib_failed->Draw();
-
-              c_four.SaveAs(fit_dir_path + "/fit_calib_" + suffix +
-                            name_suffix + ".pdf");
-            };
-
-            cout << "\nINFO Plotting full fit region" << endl;
-            plot_fit_results("fitRange", "");
-
-            cout << "\nINFO Plotting signal region" << endl;
-            plot_fit_results("sig", "_sig");
-
-            cout << "\nINFO Plotting soft pion bkg regions" << endl;
-            plot_fit_results("sb1_1", "_sb1_1");
-            plot_fit_results("sb1_2", "_sb1_2");
-
-            cout << "\nINFO Plotting d0 bkg regions" << endl;
-            plot_fit_results("sb2_1", "_sb2_1");
-            plot_fit_results("sb2_2", "_sb2_2");
-
-            cout << "\nINFO Plotting all comb regions" << endl;
-            plot_fit_results("sb3_1", "_sb3_1");
-            plot_fit_results("sb3_2", "_sb3_2");
-            plot_fit_results("sb3_3", "_sb3_3");
-            plot_fit_results("sb3_4", "_sb3_4");
-
-            // Save fitted PID efficiency
-            if (fake_mu) {
-              // For FAKE_MU, we fit calculate the complementary efficiency so
-              // that the "passed" sample always corresponds to the K/pi misid
-              // case. We recover the proper FAKE_MU PIF efficiency by storing
-              // 1.0 - eff instead of eff itself.
-              histo_pid_raw.SetBinContent(kin_bin, 1.0 - eff.getVal());
-              histo_pid.SetBinContent(kin_bin, 1.0 - eff_corrected.getVal());
-            } else {
-              histo_pid_raw.SetBinContent(kin_bin, eff.getVal());
-              histo_pid.SetBinContent(kin_bin, eff_corrected.getVal());
-            }
-            // Save fitted DiF fractions
-            histo_f_dif.SetBinContent(kin_bin, f_dif_calib_passed.getVal());
-            // Save errors if fit was performed
-            if (fit_result.get()) {
-              histo_pid_raw.SetBinError(kin_bin,
-                                        eff.getPropagatedError(*fit_result));
-              histo_pid.SetBinError(
-                  kin_bin, eff_corrected.getPropagatedError(*fit_result));
-              histo_f_dif.SetBinError(
-                  kin_bin, f_dif_calib_passed.getPropagatedError(*fit_result));
-            }
-
-            // Store final mass-window efficiencies in histogram
-            effs_mw_passed.SetBinContent(kin_bin, eff_mw_passed.getVal());
-            effs_mw_failed.SetBinContent(kin_bin, eff_mw_failed.getVal());
-
-            // Print mass-window efficiencies
-            cout << "\nINFO Mass-window efficiencies\n";
-            cout << " - Passed: " << eff_mw_passed.getVal() * 100. << "%\n";
-            cout << " - Failed: " << eff_mw_failed.getVal() * 100. << "%\n";
-
-            // Check normalization estimates
-            cout << "\nINFO Fitted vs estimated:\n";
-            cout << " - Fitted n_passed = " << n_passed.getVal()
-                 << " vs estimated " << n_calib_passed << " ("
-                 << n_passed.getVal() / n_calib_passed << ")\n";
-            cout << " - Fitted n_failed = " << n_failed.getVal()
-                 << " vs estimated " << n_calib_failed << " ("
-                 << n_failed.getVal() / n_calib_failed << ")\n";
-
-            cout << " - Fitted f_phys_passed = " << f_phys_passed.getVal()
-                 << " vs estimated " << f_phys_passed_guess << " ("
-                 << f_phys_passed.getVal() / f_phys_passed_guess << ")\n";
-            cout << " - Fitted f_phys_failed = " << f_phys_failed.getVal()
-                 << " vs estimated " << f_phys_failed_guess << " ("
-                 << f_phys_failed.getVal() / f_phys_failed_guess << ")\n";
-
-            cout << " - Fitted f_sig_passed = " << f_sig_passed.getVal()
-                 << " vs estimated " << f_sig_passed_guess << " ("
-                 << f_sig_passed.getVal() / f_sig_passed_guess << "), "
-                 << f_sig_passed_pull.getVal()
-                 << " sigma away from constrain\n";
-            cout << " - Fitted f_sig_failed = " << f_sig_failed.getVal()
-                 << " vs estimated " << f_sig_failed_guess << " ("
-                 << f_sig_failed.getVal() / f_sig_failed_guess << "), "
-                 << f_sig_failed_pull.getVal()
-                 << " sigma away from constrain\n";
-
-            cout << " - Fitted f_spi_passed = " << f_spi_passed.getVal()
-                 << " vs estimated " << f_spi_passed_guess << " ("
-                 << f_spi_passed.getVal() / f_spi_passed_guess << ")\n";
-            cout << " - Fitted f_spi_failed = " << f_spi_failed.getVal()
-                 << " vs estimated " << f_spi_failed_guess << " ("
-                 << f_spi_failed.getVal() / f_spi_failed_guess << ")\n";
-
-            cout << " - Fitted k_comb_all_failed = "
-                 << k_comb_all_failed.getVal() << " vs estimated "
-                 << k_comb_all_failed_guess << " ("
-                 << k_comb_all_failed.getVal() / k_comb_all_failed_guess
-                 << ")\n";
-            cout << " - Fitted k_comb_all_passed = "
-                 << k_comb_all_passed.getVal() << " vs estimated "
-                 << k_comb_all_passed_guess << " ("
-                 << k_comb_all_passed.getVal() / k_comb_all_passed_guess
-                 << ")\n";
-
-            cout << " - Fitted c_comb_all_failed = "
-                 << c_comb_all_failed.getVal() << "\n";
-            cout << " - Fitted c_comb_all_passed = "
-                 << c_comb_all_passed.getVal() << "\n";
-
-            cout << " - Fitted c_comb_spi_failed = "
-                 << c_comb_spi_failed.getVal() << "\n";
-            cout << " - Fitted c_comb_spi_passed = "
-                 << c_comb_all_passed.getVal() << "\n";
-
-            cout << " - Fitted non-dif passed yield = "
-                 << n_inmw_passed_nondif.getVal() +
-                        nondif_yield_add_passed.getVal()
-                 << " vs estimated " << n_inmw_passed_nondif.getVal() << " ("
-                 << 1. + nondif_yield_add_passed.getVal() /
-                             n_inmw_passed_nondif.getVal()
-                 << ")\n";
-            cout << " - Fitted non-dif failed yield = "
-                 << n_inmw_failed_nondif.getVal() -
-                        nondif_yield_add_passed.getVal()
-                 << " vs estimated " << n_inmw_failed_nondif.getVal() << " ("
-                 << 1. - nondif_yield_add_passed.getVal() /
-                             n_inmw_failed_nondif.getVal()
-                 << ")\n";
-
-            cout << " - Fitted f_dif_calib_passed = "
-                 << f_dif_calib_passed.getVal() << " vs estimated "
-                 << n_inmw_passed_dif.getVal() / (n_inmw_passed_dif.getVal() +
-                                                  n_inmw_passed_nondif.getVal())
+            cout << "INFO Calib fits took " << format_time(duration_calib)
                  << "\n";
-            cout << " - Fitted f_dif_calib_failed = "
-                 << f_dif_calib_failed.getVal() << " vs estimated "
-                 << n_inmw_failed_dif.getVal() /
-                        (n_inmw_failed_dif.getVal() +
-                         n_inmw_failed_nondif.getVal());
-            cout << endl;
+            cout << "INFO Needed " << calib_fit_reattempts << " retries with "
+                 << format_time(duration_calib / (calib_fit_reattempts + 1))
+                 << " on average\n"
+                 << endl;
 
-            d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
-            dm_var.setRange(extended_dm_min, extended_dm_max);
+            calib_retries.Fill(calib_fit_reattempts);
+
+            if (cov_matrix_status == 3) {
+              // Monitor how much f_sig deviates from constraint
+              double f_sig_passed_sigma =
+                  f_sig_passed.getVal() - f_sig_passed_guess;
+              if (f_sig_passed_sigma >= 0.) {
+                f_sig_passed_sigma /= f_sig_passed_unc_hi.getVal();
+              } else {
+                f_sig_passed_sigma /= f_sig_passed_unc_lo.getVal();
+              }
+
+              double f_sig_failed_sigma =
+                  f_sig_failed.getVal() - f_sig_failed_guess;
+              if (f_sig_failed_sigma >= 0.) {
+                f_sig_failed_sigma /= f_sig_failed_unc_hi.getVal();
+              } else {
+                f_sig_failed_sigma /= f_sig_failed_unc_lo.getVal();
+              }
+
+              f_sig_passed_pull.setVal(f_sig_passed_sigma);
+              f_sig_failed_pull.setVal(f_sig_failed_sigma);
+
+              ds_params_calib.addFast(params_calib);
+            } else {
+              f_sig_passed_pull.setVal(-100.);
+              f_sig_failed_pull.setVal(-100.);
+            }
+
+            fit_status_calib.SetBinContent(kin_bin, fit_status);
+            fit_cov_qual_calib.SetBinContent(kin_bin, cov_matrix_status);
           }
+
+          //////////////////////
+          // Plot fit results //
+          //////////////////////
+
+          // Build modified binning for data to match shifted/scaled PDFs
+          RooBinning bins_histos_d0_m_failed_mod(
+              nbins_failed + 2 * extra_bins_failed,
+              d0_m_scale.getVal() * (extended_d0_m_min - D0_M) + D0_M +
+                  d0_m_shift.getVal(),
+              d0_m_scale.getVal() * (extended_d0_m_max - D0_M) + D0_M +
+                  d0_m_shift.getVal(),
+              "bins_histos_d0_m_failed_mod");
+          RooBinning bins_histos_dm_failed_mod(
+              nbins_failed + 2 * extra_bins_failed,
+              dm_scale.getVal() * (extended_dm_min - DM) + DM +
+                  dm_shift.getVal(),
+              dm_scale.getVal() * (extended_dm_max - DM) + DM +
+                  dm_shift.getVal(),
+              "bins_histos_dm_failed_mod");
+          RooBinning bins_histos_d0_m_passed_mod(
+              nbins_passed + 2 * extra_bins_passed,
+              d0_m_scale.getVal() * (extended_d0_m_min - D0_M) + D0_M +
+                  d0_m_shift.getVal(),
+              d0_m_scale.getVal() * (extended_d0_m_max - D0_M) + D0_M +
+                  d0_m_shift.getVal(),
+              "bins_histos_d0_m_passed_mod");
+          RooBinning bins_histos_dm_passed_mod(
+              nbins_passed + 2 * extra_bins_passed,
+              dm_scale.getVal() * (extended_dm_min - DM) + DM +
+                  dm_shift.getVal(),
+              dm_scale.getVal() * (extended_dm_max - DM) + DM +
+                  dm_shift.getVal(),
+              "bins_histos_dm_passed_mod");
+
+          // Define lambda to plot fit results in different ranges
+          auto plot_fit_results = [&](const TString range,
+                                      const TString name_suffix) {
+            unique_ptr<RooPlot> frame_d0_calib_passed(d0_m_var.frame(
+                Title("D0 M Calib Passed " + tag), Range("data")));
+            unique_ptr<RooPlot> frame_d0_calib_failed(d0_m_var.frame(
+                Title("D0 M Calib Failed " + tag), Range("data")));
+            unique_ptr<RooPlot> frame_dm_calib_passed(
+                dm_var.frame(Title("dm Calib Passed " + tag), Range("data")));
+            unique_ptr<RooPlot> frame_dm_calib_failed(
+                dm_var.frame(Title("dm Calib Failed " + tag), Range("data")));
+
+            // TODO:
+            // https://root-forum.cern.ch/t/simultaneous-fit-normalization-issue/33965
+            if (range == "fitRange") {
+              // For plots over full range, also show high d0_M region in
+              // low-p pion fits
+              dataset_calib_passed->plotOn(frame_d0_calib_passed.get(),
+                                           Binning(bins_histos_d0_m_passed));
+              dataset_calib_failed->plotOn(frame_d0_calib_failed.get(),
+                                           Binning(bins_histos_d0_m_failed));
+            } else {
+              dataset_calib_passed->plotOn(frame_d0_calib_passed.get(),
+                                           Binning(bins_histos_d0_m_passed),
+                                           CutRange(range));
+              dataset_calib_failed->plotOn(frame_d0_calib_failed.get(),
+                                           Binning(bins_histos_d0_m_failed),
+                                           CutRange(range));
+            }
+            dataset_calib_passed->plotOn(frame_dm_calib_passed.get(),
+                                         Binning(bins_histos_dm_passed),
+                                         CutRange(range));
+            dataset_calib_failed->plotOn(frame_dm_calib_failed.get(),
+                                         Binning(bins_histos_dm_failed),
+                                         CutRange(range));
+
+            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2));
+            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(sig_passed),
+                                LineColor(kTeal + 2));
+            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(d0_bkg_passed),
+                                LineColor(kViolet));
+            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_spi_passed),
+                                LineColor(kOrange));
+            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_all_passed),
+                                LineColor(kRed));
+
+            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2));
+            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(sig_failed),
+                                LineColor(kTeal + 2));
+            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(d0_bkg_failed),
+                                LineColor(kViolet));
+            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_spi_failed),
+                                LineColor(kOrange));
+            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_all_failed),
+                                LineColor(kRed));
+
+            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2));
+            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(sig_passed),
+                                LineColor(kTeal + 2));
+            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(d0_bkg_passed),
+                                LineColor(kViolet));
+            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_spi_passed),
+                                LineColor(kOrange));
+            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_all_passed),
+                                LineColor(kRed));
+
+            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2));
+            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(sig_failed),
+                                LineColor(kTeal + 2));
+            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(d0_bkg_failed),
+                                LineColor(kViolet));
+            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_spi_failed),
+                                LineColor(kOrange));
+            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
+                                ProjectionRange(range), NormRange("fitRange"),
+                                LineWidth(2), Components(comb_all_failed),
+                                LineColor(kRed));
+
+            c_four.cd(1);
+            frame_d0_calib_passed->Draw();
+            c_four.cd(2);
+            frame_dm_calib_passed->Draw();
+            c_four.cd(3);
+            frame_d0_calib_failed->Draw();
+            c_four.cd(4);
+            frame_dm_calib_failed->Draw();
+
+            c_four.SaveAs(fit_dir_path + "/fit_calib_" + suffix + name_suffix +
+                          ".pdf");
+          };
+
+          cout << "\nINFO Plotting full fit region" << endl;
+          plot_fit_results("fitRange", "");
+
+          cout << "\nINFO Plotting signal region" << endl;
+          plot_fit_results("sig", "_sig");
+
+          cout << "\nINFO Plotting soft pion bkg regions" << endl;
+          plot_fit_results("sb1_1", "_sb1_1");
+          plot_fit_results("sb1_2", "_sb1_2");
+
+          cout << "\nINFO Plotting d0 bkg regions" << endl;
+          plot_fit_results("sb2_1", "_sb2_1");
+          plot_fit_results("sb2_2", "_sb2_2");
+
+          cout << "\nINFO Plotting all comb regions" << endl;
+          plot_fit_results("sb3_1", "_sb3_1");
+          plot_fit_results("sb3_2", "_sb3_2");
+          plot_fit_results("sb3_3", "_sb3_3");
+          plot_fit_results("sb3_4", "_sb3_4");
+
+          // Save fitted PID efficiency
+          if (fake_mu) {
+            // For FAKE_MU, we fit calculate the complementary efficiency so
+            // that the "passed" sample always corresponds to the K/pi misid
+            // case. We recover the proper FAKE_MU PIF efficiency by storing
+            // 1.0 - eff instead of eff itself.
+            histo_pid_raw.SetBinContent(kin_bin, 1.0 - eff.getVal());
+            histo_pid.SetBinContent(kin_bin, 1.0 - eff_corrected.getVal());
+          } else {
+            histo_pid_raw.SetBinContent(kin_bin, eff.getVal());
+            histo_pid.SetBinContent(kin_bin, eff_corrected.getVal());
+          }
+          // Save fitted DiF fractions
+          histo_f_dif.SetBinContent(kin_bin, f_dif_calib_passed.getVal());
+          // Save errors if fit was performed
+          if (fit_result.get()) {
+            histo_pid_raw.SetBinError(kin_bin,
+                                      eff.getPropagatedError(*fit_result));
+            histo_pid.SetBinError(
+                kin_bin, eff_corrected.getPropagatedError(*fit_result));
+            histo_f_dif.SetBinError(
+                kin_bin, f_dif_calib_passed.getPropagatedError(*fit_result));
+          }
+
+          // Store final mass-window efficiencies in histogram
+          effs_mw_passed.SetBinContent(kin_bin, eff_mw_passed.getVal());
+          effs_mw_failed.SetBinContent(kin_bin, eff_mw_failed.getVal());
+
+          // Print mass-window efficiencies
+          cout << "\nINFO Mass-window efficiencies\n";
+          cout << " - Passed: " << eff_mw_passed.getVal() * 100. << "%\n";
+          cout << " - Failed: " << eff_mw_failed.getVal() * 100. << "%\n";
+
+          // Check normalization estimates
+          cout << "\nINFO Fitted vs estimated:\n";
+          cout << " - Fitted n_passed = " << n_passed.getVal()
+               << " vs estimated " << n_calib_passed << " ("
+               << n_passed.getVal() / n_calib_passed << ")\n";
+          cout << " - Fitted n_failed = " << n_failed.getVal()
+               << " vs estimated " << n_calib_failed << " ("
+               << n_failed.getVal() / n_calib_failed << ")\n";
+
+          cout << " - Fitted f_phys_passed = " << f_phys_passed.getVal()
+               << " vs estimated " << f_phys_passed_guess << " ("
+               << f_phys_passed.getVal() / f_phys_passed_guess << ")\n";
+          cout << " - Fitted f_phys_failed = " << f_phys_failed.getVal()
+               << " vs estimated " << f_phys_failed_guess << " ("
+               << f_phys_failed.getVal() / f_phys_failed_guess << ")\n";
+
+          cout << " - Fitted f_sig_passed = " << f_sig_passed.getVal()
+               << " vs estimated " << f_sig_passed_guess << " ("
+               << f_sig_passed.getVal() / f_sig_passed_guess << "), "
+               << f_sig_passed_pull.getVal() << " sigma away from constrain\n";
+          cout << " - Fitted f_sig_failed = " << f_sig_failed.getVal()
+               << " vs estimated " << f_sig_failed_guess << " ("
+               << f_sig_failed.getVal() / f_sig_failed_guess << "), "
+               << f_sig_failed_pull.getVal() << " sigma away from constrain\n";
+
+          cout << " - Fitted f_spi_passed = " << f_spi_passed.getVal()
+               << " vs estimated " << f_spi_passed_guess << " ("
+               << f_spi_passed.getVal() / f_spi_passed_guess << ")\n";
+          cout << " - Fitted f_spi_failed = " << f_spi_failed.getVal()
+               << " vs estimated " << f_spi_failed_guess << " ("
+               << f_spi_failed.getVal() / f_spi_failed_guess << ")\n";
+
+          cout << " - Fitted k_comb_all_failed = " << k_comb_all_failed.getVal()
+               << " vs estimated " << k_comb_all_failed_guess << " ("
+               << k_comb_all_failed.getVal() / k_comb_all_failed_guess << ")\n";
+          cout << " - Fitted k_comb_all_passed = " << k_comb_all_passed.getVal()
+               << " vs estimated " << k_comb_all_passed_guess << " ("
+               << k_comb_all_passed.getVal() / k_comb_all_passed_guess << ")\n";
+
+          cout << " - Fitted c_comb_all_failed = " << c_comb_all_failed.getVal()
+               << "\n";
+          cout << " - Fitted c_comb_all_passed = " << c_comb_all_passed.getVal()
+               << "\n";
+
+          cout << " - Fitted c_comb_spi_failed = " << c_comb_spi_failed.getVal()
+               << "\n";
+          cout << " - Fitted c_comb_spi_passed = " << c_comb_all_passed.getVal()
+               << "\n";
+
+          cout << " - Fitted non-dif passed yield = "
+               << n_inmw_passed_nondif.getVal() +
+                      nondif_yield_add_passed.getVal()
+               << " vs estimated " << n_inmw_passed_nondif.getVal() << " ("
+               << 1. + nondif_yield_add_passed.getVal() /
+                           n_inmw_passed_nondif.getVal()
+               << ")\n";
+          cout << " - Fitted non-dif failed yield = "
+               << n_inmw_failed_nondif.getVal() -
+                      nondif_yield_add_passed.getVal()
+               << " vs estimated " << n_inmw_failed_nondif.getVal() << " ("
+               << 1. - nondif_yield_add_passed.getVal() /
+                           n_inmw_failed_nondif.getVal()
+               << ")\n";
+
+          cout << " - Fitted f_dif_calib_passed = "
+               << f_dif_calib_passed.getVal() << " vs estimated "
+               << n_inmw_passed_dif.getVal() / (n_inmw_passed_dif.getVal() +
+                                                n_inmw_passed_nondif.getVal())
+               << "\n";
+          cout << " - Fitted f_dif_calib_failed = "
+               << f_dif_calib_failed.getVal() << " vs estimated "
+               << n_inmw_failed_dif.getVal() / (n_inmw_failed_dif.getVal() +
+                                                n_inmw_failed_nondif.getVal());
+          cout << endl;
+
+          d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
+          dm_var.setRange(extended_dm_min, extended_dm_max);
         }
       }
+    }
 
-      // Define output file por PID efficiency
-      // File name matches the output of PIDCalib
-      const TString fname_suffix = fake_mu ? "_denom" : (vmu ? "_nom_vmu" : "_nom");
-      const TString opath_full_probe =
-          opath + "/" + probe + "TrueToMuTag" + fname_suffix + ".root";
-      cout << "INFO Creating output file: " << opath_full_probe << endl;
-      TFile ofile_probe(opath_full_probe, "RECREATE");
+    // Define output file por PID efficiency
+    // File name matches the output of PIDCalib
+    const TString fname_suffix =
+        fake_mu ? "_denom" : (vmu ? "_nom_vmu" : "_nom");
+    const TString opath_full_probe =
+        opath + "/" + probe + "TrueToMuTag" + fname_suffix + ".root";
+    cout << "INFO Creating output file: " << opath_full_probe << endl;
+    TFile ofile_probe(opath_full_probe, "RECREATE");
 
-      // Save PID efficiency
-      ofile_probe.cd();
-      histo_pid_raw.Write();
-      histo_pid.Write();
-      ofile_probe.Close();
+    // Save PID efficiency
+    ofile_probe.cd();
+    histo_pid_raw.Write();
+    histo_pid.Write();
+    ofile_probe.Close();
 
-      // Define output file for fitted dif fractions
-      const TString opath_f_dif = opath + "/dif_fractions_" + probe + ".root";
-      cout << "INFO Creating output file: " << opath_f_dif << endl;
-      TFile ofile_f_dif(opath_f_dif, "RECREATE");
+    // Define output file for fitted dif fractions
+    const TString opath_f_dif = opath + "/dif_fractions_" + probe + ".root";
+    cout << "INFO Creating output file: " << opath_f_dif << endl;
+    TFile ofile_f_dif(opath_f_dif, "RECREATE");
 
-      // Save fitted DiF fractions
-      ofile_f_dif.cd();
-      histo_f_dif.Write();
-      ofile_f_dif.Close();
+    // Save fitted DiF fractions
+    ofile_f_dif.cd();
+    histo_f_dif.Write();
+    ofile_f_dif.Close();
 
-      // Now save other distributions in common output file
-      ofile.cd();
-      fit_status_calib.Write();
-      fit_cov_qual_calib.Write();
+    // Now save other distributions in common output file
+    ofile.cd();
+    fit_status_calib.Write();
+    fit_cov_qual_calib.Write();
 
-      // Save fit status
-      suffix.Form("%s_%s", year.c_str(), probe.c_str());
-      c_single.cd();
-      fit_status_calib.Draw("BOX2Z");
-      c_single.SaveAs(opath + "/figs/fit_status_calib_" + suffix + ".pdf");
-      fit_cov_qual_calib.Draw("BOX2Z");
-      c_single.SaveAs(opath + "/figs/fit_cov_qual_calib_" + suffix + ".pdf");
+    // Save fit status
+    suffix.Form("%s_%s", year.c_str(), probe.c_str());
+    c_single.cd();
+    fit_status_calib.Draw("BOX2Z");
+    c_single.SaveAs(opath + "/figs/fit_status_calib_" + suffix + ".pdf");
+    fit_cov_qual_calib.Draw("BOX2Z");
+    c_single.SaveAs(opath + "/figs/fit_cov_qual_calib_" + suffix + ".pdf");
 
-      // Save number of fit retries
-      calib_retries.Draw();
-      c_single.SaveAs(opath + "/figs/fit_retries_calib_" + suffix + ".pdf");
+    // Save number of fit retries
+    calib_retries.Draw();
+    c_single.SaveAs(opath + "/figs/fit_retries_calib_" + suffix + ".pdf");
 
-      // Plot distribution of fitted variables
-      if (!dry_run) {
-        plot_dataset(ds_params_calib, opath + "/figs/params/" + suffix + "_");
-      } else {
-        cout << "INFO Dry run: will not plot distributions of fit parameters"
-             << endl;
-      }
+    // Plot distribution of fitted variables
+    if (!dry_run) {
+      plot_dataset(ds_params_calib, opath + "/figs/params/" + suffix + "_");
+    } else {
+      cout << "INFO Dry run: will not plot distributions of fit parameters"
+           << endl;
+    }
 
-      // Save efficiencies
-      cout << "INFO Saving mass-window efficiencies " << endl;
-      effs_mw_passed.Write();
-      effs_mw_failed.Write();
+    // Save efficiencies
+    cout << "INFO Saving mass-window efficiencies " << endl;
+    effs_mw_passed.Write();
+    effs_mw_failed.Write();
 
-      // Delete calib datasets
-      cout << "INFO Deleting MC datasets " << endl;
-      for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
-        for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
-          for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
-            delete datasets_calib_passed[ntrks_idx][eta_idx][p_idx];
-            delete datasets_calib_failed[ntrks_idx][eta_idx][p_idx];
-          }
+    // Delete calib datasets
+    cout << "INFO Deleting MC datasets " << endl;
+    for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
+      for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
+        for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
+          delete datasets_calib_passed[ntrks_idx][eta_idx][p_idx];
+          delete datasets_calib_failed[ntrks_idx][eta_idx][p_idx];
         }
       }
+    }
 
     // Delete MC datasets
     cout << "INFO Deleting MC datasets " << endl;
