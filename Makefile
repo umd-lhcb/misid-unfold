@@ -39,10 +39,9 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES := ./histos/default/rdx-25_11_13_05_23-merged-2016/merged.root
-EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-25_11_13_05_24-merged-2016/merged.root
-UNFOLDED := ./histos/rdx-25_11_13_05_28-unfolded-2016/unfolded.root
-TAGGED := ./histos/default/rdx-24_12_03_05_56-tag-2016/tagged.root
+EFFICIENCIES := ./histos/rdx-25_11_16_13_51-merged/merged.root
+UNFOLDED := ./gen/rdx-25_11_15_05_37-unfolded/unfolded.root
+TAGGED := ./histos/rdx-25_11_15_04_44-tag/tagged.root
 DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
 
 
@@ -222,18 +221,16 @@ build-rdx-tag:
 	@mkdir -p $(OUT_DIR)
 	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
 
-build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
+build-rdx-unfolded: $(BINPATH)/UnfoldMisID
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded)
 	@mkdir -p $(OUT_DIR)
-	$< --debug --iteration 5 \
-		--effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU) -y $(TAGGED) -o $(OUT_DIR) \
+	$< --iteration 5 -e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
 		-c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
 
-
-.PHONY: test-unfold
 test-unfold: $(BINPATH)/UnfoldMisID
-	$< -c $(YML_FILE) --dryRun --debug \
-		-y $(TAGGED) --effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-test-unfold)
+	@mkdir -p $(OUT_DIR)
+	$< -c $(YML_FILE) --dryRun --debug -y $(TAGGED) -e $(EFFICIENCIES) -o $(OUT_DIR)  | tee $(OUT_DIR)/stdout.log
 
 
 # Test of application of misID weights

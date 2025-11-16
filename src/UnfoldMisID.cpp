@@ -72,23 +72,28 @@ vStr getKeyNames(YAML::Node node, string prefix = "", string suffix = "") {
   return result;
 }
 
+// Input yield histograms read from tagged.root
 string getHistoName(const string& prefix, const string& ptcl,
-                    const string& skim, const string descr = "Tag") {
-  return ""s + prefix + "__" + ptcl + descr + "__" + skim;
+                    const string& skim, const string& year,
+                    const string descr = "Tag") {
+  return ""s + prefix + "__" + ptcl + descr + "__" + skim + "__" + year;
 }
 
+// Input efficiecy histograms read from merged.root
 string getHistoEffName(const string& ptcl1, const string& ptcl2,
-                       const string& descr1 = "True",
+                       const string& year, const string& descr1 = "True",
                        const string& descr2 = "Tag") {
-  return ""s + ptcl1 + descr1 + "To" + capitalize(ptcl2) + descr2;
+  return ""s + ptcl1 + descr1 + "To" + capitalize(ptcl2) + descr2 + "_" + year;
 }
 
+// Output histograms to be saved in unfolded.root
 string getHistoEffName(const string& prefix, const string& ptcl1,
                        const string& ptcl2, const string& descr1,
-                       const string& descr2, const string& skim) {
+                       const string& descr2, const string& skim,
+                       const string& year) {
   const string skim_suffix = skim.size() > 0 ? "_" + skim : "";
-  return ""s + prefix + "__" + getHistoEffName(ptcl1, ptcl2, descr1, descr2) +
-         skim_suffix;
+  return ""s + prefix + "__" +
+         getHistoEffName(ptcl1, ptcl2, year, descr1, descr2) + skim_suffix;
 }
 
 tuple<vFltFlt, vector<int>> getBins(YAML::Node cfgBinning) {
@@ -153,46 +158,48 @@ void printResErr(const TH2D* res) {
   printResGeneric(res, getter);
 }
 
-auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff, TFile* ntpEffVmu) {
+auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
   auto mapHisto = make_shared<map<string, shared_ptr<TH3D>>>();
 
   // NOTE: We have to capture by copy, s.t. the memory is not deallocated at
   //       after the wrapper function finishes executing
-  return [=](const string& histo_name, const string& skim, bool debug = false) {
-    const string key = (skim == "vmu") ? histo_name + "_vmu" : histo_name;
-    if (!mapHisto->count(key)) {
+  return [=](const string& key, const string& skim, bool debug = false) {
+    const bool use_vmu_eff =
+        (skim == "vmu") && (key.find("MuTag") != string::npos);
+    if (debug && use_vmu_eff) {
+      cout << "DEBUG Using VMU '*TrueToMuTag' efficiency histograms" << endl;
+    }
+    const string histo_name = use_vmu_eff ? key + "_vmu" : key;
+    if (!mapHisto->count(histo_name)) {
       TH3D* histo;
-      if (key.find("__") != key.npos) {
-        // this is a yld histo
-        if (debug) cout << "Getting yield histo" << endl;
+      if (key.find("__") != string::npos) {
+        // this is a yield histo
+        if (debug) cout << "DEBUG Getting yield histo " << histo_name << endl;
         histo = static_cast<TH3D*>(ntpYld->Get(histo_name.data()));
       } else {
-        if (skim == "vmu") {
-          if (debug)
-            cout << "Getting vmu eff histo (skim = " << skim << ")" << endl;
-          histo = static_cast<TH3D*>(ntpEffVmu->Get(histo_name.data()));
-        } else {
-          if (debug)
-            cout << "Getting nominal eff histo (skim = " << skim << ")" << endl;
-          histo = static_cast<TH3D*>(ntpEff->Get(histo_name.data()));
+        if (debug) {
+          cout << "DEBUG Getting " << skim << " efficiency histo " << histo_name
+               << endl;
         }
+        histo = static_cast<TH3D*>(ntpEff->Get(histo_name.data()));
       }
 
       if (histo == nullptr) {
-        cout << "Histogram " << histo_name << " doesn't exist! terminate now..."
-             << endl;
+        cout << "ERROR Histogram " << histo_name
+             << " doesn't exist! terminate now..." << endl;
         terminate();
       }
 
       auto histoPtr = shared_ptr<TH3D>(histo);
-      mapHisto->emplace(key, histoPtr);
+      mapHisto->emplace(histo_name, histoPtr);
       return histoPtr;
     }
 
     // the key already exists
     if (debug)
-      cout << "Getting cached eff histo (skim = " << skim << ")" << endl;
-    return mapHisto->at(key);
+      cout << "DEBUG Getting cached eff histo " << histo_name
+           << " (skim = " << skim << ")" << endl;
+    return mapHisto->at(histo_name);
   };
 }
 
@@ -223,7 +230,7 @@ auto getHistoOutHelper(map<string, shared_ptr<TH3D>>* mapHisto,
 // Unfold //
 ////////////
 
-void ensureUnitarity(TH2D* res, vStr ptcls, bool debug = true) {
+void ensureUnitarity(TH2D* res, vStr ptcls, bool debug = false) {
   auto nbinsX = res->GetNbinsX();
   auto nbinsY = res->GetNbinsY();
 
@@ -245,13 +252,12 @@ void ensureUnitarity(TH2D* res, vStr ptcls, bool debug = true) {
     for (int x = 1; x < nbinsX; x++) {
       prob += res->GetBinContent(x, y);
     }
-    if (debug) {
-      if (abs((1 - prob) - res->GetBinContent(nbinsX, y)) > 1e-6) {
-        cout << "INFO: Changing " << ptcls[y - 1] << "TrueTo"
-             << ptcls[nbinsX - 1] << "Tag eff from "
-             << res->GetBinContent(nbinsX, y) << " to " << 1 - prob << endl;
-      }
+    if (abs((1 - prob) - res->GetBinContent(nbinsX, y)) > 1e-6) {
+      cout << "INFO Changing " << ptcls[y - 1] << "TrueTo" << ptcls[nbinsX - 1]
+           << "Tag eff from " << res->GetBinContent(nbinsX, y) << " to "
+           << 1 - prob << endl;
     }
+
     res->SetBinContent(nbinsX, y, 1 - prob);
   }
 
@@ -265,21 +271,20 @@ void ensureUnitarity(TH2D* res, vStr ptcls, bool debug = true) {
 template <typename F1, typename F2>
 void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
             const vector<int>& nbins, F1& histoInGetter, F2& histoOutGetter,
-            bool debug = false, int numOfIter = 4) {
+            const string& year, bool debug = false, int numOfIter = 4) {
   int totSize = ptcls.size();
 
   // These are used to stored measured yields (a vector) and response matrix (a
   // 2D matrix)
-  auto histMea = new TH1D("histMea", "histMea", totSize, 0, totSize);
-  auto histRes =
-      new TH2D("histRes", "histRes", totSize, 0, totSize, totSize, 0, totSize);
-  auto histInv = new TH2D("histInv", "histInv", totSize, 0, totSize, totSize, 0,
-                          totSize);  // conceptually inverted matrix of histRes
-  auto histProb = new TH1D("histProb", "histProb", totSize, 0, totSize);
+  TH1D histMea(("histMea_"+year).c_str(), ("histMea_"+year).c_str(), totSize, 0, totSize);
+  TH2D histRes(("histRes_"+year).c_str(), ("histRes_"+year).c_str(), totSize, 0, totSize, totSize, 0, totSize);
+  TH2D histInv(("histInv_"+year).c_str(), ("histInv_"+year).c_str(), totSize, 0, totSize, totSize, 0,
+               totSize);  // conceptually inverted matrix of histRes
+  TH1D histProb(("histProb_"+year).c_str(), ("histProb_"+year).c_str(), totSize, 0, totSize);
 
   // This is used to provide dimension info for response matrix only
-  auto histDim = new TH1D("histDim", "histDim", totSize, 0, totSize);
-  for (int i = 1; i <= totSize; i++) histDim->SetBinContent(i, 1);
+  TH1D histDim(("histDim_"+year).c_str(), ("histDim_"+year).c_str(), totSize, 0, totSize);
+  for (int i = 1; i <= totSize; i++) histDim.SetBinContent(i, 1);
 
   // Main unfolding procedure
   for (int x = 1; x <= nbins[0]; x++) {
@@ -287,14 +292,14 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
       for (int z = 1; z <= nbins[2]; z++) {
         for (auto& pref : prefix) {
           for (const auto& skim : skims) {
+            cout << "\nINFO Unfolding bin " << x << " " << y << " " << z << " of "
+                 << pref << " " << skim << endl;
+
             // build yield vector
             for (int idx = 0; idx != totSize; idx++) {
-              // For vmu case, read vmu yields but still produce (identical)
-              // iso, 1os, 2os and dd weights (As in the fit, iso wil be used
-              // for vmu while other skims will be ignored)
-              auto name  = getHistoName(pref, ptcls[idx], skim);
-              auto histo = histoInGetter(name, skim);
-              histMea->SetBinContent(idx + 1, histo->GetBinContent(x, y, z));
+              auto name  = getHistoName(pref, ptcls[idx], skim, year);
+              auto histo = histoInGetter(name, skim, debug);
+              histMea.SetBinContent(idx + 1, histo->GetBinContent(x, y, z));
             }
 
             // build response matrix (2D matrix)
@@ -305,8 +310,9 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
             //         tag  -> x index
             for (int idxTag = 0; idxTag != totSize; idxTag++) {
               for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
-                auto name  = getHistoEffName(ptcls[idxTrue], ptcls[idxTag]);
-                auto histo = histoInGetter(name, skim);
+                auto name =
+                    getHistoEffName(ptcls[idxTrue], ptcls[idxTag], year);
+                auto histo = histoInGetter(name, skim, debug);
                 auto eff   = histo->GetBinContent(x, y, z);
                 auto err   = histo->GetBinError(x, y, z);
 
@@ -332,29 +338,29 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
                 // https://en.wikipedia.org/wiki/Signed_zero
                 if (eff == 0.) eff = abs(eff);
 
-                histRes->SetBinContent(idxTag + 1, idxTrue + 1, eff);
-                histRes->SetBinError(idxTag + 1, idxTrue + 1, err);
+                histRes.SetBinContent(idxTag + 1, idxTrue + 1, eff);
+                histRes.SetBinError(idxTag + 1, idxTrue + 1, err);
               }
             }
-            ensureUnitarity(histRes, ptcls);
+            ensureUnitarity(&histRes, ptcls, debug);
 
             // perform unfolding to get unfolded ("true") yield
-            RooUnfoldResponse resp(nullptr, histDim, histRes);
-            RooUnfoldBayes    unfoldWorker(&resp, histMea, numOfIter);
+            RooUnfoldResponse resp(nullptr, &histDim, &histRes);
+            RooUnfoldBayes    unfoldWorker(&resp, &histMea, numOfIter);
             auto histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
 
             if (debug) {
               // Print measured and unfolded yields
-              cout << "\nINFO: measured vs unfolded yields vs predicted ("
+              cout << "\nINFO Measured yields vs unfolded vs predicted ("
                    << pref << " " << x << " " << y << " " << z << ")" << endl;
               for (int idx = 0; idx != totSize; idx++) {
                 double pred = 0.;
                 for (int idy = 0; idy != totSize; idy++) {
-                  pred += histRes->GetBinContent(idx + 1, idy + 1) *
+                  pred += histRes.GetBinContent(idx + 1, idy + 1) *
                           histUnf->GetBinContent(idy + 1);
                 }
                 cout << "\t" << ptcls[idx] << ": "
-                     << histMea->GetBinContent(idx + 1) << " | "
+                     << histMea.GetBinContent(idx + 1) << " | "
                      << histUnf->GetBinContent(idx + 1) << " | " << pred
                      << endl;
               }
@@ -363,14 +369,14 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
 
             // Save unfolded yields
             for (int idx = 0; idx != totSize; idx++) {
-              auto name = getHistoName(pref, ptcls[idx], skim, "True");
+              auto name = getHistoName(pref, ptcls[idx], skim, year, "True");
               auto yld  = histUnf->GetBinContent(idx + 1);
               if (isnan(yld) || isinf(yld)) {
-                cout << "WARNING: naN or inf detected for " << name << endl;
+                cout << "WARNING NaN or inf detected for " << name << endl;
                 yld = 0;
               }
               auto histo = histoOutGetter(name);
-              cout << "Writing unfolded yield to " << name << endl;
+              if (debug) cout << "Writing unfolded yield to " << name << endl;
               histo->SetBinContent(x, y, z, yld);
             }
 
@@ -387,20 +393,21 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
               for (int idxTrue = 0; idxTrue != totSize; idxTrue++)
                 probTrueNormFac +=
                     probTrue[idxTrue] *
-                    histRes->GetBinContent(idxTag + 1, idxTrue + 1);
+                    histRes.GetBinContent(idxTag + 1, idxTrue + 1);
 
               for (int idxTrue = 0; idxTrue != totSize; idxTrue++) {
                 // from pidcalib we have true -> tag
                 auto probTrueToTag =
-                    histRes->GetBinContent(idxTag + 1, idxTrue + 1);
+                    histRes.GetBinContent(idxTag + 1, idxTrue + 1);
                 if (isnan(probTrueToTag)) probTrueToTag = 0.0;
 
                 // probability: tag -> true
                 auto probTagToTrue =
                     probTrueToTag * probTrue[idxTrue] / probTrueNormFac;
                 if (isnan(probTagToTrue)) probTagToTrue = 0.0;
-                auto nameTagToTrue = getHistoEffName(
-                    pref, ptcls[idxTag], ptcls[idxTrue], "Tag", "True", skim);
+                auto nameTagToTrue =
+                    getHistoEffName(pref, ptcls[idxTag], ptcls[idxTrue], "Tag",
+                                    "True", skim, year);
                 auto histoTagToTrue = histoOutGetter(nameTagToTrue);
                 histoTagToTrue->SetBinContent(x, y, z, probTagToTrue);
 
@@ -408,20 +415,22 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
                   cout << "  idxTrue: " << idxTrue << " idxTag: " << idxTag
                        << endl;
                   cout << "  prob = "
-                       << getHistoEffName(ptcls[idxTrue], ptcls[idxTag])
-                       << " * " << getHistoName(pref, ptcls[idxTrue], skim)
+                       << getHistoEffName(ptcls[idxTrue], ptcls[idxTag], year)
+                       << " * "
+                       << getHistoName(pref, ptcls[idxTrue], skim, year)
                        << " / "
                        << "normalization" << endl;
                   cout << "       = " << probTrueToTag << " * "
                        << probTrue[idxTrue] << " / " << probTrueNormFac << " = "
                        << probTagToTrue << endl;
                 }
-                histInv->SetBinContent(idxTrue + 1, idxTag + 1, probTagToTrue);
+                histInv.SetBinContent(idxTrue + 1, idxTag + 1, probTagToTrue);
 
                 // now contract with the mu misID eff (true -> mu tag)
-                auto nameTrueToMuTag = getHistoEffName(ptcls[idxTrue], "Mu");
-                auto histo           = histoInGetter(nameTrueToMuTag, skim);
-                auto effTrueToMuTag  = histo->GetBinContent(x, y, z);
+                auto nameTrueToMuTag =
+                    getHistoEffName(ptcls[idxTrue], "Mu", year);
+                auto histo = histoInGetter(nameTrueToMuTag, skim, debug);
+                auto effTrueToMuTag = histo->GetBinContent(x, y, z);
 
                 if (isnan(effTrueToMuTag)) effTrueToMuTag = 0.0;
                 auto wtTagToMuTagElem = probTagToTrue * effTrueToMuTag;
@@ -435,7 +444,7 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
 
               // we use idxTag as the second index, which checks out
               auto name  = getHistoEffName(pref, ptcls[idxTag], "Mu", "Tag",
-                                           "Tag", skim);
+                                           "Tag", skim, year);
               auto histo = histoOutGetter(name);
               histo->SetBinContent(x, y, z, wtTagToMuTag);
               if (debug)
@@ -460,7 +469,7 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
 
               cout << "The yields are (top: tag; bot: true):" << endl;
               for (int idx = 1; idx <= totSize; idx++)
-                cout << setw(12) << histMea->GetBinContent(idx);
+                cout << setw(12) << histMea.GetBinContent(idx);
               cout << endl;
               for (int idx = 1; idx <= totSize; idx++)
                 cout << setw(12) << histUnf->GetBinContent(idx);
@@ -473,12 +482,12 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
               cout << "The true -> tag matrix is (row: fixed tag; "
                       "col: fixed true):"
                    << endl;
-              printResVal(histRes);
+              printResVal(&histRes);
 
               cout << "The tag -> true efficiency matrix is (row: fixed true; "
                       "col: fixed tag):"
                    << endl;
-              printResVal(histInv);
+              printResVal(&histInv);
               cout << "------" << endl;
             }
           }
@@ -486,25 +495,18 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
       }
     }
   }
-
-  // cleanups
-  delete histMea;
-  delete histRes;
-  delete histInv;
-  delete histProb;
-  delete histDim;
 }
 
 template <typename F1, typename F2>
 void unfoldDryRun(const vStr& prefix, const vStr& ptcls, const vStr& skims,
                   const vFltFlt& binnings, const vector<int>& nbins,
-                  F1& histoInGetter, F2& histoOutGetter) {
+                  F1& histoInGetter, F2& histoOutGetter, const string& year) {
   for (const auto& pref : prefix) {
     cout << pref << ": The measured yields are stored in these histos:" << endl;
     for (const auto& pTag : ptcls) {
       for (auto skim : skims) {
         cout << skim << endl;
-        auto name = getHistoName(pref, pTag, skim);
+        auto name = getHistoName(pref, pTag, skim, year);
         histoInGetter(name, skim, true);
         cout << "  " << name << "\n" << endl;
       }
@@ -515,7 +517,7 @@ void unfoldDryRun(const vStr& prefix, const vStr& ptcls, const vStr& skims,
     for (const auto& pTag : ptcls) {
       for (auto skim : skims) {
         cout << skim << endl;
-        auto name = getHistoName(pref, pTag, skim, "True");
+        auto name = getHistoName(pref, pTag, skim, year, "True");
         histoOutGetter(name);
         cout << "  " << name << "\n" << endl;
       }
@@ -527,7 +529,7 @@ void unfoldDryRun(const vStr& prefix, const vStr& ptcls, const vStr& skims,
       for (const auto& pTrue : ptcls) {
         for (auto skim : skims) {
           cout << skim << endl;
-          auto name = getHistoEffName(pTrue, pTag);
+          auto name = getHistoEffName(pTrue, pTag, year);
           histoInGetter(name, skim, true);
           cout << name << "\n";
         }
@@ -543,7 +545,8 @@ void unfoldDryRun(const vStr& prefix, const vStr& ptcls, const vStr& skims,
       for (const auto& pTag : ptcls) {
         cout << "  ";
         for (auto skim : skims) {
-          auto name = getHistoEffName(pref, pTag, pTrue, "Tag", "True", skim);
+          auto name =
+              getHistoEffName(pref, pTag, pTrue, "Tag", "True", skim, year);
           cout << setw(38) << name;
           histoOutGetter(name);
         }
@@ -555,7 +558,7 @@ void unfoldDryRun(const vStr& prefix, const vStr& ptcls, const vStr& skims,
     cout << pref
          << ": The Mu efficiencies will be loaded from these histos:" << endl;
     for (const auto& pTrue : ptcls) {
-      auto name = getHistoEffName(pTrue, "mu", "True", "Tag");
+      auto name = getHistoEffName(pTrue, "mu", year, "True", "Tag");
       cout << "  " << name << endl;
       histoOutGetter(name);
     }
@@ -590,12 +593,12 @@ int main(int argc, char** argv) {
      cxxopts::value<bool>()->default_value("false"))
     ("D,dryRun", "parse config and load histos, w/o unfolding",
      cxxopts::value<bool>()->default_value("false"))
-    ("Y,year", "sample year",
-     cxxopts::value<string>()->default_value("2016"))
+    ("Y,years", "list of sample years",
+     cxxopts::value<vector<string>>()->default_value("2016,2017,2018"))
+    ("s,skims", "list of skims",
+     cxxopts::value<vector<string>>()->default_value("iso,1os,2os,dd,vmu"))
     // input/output
     ("e,effHisto", "specify input ntuple containing efficiency histos",
-     cxxopts::value<string>())
-    ("v,effHistoVmu", "specify input ntuple containing vmu efficiency histos",
      cxxopts::value<string>())
     ("y,yldHisto", "specify input ntuple containing measured yield histos",
      cxxopts::value<string>())
@@ -628,44 +631,53 @@ int main(int argc, char** argv) {
   auto ymlConfig  = YAML::LoadFile(ymlFile);
   auto ptclTarget = parsedArgs["targetParticle"].as<string>();
   auto ptclList   = getKeyNames(ymlConfig["tags"]);
-  auto year       = parsedArgs["year"].as<string>();
-  auto prefix     = getKeyNames(ymlConfig["input_ntps"][year]);
+  auto years      = parsedArgs["years"].as<vector<string>>();
+
   auto [histoBinSpec, histoBinSize] = getBins(ymlConfig["binning"]);
+
+  // Currently, only tagged yields are different between ISO+CTRL skims.
+  // For VMU, no skim cuts are applied.
+  auto skims = parsedArgs["skims"].as<vector<string>>();
 
   // input ntuples
   auto ntpYld = make_unique<TFile>(parsedArgs["yldHisto"].as<string>().data());
   auto ntpEff = make_unique<TFile>(parsedArgs["effHisto"].as<string>().data());
-  auto ntpEffVmu =
-      make_unique<TFile>(parsedArgs["effHistoVmu"].as<string>().data());
 
-  auto histoOut = map<string, shared_ptr<TH3D>>{};
-  auto histoInGetter =
-      getHistoInHelper(ntpYld.get(), ntpEff.get(), ntpEffVmu.get());
+  auto histoOut       = map<string, shared_ptr<TH3D>>{};
+  auto histoInGetter  = getHistoInHelper(ntpYld.get(), ntpEff.get());
   auto histoOutGetter = getHistoOutHelper(&histoOut, histoBinSpec);
 
-  // Produce list of skims. Currently, only tagged yields are different.
-  // For vmu, no skim cuts are applied.
-  const vStr skims = {"iso", "1os", "2os", "dd", "vmu"};
+  for (const auto& year : years) {
+    cout << "INFO Starting " << year << endl;
+    const string year_prefix = year.substr(2, 2);
+    auto         prefix      = getKeyNames(ymlConfig["input_ntps"][year]);
 
-  // dry run
-  if (parsedArgs["dryRun"].as<bool>()) {
-    unfoldDryRun(prefix, ptclList, skims, histoBinSpec, histoBinSize,
-                 histoInGetter, histoOutGetter);
-    return 0;
+    if (parsedArgs["dryRun"].as<bool>()) {
+      // dry run
+      unfoldDryRun(prefix, ptclList, skims, histoBinSpec, histoBinSize,
+                   histoInGetter, histoOutGetter, year_prefix);
+    } else {
+      // unfold
+      auto numOfIter = parsedArgs["iteration"].as<int>();
+      unfold(prefix, ptclList, skims, histoBinSize, histoInGetter,
+             histoOutGetter, year_prefix, debug, numOfIter);
+    }
   }
-
-  // unfold
-  auto numOfIter = parsedArgs["iteration"].as<int>();
-  unfold(prefix, ptclList, skims, histoBinSize, histoInGetter, histoOutGetter,
-         debug, numOfIter);
 
   // save output
   auto outputFilename = parsedArgs["output"].as<string>() + "/" +
                         parsedArgs["outputHisto"].as<string>();
-  auto ntpOut = make_unique<TFile>(outputFilename.data(), "RECREATE");
+  TFile ntpOut(outputFilename.c_str(), "RECREATE");
 
-  for (const auto& [key, h] : histoOut)
-    ntpOut->WriteObject(h.get(), key.data());
+  for (const auto& [key, h] : histoOut) {
+    if (debug) {
+      cout << "DEBUG Saving objects. Key = " << key
+           << " , Object name = " << h->GetName() << endl;
+    }
+    ntpOut.WriteObject(h.get(), key.data());
+  }
+
+  ntpOut.Close();
 
   return 0;
 }
