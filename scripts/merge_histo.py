@@ -42,12 +42,6 @@ def parse_input():
 
     parser.add_argument("-o", "--output", required=True, help="specify output dir.")
 
-    parser.add_argument("-y", "--year", default="2016", help="specify year.")
-
-    parser.add_argument(
-        "--ctrl-sample", action="store_true", help="Use control sample uBDT cut."
-    )
-
     return parser.parse_args()
 
 
@@ -328,17 +322,28 @@ def abs_dir(path):
     return str(Path(path).parent.absolute())
 
 
-def merge_true_to_tag(output_ntp, path_prefix, paths, config):
+def merge_true_to_tag(output_ntp, path_prefix, paths, config, year):
     # Build a dictionary of 'output histoname' -> related histos
     histo_map = dict()
     for p in paths:
         for h in glob(f"{path_prefix}/{p}/*.root"):
             histo_name = basename(h).split(".")[0]
-            main_name = histo_name.split("_")[0]
+            main_name = histo_name.split("_")[0] + "_" + year[2:]
+            # Create a separate nom/denom pair for vmu effs
+            if "vmu" in histo_name:
+                main_name += "_vmu"
             if main_name not in histo_map:
                 histo_map[main_name] = [h]
             else:
                 histo_map[main_name].append(h)
+            # denom is the same for vmu and iso, so in the denom iteration
+            # add it to both histo lists
+            if "denom" in histo_name:
+                main_name += "_vmu"
+                if main_name not in histo_map:
+                    histo_map[main_name] = [h]
+                else:
+                    histo_map[main_name].append(h)
 
     for main_name, inputs in histo_map.items():
         # copy histo (mostly) verbatim when there's only 1 histo
@@ -374,11 +379,11 @@ def merge_true_to_tag(output_ntp, path_prefix, paths, config):
             histo_ratio.Write()
 
 
-def merge_extra(output_ntp, path_prefix, spec, config):
+def merge_extra(output_ntp, path_prefix, spec, config, year):
     for path in spec:
         input_ntp = ROOT.TFile(f"{path_prefix}/{path}")
         for src, tgt in spec[path].items():
-            print(f"Copy {tgt} from {src} and shfit means...")
+            print(f"Copy {tgt} from {src} and shift means...")
             histo_src = input_ntp.Get(src)
             histo_tgt = rebuild_root_histo(tgt, histo_src)
             fix_bad_bins_in_histo(histo_tgt)
@@ -406,16 +411,13 @@ if __name__ == "__main__":
         config = safe_load(f)
 
     output_ntp = ROOT.TFile(f"{args.output}/{HISTO_NAME}", "RECREATE")
-    for mode, params in config["input_histos"][int(args.year)].items():
-        if args.ctrl_sample:
-            params = params["misid_ctrl"]
-        else:
-            params = params["default"]
-        if mode not in KNOWN_MERGERS:
-            print(f'WARNING: Unknown mode: "{mode}". Skipping...')
-            continue
+    for year in config["input_histos"]:
+        for mode, params in config["input_histos"][year].items():
+            if mode not in KNOWN_MERGERS:
+                print(f'WARNING: Unknown mode: "{mode}". Skipping...')
+                continue
 
-        print(f"Merging {mode} using {params}...")
-        KNOWN_MERGERS[mode](output_ntp, path_prefix, params, config)
+            print(f"Merging {mode} using {params}...")
+            KNOWN_MERGERS[mode](output_ntp, path_prefix, params, config, str(year))
 
     output_ntp.Close()

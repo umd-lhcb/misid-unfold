@@ -13,6 +13,14 @@ binning:
     ETA: [1.7, 3.6, 5.0]
     nTracks: [0, 200, 600]
 
+skims:
+    iso:  "is_iso_loose"
+    1os:  "is_1os_loose"
+    2os:  "is_2os_loose"
+    dd:   "is_dd_loose"
+    vmu:  "1"
+    prot: "is_prot_loose"
+
 
 # cuts for each tagged species, used by ALL
 tags:
@@ -58,42 +66,50 @@ pidcalib_config:
             nom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"  # this is the acceptance cut
                 pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
-                add_pid_cut:
-                    default: "UBDT > 0.25"
-                    misid_ctrl: "UBDT < 0.25"
+                add_pid_cut: "UBDT > 0.25"
+            nom_vmu:
+                cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0"
+                add_pid_cut: "UBDT < 0.25"
             denom:
                 cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
                 pid_cut: "IsMuon == 0.0"
 
 # Used by (E)
 local_pid_config:
-    2016:
-        g:
-            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
-            tags:
-                cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
-            tags_addon:
-                mu:
-                    nom:
-                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
-                        pid_cut:
-                            default: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
-                            misid_ctrl: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
-                    denom:
-                        cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
-                        pid_cut:
-                            default: "IsMuon == 0.0"
-                            misid_ctrl: "IsMuon == 0.0"
-        e:
-            samples: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
-            tags_addon:
-                mu:
-                    rel:
-                        projection_p: True
-                        cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
-                        pid_cut:
-                            default: "UBDT > 0.25"
-                            misid_ctrl: "UBDT < 0.25"
+    g:
+        samples:
+            2016: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
+            2017: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2017--m*--incl_b.root:tree"
+            2018: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/ghost--25_08_07--mc--27163974--2018--m*--incl_b.root:tree"
+        tags:
+            cut: "TRACK_GHOSTPROB < 0.5 & IsMuon == 0.0 & InMuonAcc == 1.0 & MuonUnbiased == 1.0"
+        tags_addon:
+            mu:
+                nom:
+                    cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT > 0.25"
+                nom_vmu:
+                    cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & UBDT < 0.25"
+                denom:
+                    cut: "TRACK_GHOSTPROB < 0.5 & MuonUnbiased == 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "IsMuon == 0.0"
+    e:
+        samples:
+            2016: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2016--m*--incl_b.root:tree"
+            2017: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2017--m*--incl_b.root:tree"
+            2018: "../ntuples/0.9.15-incl_b/incl_b_dst_mc-e_ghost/e--25_08_07--mc--27163974--2018--m*--incl_b.root:tree"
+        tags_addon:
+            mu:
+                rel:
+                    projection_p: True
+                    cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "UBDT > 0.25"
+                rel_vmu:
+                    projection_p: True
+                    cut: "IsMuon == 1.0 & DLLmu > 2.0 & DLLe < 1.0 & InMuonAcc == 1.0"
+                    pid_cut: "UBDT < 0.25"
 
 # specify additional source of histograms
 # used by the efficiency histogram merger (M)
@@ -101,14 +117,9 @@ local_pid_config:
 input_histos:
     2016:
         true_to_tag:
-            default:
-                - "../histos/default/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
-                - "../histos/default/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
-                - "../histos/default/rdx-25_11_12_09_27-true_to_tag_local-2016"
-            misid_ctrl:
-                - "../histos/ctrl_sample/rdx-25_11_12_11_31-true_to_tag_glacier-2016-corrected"
-                - "../histos/ctrl_sample/rdx-25_04_08_19_22-true_to_tag_lxplus-2016"
-                - "../histos/ctrl_sample/rdx-25_11_12_09_36-true_to_tag_local-2016"
+            - "../histos/rdx-25_11_12_06_47-true_to_tag_glacier-2016-corrected"
+            - "../histos/rdx-25_04_08_19_19-true_to_tag_lxplus-2016"
+            - "../histos/rdx-25_11_12_09_27-true_to_tag_local-2016"
         # extra:
         #     "../histos/rjpsi-22_03_14_03_17-demo-2016/rjpsi-demo.root":
         #         H2H_Ghost_TO_Pi: gTrueToPiTag
@@ -117,6 +128,16 @@ input_histos:
         #         H2H_Ghost_TO_e: gTrueToETag
         #         H2H_Ghost_TO_Ghost: gTrueToGTag
         #         H2H_Ghost_TO_Mu: gTrueToMuTag
+    2017:
+        true_to_tag:
+            - "../histos/rdx-25_11_13_16_16-true_to_tag_glacier-2017-corrected"
+            - "../histos/rdx-25_11_14_11_17-true_to_tag_lxplus-2017"
+            - "../histos/rdx-25_11_13_15_35-true_to_tag_local-2017"
+    2018:
+        true_to_tag:
+            - "../histos/rdx-25_11_13_16_16-true_to_tag_glacier-2018-corrected"
+            - "../histos/rdx-25_11_14_11_22-true_to_tag_lxplus-2018"
+            - "../histos/rdx-25_11_13_15_39-true_to_tag_local-2018"
 
 
 # building tagged histograms, used by (T), and (U)
@@ -127,82 +148,187 @@ input_ntps:
     2016:
         # each entry should be a key-list pair, where list provides path to ntuples, with tree names
         D0:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         D0_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         ####
         D0_ws_Mu:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         D0_ws_Mu_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/D0_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         ####
         Dst:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         Dst_dsb:  # D* comb, within deltaM window
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         Dst_dsb_bsb: # D* comb, outside deltaM window
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
         ####
         Dst_ws_Mu:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Mu_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         Dst_ws_Mu_dsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Mu_dsb_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Mu--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
         ####
         Dst_ws_Pi:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Pi_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "dx_m_ok & b_m_sb"
         Dst_ws_Pi_dsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
         Dst_ws_Pi_dsb_bsb:
-            files: "../ntuples/0.9.14-D0p/Dst_D0-mu_misid-study-step2/Dst_ws_Pi--24_11_26--mu_misid--data--2016--m?.root:tree"
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2016--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+    2017:
+        D0:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        D0_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        Dst:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Mu_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Pi:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Pi_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2017--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+    2018:
+        D0:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        D0_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        D0_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/D0_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        ####
+        Dst:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Mu:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Mu_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Mu_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Mu--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
+        ####
+        Dst_ws_Pi:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "dx_m_ok & b_m_sb"
+        Dst_ws_Pi_dsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
+            cuts: "d0_m_ok & !dst_m_ok & b_m_ok & in_fit_range"
+        Dst_ws_Pi_dsb_bsb:
+            files: "../ntuples/0.9.18-misid_pid_kept/rdx-ntuple-run2-misid_study-all/Dst_ws_Pi--25_11_14--mu_misid--data--2018--m?.root:tree"
             cuts: "d0_m_ok & !dst_m_ok & b_m_sb"
 
 
 # Used by (A)
 weight_brs:
-    2016:
-        TupleBminus/DecayTree:
-            - prefix: D0
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_norm
-            - prefix: D0_bsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_bsb
-        TupleB0/DecayTree:
-            - prefix: Dst
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_norm
-            - prefix: Dst_dsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_dsb
-            - prefix: Dst_bsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_bsb
-            - prefix: Dst_dsb_bsb
-              file: "../histos/rdx-24_12_08_18_44-unfolded-2016/unfolded.root"
-              name: wmis_dsb_bsb
+    TupleBminus/DecayTree:
+        - prefix: D0
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          name: wmis_norm
+        - prefix: D0_bsb
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          name: wmis_bsb
+    TupleB0/DecayTree:
+        - prefix: Dst
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          name: wmis_norm
+        - prefix: Dst_dsb
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          name: wmis_dsb
+        - prefix: Dst_bsb
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          name: wmis_bsb
+        - prefix: Dst_dsb_bsb
+          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          name: wmis_dsb_bsb
 
 misid_corrections:
     mc_ntps:

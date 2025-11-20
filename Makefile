@@ -11,15 +11,6 @@ TEX_FILES := $(wildcard docs/*.tex)
 PDF_FILES := $(patsubst docs/%.tex,$(GENPATH)/%.pdf,$(TEX_FILES))
 YML_FILE  := ./spec/rdx-run2.yml
 
-CTRL_SAMPLE_FLAG :=
-ifdef USE_CTRL_SAMPLE
-	ifeq ($(USE_CTRL_SAMPLE), true)
-		CTRL_SAMPLE_FLAG = --ctrl-sample
-	else
-		$(warning Unexpected value assigned to USE_CTRL_SAMPLE. Using default uBDT file.)
-	endif
-endif
-
 TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 
 COMPILER     := $(shell root-config --cxx)
@@ -39,17 +30,16 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES := ./histos/default/rdx-25_11_13_05_23-merged-2016/merged.root
-EFFICIENCIES_VMU := ./histos/ctrl_sample/rdx-25_11_13_05_24-merged-2016/merged.root
-UNFOLDED := ./histos/rdx-25_11_13_05_28-unfolded-2016/unfolded.root
-TAGGED := ./histos/default/rdx-24_12_03_05_56-tag-2016/tagged.root
+EFFICIENCIES := ./histos/rdx-25_11_16_13_51-merged/merged.root
+UNFOLDED := ./histos/rdx-25_11_16_17_57-unfolded/unfolded.root
+TAGGED := ./histos/rdx-25_11_16_17_27-tag/tagged.root
 DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
 
 
 ###########
 # General #
 ###########
-.PHONY: exe applyer clean build-test build-test-lxplus build-test-nix plot-test
+.PHONY: clean build-test
 
 exe: $(EXE_FILES)
 
@@ -67,39 +57,137 @@ test-nix:
 #######
 
 # Generation of true to tag misID efficiency
-.PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2016-lxplus
+
+# K, pi and p efficincies with PIDCalib
+.PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2017-glacier build-rdx-true-to-tag-2018-glacier
 build-rdx-true-to-tag-2016-glacier:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m glacier 2>&1 | tee $(OUT_DIR)/stdout.log
 
+build-rdx-true-to-tag-2017-glacier:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2017)
+	@mkdir -p $(OUT_DIR)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2017 -m glacier 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-true-to-tag-2018-glacier:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2018)
+	@mkdir -p $(OUT_DIR)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2018 -m glacier 2>&1 | tee $(OUT_DIR)/stdout.log
+
+# e efficiencies with PIDCalib (not accounting for mu_uBDT cut)
+.PHONY: build-rdx-true-to-tag-2016-lxplus build-rdx-true-to-tag-2017-lxplus build-rdx-true-to-tag-2018-lxplus
 build-rdx-true-to-tag-2016-lxplus:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 -m lxplus 2>&1 | tee $(OUT_DIR)/stdout.log
 
+build-rdx-true-to-tag-2017-lxplus:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2017)
+	@mkdir -p $(OUT_DIR)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2017 -m lxplus 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-true-to-tag-2018-lxplus:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_lxplus-2018)
+	@mkdir -p $(OUT_DIR)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(OUT_DIR) -y 2018 -m lxplus 2>&1 | tee $(OUT_DIR)/stdout.log
 
 .PHONY: test-pidcalib2-wrapper-glacier test-pidcalib2-wrapper-lxplus
 test-pidcalib2-wrapper-glacier:
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m glacier $(CTRL_SAMPLE_FLAG)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m glacier
 
 test-pidcalib2-wrapper-lxplus:
-	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m lxplus $(CTRL_SAMPLE_FLAG)
+	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m lxplus
 
-
-.PHONY: build-rdx-true-to-tag-2016-local
+# ghost efficincies and e conditional efficiencies
+.PHONY: build-rdx-true-to-tag-2016-local build-rdx-true-to-tag-2017-local build-rdx-true-to-tag-2018-local
 build-rdx-true-to-tag-2016-local:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
+	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 2>&1 | tee $(OUT_DIR)/stdout.log
 
-.PHONY: build-rdx-merged-2016
-build-rdx-merged-2016:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged-2016)
+build-rdx-true-to-tag-2017-local:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2017)
 	@mkdir -p $(OUT_DIR)
-	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 $(CTRL_SAMPLE_FLAG) 2>&1 | tee $(OUT_DIR)/stdout.log
+	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2017 2>&1 | tee $(OUT_DIR)/stdout.log
 
+build-rdx-true-to-tag-2018-local:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2018)
+	@mkdir -p $(OUT_DIR)
+	./scripts/build_histo_eff.py -c $(YML_FILE) -o $(OUT_DIR) -y 2018 2>&1 | tee $(OUT_DIR)/stdout.log
 
+# Produce bkg constraints needed to calculate K/pi -> mu misid efficiencies
+build-d0-decays: $(BINPATH)/d0BkgDecays
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-d0_decays)
+	@mkdir -p $(OUT_DIR)
+	@touch $(OUT_DIR)/d0_decays.yml
+	$< -o $(OUT_DIR) -c $(YML_FILE) -f d0_decays.yml 2>&1 | tee $(OUT_DIR)/stdout.log
+
+# K/pi -> mu misid ISO+CTRL efficiencies
+build-rdx-misid-mc-corrections-2016: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2016)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2016 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-2017: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2017)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2017 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-2018: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2018)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2018 2>&1 | tee $(OUT_DIR)/stdout.log
+
+# K/pi -> mu misid VMU efficiencies
+build-rdx-misid-mc-corrections-2016-vmu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2016-vmu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2016 --vmu 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-2017-vmu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2017-vmu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2017 --vmu 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-2018-vmu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2018-vmu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2018 --vmu 2>&1 | tee $(OUT_DIR)/stdout.log
+
+# K/pi -> mu misid FAKE_MU efficiencies
+build-rdx-misid-mc-corrections-2016-fake_mu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2016-fake_mu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2016 --fake_mu 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-2017-fake_mu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2017-fake_mu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2017 --fake_mu 2>&1 | tee $(OUT_DIR)/stdout.log
+
+build-rdx-misid-mc-corrections-2018-fake_mu: $(BINPATH)/GetMisIDCorrections
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-2018-fake_mu)
+	@mkdir -p $(OUT_DIR)/figs/params
+	@mkdir -p $(OUT_DIR)/figs/fits
+	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml -y 2018 --fake_mu 2>&1 | tee $(OUT_DIR)/stdout.log
+
+# Merge efficiencies into single file
+.PHONY: build-rdx-merged
+build-rdx-merged:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-merged)
+	@mkdir -p $(OUT_DIR)
+	./scripts/merge_histo.py -c $(YML_FILE) -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
+
+# Produce dif smearing sample
 .PHONY: build-generic-dif-smearing
 build-generic-dif-smearing:
 	$(eval OUT_DIR	:=	$(GENPATH)/generic-$(TIME_STAMP)-dif_smearing)
@@ -111,62 +199,56 @@ build-generic-dif-smearing:
 		./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root \
 		2>&1 | tee $(OUT_DIR)/stdout.log
 
-build-d0-decays: $(BINPATH)/d0BkgDecays
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-d0_decays)
-	@mkdir -p $(OUT_DIR)
-	@touch $(OUT_DIR)/d0_decays.yml
-	$< -o $(OUT_DIR) -c $(YML_FILE) -f d0_decays.yml 2>&1 | tee $(OUT_DIR)/stdout.log
-
-build-rdx-misid-mc-corrections: $(BINPATH)/GetMisIDCorrections
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections)
-	@mkdir -p $(OUT_DIR)/figs/params
-	@mkdir -p $(OUT_DIR)/figs/fits
-	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml 2>&1 | tee $(OUT_DIR)/stdout.log
-
-build-rdx-misid-mc-corrections-vmu: $(BINPATH)/GetMisIDCorrections
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-vmu)
-	@mkdir -p $(OUT_DIR)/figs/params
-	@mkdir -p $(OUT_DIR)/figs/fits
-	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml --vmu true 2>&1 | tee $(OUT_DIR)/stdout.log
-
-build-rdx-misid-mc-corrections-fake_mu: $(BINPATH)/GetMisIDCorrections
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-misid-mc-corrections-fake_mu)
-	@mkdir -p $(OUT_DIR)/figs/params
-	@mkdir -p $(OUT_DIR)/figs/fits
-	$< -o $(OUT_DIR) -c $(YML_FILE) -b ./spec/d0_decays.yml --fake_mu true 2>&1 | tee $(OUT_DIR)/stdout.log
-
 
 # Unfold the misID weights
-.PHONY: build-rdx-tag-2016
-build-rdx-tag-2016:
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag-2016)
+.PHONY: build-rdx-tag
+build-rdx-tag:
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-tag)
 	@mkdir -p $(OUT_DIR)
-	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) -y 2016 2>&1 | tee $(OUT_DIR)/stdout.log
+	./scripts/build_histo_tagged.py -c $(YML_FILE) -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
 
-build-rdx-unfolded-2016: $(BINPATH)/UnfoldMisID
-	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-2016)
+build-rdx-unfolded: $(BINPATH)/UnfoldMisID
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded)
 	@mkdir -p $(OUT_DIR)
-	$< --debug --iteration 5 \
-		--effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU) -y $(TAGGED) -o $(OUT_DIR) \
+	$< --iteration 5 -e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
 		-c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
 
-
-.PHONY: test-unfold
 test-unfold: $(BINPATH)/UnfoldMisID
-	$< -c $(YML_FILE) --dryRun --debug \
-		-y $(TAGGED) --effHisto $(EFFICIENCIES) --effHistoVmu $(EFFICIENCIES_VMU)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-test-unfold)
+	@mkdir -p $(OUT_DIR)
+	$< -c $(YML_FILE) --dryRun --debug -y $(TAGGED) -e $(EFFICIENCIES) -o $(OUT_DIR)  | tee $(OUT_DIR)/stdout.log
 
 
 # Test of application of misID weights
-.PHONY: test-apply-rdx-weights-2016
-test-apply-rdx-weights-2016: \
-	$(BINPATH)/ApplyMisIDWeight \
-	./ntuples/0.9.6-2016_production/Dst_D0-mu_misid/Dst_D0--22_03_01--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST.root \
+test-apply-rdx-weights: test-apply-rdx-weights-2016 test-apply-rdx-weights-2017 test-apply-rdx-weights-2018
+
+test-apply-rdx-weights-2016: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--000-dv.root \
 	$(DIF)
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016)
 	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
 	@mkdir -p $(OUT_DIR)
 	$< --debug -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+
+test-apply-rdx-weights-2017: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision17_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco17_Stripping29r2_90000000_SEMILEPTONIC.DST--000-dv.root \
+	$(DIF)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2017)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
+	@mkdir -p $(OUT_DIR)
+	$< --debug -a -Y 2017 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+
+test-apply-rdx-weights-2018: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision18_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco18_Stripping34_90000000_SEMILEPTONIC.DST--000-dv.root \
+	$(DIF)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2018)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid.root)
+	@mkdir -p $(OUT_DIR)
+	$< --debug -a -Y 2018 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
 		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
 
