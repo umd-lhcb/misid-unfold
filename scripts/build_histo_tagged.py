@@ -75,10 +75,10 @@ if __name__ == "__main__":
         config = safe_load(f)
 
     for year in config["input_ntps"]:
-        print(f"Working on {year} samples")
+        print(f"\nWorking on {year} samples")
         for particle, subconfig in config["input_ntps"][year].items():
             input_files = subconfig["files"]
-            print(f"Working on {particle} using files {input_files}")
+            print(f"\nWorking on {particle} using files {input_files}")
             evaluator = BooleanEvaluator(
                 *ntp_tree(input_files, dir_abs_path=config_dir_path))
 
@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
                 for sp, cut_expr in config["tags"].items():
                     print(
-                        f"    Species {histo_name_gen(sp)} has the following cuts: {cut_expr}"
+                        f"    - {histo_name_gen(sp)} cuts: {cut_expr}"
                     )
                     cut = evaluator.eval(cut_expr)
 
