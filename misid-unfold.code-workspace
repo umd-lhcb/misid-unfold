@@ -97,7 +97,8 @@
             "new": "cpp",
             "unordered_map": "cpp",
             "string": "cpp",
-            "array": "cpp"
+            "array": "cpp",
+            "type_traits": "cpp"
         },
         "files.trimTrailingWhitespace": true,
         "flake8.args": [
