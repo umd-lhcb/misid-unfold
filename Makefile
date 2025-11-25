@@ -30,7 +30,7 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES := ./histos/rdx-25_11_16_13_51-merged/merged.root
+EFFICIENCIES := ./histos/rdx-25_11_25_10_56-merged/merged.root
 UNFOLDED := ./histos/rdx-25_11_16_17_57-unfolded/unfolded.root
 TAGGED := ./histos/rdx-25_11_16_17_27-tag/tagged.root
 DIF    := ./histos/default/generic-24_11_19_11_07-dif_smearing/dif.root
