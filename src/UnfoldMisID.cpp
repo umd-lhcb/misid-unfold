@@ -44,12 +44,13 @@ typedef vector<vector<float>> vFltFlt;
 /////////////////////
 
 vector<double> histoToProb(const TH1D* histo) {
-  vector<double> result{};
-  double         normFac = 0;
+  double normFac = 0;
   for (int idx = 1; idx <= histo->GetNbinsX(); idx++) {
     normFac += histo->GetBinContent(idx);
   }
   // we loop twice. it's stupid but it works
+  vector<double> result{};
+  result.reserve(histo->GetNbinsX());
   for (int idx = 1; idx <= histo->GetNbinsX(); idx++) {
     result.emplace_back(histo->GetBinContent(idx) / normFac);
   }
@@ -166,9 +167,6 @@ auto getHistoInHelper(TFile* ntpYld, TFile* ntpEff) {
   return [=](const string& key, const string& skim, bool debug = false) {
     const bool use_vmu_eff =
         (skim == "vmu") && (key.find("MuTag") != string::npos);
-    if (debug && use_vmu_eff) {
-      cout << "DEBUG Using VMU '*TrueToMuTag' efficiency histograms" << endl;
-    }
     const string histo_name = use_vmu_eff ? key + "_vmu" : key;
     if (!mapHisto->count(histo_name)) {
       TH3D* histo;
@@ -271,8 +269,9 @@ void ensureUnitarity(TH2D* res, vStr ptcls, bool debug = false) {
 template <typename F1, typename F2>
 void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
             const vector<int>& nbins, F1& histoInGetter, F2& histoOutGetter,
-            const string& year, bool debug = false, int numOfIter = 4) {
-  int totSize = ptcls.size();
+            const string& year, map<string, int>& count_empty_tagged,
+            bool debug = false, int numOfIter = 4) {
+  const int totSize = ptcls.size();
 
   // These are used to stored measured yields (a vector) and response matrix (a
   // 2D matrix)
@@ -298,7 +297,7 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
         for (auto& pref : prefix) {
           for (const auto& skim : skims) {
             cout << "\nINFO Unfolding bin " << x << " " << y << " " << z
-                 << " of " << pref << " " << skim << endl;
+                 << " of " << pref << " " << skim << " " << year << endl;
 
             // build yield vector
             for (int idx = 0; idx != totSize; idx++) {
@@ -349,14 +348,33 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
             }
             ensureUnitarity(&histRes, ptcls, debug);
 
-            // perform unfolding to get unfolded ("true") yield
-            RooUnfoldResponse resp(nullptr, &histDim, &histRes);
-            RooUnfoldBayes    unfoldWorker(&resp, &histMea, numOfIter);
-            auto histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
+            TH1D* histUnf = nullptr;
+            if (histMea.Integral() > 0) {
+              // Perform unfolding to get unfolded ("true") yields
+              RooUnfoldResponse resp(nullptr, &histDim, &histRes);
+              RooUnfoldBayes    unfoldWorker(&resp, &histMea, numOfIter);
+              histUnf = static_cast<TH1D*>(unfoldWorker.Hreco());
+            } else {
+              // There were no tagged events, so skip the unfolding and produce
+              // an "unfolded" histogram by hand with equal yields for all tags
+              // to produce a uniform distribution for the prior instead
+              cout << "WARNING Total tagged yield is 0. Assuming uniform "
+                      "distribution."
+                   << endl;
+              const string key = pref + "_" + skim + "_" + year;
+              count_empty_tagged[key]++;
+              const string dummy_name = key + "_" + to_string(x) + "_" +
+                                        to_string(y) + "_" + to_string(z);
+              histUnf = new TH1D(dummy_name.c_str(), dummy_name.c_str(),
+                                 totSize, 0, totSize);
+              for (int idx = 0; idx < totSize; idx++) {
+                histUnf->SetBinContent(idx + 1, 0.2);
+              }
+            }
 
             if (debug) {
               // Print measured and unfolded yields
-              cout << "\nINFO Measured yields vs unfolded vs predicted ("
+              cout << "\nDEBUG Measured yields vs unfolded vs predicted ("
                    << pref << " " << x << " " << y << " " << z << ")" << endl;
               for (int idx = 0; idx != totSize; idx++) {
                 double pred = 0.;
@@ -370,6 +388,22 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
                      << endl;
               }
               cout << endl;
+            } else {
+              cout << "INFO Tagged yields are ";
+              for (int idx = 0; idx < totSize; idx++) {
+                const int tagged = histMea.GetBinContent(idx + 1);
+                cout << tagged << " (" << ptcls[idx] << ")";
+                if (idx < totSize - 1) cout << ", ";
+              }
+              cout << endl;
+
+              cout << "INFO Unfolded yields are " << setprecision(2);
+              for (int idx = 0; idx < totSize; idx++) {
+                const double unfolded = histUnf->GetBinContent(idx + 1);
+                cout << unfolded << " (" << ptcls[idx] << ")";
+                if (idx < totSize - 1) cout << ", ";
+              }
+              cout << setprecision(5) << endl;
             }
 
             // Save unfolded yields
@@ -441,7 +475,8 @@ void unfold(const vStr& prefix, const vStr& ptcls, const vStr& skims,
                 auto wtTagToMuTagElem = probTagToTrue * effTrueToMuTag;
 
                 if (debug)
-                  cout << "  trans. fac. = " << probTagToTrue << " * "
+                  cout << "  trans. fac. = " << nameTagToTrue << " * "
+                       << nameTrueToMuTag << " = " << probTagToTrue << " * "
                        << effTrueToMuTag << " = " << wtTagToMuTagElem << endl;
                 wtTagToMuTag += wtTagToMuTagElem;
                 wtTagToMuTag_singleTrue[idxTrue] = wtTagToMuTagElem;
@@ -588,7 +623,7 @@ void unfoldDryRun(const vStr& prefix, const vStr& ptcls, const vStr& skims,
 
 int main(int argc, char** argv) {
   cxxopts::Options argOpts("UnfoldMisID",
-                           "unfolding efficiency calculator (U).");
+                           "Unfolding efficiency calculator (U).");
 
   // clang-format off
   argOpts.add_options()
@@ -627,22 +662,22 @@ int main(int argc, char** argv) {
   }
 
   // Check info level
-  auto debug = parsedArgs["debug"].as<bool>();
+  const auto debug = parsedArgs["debug"].as<bool>();
   // Get YML file name
   const string ymlFile = parsedArgs["config"].as<string>();
   const string ymlName = fileNameFromPath(ymlFile);
 
   // parse YAML config
-  auto ymlConfig  = YAML::LoadFile(ymlFile);
-  auto ptclTarget = parsedArgs["targetParticle"].as<string>();
-  auto ptclList   = getKeyNames(ymlConfig["tags"]);
-  auto years      = parsedArgs["years"].as<vector<string>>();
+  const auto ymlConfig  = YAML::LoadFile(ymlFile);
+  const auto ptclTarget = parsedArgs["targetParticle"].as<string>();
+  const auto ptclList   = getKeyNames(ymlConfig["tags"]);
+  const auto years      = parsedArgs["years"].as<vector<string>>();
 
-  auto [histoBinSpec, histoBinSize] = getBins(ymlConfig["binning"]);
+  const auto [histoBinSpec, histoBinSize] = getBins(ymlConfig["binning"]);
 
   // Currently, only tagged yields are different between ISO+CTRL skims.
   // For VMU, no skim cuts are applied.
-  auto skims = parsedArgs["skims"].as<vector<string>>();
+  const auto skims = parsedArgs["skims"].as<vector<string>>();
 
   // input ntuples
   auto ntpYld = make_unique<TFile>(parsedArgs["yldHisto"].as<string>().data());
@@ -652,10 +687,13 @@ int main(int argc, char** argv) {
   auto histoInGetter  = getHistoInHelper(ntpYld.get(), ntpEff.get());
   auto histoOutGetter = getHistoOutHelper(&histoOut, histoBinSpec);
 
+  // Keep stats of bins where total tagged yields are too low
+  map<string, int> count_empty_tagged;
+
   for (const auto& year : years) {
     cout << "INFO Starting " << year << endl;
     const string year_prefix = year.substr(2, 2);
-    auto         prefix      = getKeyNames(ymlConfig["input_ntps"][year]);
+    const auto   prefix      = getKeyNames(ymlConfig["input_ntps"][year]);
 
     if (parsedArgs["dryRun"].as<bool>()) {
       // dry run
@@ -665,8 +703,18 @@ int main(int argc, char** argv) {
       // unfold
       auto numOfIter = parsedArgs["iteration"].as<int>();
       unfold(prefix, ptclList, skims, histoBinSize, histoInGetter,
-             histoOutGetter, year_prefix, debug, numOfIter);
+             histoOutGetter, year_prefix, count_empty_tagged, debug, numOfIter);
     }
+  }
+
+  if (!count_empty_tagged.empty()) {
+    cout << "\nWARNING Counting bins where tagged yields are 0" << endl;
+    int total = 0;
+    for (const auto& [name, count] : count_empty_tagged) {
+      cout << " - " << name << ": " << count << endl;
+      total += count;
+    }
+    cout << "Total: " << total << endl;
   }
 
   // save output
