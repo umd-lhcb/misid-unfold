@@ -21,10 +21,10 @@ def parseInput():
         description='Run fit with configuration from yaml file.')
 
     parser.add_argument(
-        'pathRef',
+        'pathNew',
         help='Specify path to the directory containing the new efficiencies.')
     parser.add_argument(
-        'pathNew',
+        'pathRef',
         help='Specify path to the directory containing the old efficiencies.')
 
     return parser.parse_args()
