@@ -3628,6 +3628,26 @@ int main(int argc, char **argv) {
           //   plot_fit_results("sb3_3", "_sb3_3");
           //   plot_fit_results("sb3_4", "_sb3_4");
 
+          // Plot 2D pulls
+          gStyle->SetPalette(kLightTemperature);
+
+          unique_ptr<TH2F> pulls_failed(make_2d_pulls(
+              model_failed, th2_calib_failed.get(), d0_m_var, dm_var));
+          pulls_failed->SetTitle("Failed " + tag + ";" + d0_m_x_dm_label);
+
+          unique_ptr<TH2F> pulls_passed(make_2d_pulls(
+              model_passed, th2_calib_passed.get(), d0_m_var, dm_var));
+          pulls_passed->SetTitle("Passed " + tag + ";" + d0_m_x_dm_label);
+
+          c_double.cd(1);
+          pulls_passed->Draw("COLZ");
+          c_double.cd(2);
+          pulls_failed->Draw("COLZ");
+
+          c_double.SaveAs(fit_dir_path + "/pulls_" + suffix + ".pdf");
+
+          gStyle->SetPalette();  // Return to default pallete
+
           // Save fitted PID efficiency
           if (fake_mu) {
             // For FAKE_MU, we fit calculate the complementary efficiency so
