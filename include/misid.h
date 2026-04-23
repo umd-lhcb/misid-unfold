@@ -75,6 +75,37 @@ constexpr int N_BINS_NTRACKS = sizeof(BINS_NTRACKS) / sizeof(double) - 1;
 // Helper functions //
 //////////////////////
 
+// Check if track is matched to a h -> mu nu decay-in-fight chain.
+bool check_dif(const int &probe_trueid, const int &probe_daughter0_trueid,
+               const int &probe_daughter1_trueid, const int &probe_mc_mom_nd,
+               const string &probe) {
+  // Deduce hadron ID
+  int h_id = 0;
+  if (probe == "k") {
+    h_id = K_ID;
+  } else if (probe == "pi") {
+    h_id = PI_ID;
+  } else {
+    return false;
+  }
+
+  // First case: track matched to hadron
+  // DiF particles will have mu, nu_mu as daughters
+  if (std::abs(probe_trueid) == h_id) {
+    return (std::abs(probe_daughter0_trueid) == MU_ID) &&
+           (std::abs(probe_daughter1_trueid) == NU_MU_ID);
+  }
+
+  // Second case: track matched to muon
+  // Can't check if sister particle is a muon neutrino, so just check if DiF
+  // vertex produced two particles
+  if (std::abs(probe_trueid) == MU_ID) {
+    return probe_mc_mom_nd == 2;
+  }
+
+  return false;
+}
+
 // Comparison function for PDG IDs.
 // Sort by absolute value, and if it's the same sort by sign.
 bool comp_pdg_ids(const int &a, const int &b) {

@@ -761,8 +761,8 @@ int main(int argc, char **argv) {
       print_files(ch_mc);
 
       // Define variable to access input ntuples
-      int dst_id, probe_trueid, probe_daughter0_trueid, ntracks,
-          dst_vtx_ndof, d0_vtx_ndof;
+      int dst_id, d0_id, probe_trueid, probe_daughter0_trueid, ntracks,
+          probe_daughter1_trueid, probe_mc_mom_nd, dst_vtx_ndof, d0_vtx_ndof;
 
       double dst_m, d0_m, probe_p, probe_pz, probe_pt, probe_dllmu, probe_dlle,
           spi_p, spi_pt, tag_p, tag_pz, tag_pt, k_track_chi2ndof,
@@ -780,6 +780,7 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress("dst_ENDVERTEX_CHI2", &dst_vtx_chi2);
       ch_mc.SetBranchAddress("dst_ENDVERTEX_NDOF", &dst_vtx_ndof);
       ch_mc.SetBranchAddress("d0_M", &d0_m);
+      ch_mc.SetBranchAddress("d0_TRUEID", &d0_id);
       ch_mc.SetBranchAddress("d0_ENDVERTEX_CHI2", &d0_vtx_chi2);
       ch_mc.SetBranchAddress("d0_ENDVERTEX_NDOF", &d0_vtx_ndof);
       ch_mc.SetBranchAddress("spi_P", &spi_p);
@@ -798,6 +799,10 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress((probe + "_TRUEID").c_str(), &probe_trueid);
       ch_mc.SetBranchAddress((probe + "_DAUGHTER0_ID").c_str(),
                              &probe_daughter0_trueid);
+      ch_mc.SetBranchAddress((probe + "_DAUGHTER1_ID").c_str(),
+                             &probe_daughter1_trueid);
+      ch_mc.SetBranchAddress((probe + "_MC_MOTHER_ND").c_str(),
+                             &probe_mc_mom_nd);
       ch_mc.SetBranchAddress("k_PX", &k_px);
       ch_mc.SetBranchAddress("k_PY", &k_py);
       ch_mc.SetBranchAddress("pi_PX", &pi_px);
@@ -825,6 +830,7 @@ int main(int argc, char **argv) {
 
         // Offline truth-matching
         if (std::abs(dst_id) != Dst_ID) continue;
+        if (std::abs(d0_id) != D0_ID) continue;
         count_tm++;
 
         // Conditional cuts
@@ -921,8 +927,9 @@ int main(int argc, char **argv) {
         if (in_fit_window) count_mw++;
 
         // Check for decay in flight of probe hadron
-        const bool dif = (std::abs(probe_trueid) == MU_ID) ||
-                         (std::abs(probe_daughter0_trueid) == MU_ID);
+        const bool dif =
+            check_dif(probe_trueid, probe_daughter0_trueid,
+                      probe_daughter1_trueid, probe_mc_mom_nd, probe);
 
         // PID
         bool pid_ok;
@@ -1087,7 +1094,7 @@ int main(int argc, char **argv) {
       print_files(ch_mc);
 
       // Define variable to access input ntuples
-      int dst_id, probe_trueid, ntracks, k_mother_id, k_gd_mother_id,
+      int dst_id, d0_id, probe_trueid, ntracks, k_mother_id, k_gd_mother_id,
           k_gd_gd_mother_id, k_gd_gd_gd_mother_id, pi_mother_id,
           pi_gd_mother_id, pi_gd_gd_mother_id, pi_gd_gd_gd_mother_id,
           dst_vtx_ndof, d0_vtx_ndof;
@@ -1107,6 +1114,7 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress("dst_ENDVERTEX_CHI2", &dst_vtx_chi2);
       ch_mc.SetBranchAddress("dst_ENDVERTEX_NDOF", &dst_vtx_ndof);
       ch_mc.SetBranchAddress("d0_M", &d0_m);
+      ch_mc.SetBranchAddress("d0_TRUEID", &d0_id);
       ch_mc.SetBranchAddress("d0_ENDVERTEX_CHI2", &d0_vtx_chi2);
       ch_mc.SetBranchAddress("d0_ENDVERTEX_NDOF", &d0_vtx_ndof);
       ch_mc.SetBranchAddress("spi_P", &spi_p);
@@ -1158,6 +1166,7 @@ int main(int argc, char **argv) {
 
         // Offline truth-matching
         if (std::abs(dst_id) != Dst_ID) continue;
+        if (std::abs(d0_id) != D0_ID && std::abs(d0_id) != KS_ID) continue;
 
         // For emulated D0 -> (KS->pi0pi0)pi+pi- and D0 -> (KL->X)pi+pi-
         // decays only, veto events where the K or pi candidate is a KS/KL decay
