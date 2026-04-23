@@ -1,3 +1,10 @@
+// Author: Lucas Meyer Garcia
+// License: BSD 2-clause
+//
+// Description: Make plots comparing PID efficiencies. Ideally, should be called
+// from the python wrapper script/compare_effs.py.
+
+#include <cmath>
 #include <iostream>
 #include <string>
 

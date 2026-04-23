@@ -100,7 +100,7 @@ static const string D0_TEST_BR  = "d0_PX";
 //   https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
 RNode defineBranch(RNode df, string particle = "mu",
                    const vPStrStr& rules = MU_BRANCH_DEFS,
-                   const bool& debug = false, int idx = 0) {
+                   const bool& debug = false, unsigned idx = 0) {
   // auto df = init_df.Alias(alias, particle+"_"+raw);
   if (rules.size() == idx) return df;
 
@@ -135,7 +135,7 @@ pair<vPStrStr, vector<string>> genTaggedCutDirective(
   }
 
   // generate the alias for output cut branches
-  for (auto idx = 0; idx != particles.size(); idx++) {
+  for (unsigned idx = 0; idx != particles.size(); idx++) {
     outputBrs.emplace_back(brPrefix + particles[idx]);
     directives.emplace_back(pair{brPrefix + particles[idx], particles[idx]});
   }
@@ -155,7 +155,7 @@ vector<TString> buildHistoWtNames(string                 targetParticle,
     for (auto it = node.begin(); it != node.end(); it++) {
       auto srcPtcl = it->first.as<string>();
       auto name    = srcPtcl + "TagTo" + capitalize(targetParticle) + "Tag_" +
-                  year.substr(2, 2) + "_" + skim;
+                     year.substr(2, 2) + "_" + skim;
       result.emplace_back(name);
       for (auto itTrue = node.begin(); itTrue != node.end(); itTrue++) {
         auto srcPtclSingle = itTrue->first.as<string>();
@@ -183,11 +183,12 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
 
     double prescale = 1.0;
     if (TString(h).Contains("MuTag")) {
-      if (debug)
+      if (debug) {
         cout << "  " << h
              << " is a transfer-factor weight, apply 10x enhance due to "
                 "prescale."
              << endl;
+      }
       prescale = PRE_SCALE_CORRECTION;
     }
 
@@ -216,7 +217,6 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node             node,
   vPStrStr       directives{};
   vector<string> outputBrs{};
   const auto     wtTargetParticle = "MuTag";
-  const auto     wtSmrParticles   = {"k", "pi"};
 
   vector<string> particles{};
   // first find particles
@@ -278,6 +278,7 @@ auto getRandSmrHelper(vector<vector<double>>& smr) {
 
 vector<string> setBrPrefix(const string prefix, const vector<string> vars) {
   vector<string> result{};
+  result.reserve(vars.size());
   for (const auto& v : vars) result.emplace_back(prefix + "_" + v);
   return result;
 }
@@ -359,8 +360,8 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
   // Replace mass hypo and compute fit vars
   df = computeDiFVars(df, randPiGetter, "_smr_pi" + brSuffix, outputBrs,
                       smr_mode);
-  df = computeDiFVars(df, randKGetter, "_smr_k" + brSuffix, outputBrs,
-                      smr_mode);
+  df =
+      computeDiFVars(df, randKGetter, "_smr_k" + brSuffix, outputBrs, smr_mode);
 
   return {df, outputBrs};
 }
@@ -371,7 +372,7 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
 
 int main(int argc, char** argv) {
   cxxopts::Options argOpts("ApplyMisIDWeight",
-                           "unfolding weihgts applyer (A).");
+                           "Unfolding weights applier (A).");
 
   // clang-format off
   argOpts.add_options()
@@ -407,47 +408,45 @@ int main(int argc, char** argv) {
   }
 
   // get options
-  auto   ntpIn       = parsedArgs["input"].as<string>();
-  auto   ntpOut      = parsedArgs["output"].as<string>();
-  auto   ntpAux      = parsedArgs["aux"].as<string>();
-  auto   particle    = parsedArgs["particle"].as<string>();
-  auto   applyAlias  = parsedArgs["alias"].as<bool>();
-  auto   kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
-  auto   piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
-  string smr_mode    = parsedArgs["smrMode"].as<string>();
+  const auto ntpIn       = parsedArgs["input"].as<string>();
+  const auto ntpOut      = parsedArgs["output"].as<string>();
+  const auto ntpAux      = parsedArgs["aux"].as<string>();
+  const auto particle    = parsedArgs["particle"].as<string>();
+  const auto applyAlias  = parsedArgs["alias"].as<bool>();
+  const auto kSmrBrName  = parsedArgs["kSmrBrName"].as<string>();
+  const auto piSmrBrName = parsedArgs["piSmrBrName"].as<string>();
+  const auto smr_mode    = parsedArgs["smrMode"].as<string>();
+  const auto ymlFile     = parsedArgs["config"].as<string>();
+  const auto debug       = parsedArgs["debug"].as<bool>();
 
-  // Get correct smearing in case of misid validation fit
-  auto kSmrBrNameVmu  = kSmrBrName + "_ubdt_veto";
-  auto piSmrBrNameVmu = piSmrBrName + "_ubdt_veto";
+  // Get correct smearing for misid validation sample
+  const string kSmrBrNameVmu  = kSmrBrName + "_ubdt_veto";
+  const string piSmrBrNameVmu = piSmrBrName + "_ubdt_veto";
 
-  // Check get yml file
-  const string ymlFile = parsedArgs["config"].as<string>();
+  // Get yml file
   const string ymlName = fileNameFromPath(ymlFile);
 
-  // Check info level
-  const bool debug = parsedArgs["debug"].as<bool>();
-
   // Dump some information
-  cout << "\nApplyMisIDWeight configuration:" << endl;
+  cout << "\nApplyMisIDWeight configuration:\n";
   cout << boolalpha;
-  cout << "- Input ntuple: " << ntpIn << endl;
-  cout << "- Output ntuple: " << ntpOut << endl;
-  cout << "- Auxiliary ntuple: " << ntpAux << endl;
-  cout << "- YAML file: " << ymlFile << endl;
-  cout << "- Particle: " << particle << endl;
-  cout << "- applyAlias: " << applyAlias << endl;
-  cout << "- K smear branch name: " << kSmrBrName << endl;
-  cout << "- Pi smear branch name: " << piSmrBrName << endl;
-  cout << "- K vmu smear branch name: " << kSmrBrNameVmu << endl;
-  cout << "- Pi vmu smear branch name: " << piSmrBrNameVmu << endl;
+  cout << "- Input ntuple: " << ntpIn << "\n";
+  cout << "- Output ntuple: " << ntpOut << "\n";
+  cout << "- Auxiliary ntuple: " << ntpAux << "\n";
+  cout << "- YAML file: " << ymlFile << "\n";
+  cout << "- Particle: " << particle << "\n";
+  cout << "- applyAlias: " << applyAlias << "\n";
+  cout << "- K smear branch name: " << kSmrBrName << "\n";
+  cout << "- Pi smear branch name: " << piSmrBrName << "\n";
+  cout << "- K vmu smear branch name: " << kSmrBrNameVmu << "\n";
+  cout << "- Pi vmu smear branch name: " << piSmrBrNameVmu << "\n";
   cout << "- Smearing strategy: " << smr_mode << endl;
 
   // parse YAML config
-  auto ymlConfig       = YAML::LoadFile(ymlFile);
-  auto year            = parsedArgs["year"].as<string>();
-  auto ymlDirPath      = absDirPath(parsedArgs["config"].as<string>());
-  auto outputDirective = ymlConfig["weight_brs"];
-  auto filePrefix      = absDirPath(ymlFile);
+  const auto ymlConfig       = YAML::LoadFile(ymlFile);
+  const auto year            = parsedArgs["year"].as<string>();
+  const auto ymlDirPath      = absDirPath(parsedArgs["config"].as<string>());
+  const auto outputDirective = ymlConfig["weight_brs"];
+  const auto filePrefix      = absDirPath(ymlFile);
 
   // snapshot option
   auto writeOpts  = ROOT::RDF::RSnapshotOptions{};
@@ -455,21 +454,27 @@ int main(int argc, char** argv) {
 
   // Produce list of skims. Currently, only tagged yields are different.
   // For vmu, no skim cuts are applied.
+  // TODO recover this from ymlConfig["skims"]
   const vector<TString> skims = {"iso", "1os", "2os", "dd", "vmu", "prot"};
 
   // Generate names of histograms to be imported from unfolded.root
   const vector<TString> histoWtNames =
       buildHistoWtNames(particle, skims, year, ymlConfig["tags"]);
-  cout << "\nEfficiency histograms: " << endl;
-  for (auto h : histoWtNames) cout << "\t" << h << endl;
+  if (debug) {
+    cout << "\nEfficiency histograms:\n";
+    for (const auto& h : histoWtNames) {
+      cout << "\t" << h << "\n";
+    }
+    cout << endl;
+  }
 
   for (auto it = outputDirective.begin(); it != outputDirective.end(); it++) {
     if (debug) cout << "--------" << endl;
-    auto treeName    = it->first.as<string>();
-    auto ntpInTest   = new TFile(ntpIn.data());
-    auto ntpsToClean = vector<TFile*>{ntpInTest};
+    const auto treeName    = it->first.as<string>();
+    const auto ntpInTest   = new TFile(ntpIn.data());
+    auto       ntpsToClean = vector<TFile*>{ntpInTest};
 
-    auto treeTest = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
+    const auto treeTest = dynamic_cast<TTree*>(ntpInTest->Get(treeName.data()));
     if (treeTest == nullptr) {
       cout << treeName << " doesn't exist in " << ntpIn << ". skipping..."
            << endl;
@@ -524,23 +529,24 @@ int main(int argc, char** argv) {
     for (const auto& br : outputBrsTags) outputBrNames.emplace_back(br);
 
     // add all kinds of weights
-    for (auto entry : it->second) {
-      auto histoPrefix    = entry["prefix"].as<string>();
-      auto histoFile      = entry["file"].as<string>();
-      auto weightBrPrefix = entry["name"].as<string>();
-      histoFile           = filePrefix + "/" + histoFile;
+    for (const auto& entry : it->second) {
+      const auto histoPrefix    = entry["prefix"].as<string>();
+      const auto histoFile      = filePrefix + "/" + entry["file"].as<string>();
+      const auto weightBrPrefix = entry["name"].as<string>();
 
-      if (debug)
+      if (debug) {
         cout << "\n\nHandling tree " << treeName << " from histos of prefix "
              << histoPrefix << " from file " << histoFile << endl;
+      }
 
       // add weights required by misID weights
       auto ntpHisto = new TFile(histoFile.data(), "READ");
       ntpsToClean.emplace_back(ntpHisto);
 
-      if (debug)
+      if (debug) {
         cout << "Generate transfer factors/DiF smearing weights for all species"
              << endl;
+      }
       auto [dfHistos, outputBrsHistos, histos] = applyWtFromHistos(
           df, ntpHisto, histoPrefix, weightBrPrefix, histoWtNames, debug);
       for (auto br : outputBrsHistos) outputBrNames.emplace_back(br);

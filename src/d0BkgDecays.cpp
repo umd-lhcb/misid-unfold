@@ -1,3 +1,12 @@
+// Author: Lucas Meyer Garcia
+// License: BSD 2-clause
+//
+// Description: Estimate ratio of selected D0 bkg events to signal in PIDCalib
+// fits using minimum-bias MC. Ideally, should be used only as initial value,
+// but loose constraints are applied to help stabilized fits where this
+// contribution is very small.
+
+#include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -19,7 +28,8 @@
 #include "misid.h"
 #include "utils.h"
 
-using std::cout, std::endl, std::right, std::left, std::setw, std::to_string;
+using std::cout, std::endl, std::right, std::left, std::setw, std::setprecision,
+    std::fixed, std::to_string;
 using std::string, std::unique_ptr, std::unordered_map, std::vector, std::map;
 
 ///////////////
@@ -95,20 +105,18 @@ const std::unordered_map<int, std::string> id_to_string{
 
 int main(int argc, char **argv) {
   cxxopts::Options argOpts(
-      "GetMisIDCorrections",
-      "Calculate misid corrections (CrystalBall core -> core + tail).");
+      "d0BkgDecays",
+      "Estimate amount of D0 bkg relative to signal decays in minimum-bias MC.");
 
   // clang-format off
   argOpts.add_options()
     ("h,help", "Print help")
-    ("d,debug", "Enable debug mode",
-     cxxopts::value<bool>()->default_value("false"))
     ("c,config", "Specify input YAML config file",
      cxxopts::value<string>())
     ("o,output", "Specify output folder",
      cxxopts::value<string>()->default_value("gen/"))
     ("f,file", "Specify output YAML config file",
-     cxxopts::value<string>())
+     cxxopts::value<string>()->default_value("d0_bkg_decays.yml"))
     ;
   // clang-format on
 
@@ -191,7 +199,7 @@ int main(int argc, char **argv) {
       for (int evt = 0; evt < entries_mc; evt++) {
         ch_mc.GetEntry(evt);
 
-        if (abs(dst_trueid) != Dst_ID) {
+        if (std::abs(dst_trueid) != Dst_ID) {
           continue;
         }
 
@@ -203,7 +211,7 @@ int main(int argc, char **argv) {
         }
 
         const double probe_eta =
-            0.5 * log((probe_p + probe_pz) / (probe_p - probe_pz));
+            0.5 * std::log((probe_p + probe_pz) / (probe_p - probe_pz));
         if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
 
         if ((k_track_chi2ndof > 3.) || (pi_track_chi2ndof > 3.) ||
@@ -272,6 +280,8 @@ int main(int argc, char **argv) {
         counts_particles_all{{"passed", counts_particles_passed},
                              {"failed", counts_particles_failed}};
 
+    cout << fixed << setprecision(2);
+
     for (auto &counts_particles_subsample : counts_particles_all) {
       const auto &subsample        = counts_particles_subsample.first;
       const auto &counts_particles = counts_particles_subsample.second;
@@ -280,7 +290,7 @@ int main(int argc, char **argv) {
         const auto &counts   = particle_counts.second;
         cout << "\nINFO Printing " << subsample << " counts for " << particle
              << endl;
-        for (unsigned p_bin = 0; p_bin < counts.size(); p_bin++) {
+        for (unsigned p_bin = 0; p_bin < N_BINS_P; p_bin++) {
           cout << " - p bin " << p_bin << endl;
           const auto &count_decs = counts[p_bin];
           int         bin_total  = 0;
@@ -291,15 +301,11 @@ int main(int argc, char **argv) {
             const auto &decay = dec_count.first;
             const auto &count = dec_count.second;
             cout << " -- " << left << setw(30) << decay << ": " << right
-                 << setw(5) << count << " / " << left << setw(5) << bin_total
-                 << " = " << count * 100. / bin_total << "%" << endl;
+                 << setw(5) << count << " / " << bin_total << " = " << right
+                 << setw(5) << count * 100. / bin_total << "%" << endl;
           }
           const int bin_signal = count_decs.at("D0 -> K- pi+");
           const int bin_bkg    = bin_total - bin_signal;
-
-          // Bkg / Sig
-          cout << " --- bkg / sig: " << bin_bkg << " / " << bin_signal << " = "
-               << bin_bkg * 100. / bin_signal << "%" << endl;
 
           // Bkg / Total
           const double f_bkg = (bin_bkg * 1.0) / bin_total;
@@ -307,9 +313,10 @@ int main(int argc, char **argv) {
               TEfficiency::Wilson(bin_total, bin_bkg, ONE_SIGMA, true) - f_bkg;
           const double f_bkg_unc_lo =
               f_bkg - TEfficiency::Wilson(bin_total, bin_bkg, ONE_SIGMA, false);
-          cout << " --- bkg / total: " << bin_bkg << " / " << bin_total
-               << " = (" << f_bkg * 100. << " + " << f_bkg_unc_hi * 100.
-               << " - " << f_bkg_unc_lo * 100. << ")%" << endl;
+          cout << " -- bkg / total: " << right << setw(6) << bin_bkg << " / "
+               << bin_total << " = (" << setw(5) << f_bkg * 100. << " + "
+               << setw(4) << f_bkg_unc_hi * 100. << " - " << setw(4)
+               << f_bkg_unc_lo * 100. << ")%" << endl;
 
           // Sig / Total
           const double f_sig = (bin_signal * 1.0) / bin_total;
@@ -319,10 +326,10 @@ int main(int argc, char **argv) {
           const double f_sig_unc_lo =
               f_sig -
               TEfficiency::Wilson(bin_total, bin_signal, ONE_SIGMA, false);
-          cout << " --- sig / total: " << bin_signal << " / " << bin_total
-               << " = (" << f_sig * 100. << " + " << f_sig_unc_hi * 100.
-               << " - " << f_sig_unc_lo * 100. << ")% (" << bin_signal << ", "
-               << bin_total << ")\n"
+          cout << " -- sig / total: " << right << setw(6) << bin_signal << " / "
+               << bin_total << " = (" << setw(5) << f_sig * 100. << " + "
+               << setw(4) << f_sig_unc_hi * 100. << " - " << setw(4)
+               << f_sig_unc_lo * 100. << ")%\n"
                << endl;
 
           ymlContent[sample][particle][subsample][p_bin]["signal"] = bin_signal;

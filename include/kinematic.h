@@ -1,21 +1,19 @@
-// Author: Yipeng Sun, Svende Braun
+// Author: Yipeng Sun, Svende Braun, Lucas Meyer Garcia
 // License: BSD 2-clause
 // Last Change: Tue Sep 20, 2022 at 03:26 AM -0400
 
 #pragma once
 
+#include <cmath>
+#include <string>
 #include <vector>
 
 #include <Math/Vector3D.h>
 #include <Math/Vector4D.h>
 #include <Math/VectorUtil.h>
-#include <TMath.h>
-#include <TROOT.h>
 
-using std::vector;
+using std::string, std::vector;
 
-using ROOT::Math::LorentzVector;
-using ROOT::Math::PtEtaPhiMVector;
 using ROOT::Math::PxPyPzEVector;
 using ROOT::Math::PxPyPzMVector;
 using ROOT::Math::XYZVector;
@@ -26,7 +24,7 @@ using ROOT::Math::XYZVector;
 
 PxPyPzEVector rebuildMu4Mom(const PxPyPzEVector&  v4Mu,
                             const vector<double>& smrFac,
-                            TString               mode = "PThetaPhi") {
+                            const string&         mode = "PThetaPhi") {
   if (mode == "PThetaPhi") {
     // Get variations
     const double& rp     = smrFac[3];
@@ -34,15 +32,15 @@ PxPyPzEVector rebuildMu4Mom(const PxPyPzEVector&  v4Mu,
     const double& dphi   = smrFac[5];
     // Compute smeared vector
     double p2_old = v4Mu.P2();
-    double p      = sqrt(p2_old) * rp;
+    double p      = std::sqrt(p2_old) * rp;
     double theta  = v4Mu.Theta() + dtheta;
     double phi    = v4Mu.Phi() + dphi;
-    double pt     = p * sin(theta);
-    double px     = pt * cos(phi);
-    double py     = pt * sin(phi);
-    double pz     = p * cos(theta);
+    double pt     = p * std::sin(theta);
+    double px     = pt * std::cos(phi);
+    double py     = pt * std::sin(phi);
+    double pz     = p * std::cos(theta);
     double e_old  = v4Mu.E();
-    double e      = sqrt(e_old * e_old - p2_old + p * p);
+    double e      = std::sqrt(e_old * e_old - p2_old + p * p);
     return PxPyPzEVector(px, py, pz, e);
   } else if (mode == "PxPyPz") {
     // Get variations
@@ -87,7 +85,7 @@ PxPyPzEVector estB4Mom(const PxPyPzEVector& v4BReco,
 
   double pBMag = (mBRef * pzB) / (mB * cosZ);
   return PxPyPzEVector(pBMag * cosX, pBMag * cosY, pBMag * cosZ,
-                       TMath::Sqrt(pBMag * pBMag + mBRef * mBRef));
+                       std::sqrt(pBMag * pBMag + mBRef * mBRef));
 }
 
 // all in GeV(^2)!

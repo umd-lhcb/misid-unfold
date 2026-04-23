@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -14,7 +15,7 @@
 #include "TObjArray.h"
 #include "TObject.h"
 #include "TString.h"
-#include <TTree.h>
+#include "TTree.h"
 
 #include "RooDataSet.h"
 #include "RooRealVar.h"
@@ -45,12 +46,12 @@ string absDirPath(string pathRaw) {
 
 string fileNameFromPath(const string& path) {
   const int first = path.find_last_of("/\\");
-  const int last = path.find_last_of(".");
-  return path.substr(first+1, last-first-1);
+  const int last  = path.find_last_of(".");
+  return path.substr(first + 1, last - first - 1);
 }
 
 // Convert an integer number of seconds to the format Xh Ym Zs
-TString format_time(const int &duration) {
+TString format_time(const int& duration) {
   const double d = duration / 3600.;
 
   const int h = d;
@@ -77,20 +78,20 @@ bool branchExists(TTree* tree, string brName) {
 }
 
 // Print list of files added to <ch>
-void print_files(const TChain &ch) {
-  TObjArray *fileElements = ch.GetListOfFiles();
-  for (TObject *op : *fileElements) {
-    auto chainElement = static_cast<TChainElement *>(op);
+void print_files(const TChain& ch) {
+  TObjArray* fileElements = ch.GetListOfFiles();
+  for (TObject* op : *fileElements) {
+    auto chainElement = static_cast<TChainElement*>(op);
     cout << "  - " << chainElement->GetTitle() << endl;
   }
 }
 
 // Check if <val> is inside <var>'s default range
-bool in_var_range(const RooRealVar &var, const double &val) {
+bool in_var_range(const RooRealVar& var, const double& val) {
   return (val <= var.getMax()) && (val >= var.getMin());
 }
 
 // Check if <val> is between <down> and <up>
-bool in_range(const double &down, const double &val, const double &up) {
+bool in_range(const double& down, const double& val, const double& up) {
   return (val <= up) && (val >= down);
 }

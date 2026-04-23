@@ -4,6 +4,7 @@
 // Description: Calculate misid efficiencies for kaons and pions
 
 #include <chrono>
+#include <cmath>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -13,7 +14,6 @@
 #include <Math/Vector4D.h>
 #include "TCanvas.h"
 #include "TChain.h"
-#include "TColor.h"
 #include "TEfficiency.h"
 #include "TFile.h"
 #include "TH1.h"
@@ -24,6 +24,7 @@
 #include "TString.h"
 #include "TSystem.h"
 
+#include "RooAbsReal.h"
 #include "RooAddPdf.h"
 #include "RooAddition.h"
 #include "RooArgList.h"
@@ -53,7 +54,9 @@
 using namespace RooFit;
 using namespace std::chrono;
 
-using std::cout, std::endl;
+using ROOT::Math::PxPyPzMVector;
+using std::cout, std::endl, std::right, std::left, std::setw, std::fixed,
+    std::setprecision;
 using std::string, std::unique_ptr, std::unordered_map, std::vector, std::array,
     std::pair;
 
@@ -77,8 +80,8 @@ constexpr array<double, 4> gen_uncs_pipipi0_dalitz = {0.00040, 0.00040, 0.00038,
 
 constexpr double gen_eff_pipipi0_dalitz =
     weighted_average(gen_effs_pipipi0_dalitz, gen_uncs_pipipi0_dalitz);
-constexpr double gen_eff_pipipi0_phsp =
-    gen_eff_pipipi0_dalitz;  // Efficiencies not available in STATS09 table
+// constexpr double gen_eff_pipipi0_phsp =
+//     gen_eff_pipipi0_dalitz;  // Efficiencies not available in STATS09 table
 
 // D0 -> pi- mu+ nu
 constexpr array<double, 5> gen_effs_pimunu = {0.21296, 0.21242, 0.21262,
@@ -136,13 +139,13 @@ constexpr int N_disk_kpi =
     15462222 + 15903204 + 15001155 + 15044631 + 15045803 + 15017328;
 
 // D0 bkg
-constexpr int N_disk_pipipi0_phsp =
-    1756054 + 1751894 + 1752298 + 1737653 + 502883 + 504796;
+// constexpr int N_disk_pipipi0_phsp =
+//     1756054 + 1751894 + 1752298 + 1737653 + 502883 + 504796;
 constexpr int N_disk_pipipi0_dalitz =
     1995881 + 2000074 + 2080042 + 2000189 + 1008307 + 1003547;
 constexpr int N_disk_pimunu = 1776455 + 1758546 + 1750705 + 1888217;
 constexpr int N_disk_kmunu  = 1751390 + 1757357 + 1750989 + 1740356 + 2023764 +
-                             2005513 + 1047769 + 1035712;
+                              2005513 + 1047769 + 1035712;
 constexpr int N_disk_pipi =
     1008347 + 1011491 + 2028005 + 2000032 + 2002621 + 2006539;
 constexpr int N_disk_pienu  = 1756658 + 1751546 + 1750623 + 1979092;
@@ -155,8 +158,6 @@ constexpr int N_disk_klpipi = N_disk_kspipi;
 ////////////////////////////////
 
 constexpr double N_sim_kpi = N_disk_kpi / gen_eff_kpi;
-constexpr double N_sim_pipipi0_phsp =
-    N_disk_pipipi0_phsp / gen_eff_pipipi0_phsp;
 constexpr double N_sim_pipipi0_dalitz =
     N_disk_pipipi0_dalitz / gen_eff_pipipi0_dalitz;
 constexpr double N_sim_pimunu = N_disk_pimunu / gen_eff_pimunu;
@@ -170,9 +171,9 @@ constexpr double N_sim_klpipi = N_sim_kspipi;
 // as a klpipi sample as long as we ignore events in which one of the tracks was
 // produced by a Ks decay product.
 
-////////////////////////////////
-// Number of simulated events //
-////////////////////////////////
+////////////////////////////////////
+// Branching fractions (PDG 2025) //
+////////////////////////////////////
 
 constexpr double BF_D0_kpi     = 0.03945;
 constexpr double BF_D0_pipipi0 = 0.0149;
@@ -191,8 +192,6 @@ constexpr double BF_ks_pipi    = 0.6920;
 /////////////
 
 // Normalize w.r.t. number of simulated pipipi0 DALITZ events
-constexpr double w_pipipi0_phsp = (N_sim_pipipi0_dalitz / BF_D0_pipipi0) /
-                                  (N_sim_pipipi0_phsp / BF_D0_pipipi0);
 constexpr double w_pipipi0_dalitz = (N_sim_pipipi0_dalitz / BF_D0_pipipi0) /
                                     (N_sim_pipipi0_dalitz / BF_D0_pipipi0);
 constexpr double w_pimunu =
@@ -205,22 +204,21 @@ constexpr double w_pienu =
     (N_sim_pipipi0_dalitz / BF_D0_pipipi0) / (N_sim_pienu / BF_D0_pienu);
 constexpr double w_kenu =
     (N_sim_pipipi0_dalitz / BF_D0_pipipi0) / (N_sim_kenu / BF_D0_kenu);
-constexpr double w_kspipi_pipi = (N_sim_pipipi0_dalitz / BF_D0_pipipi0) /
-                                 (N_sim_kspipi / (BF_D0_kspipi * BF_ks_pipi));
+constexpr double w_kspipi_pipi   = (N_sim_pipipi0_dalitz / BF_D0_pipipi0) /
+                                   (N_sim_kspipi / (BF_D0_kspipi * BF_ks_pipi));
 constexpr double w_kspipi_pi0pi0 = w_kspipi_pipi * (BF_ks_pi0pi0 / BF_ks_pipi);
 constexpr double w_klpipi =
     (N_sim_pipipi0_dalitz / BF_D0_pipipi0) / (N_sim_kspipi / BF_D0_klpipi);
 
-const unordered_map<string, double> w_d0_decays{
-    {"pipipi0", w_pipipi0_dalitz},
-    {"pimunu", w_pimunu},
-    {"kmunu", w_kmunu},
-    {"pipi", w_pipi},
-    {"pienu", w_pienu},
-    {"kenu", w_kenu},
-    {"kspipi_pipi", w_kspipi_pipi},
-    {"kspipi_pi0pi0", w_kspipi_pi0pi0},
-    {"klpipi", w_kspipi_pipi}};
+const map<string, double> w_d0_decays{{"pipipi0", w_pipipi0_dalitz},
+                                      {"pimunu", w_pimunu},
+                                      {"kmunu", w_kmunu},
+                                      {"pipi", w_pipi},
+                                      {"pienu", w_pienu},
+                                      {"kenu", w_kenu},
+                                      {"kspipi_pipi", w_kspipi_pipi},
+                                      {"kspipi_pi0pi0", w_kspipi_pi0pi0},
+                                      {"klpipi", w_kspipi_pipi}};
 
 ///////////////////
 // Color palette //
@@ -309,11 +307,12 @@ int main(int argc, char **argv) {
     cout << "WARNING Dry run. Fits will not be performed." << endl;
   }
 
-  if (use_minos) cout << "INFO Using MINOS in calib fits" << endl;
+  if (use_minos) {
+    cout << "INFO Enabling MINOS." << endl;
+  }
 
   if (float_dif) {
-    cout << "INFO Floating amount of ratio of DiF events in signal PDFs"
-         << endl;
+    cout << "INFO Floating ratio of DiF events in signal PDFs." << endl;
   }
 
   RooFit::MsgLevel msg_level = debug ? RooFit::INFO : RooFit::PROGRESS;
@@ -323,14 +322,17 @@ int main(int argc, char **argv) {
   constexpr int max_fix_reattempts = 10;
 
   // Parse YAML config
+  cout << "INFO Loading " << ymlFile << endl;
   const auto ymlConfig = YAML::LoadFile(ymlFile)["misid_corrections"];
 
   // Open YAML with D0 bkg constraints
+  cout << "INFO Loading " << d0BkgFile << endl;
   const auto ymlBkg = YAML::LoadFile(d0BkgFile);
 
   // Define histogram to easily determine kinematical bins
-  TH3D histo_binning("histo_binning", ";p;#eta;nTracks", N_BINS_P, BINS_P,
-                     N_BINS_ETA, BINS_ETA, N_BINS_NTRACKS, BINS_NTRACKS);
+  TH3D histo_binning("histo_binning", ";#font[12]{p};#eta;nTracks", N_BINS_P,
+                     BINS_P, N_BINS_ETA, BINS_ETA, N_BINS_NTRACKS,
+                     BINS_NTRACKS);
 
   // Define counters for mass window efficiencies and initialize all to 0
   int count_in_mw_passed_dif[3][N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] = {
@@ -380,23 +382,23 @@ int main(int argc, char **argv) {
 
   constexpr double r = static_cast<double>(nbins_d0_bkg) / extra_bins_d0_bkg;
 
-  // Calculate histograsm ranges with additional bins
+  // Calculate histogram ranges with additional bins
   // Limits are the same for all samples
   constexpr double extended_d0_m_max = D0_M_max + (D0_M_max - D0_M_min) / r;
   constexpr double extended_d0_m_min = D0_M_min - (D0_M_max - D0_M_min) / r;
   constexpr double extended_dm_max   = DM_max + (DM_max - DM_min) / r;
   constexpr double extended_dm_min   = DM_min - (DM_max - DM_min) / r;
 
-  // Calculate number of bins for RooKeysPdf. The ideai is to have ~2k bins in
+  // Calculate number of bins for RooKeysPdf. The ideal is to have ~2k bins in
   // the fit range, scale the count porperly to account for the additional
   // range.
   constexpr int n_bins_keys =
       (2000 * (nbins_d0_bkg + 2 * extra_bins_d0_bkg)) / nbins_d0_bkg;
 
   // Observables
-  RooRealVar d0_m_var("d0_m_var", "d0_m_var", extended_d0_m_min,
+  RooRealVar d0_m_var("d0_m_var", d0_m_label, extended_d0_m_min,
                       extended_d0_m_max, "GeV");
-  RooRealVar dm_var("dm_var", "dm_var", extended_dm_min, extended_dm_max,
+  RooRealVar dm_var("dm_var", dm_label, extended_dm_min, extended_dm_max,
                     "GeV");
 
   d0_m_var.setRange("data", D0_M_min, D0_M_max);
@@ -510,7 +512,7 @@ int main(int argc, char **argv) {
       RooArgList(n_inmw_failed_dif, n_inmw_failed_nondif,
                  nondif_yield_add_passed));
 
-  // Built heuristic constraint for non-dif scale
+  // Build constraint for non-dif scaling
   RooBifurGauss scale_nondif_constrain(
       "scale_nondif_constrain", "scale_nondif_constrain", scale_nondif_calib,
       RooConst(1.0), RooConst(0.1), RooConst(5. / 3.));
@@ -601,7 +603,7 @@ int main(int argc, char **argv) {
       "f_sig_failed_constrain", "f_sig_failed_constrain", f_sig_failed,
       f_sig_failed_mean, f_sig_failed_unc_lo, f_sig_failed_unc_hi);
 
-  // PID efficiency
+  // Raw PID efficiency (no mass-window correction)
   RooFormulaVar eff("eff", "eff", "x[0] / (x[0] + x[1])",
                     RooArgList(n_sig_passed, n_sig_failed));
 
@@ -617,6 +619,7 @@ int main(int argc, char **argv) {
       RooArgList(n_inmw_failed_dif, n_inmw_failed_nondif, n_total_failed_dif,
                  n_total_failed_nondif, nondif_yield_add_passed));
 
+  // PID efficiency corrected by mass-window efficiencies
   RooFormulaVar eff_corrected("eff_corrected", "eff_corrected",
                               "(x[0]/x[1]) / ((x[0]/x[1]) + ((1-x[0])/x[2]))",
                               RooArgList(eff, eff_mw_passed, eff_mw_failed));
@@ -648,8 +651,6 @@ int main(int argc, char **argv) {
   // RooArgSet with fit observables and weight (d0_m_var, dm_var, w_d0_bkg)
   RooArgSet fit_vars_w(d0_m_var, dm_var, w_d0_bkg);
 
-  RooArgSet argset_minos(eff, scale_nondif_calib);
-
   // Monitor how much f_sig deviates from constraint
   RooRealVar f_sig_passed_pull("f_sig_passed_pull", "f_sig_passed_pull", 0.,
                                -6., 6., "");
@@ -660,7 +661,8 @@ int main(int argc, char **argv) {
       c_comb_spi_failed, c_comb_spi_passed, c_comb_all_failed,
       c_comb_all_passed, k_comb_all_failed, k_comb_all_passed, f_phys_passed,
       f_phys_failed, f_sig_passed, f_sig_failed, f_spi_passed, f_spi_failed,
-      scale_nondif_calib, f_sig_passed_pull, f_sig_failed_pull);
+      scale_nondif_calib, f_sig_passed_pull, f_sig_failed_pull, d0_m_shift,
+      dm_shift, d0_m_scale, dm_scale);
 
   // Check proportions in mis-reconstructed D0 bkg
   unordered_map<string, vector<unordered_map<string, int>>>
@@ -679,8 +681,8 @@ int main(int argc, char **argv) {
     // With the dif and non-dif events separated, there is only a small
     // difference in the D0 mass shape within each population for different
     // multiplicity bins. Therefore, for the dif events (which have lower
-    // stats), the multipliciply bins are combined. For the non-dif population,
-    // stats are much higher and merging is not benefitial. In fact, due to the
+    // stats), the multiplicity bins are combined. For the non-dif population,
+    // stats are much higher and merging is not beneficial. In fact, due to the
     // higher precision, the difference actually becomes noticeable (although
     // small).
     RooDataSet *datasets_mc_passed_dif[N_BINS_ETA][N_BINS_P] = {{nullptr}};
@@ -726,7 +728,7 @@ int main(int argc, char **argv) {
              << endl;
         ch_mc.Add(mc_path.c_str());
       }
-      // Alex's sample yeilds +10M events out of 60M
+      // Alex's sample yields +10M events out of 60M
       // (+ 16%)
       cout << "INFO Opened MC files:" << endl;
       print_files(ch_mc);
@@ -791,6 +793,12 @@ int main(int argc, char **argv) {
 
         // Conditional cuts
         if (!probe_hasmuon) continue;
+
+        // Included for completeness; Cut already applied at reconstruction
+        if ((k_ghostprob > 0.4) || (pi_ghostprob > 0.4) ||
+            (spi_ghostprob > 0.4))
+          continue;
+
         count_cond++;
 
         // Calib sample cuts
@@ -814,29 +822,27 @@ int main(int argc, char **argv) {
           pi_pz = probe_pz;
         }
 
-        ROOT::Math::PxPyPzMVector p_k(k_px * 0.001, k_py * 0.001, k_pz * 0.001,
-                                      K_M);
-        ROOT::Math::PxPyPzMVector p_pi(pi_px * 0.001, pi_py * 0.001,
-                                       pi_pz * 0.001, PI_M);
+        const PxPyPzMVector p_k(k_px, k_py, k_pz, K_M * 1000.);
+        const PxPyPzMVector p_pi(pi_px, pi_py, pi_pz, PI_M * 1000.);
 
-        if ((std::max(probe_pt, tag_pt) < 1000.) || ((p_k + p_pi).Pt() < 1.5))
+        if ((std::max(probe_pt, tag_pt) < 1000.) || ((p_k + p_pi).Pt() < 1500.))
           continue;
+
+        const PxPyPzMVector p_k_wm(k_px, k_py, k_pz, PI_M * 1000.);
+        const PxPyPzMVector p_pi_wm(pi_px, pi_py, pi_pz, K_M * 1000.);
 
         // Veto wrong-mass hypotheses
         // pi pi
-        p_k.SetM(PI_M);
-        p_pi.SetM(PI_M);
-        if (std::abs((p_k + p_pi).M() - D0_M) < 0.025) continue;
+        const double wm_pipi = (p_k_wm + p_pi).M();
+        if (std::abs(wm_pipi - D0_M * 1000.) < 25.) continue;
 
         // pi K (wrong sign)
-        p_k.SetM(PI_M);
-        p_pi.SetM(K_M);
-        if (std::abs((p_k + p_pi).M() - D0_M) < 0.025) continue;
+        const double wm_pik = (p_k_wm + p_pi_wm).M();
+        if (std::abs(wm_pik - D0_M * 1000.) < 25.) continue;
 
         // K K
-        p_k.SetM(K_M);
-        p_pi.SetM(K_M);
-        if (std::abs((p_k + p_pi).M() - D0_M) < 0.025) continue;
+        const double wm_kk = (p_k + p_pi_wm).M();
+        if (std::abs(wm_kk - D0_M * 1000.) < 25.) continue;
 
         count_calib_sel++;
 
@@ -844,13 +850,13 @@ int main(int argc, char **argv) {
         // https://gitlab.cern.ch/lhcb-datapkg/WG/PIDCalib/-/blob/master/scriptsR2/makeTuples_pp_2016_reprocessing.py#L71
         // and https://mattermost.web.cern.ch/lhcb/pl/893yre484jggigooti5u3gqb8w
 
-        // Not applying MuonUnbiased and GHOSTPROB conditional cuts in MC since
+        // Not applying MuonUnbiased conditional cut in MC since
         // some kinematical bins have very low statistics
 
         if (probe_p < 3000. || probe_p >= 100000. || ntracks >= 600) continue;
 
         const double probe_eta =
-            0.5 * log((probe_p + probe_pz) / (probe_p - probe_pz));
+            0.5 * std::log((probe_p + probe_pz) / (probe_p - probe_pz));
         if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
         count_range++;
 
@@ -1108,27 +1114,33 @@ int main(int argc, char **argv) {
         // Offline truth-matching
         if (std::abs(dst_id) != Dst_ID) continue;
 
-        // For emulated D0 -> (ks->pi0pi0)pi+pi- and D0 -> (kl->X)pi+pi-
-        // decays only, veto events where K or pi candidates are Ks decay
-        // products.
+        // For emulated D0 -> (KS->pi0pi0)pi+pi- and D0 -> (KL->X)pi+pi-
+        // decays only, veto events where the K or pi candidate is a KS/KL decay
+        // product.
         // We certainty don't need to check four generations, but why not
         // ¯\_(ツ)_/¯
-        const bool from_ks = veto_ks_daughters
-                                 ? (abs(k_mother_id) == KS_ID) ||
-                                       (abs(pi_mother_id) == KS_ID) ||
-                                       (abs(k_gd_mother_id) == KS_ID) ||
-                                       (abs(pi_gd_mother_id) == KS_ID) ||
-                                       (abs(k_gd_gd_mother_id) == KS_ID) ||
-                                       (abs(pi_gd_gd_mother_id) == KS_ID) ||
-                                       (abs(k_gd_gd_gd_mother_id) == KS_ID) ||
-                                       (abs(pi_gd_gd_gd_mother_id) == KS_ID)
-                                 : false;
+        const bool from_ks =
+            veto_ks_daughters ? (std::abs(k_mother_id) == KS_ID) ||
+                                    (std::abs(pi_mother_id) == KS_ID) ||
+                                    (std::abs(k_gd_mother_id) == KS_ID) ||
+                                    (std::abs(pi_gd_mother_id) == KS_ID) ||
+                                    (std::abs(k_gd_gd_mother_id) == KS_ID) ||
+                                    (std::abs(pi_gd_gd_mother_id) == KS_ID) ||
+                                    (std::abs(k_gd_gd_gd_mother_id) == KS_ID) ||
+                                    (std::abs(pi_gd_gd_gd_mother_id) == KS_ID)
+                              : false;
 
         if (from_ks) continue;
         count_tm++;
 
         // Conditional cuts
         if (!probe_hasmuon) continue;
+
+        // Included for completeness; Cut already applied at reconstruction
+        if ((k_ghostprob > 0.4) || (pi_ghostprob > 0.4) ||
+            (spi_ghostprob > 0.4))
+          continue;
+
         count_cond++;
 
         // Calib sample cuts
@@ -1152,10 +1164,8 @@ int main(int argc, char **argv) {
           pi_pz = probe_pz;
         }
 
-        ROOT::Math::PxPyPzMVector p_k(k_px * 0.001, k_py * 0.001, k_pz * 0.001,
-                                      K_M);
-        ROOT::Math::PxPyPzMVector p_pi(pi_px * 0.001, pi_py * 0.001,
-                                       pi_pz * 0.001, PI_M);
+        PxPyPzMVector p_k(k_px * 0.001, k_py * 0.001, k_pz * 0.001, K_M);
+        PxPyPzMVector p_pi(pi_px * 0.001, pi_py * 0.001, pi_pz * 0.001, PI_M);
 
         if ((std::max(probe_pt, tag_pt) < 1000.) || ((p_k + p_pi).Pt() < 1.5))
           continue;
@@ -1184,13 +1194,13 @@ int main(int argc, char **argv) {
         // and
         // https://mattermost.web.cern.ch/lhcb/pl/893yre484jggigooti5u3gqb8w
 
-        // Not applying MuonUnbiased and GHOSTPROB conditional cuts in MC
+        // Not applying MuonUnbiased conditional cut in MC
         // since some kinematical bins have very low statistics
 
         if (probe_p < 3000. || probe_p >= 100000. || ntracks >= 600) continue;
 
         const double probe_eta =
-            0.5 * log((probe_p + probe_pz) / (probe_p - probe_pz));
+            0.5 * std::log((probe_p + probe_pz) / (probe_p - probe_pz));
         if (probe_eta < 1.7 || probe_eta >= 5.0) continue;
         count_range++;
 
@@ -1370,7 +1380,7 @@ int main(int argc, char **argv) {
           count_tis++;
 
           // Conditional cuts
-          if (!probe_hasmuon || probe_ghostprob > 0.5) continue;
+          if (!probe_hasmuon || probe_ghostprob > 0.4) continue;
           count_cond++;
 
           // Kinematical range cuts
@@ -1451,15 +1461,17 @@ int main(int argc, char **argv) {
 
     TH3D fit_status_calib(histo_binning);
     fit_status_calib.SetName("fit_status_calib_" + suffix);
+    fit_status_calib.SetTitle("Fit status");
     fit_status_calib.SetMinimum(-0.1);
     fit_status_calib.SetMaximum(12.);
 
     TH3D fit_cov_qual_calib(histo_binning);
     fit_cov_qual_calib.SetName("fit_cov_qual_calib_" + suffix);
+    fit_cov_qual_calib.SetTitle("Cov matrix quality");
     fit_cov_qual_calib.SetMinimum(-0.1);
     fit_cov_qual_calib.SetMaximum(6.);
 
-    TH1D calib_retries("calib_retries", "calib fit #retries;#retries;;",
+    TH1D calib_retries("calib_retries", "Fit retries;#retries;;",
                        max_fix_reattempts + 1, 0., max_fix_reattempts + 1.);
 
     ofile.cd();
@@ -1471,6 +1483,7 @@ int main(int argc, char **argv) {
     TH3D histo_pid(histo_binning);
     histo_pid.SetName("eff");
 
+    // Same for uncorrected efficiency
     TH3D histo_pid_raw(histo_binning);
     histo_pid_raw.SetName("eff_raw");
 
@@ -1538,6 +1551,11 @@ int main(int argc, char **argv) {
               dataset_calib_failed->createHistogram(
                   d0_m_var, dm_var, 60, 60, "", "th2_calib_failed_" + suffix));
 
+          th2_calib_passed->SetTitle(";" + d0_m_x_dm_label);
+          th2_calib_passed->SetStats(false);
+          th2_calib_failed->SetTitle(";" + d0_m_x_dm_label);
+          th2_calib_failed->SetStats(false);
+
           c_single.cd();
           th2_calib_passed->Draw("LEGO2Z 0");
           c_single.SaveAs(fit_dir_path + "/th2_" + suffix + "_passed.pdf");
@@ -1592,9 +1610,10 @@ int main(int argc, char **argv) {
           // PDF from merged dataset is compared to separate distribution
           // in individual samples
           unique_ptr<RooPlot> frame_d0_passed_nondif(
-              d0_m_var.frame(Title("D0 M Passed " + tag)));
+              d0_m_var.frame(Title("Passed non-DiF " + tag)));
           unique_ptr<RooPlot> frame_d0_failed_nondif(
-              d0_m_var.frame(Title("D0 M Failed " + tag)));
+              d0_m_var.frame(Title("Failed non-DiF " + tag)));
+
           ds_mc_passed_nondif->plotOn(frame_d0_passed_nondif.get(),
                                       Binning("bins_histos_d0_m_passed"));
           ds_mc_failed_nondif->plotOn(frame_d0_failed_nondif.get(),
@@ -1621,9 +1640,9 @@ int main(int argc, char **argv) {
           frame_d0_failed_nondif->Draw();
           c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_nondif.pdf");
 
-          ///////////////////////
-          // DiF d0_m template //
-          ///////////////////////
+          ////////////////////////
+          // DiF d0_m templates //
+          ////////////////////////
 
           cout << "\nINFO Building D0 MC template with dif " << suffix << endl;
 
@@ -2082,9 +2101,10 @@ int main(int argc, char **argv) {
 
           // Plot PDF over extended range
           unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed_ext(
-              d0_m_var.frame(Title("d0_m Passed " + tag)));
+              d0_m_var.frame(Title("Passed " + tag)));
           unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed_ext(
-              d0_m_var.frame(Title("d0_m Failed " + tag)));
+              d0_m_var.frame(Title("Failed " + tag)));
+
           ds_d0m_d0_bkg_passed_sum.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
                                           Binning(bins_histos_d0_m_d0_bkg));
           ds_d0m_d0_bkg_failed_sum.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
@@ -2114,9 +2134,10 @@ int main(int argc, char **argv) {
           dm_var.setRange(dm_range_min, dm_range_max);
 
           unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed(
-              d0_m_var.frame(Title("d0_m Passed " + tag), Range("fitRange")));
+              d0_m_var.frame(Title("Passed " + tag), Range("fitRange")));
           unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed(
-              d0_m_var.frame(Title("d0_m Failed " + tag), Range("fitRange")));
+              d0_m_var.frame(Title("Failed " + tag), Range("fitRange")));
+
           ds_d0m_d0_bkg_passed_sum.plotOn(frame_d0_mc_d0_bkg_passed.get(),
                                           Binning(bins_histos_d0_m_d0_bkg),
                                           CutRange("fitRange"));
@@ -2279,11 +2300,11 @@ int main(int argc, char **argv) {
                            RooKeysPdf::NoMirror, 1.6, true, n_bins_keys));
 
             unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed(
-                dm_var.frame(Title("dm Passed " + tag)));
+                dm_var.frame(Title("Passed " + tag)));
             unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed(
-                dm_var.frame(Title("dm Failed " + tag)));
+                dm_var.frame(Title("Failed " + tag)));
             unique_ptr<RooPlot> frame_dm_mc_d0_bkg_total(
-                dm_var.frame(Title("dm Total " + tag)));
+                dm_var.frame(Title("Total " + tag)));
 
             ds_passed.plotOn(frame_dm_mc_d0_bkg_passed.get(),
                              Binning(bins_histos_dm_d0_bkg));
@@ -2422,7 +2443,6 @@ int main(int argc, char **argv) {
                                            "dm_model_d0_bkg_passed_" + suffix,
                                            dm_pdf_list_d0_bkg_passed,
                                            dm_f_list_d0_bkg_passed);
-
           RooAddPdf dm_model_d0_bkg_failed("dm_model_d0_bkg_failed_" + suffix,
                                            "dm_model_d0_bkg_failed_" + suffix,
                                            dm_pdf_list_d0_bkg_failed,
@@ -2441,9 +2461,10 @@ int main(int argc, char **argv) {
 
           // Plot PDF over extended range
           unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed_ext(
-              dm_var.frame(Title("dm Passed " + tag)));
+              dm_var.frame(Title("Passed " + tag)));
           unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed_ext(
-              dm_var.frame(Title("dm Failed " + tag)));
+              dm_var.frame(Title("Failed " + tag)));
+
           ds_dm_d0_bkg_passed_sum.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
                                          Binning(bins_histos_dm_d0_bkg));
           ds_dm_d0_bkg_failed_sum.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
@@ -2473,9 +2494,10 @@ int main(int argc, char **argv) {
           dm_var.setRange(dm_range_min, dm_range_max);
 
           unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed(
-              dm_var.frame(Title("dm Passed " + tag), Range("fitRange")));
+              dm_var.frame(Title("Passed " + tag), Range("fitRange")));
           unique_ptr<RooPlot> frame_dm_mc_d0_bkg_failed(
-              dm_var.frame(Title("dm Failed " + tag), Range("fitRange")));
+              dm_var.frame(Title("Failed " + tag), Range("fitRange")));
+
           ds_dm_d0_bkg_passed_sum.plotOn(frame_dm_mc_d0_bkg_passed.get(),
                                          Binning(bins_histos_dm_d0_bkg),
                                          CutRange("fitRange"));
@@ -2780,11 +2802,11 @@ int main(int argc, char **argv) {
 
           const double k_comb_all_failed_guess =
               (y2_comb_all_failed > 0.) && (y1_comb_all_failed > 0.)
-                  ? log(y2_comb_all_failed / y1_comb_all_failed) / dx
+                  ? std::log(y2_comb_all_failed / y1_comb_all_failed) / dx
                   : 1.;
           const double k_comb_all_passed_guess =
               (y2_comb_all_passed > 0.) && (y1_comb_all_passed > 0.)
-                  ? log(y2_comb_all_passed / y1_comb_all_passed) / dx
+                  ? std::log(y2_comb_all_passed / y1_comb_all_passed) / dx
                   : 1.;
 
           if (k_comb_all_failed_guess < 0.) {
@@ -3036,16 +3058,16 @@ int main(int argc, char **argv) {
           // Define lambda to plot fit results in different ranges
           auto plot_fit_results = [&](const TString range,
                                       const TString name_suffix) {
-            unique_ptr<RooPlot> frame_d0_calib_passed(d0_m_var.frame(
-                Title("D0 M Calib Passed " + tag), Range("data")));
-            unique_ptr<RooPlot> frame_d0_calib_failed(d0_m_var.frame(
-                Title("D0 M Calib Failed " + tag), Range("data")));
+            unique_ptr<RooPlot> frame_d0_calib_passed(
+                d0_m_var.frame(Title("Passed " + tag), Range("data")));
+            unique_ptr<RooPlot> frame_d0_calib_failed(
+                d0_m_var.frame(Title("Failed " + tag), Range("data")));
             unique_ptr<RooPlot> frame_dm_calib_passed(
-                dm_var.frame(Title("dm Calib Passed " + tag), Range("data")));
+                dm_var.frame(Title("Passed " + tag), Range("data")));
             unique_ptr<RooPlot> frame_dm_calib_failed(
-                dm_var.frame(Title("dm Calib Failed " + tag), Range("data")));
+                dm_var.frame(Title("Failed " + tag), Range("data")));
 
-            // TODO:
+            // To be careful:
             // https://root-forum.cern.ch/t/simultaneous-fit-normalization-issue/33965
             if (range == "fitRange") {
               // For plots over full range, also show high d0_M region in
@@ -3329,12 +3351,17 @@ int main(int argc, char **argv) {
     // Save fit status
     suffix.Form("%s_%s", year.c_str(), probe.c_str());
     c_single.cd();
+
+    fit_status_calib.SetStats(false);
     fit_status_calib.Draw("BOX2Z");
     c_single.SaveAs(opath + "/figs/fit_status_calib_" + suffix + ".pdf");
+
+    fit_cov_qual_calib.SetStats(false);
     fit_cov_qual_calib.Draw("BOX2Z");
     c_single.SaveAs(opath + "/figs/fit_cov_qual_calib_" + suffix + ".pdf");
 
     // Save number of fit retries
+    calib_retries.SetStats(false);
     calib_retries.Draw();
     c_single.SaveAs(opath + "/figs/fit_retries_calib_" + suffix + ".pdf");
 
@@ -3378,12 +3405,14 @@ int main(int argc, char **argv) {
 
   ofile.Close();
 
+  cout << fixed << setprecision(3);
+
   cout << "INFO Dumping counts of PASSED D0 bkg MC events" << endl;
   for (const auto &counts_probe : d0_bkg_counts_passed) {
     const auto &probe  = counts_probe.first;
     const auto &counts = counts_probe.second;
     cout << "INFO probe " << probe << "\n" << endl;
-    for (unsigned p_bin = 0; p_bin < counts.size(); p_bin++) {
+    for (int p_bin = 0; p_bin < N_BINS_P; p_bin++) {
       cout << "INFO - p bin " << p_bin << endl;
       double bin_total = 0;
       for (const auto &counts_decay : counts[p_bin]) {
@@ -3393,8 +3422,9 @@ int main(int argc, char **argv) {
       for (const auto &counts_decay : counts[p_bin]) {
         const auto  &decay = counts_decay.first;
         const double count = counts_decay.second * w_d0_decays.at(decay);
-        cout << "INFO -- " << decay << ": " << count / bin_total * 100. << "%"
-             << endl;
+        cout << "INFO --- " << left << setw(13) << decay << ": " << right
+             << setw(5) << count / bin_total * 100. << "% ("
+             << counts_decay.second << " events)\n";
       }
       cout << endl;
     }
@@ -3405,7 +3435,7 @@ int main(int argc, char **argv) {
     const auto &probe  = counts_probe.first;
     const auto &counts = counts_probe.second;
     cout << "INFO probe " << probe << "\n" << endl;
-    for (unsigned p_bin = 0; p_bin < counts.size(); p_bin++) {
+    for (int p_bin = 0; p_bin < N_BINS_P; p_bin++) {
       cout << "INFO - p bin " << p_bin << endl;
       double bin_total = 0;
       for (const auto &counts_decay : counts[p_bin]) {
@@ -3415,8 +3445,9 @@ int main(int argc, char **argv) {
       for (const auto &counts_decay : counts[p_bin]) {
         const auto  &decay = counts_decay.first;
         const double count = counts_decay.second * w_d0_decays.at(decay);
-        cout << "INFO -- " << decay << ": " << count / bin_total * 100. << "%"
-             << endl;
+        cout << "INFO --- " << left << setw(13) << decay << ": " << right
+             << setw(5) << count / bin_total * 100. << "% ("
+             << counts_decay.second << " events)\n";
       }
       cout << endl;
     }
