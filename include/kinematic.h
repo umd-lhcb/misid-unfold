@@ -18,14 +18,7 @@ using ROOT::Math::LorentzVector;
 using ROOT::Math::PtEtaPhiMVector;
 using ROOT::Math::PxPyPzEVector;
 using ROOT::Math::PxPyPzMVector;
-
-using ROOT::Math::DisplacementVector3D;
 using ROOT::Math::XYZVector;
-
-#define K_M 493.677
-#define PI_M 139.570
-#define B_M 5279.34
-#define B0_M 5279.65
 
 //////////////////////
 // Rebuild momentum //
@@ -79,8 +72,11 @@ XYZVector buildBFlightDir(double endVtxX, double ownPvX, double endVtxY,
 // Rest frame approximation //
 //////////////////////////////
 
-PxPyPzEVector estB4Mom(const PxPyPzEVector& v4BReco, const XYZVector& v3BFlight,
-                       double mBRef = B_M) {
+PxPyPzEVector estB4Mom(const PxPyPzEVector& v4BReco,
+                       const XYZVector&     v3BFlight) {
+  // Used in TupleToolTauMuDiscrVars for both B0 and B+
+  constexpr double mBRef = 5279.61;
+
   auto mB  = v4BReco.M();
   auto pzB = v4BReco.Pz();
 

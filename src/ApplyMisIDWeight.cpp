@@ -293,7 +293,7 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
 }
 
 template <typename F>
-RNode computeDiFVars(RNode df, F& randGetter, double mB, string suffix,
+RNode computeDiFVars(RNode df, F& randGetter, string suffix,
                      vector<string>& outputBrs, string smr_mode) {
   // we probably did some unnecessary copies here, but deducing those nested
   // lambdas can be quite hard so I'm just being lazy here.
@@ -302,7 +302,7 @@ RNode computeDiFVars(RNode df, F& randGetter, double mB, string suffix,
     return rebuildMu4Mom(v4Mu, smr, smr_mode);
   };
   auto estB4MomPartial = [=](PxPyPzEVector v4BReco, XYZVector v3BFlight) {
-    return estB4Mom(v4BReco, v3BFlight, mB);
+    return estB4Mom(v4BReco, v3BFlight);
   };
 
   vector<string> brNames = {"mm2", "q2", "el", "b_m"};
@@ -327,16 +327,13 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
   vector<string> outputBrs{};
   string         dMeson = ""s;
   string         bMeson = ""s;
-  double         mBRef;
 
   if (branchExists(tree, DST_TEST_BR)) {
     dMeson = DST_BR_PREFIX;
     bMeson = B0_BR_PREFIX;
-    mBRef  = B0_M;
   } else if (branchExists(tree, D0_TEST_BR)) {
     dMeson = D0_BR_PREFIX;
     bMeson = B_BR_PREFIX;
-    mBRef  = B_M;
   } else {
     cout << "No known branch found for D0 nor D*. Exit now..." << endl;
     exit(1);
@@ -360,9 +357,9 @@ pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                                         "OWNPV_Y", "ENDVERTEX_Z", "OWNPV_Z"}));
 
   // Replace mass hypo and compute fit vars
-  df = computeDiFVars(df, randPiGetter, mBRef, "_smr_pi" + brSuffix, outputBrs,
+  df = computeDiFVars(df, randPiGetter, "_smr_pi" + brSuffix, outputBrs,
                       smr_mode);
-  df = computeDiFVars(df, randKGetter, mBRef, "_smr_k" + brSuffix, outputBrs,
+  df = computeDiFVars(df, randKGetter, "_smr_k" + brSuffix, outputBrs,
                       smr_mode);
 
   return {df, outputBrs};
