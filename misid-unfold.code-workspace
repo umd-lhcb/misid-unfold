@@ -36,9 +36,9 @@
             // store (such as boost-1.75.0-dev), I'm not sure which one is the correct
             // (they look equivalent, but they have different hashes so there is some difference).
             "/nix/store/dlwb9al8d40rllzbhfbzj28jips65lr6-root-6.32.16/include/*",
-            "/nix/store/rbvd1cq9gy7vbkds7v2w968vmrl5a9vd-roounfold-2.1/include/",
+            "/nix/store/p43w4kclrk5hx3jpwzz9ax7b5v5ln14c-roounfold-2.1/include/",
             "/nix/store/3zvgb0wgvbjal65sb4mz50r0dzsgsdn4-libyaml-cpp-0.6.3/include/",
-            "/nix/store/hnawcrf4iigsk47pxz0bg5mg1w1szfir-boost-1.75.0-dev/include",
+            "/nix/store/8cibp0m4s32xzh9ybk2lcr0hkzanaryw-boost-1.75.0/include",
             "/nix/store/bd28hkx3zkzhfwjj5l91h7l4wqx4qmaf-cxxopts/include"
         ],
         "C_Cpp.default.intelliSenseMode": "gcc-x64",
@@ -54,14 +54,15 @@
             "editor.defaultFormatter": "eeyore.yapf"
         },
         "cSpell.diagnosticLevel": "Hint",
-        "cSpell.enabledLanguageIds": [
-            "c",
-            "cpp",
-            "markdown",
-            "python",
-            "restructuredtext",
-            "text"
-        ],
+        "cSpell.enabledFileTypes": {
+            "*": false,
+            "c": true,
+            "cpp": true,
+            "markdown": true,
+            "python": true,
+            "text": true,
+            "yaml": true
+        },
         "cSpell.language": "en,en-GB",
         "cSpell.languageSettings": [
             {
@@ -98,7 +99,8 @@
             "unordered_map": "cpp",
             "string": "cpp",
             "array": "cpp",
-            "type_traits": "cpp"
+            "type_traits": "cpp",
+            "memory": "cpp"
         },
         "files.trimTrailingWhitespace": true,
         "flake8.args": [
@@ -107,13 +109,6 @@
         "python.defaultInterpreterPath": "/usr/bin/python3",
         "python.languageServer": "Pylance",
         "remote.downloadExtensionsLocally": true,
-        "restructuredtext.linter.disabledLinters": [
-            "doc8",
-            "rst-lint",
-            "rstcheck"
-        ],
-        "restructuredtext.linter.run": "off",
-        "telemetry.enableCrashReporter": false,
         "window.title": "${dirty}${activeEditorShort}${separator}${rootPath}"
     }
 }
