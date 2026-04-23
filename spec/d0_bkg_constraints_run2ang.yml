@@ -1,0 +1,525 @@
+fake_mu:
+  k:
+    failed:
+      0:
+        0:
+          signal: 35695
+          total: 40999
+        1:
+          signal: 1399
+          total: 1638
+      1:
+        0:
+          signal: 88202
+          total: 94239
+        1:
+          signal: 15137
+          total: 16777
+      2:
+        0:
+          signal: 123468
+          total: 128361
+        1:
+          signal: 31527
+          total: 33542
+      3:
+        0:
+          signal: 206941
+          total: 210440
+        1:
+          signal: 66673
+          total: 69105
+      4:
+        0:
+          signal: 216021
+          total: 217473
+        1:
+          signal: 161460
+          total: 163581
+      5:
+        0:
+          signal: 33289
+          total: 33452
+        1:
+          signal: 86775
+          total: 87387
+    passed:
+      0:
+        0:
+          signal: 2843
+          total: 3315
+        1:
+          signal: 134
+          total: 154
+      1:
+        0:
+          signal: 4386
+          total: 4704
+        1:
+          signal: 842
+          total: 945
+      2:
+        0:
+          signal: 2768
+          total: 2887
+        1:
+          signal: 893
+          total: 957
+      3:
+        0:
+          signal: 2955
+          total: 3025
+        1:
+          signal: 1105
+          total: 1143
+      4:
+        0:
+          signal: 1974
+          total: 2000
+        1:
+          signal: 1438
+          total: 1460
+      5:
+        0:
+          signal: 224
+          total: 230
+        1:
+          signal: 549
+          total: 553
+  pi:
+    failed:
+      0:
+        0:
+          signal: 70615
+          total: 70867
+        1:
+          signal: 1624
+          total: 1632
+      1:
+        0:
+          signal: 111844
+          total: 112090
+        1:
+          signal: 16940
+          total: 16983
+      2:
+        0:
+          signal: 131650
+          total: 132825
+        1:
+          signal: 31317
+          total: 31445
+      3:
+        0:
+          signal: 198427
+          total: 204759
+        1:
+          signal: 64419
+          total: 65357
+      4:
+        0:
+          signal: 193488
+          total: 202841
+        1:
+          signal: 149904
+          total: 156144
+      5:
+        0:
+          signal: 28877
+          total: 30286
+        1:
+          signal: 73225
+          total: 76947
+    passed:
+      0:
+        0:
+          signal: 6687
+          total: 6906
+        1:
+          signal: 157
+          total: 161
+      1:
+        0:
+          signal: 5480
+          total: 5675
+        1:
+          signal: 873
+          total: 914
+      2:
+        0:
+          signal: 2282
+          total: 2496
+        1:
+          signal: 689
+          total: 748
+      3:
+        0:
+          signal: 1724
+          total: 2218
+        1:
+          signal: 744
+          total: 886
+      4:
+        0:
+          signal: 947
+          total: 1422
+        1:
+          signal: 785
+          total: 1159
+      5:
+        0:
+          signal: 77
+          total: 138
+        1:
+          signal: 274
+          total: 444
+iso_ctrl:
+  k:
+    failed:
+      0:
+        0:
+          signal: 38158
+          total: 43822
+        1:
+          signal: 1509
+          total: 1760
+      1:
+        0:
+          signal: 92155
+          total: 98429
+        1:
+          signal: 15803
+          total: 17506
+      2:
+        0:
+          signal: 126051
+          total: 131004
+        1:
+          signal: 32215
+          total: 34267
+      3:
+        0:
+          signal: 209781
+          total: 213312
+        1:
+          signal: 67577
+          total: 70028
+      4:
+        0:
+          signal: 217599
+          total: 219069
+        1:
+          signal: 162469
+          total: 164605
+      5:
+        0:
+          signal: 33413
+          total: 33580
+        1:
+          signal: 87093
+          total: 87708
+    passed:
+      0:
+        0:
+          signal: 380
+          total: 492
+        1:
+          signal: 24
+          total: 32
+      1:
+        0:
+          signal: 433
+          total: 514
+        1:
+          signal: 176
+          total: 216
+      2:
+        0:
+          signal: 185
+          total: 244
+        1:
+          signal: 205
+          total: 232
+      3:
+        0:
+          signal: 115
+          total: 153
+        1:
+          signal: 201
+          total: 220
+      4:
+        0:
+          signal: 396
+          total: 404
+        1:
+          signal: 429
+          total: 436
+      5:
+        0:
+          signal: 100
+          total: 102
+        1:
+          signal: 231
+          total: 232
+  pi:
+    failed:
+      0:
+        0:
+          signal: 76781
+          total: 77051
+        1:
+          signal: 1754
+          total: 1763
+      1:
+        0:
+          signal: 116549
+          total: 116811
+        1:
+          signal: 17611
+          total: 17657
+      2:
+        0:
+          signal: 132853
+          total: 134042
+        1:
+          signal: 31727
+          total: 31859
+      3:
+        0:
+          signal: 198953
+          total: 205319
+        1:
+          signal: 64745
+          total: 65692
+      4:
+        0:
+          signal: 193686
+          total: 203074
+        1:
+          signal: 150185
+          total: 156447
+      5:
+        0:
+          signal: 28909
+          total: 30324
+        1:
+          signal: 73343
+          total: 77073
+    passed:
+      0:
+        0:
+          signal: 521
+          total: 722
+        1:
+          signal: 27
+          total: 30
+      1:
+        0:
+          signal: 775
+          total: 954
+        1:
+          signal: 202
+          total: 240
+      2:
+        0:
+          signal: 1079
+          total: 1279
+        1:
+          signal: 279
+          total: 334
+      3:
+        0:
+          signal: 1198
+          total: 1658
+        1:
+          signal: 418
+          total: 551
+      4:
+        0:
+          signal: 749
+          total: 1189
+        1:
+          signal: 504
+          total: 856
+      5:
+        0:
+          signal: 45
+          total: 100
+        1:
+          signal: 156
+          total: 318
+vmu:
+  k:
+    failed:
+      0:
+        0:
+          signal: 36126
+          total: 41555
+        1:
+          signal: 1430
+          total: 1678
+      1:
+        0:
+          signal: 88755
+          total: 94874
+        1:
+          signal: 15345
+          total: 17026
+      2:
+        0:
+          signal: 123693
+          total: 128645
+        1:
+          signal: 31755
+          total: 33799
+      3:
+        0:
+          signal: 207088
+          total: 210626
+        1:
+          signal: 66894
+          total: 69346
+      4:
+        0:
+          signal: 216432
+          total: 217892
+        1:
+          signal: 161911
+          total: 164039
+      5:
+        0:
+          signal: 33391
+          total: 33556
+        1:
+          signal: 87012
+          total: 87625
+    passed:
+      0:
+        0:
+          signal: 2412
+          total: 2759
+        1:
+          signal: 103
+          total: 114
+      1:
+        0:
+          signal: 3833
+          total: 4069
+        1:
+          signal: 634
+          total: 696
+      2:
+        0:
+          signal: 2543
+          total: 2603
+        1:
+          signal: 665
+          total: 700
+      3:
+        0:
+          signal: 2808
+          total: 2839
+        1:
+          signal: 884
+          total: 902
+      4:
+        0:
+          signal: 1563
+          total: 1581
+        1:
+          signal: 987
+          total: 1002
+      5:
+        0:
+          signal: 122
+          total: 126
+        1:
+          signal: 312
+          total: 315
+  pi:
+    failed:
+      0:
+        0:
+          signal: 71154
+          total: 71610
+        1:
+          signal: 1653
+          total: 1664
+      1:
+        0:
+          signal: 112642
+          total: 113072
+        1:
+          signal: 17148
+          total: 17229
+      2:
+        0:
+          signal: 132744
+          total: 134120
+        1:
+          signal: 31603
+          total: 31787
+      3:
+        0:
+          signal: 199646
+          total: 206439
+        1:
+          signal: 64852
+          total: 65924
+      4:
+        0:
+          signal: 194243
+          total: 204036
+        1:
+          signal: 150421
+          total: 157014
+      5:
+        0:
+          signal: 28922
+          total: 30386
+        1:
+          signal: 73383
+          total: 77268
+    passed:
+      0:
+        0:
+          signal: 6148
+          total: 6163
+        1:
+          signal: 128
+          total: 129
+      1:
+        0:
+          signal: 4682
+          total: 4693
+        1:
+          signal: 665
+          total: 668
+      2:
+        0:
+          signal: 1188
+          total: 1201
+        1:
+          signal: 403
+          total: 406
+      3:
+        0:
+          signal: 505
+          total: 538
+        1:
+          signal: 311
+          total: 319
+      4:
+        0:
+          signal: 192
+          total: 227
+        1:
+          signal: 268
+          total: 289
+      5:
+        0:
+          signal: 32
+          total: 38
+        1:
+          signal: 116
+          total: 123

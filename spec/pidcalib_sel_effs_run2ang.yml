@@ -1,0 +1,2751 @@
+fake_mu:
+  k:
+    failed:
+      dif:
+        0:
+          0:
+            0:
+              sel: 7237
+              total: 10930
+            1:
+              sel: 7237
+              total: 10930
+          1:
+            0:
+              sel: 215
+              total: 2538
+            1:
+              sel: 215
+              total: 2538
+        1:
+          0:
+            0:
+              sel: 9047
+              total: 12452
+            1:
+              sel: 9047
+              total: 12452
+          1:
+            0:
+              sel: 1548
+              total: 3239
+            1:
+              sel: 1548
+              total: 3239
+        2:
+          0:
+            0:
+              sel: 7883
+              total: 11816
+            1:
+              sel: 7883
+              total: 11816
+          1:
+            0:
+              sel: 2056
+              total: 3791
+            1:
+              sel: 2056
+              total: 3791
+        3:
+          0:
+            0:
+              sel: 8028
+              total: 12495
+            1:
+              sel: 8028
+              total: 12495
+          1:
+            0:
+              sel: 2708
+              total: 5407
+            1:
+              sel: 2708
+              total: 5407
+        4:
+          0:
+            0:
+              sel: 4880
+              total: 6897
+            1:
+              sel: 4880
+              total: 6897
+          1:
+            0:
+              sel: 3085
+              total: 5603
+            1:
+              sel: 3085
+              total: 5603
+        5:
+          0:
+            0:
+              sel: 286
+              total: 425
+            1:
+              sel: 286
+              total: 425
+          1:
+            0:
+              sel: 696
+              total: 1051
+            1:
+              sel: 696
+              total: 1051
+      nondif:
+        0:
+          0:
+            0:
+              sel: 156414
+              total: 230782
+            1:
+              sel: 31655
+              total: 45747
+          1:
+            0:
+              sel: 6326
+              total: 55501
+            1:
+              sel: 1272
+              total: 10555
+        1:
+          0:
+            0:
+              sel: 382111
+              total: 524417
+            1:
+              sel: 78628
+              total: 106315
+          1:
+            0:
+              sel: 67274
+              total: 142412
+            1:
+              sel: 13337
+              total: 27813
+        2:
+          0:
+            0:
+              sel: 533046
+              total: 789952
+            1:
+              sel: 112071
+              total: 163227
+          1:
+            0:
+              sel: 135806
+              total: 251531
+            1:
+              sel: 27384
+              total: 49334
+        3:
+          0:
+            0:
+              sel: 916348
+              total: 1345113
+            1:
+              sel: 191296
+              total: 279975
+          1:
+            0:
+              sel: 282813
+              total: 547936
+            1:
+              sel: 57570
+              total: 107846
+        4:
+          0:
+            0:
+              sel: 1053285
+              total: 1324682
+            1:
+              sel: 229933
+              total: 290749
+          1:
+            0:
+              sel: 692077
+              total: 1109639
+            1:
+              sel: 143099
+              total: 225162
+        5:
+          0:
+            0:
+              sel: 184312
+              total: 219253
+            1:
+              sel: 43425
+              total: 51940
+          1:
+            0:
+              sel: 379982
+              total: 489090
+            1:
+              sel: 81108
+              total: 105191
+    passed:
+      dif_dwrich:
+        0:
+          0:
+            0:
+              sel: 1195
+              total: 2052
+            1:
+              sel: 1195
+              total: 2052
+          1:
+            0:
+              sel: 50
+              total: 466
+            1:
+              sel: 50
+              total: 466
+        1:
+          0:
+            0:
+              sel: 2472
+              total: 4205
+            1:
+              sel: 2472
+              total: 4205
+          1:
+            0:
+              sel: 393
+              total: 980
+            1:
+              sel: 393
+              total: 980
+        2:
+          0:
+            0:
+              sel: 2618
+              total: 5738
+            1:
+              sel: 2618
+              total: 5738
+          1:
+            0:
+              sel: 536
+              total: 1433
+            1:
+              sel: 536
+              total: 1433
+        3:
+          0:
+            0:
+              sel: 3266
+              total: 8654
+            1:
+              sel: 3266
+              total: 8654
+          1:
+            0:
+              sel: 772
+              total: 2547
+            1:
+              sel: 772
+              total: 2547
+        4:
+          0:
+            0:
+              sel: 2764
+              total: 7391
+            1:
+              sel: 2764
+              total: 7391
+          1:
+            0:
+              sel: 1302
+              total: 4051
+            1:
+              sel: 1302
+              total: 4051
+        5:
+          0:
+            0:
+              sel: 326
+              total: 904
+            1:
+              sel: 326
+              total: 904
+          1:
+            0:
+              sel: 431
+              total: 1204
+            1:
+              sel: 431
+              total: 1204
+      dif_uprich:
+        0:
+          0:
+            0:
+              sel: 114
+              total: 380
+            1:
+              sel: 114
+              total: 380
+          1:
+            0:
+              sel: 1
+              total: 178
+            1:
+              sel: 1
+              total: 178
+        1:
+          0:
+            0:
+              sel: 207
+              total: 489
+            1:
+              sel: 207
+              total: 489
+          1:
+            0:
+              sel: 19
+              total: 254
+            1:
+              sel: 19
+              total: 254
+        2:
+          0:
+            0:
+              sel: 189
+              total: 458
+            1:
+              sel: 189
+              total: 458
+          1:
+            0:
+              sel: 48
+              total: 273
+            1:
+              sel: 48
+              total: 273
+        3:
+          0:
+            0:
+              sel: 293
+              total: 724
+            1:
+              sel: 293
+              total: 724
+          1:
+            0:
+              sel: 70
+              total: 326
+            1:
+              sel: 70
+              total: 326
+        4:
+          0:
+            0:
+              sel: 216
+              total: 701
+            1:
+              sel: 216
+              total: 701
+          1:
+            0:
+              sel: 122
+              total: 544
+            1:
+              sel: 122
+              total: 544
+        5:
+          0:
+            0:
+              sel: 19
+              total: 87
+            1:
+              sel: 19
+              total: 87
+          1:
+            0:
+              sel: 45
+              total: 169
+            1:
+              sel: 45
+              total: 169
+      nondif:
+        0:
+          0:
+            0:
+              sel: 156414
+              total: 230782
+            1:
+              sel: 31655
+              total: 45747
+          1:
+            0:
+              sel: 6326
+              total: 55501
+            1:
+              sel: 1272
+              total: 10555
+        1:
+          0:
+            0:
+              sel: 382111
+              total: 524417
+            1:
+              sel: 78628
+              total: 106315
+          1:
+            0:
+              sel: 67274
+              total: 142412
+            1:
+              sel: 13337
+              total: 27813
+        2:
+          0:
+            0:
+              sel: 533046
+              total: 789952
+            1:
+              sel: 112071
+              total: 163227
+          1:
+            0:
+              sel: 135806
+              total: 251531
+            1:
+              sel: 27384
+              total: 49334
+        3:
+          0:
+            0:
+              sel: 916348
+              total: 1345113
+            1:
+              sel: 191296
+              total: 279975
+          1:
+            0:
+              sel: 282813
+              total: 547936
+            1:
+              sel: 57570
+              total: 107846
+        4:
+          0:
+            0:
+              sel: 1053285
+              total: 1324682
+            1:
+              sel: 229933
+              total: 290749
+          1:
+            0:
+              sel: 692077
+              total: 1109639
+            1:
+              sel: 143099
+              total: 225162
+        5:
+          0:
+            0:
+              sel: 184312
+              total: 219253
+            1:
+              sel: 43425
+              total: 51940
+          1:
+            0:
+              sel: 379982
+              total: 489090
+            1:
+              sel: 81108
+              total: 105191
+  pi:
+    failed:
+      dif:
+        0:
+          0:
+            0:
+              sel: 2051
+              total: 3370
+            1:
+              sel: 2051
+              total: 3370
+          1:
+            0:
+              sel: 2
+              total: 289
+            1:
+              sel: 2
+              total: 289
+        1:
+          0:
+            0:
+              sel: 334
+              total: 563
+            1:
+              sel: 334
+              total: 563
+          1:
+            0:
+              sel: 25
+              total: 69
+            1:
+              sel: 25
+              total: 69
+        2:
+          0:
+            0:
+              sel: 193
+              total: 424
+            1:
+              sel: 193
+              total: 424
+          1:
+            0:
+              sel: 27
+              total: 89
+            1:
+              sel: 27
+              total: 89
+        3:
+          0:
+            0:
+              sel: 151
+              total: 331
+            1:
+              sel: 151
+              total: 331
+          1:
+            0:
+              sel: 45
+              total: 150
+            1:
+              sel: 45
+              total: 150
+        4:
+          0:
+            0:
+              sel: 74
+              total: 155
+            1:
+              sel: 74
+              total: 155
+          1:
+            0:
+              sel: 86
+              total: 217
+            1:
+              sel: 86
+              total: 217
+        5:
+          0:
+            0:
+              sel: 8
+              total: 13
+            1:
+              sel: 8
+              total: 13
+          1:
+            0:
+              sel: 25
+              total: 49
+            1:
+              sel: 25
+              total: 49
+      nondif:
+        0:
+          0:
+            0:
+              sel: 318726
+              total: 449460
+            1:
+              sel: 64652
+              total: 90162
+          1:
+            0:
+              sel: 7208
+              total: 46559
+            1:
+              sel: 1462
+              total: 9527
+        1:
+          0:
+            0:
+              sel: 494874
+              total: 679922
+            1:
+              sel: 101807
+              total: 137860
+          1:
+            0:
+              sel: 73879
+              total: 132647
+            1:
+              sel: 14894
+              total: 26668
+        2:
+          0:
+            0:
+              sel: 577478
+              total: 843868
+            1:
+              sel: 121020
+              total: 174244
+          1:
+            0:
+              sel: 136744
+              total: 244705
+            1:
+              sel: 27787
+              total: 48802
+        3:
+          0:
+            0:
+              sel: 893082
+              total: 1298984
+            1:
+              sel: 188785
+              total: 272901
+          1:
+            0:
+              sel: 272988
+              total: 528911
+            1:
+              sel: 56170
+              total: 104696
+        4:
+          0:
+            0:
+              sel: 948011
+              total: 1193089
+            1:
+              sel: 207560
+              total: 262607
+          1:
+            0:
+              sel: 656010
+              total: 1040379
+            1:
+              sel: 135427
+              total: 210754
+        5:
+          0:
+            0:
+              sel: 152387
+              total: 180858
+            1:
+              sel: 36069
+              total: 43251
+          1:
+            0:
+              sel: 324368
+              total: 419201
+            1:
+              sel: 69732
+              total: 90818
+    passed:
+      dif_dwrich:
+        0:
+          0:
+            0:
+              sel: 3496
+              total: 7709
+            1:
+              sel: 3496
+              total: 7709
+          1:
+            0:
+              sel: 76
+              total: 784
+            1:
+              sel: 76
+              total: 784
+        1:
+          0:
+            0:
+              sel: 3714
+              total: 8091
+            1:
+              sel: 3714
+              total: 8091
+          1:
+            0:
+              sel: 520
+              total: 1562
+            1:
+              sel: 520
+              total: 1562
+        2:
+          0:
+            0:
+              sel: 2817
+              total: 6845
+            1:
+              sel: 2817
+              total: 6845
+          1:
+            0:
+              sel: 634
+              total: 1956
+            1:
+              sel: 634
+              total: 1956
+        3:
+          0:
+            0:
+              sel: 2860
+              total: 6953
+            1:
+              sel: 2860
+              total: 6953
+          1:
+            0:
+              sel: 795
+              total: 2661
+            1:
+              sel: 795
+              total: 2661
+        4:
+          0:
+            0:
+              sel: 1725
+              total: 3466
+            1:
+              sel: 1725
+              total: 3466
+          1:
+            0:
+              sel: 1069
+              total: 2653
+            1:
+              sel: 1069
+              total: 2653
+        5:
+          0:
+            0:
+              sel: 145
+              total: 262
+            1:
+              sel: 145
+              total: 262
+          1:
+            0:
+              sel: 259
+              total: 510
+            1:
+              sel: 259
+              total: 510
+      dif_uprich:
+        0:
+          0:
+            0:
+              sel: 523
+              total: 4957
+            1:
+              sel: 523
+              total: 4957
+          1:
+            0:
+              sel: 5
+              total: 598
+            1:
+              sel: 5
+              total: 598
+        1:
+          0:
+            0:
+              sel: 404
+              total: 4429
+            1:
+              sel: 404
+              total: 4429
+          1:
+            0:
+              sel: 60
+              total: 1034
+            1:
+              sel: 60
+              total: 1034
+        2:
+          0:
+            0:
+              sel: 275
+              total: 3384
+            1:
+              sel: 275
+              total: 3384
+          1:
+            0:
+              sel: 72
+              total: 1119
+            1:
+              sel: 72
+              total: 1119
+        3:
+          0:
+            0:
+              sel: 278
+              total: 2646
+            1:
+              sel: 278
+              total: 2646
+          1:
+            0:
+              sel: 96
+              total: 1343
+            1:
+              sel: 96
+              total: 1343
+        4:
+          0:
+            0:
+              sel: 169
+              total: 1063
+            1:
+              sel: 169
+              total: 1063
+          1:
+            0:
+              sel: 115
+              total: 1050
+            1:
+              sel: 115
+              total: 1050
+        5:
+          0:
+            0:
+              sel: 12
+              total: 62
+            1:
+              sel: 12
+              total: 62
+          1:
+            0:
+              sel: 20
+              total: 186
+            1:
+              sel: 20
+              total: 186
+      nondif:
+        0:
+          0:
+            0:
+              sel: 318726
+              total: 449460
+            1:
+              sel: 64652
+              total: 90162
+          1:
+            0:
+              sel: 7208
+              total: 46559
+            1:
+              sel: 1462
+              total: 9527
+        1:
+          0:
+            0:
+              sel: 494874
+              total: 679922
+            1:
+              sel: 101807
+              total: 137860
+          1:
+            0:
+              sel: 73879
+              total: 132647
+            1:
+              sel: 14894
+              total: 26668
+        2:
+          0:
+            0:
+              sel: 577478
+              total: 843868
+            1:
+              sel: 121020
+              total: 174244
+          1:
+            0:
+              sel: 136744
+              total: 244705
+            1:
+              sel: 27787
+              total: 48802
+        3:
+          0:
+            0:
+              sel: 893082
+              total: 1298984
+            1:
+              sel: 188785
+              total: 272901
+          1:
+            0:
+              sel: 272988
+              total: 528911
+            1:
+              sel: 56170
+              total: 104696
+        4:
+          0:
+            0:
+              sel: 948011
+              total: 1193089
+            1:
+              sel: 207560
+              total: 262607
+          1:
+            0:
+              sel: 656010
+              total: 1040379
+            1:
+              sel: 135427
+              total: 210754
+        5:
+          0:
+            0:
+              sel: 152387
+              total: 180858
+            1:
+              sel: 36069
+              total: 43251
+          1:
+            0:
+              sel: 324368
+              total: 419201
+            1:
+              sel: 69732
+              total: 90818
+iso_ctrl:
+  k:
+    failed:
+      dif:
+        0:
+          0:
+            0:
+              sel: 10519
+              total: 15668
+            1:
+              sel: 10519
+              total: 15668
+          1:
+            0:
+              sel: 337
+              total: 3192
+            1:
+              sel: 337
+              total: 3192
+        1:
+          0:
+            0:
+              sel: 16203
+              total: 22648
+            1:
+              sel: 16203
+              total: 22648
+          1:
+            0:
+              sel: 2390
+              total: 4954
+            1:
+              sel: 2390
+              total: 4954
+        2:
+          0:
+            0:
+              sel: 15630
+              total: 24402
+            1:
+              sel: 15630
+              total: 24402
+          1:
+            0:
+              sel: 3299
+              total: 6340
+            1:
+              sel: 3299
+              total: 6340
+        3:
+          0:
+            0:
+              sel: 17293
+              total: 29201
+            1:
+              sel: 17293
+              total: 29201
+          1:
+            0:
+              sel: 4553
+              total: 9547
+            1:
+              sel: 4553
+              total: 9547
+        4:
+          0:
+            0:
+              sel: 10546
+              total: 16970
+            1:
+              sel: 10546
+              total: 16970
+          1:
+            0:
+              sel: 5365
+              total: 10457
+            1:
+              sel: 5365
+              total: 10457
+        5:
+          0:
+            0:
+              sel: 564
+              total: 1048
+            1:
+              sel: 564
+              total: 1048
+          1:
+            0:
+              sel: 1243
+              total: 2144
+            1:
+              sel: 1243
+              total: 2144
+      nondif:
+        0:
+          0:
+            0:
+              sel: 154261
+              total: 227713
+            1:
+              sel: 31177
+              total: 45101
+          1:
+            0:
+              sel: 6235
+              total: 55073
+            1:
+              sel: 1257
+              total: 10447
+        1:
+          0:
+            0:
+              sel: 377614
+              total: 518326
+            1:
+              sel: 77764
+              total: 105119
+          1:
+            0:
+              sel: 66697
+              total: 141290
+            1:
+              sel: 13233
+              total: 27588
+        2:
+          0:
+            0:
+              sel: 528511
+              total: 783315
+            1:
+              sel: 111173
+              total: 161906
+          1:
+            0:
+              sel: 135025
+              total: 250092
+            1:
+              sel: 27232
+              total: 49044
+        3:
+          0:
+            0:
+              sel: 911250
+              total: 1337631
+            1:
+              sel: 190242
+              total: 278447
+          1:
+            0:
+              sel: 281725
+              total: 545802
+            1:
+              sel: 57336
+              total: 107443
+        4:
+          0:
+            0:
+              sel: 1050157
+              total: 1320709
+            1:
+              sel: 229277
+              total: 289936
+          1:
+            0:
+              sel: 690703
+              total: 1107348
+            1:
+              sel: 142837
+              total: 224748
+        5:
+          0:
+            0:
+              sel: 184187
+              total: 219106
+            1:
+              sel: 43399
+              total: 51909
+          1:
+            0:
+              sel: 379678
+              total: 488698
+            1:
+              sel: 81037
+              total: 105097
+    passed:
+      dif_dwrich:
+        0:
+          0:
+            0:
+              sel: 576
+              total: 1078
+            1:
+              sel: 576
+              total: 1078
+          1:
+            0:
+              sel: 34
+              total: 366
+            1:
+              sel: 34
+              total: 366
+        1:
+          0:
+            0:
+              sel: 748
+              total: 1388
+            1:
+              sel: 748
+              total: 1388
+          1:
+            0:
+              sel: 235
+              total: 625
+            1:
+              sel: 235
+              total: 625
+        2:
+          0:
+            0:
+              sel: 393
+              total: 1244
+            1:
+              sel: 393
+              total: 1244
+          1:
+            0:
+              sel: 234
+              total: 646
+            1:
+              sel: 234
+              total: 646
+        3:
+          0:
+            0:
+              sel: 312
+              total: 1334
+            1:
+              sel: 312
+              total: 1334
+          1:
+            0:
+              sel: 272
+              total: 1016
+            1:
+              sel: 272
+              total: 1016
+        4:
+          0:
+            0:
+              sel: 974
+              total: 2527
+            1:
+              sel: 974
+              total: 2527
+          1:
+            0:
+              sel: 684
+              total: 2104
+            1:
+              sel: 684
+              total: 2104
+        5:
+          0:
+            0:
+              sel: 208
+              total: 516
+            1:
+              sel: 208
+              total: 516
+          1:
+            0:
+              sel: 272
+              total: 675
+            1:
+              sel: 272
+              total: 675
+      dif_uprich:
+        0:
+          0:
+            0:
+              sel: 82
+              total: 331
+            1:
+              sel: 82
+              total: 331
+          1:
+            0:
+              sel: 1
+              total: 160
+            1:
+              sel: 1
+              total: 160
+        1:
+          0:
+            0:
+              sel: 136
+              total: 397
+            1:
+              sel: 136
+              total: 397
+          1:
+            0:
+              sel: 16
+              total: 241
+            1:
+              sel: 16
+              total: 241
+        2:
+          0:
+            0:
+              sel: 100
+              total: 324
+            1:
+              sel: 100
+              total: 324
+          1:
+            0:
+              sel: 40
+              total: 240
+            1:
+              sel: 40
+              total: 240
+        3:
+          0:
+            0:
+              sel: 134
+              total: 348
+            1:
+              sel: 134
+              total: 348
+          1:
+            0:
+              sel: 47
+              total: 254
+            1:
+              sel: 47
+              total: 254
+        4:
+          0:
+            0:
+              sel: 124
+              total: 278
+            1:
+              sel: 124
+              total: 278
+          1:
+            0:
+              sel: 96
+              total: 342
+            1:
+              sel: 96
+              total: 342
+        5:
+          0:
+            0:
+              sel: 10
+              total: 30
+            1:
+              sel: 10
+              total: 30
+          1:
+            0:
+              sel: 32
+              total: 91
+            1:
+              sel: 32
+              total: 91
+      nondif:
+        0:
+          0:
+            0:
+              sel: 154261
+              total: 227713
+            1:
+              sel: 31177
+              total: 45101
+          1:
+            0:
+              sel: 6235
+              total: 55073
+            1:
+              sel: 1257
+              total: 10447
+        1:
+          0:
+            0:
+              sel: 377614
+              total: 518326
+            1:
+              sel: 77764
+              total: 105119
+          1:
+            0:
+              sel: 66697
+              total: 141290
+            1:
+              sel: 13233
+              total: 27588
+        2:
+          0:
+            0:
+              sel: 528511
+              total: 783315
+            1:
+              sel: 111173
+              total: 161906
+          1:
+            0:
+              sel: 135025
+              total: 250092
+            1:
+              sel: 27232
+              total: 49044
+        3:
+          0:
+            0:
+              sel: 911250
+              total: 1337631
+            1:
+              sel: 190242
+              total: 278447
+          1:
+            0:
+              sel: 281725
+              total: 545802
+            1:
+              sel: 57336
+              total: 107443
+        4:
+          0:
+            0:
+              sel: 1050157
+              total: 1320709
+            1:
+              sel: 229277
+              total: 289936
+          1:
+            0:
+              sel: 690703
+              total: 1107348
+            1:
+              sel: 142837
+              total: 224748
+        5:
+          0:
+            0:
+              sel: 184187
+              total: 219106
+            1:
+              sel: 43399
+              total: 51909
+          1:
+            0:
+              sel: 379678
+              total: 488698
+            1:
+              sel: 81037
+              total: 105097
+  pi:
+    failed:
+      dif:
+        0:
+          0:
+            0:
+              sel: 7087
+              total: 11225
+            1:
+              sel: 7087
+              total: 11225
+          1:
+            0:
+              sel: 50
+              total: 607
+            1:
+              sel: 50
+              total: 607
+        1:
+          0:
+            0:
+              sel: 5097
+              total: 7838
+            1:
+              sel: 5097
+              total: 7838
+          1:
+            0:
+              sel: 376
+              total: 792
+            1:
+              sel: 376
+              total: 792
+        2:
+          0:
+            0:
+              sel: 1763
+              total: 3317
+            1:
+              sel: 1763
+              total: 3317
+          1:
+            0:
+              sel: 384
+              total: 928
+            1:
+              sel: 384
+              total: 928
+        3:
+          0:
+            0:
+              sel: 740
+              total: 1742
+            1:
+              sel: 740
+              total: 1742
+          1:
+            0:
+              sel: 272
+              total: 830
+            1:
+              sel: 272
+              total: 830
+        4:
+          0:
+            0:
+              sel: 243
+              total: 638
+            1:
+              sel: 243
+              total: 638
+          1:
+            0:
+              sel: 198
+              total: 612
+            1:
+              sel: 198
+              total: 612
+        5:
+          0:
+            0:
+              sel: 22
+              total: 52
+            1:
+              sel: 22
+              total: 52
+          1:
+            0:
+              sel: 53
+              total: 118
+            1:
+              sel: 53
+              total: 118
+      nondif:
+        0:
+          0:
+            0:
+              sel: 316327
+              total: 446075
+            1:
+              sel: 64157
+              total: 89479
+          1:
+            0:
+              sel: 7177
+              total: 46431
+            1:
+              sel: 1457
+              total: 9493
+        1:
+          0:
+            0:
+              sel: 492504
+              total: 676716
+            1:
+              sel: 101352
+              total: 137225
+          1:
+            0:
+              sel: 73670
+              total: 132302
+            1:
+              sel: 14846
+              total: 26596
+        2:
+          0:
+            0:
+              sel: 576684
+              total: 842665
+            1:
+              sel: 120842
+              total: 173999
+          1:
+            0:
+              sel: 136554
+              total: 244351
+            1:
+              sel: 27747
+              total: 48727
+        3:
+          0:
+            0:
+              sel: 892838
+              total: 1298618
+            1:
+              sel: 188736
+              total: 272827
+          1:
+            0:
+              sel: 272888
+              total: 528736
+            1:
+              sel: 56150
+              total: 104661
+        4:
+          0:
+            0:
+              sel: 947979
+              total: 1193038
+            1:
+              sel: 207543
+              total: 262586
+          1:
+            0:
+              sel: 655982
+              total: 1040316
+            1:
+              sel: 135412
+              total: 210726
+        5:
+          0:
+            0:
+              sel: 152386
+              total: 180855
+            1:
+              sel: 36069
+              total: 43251
+          1:
+            0:
+              sel: 324358
+              total: 419189
+            1:
+              sel: 69730
+              total: 90814
+    passed:
+      dif_dwrich:
+        0:
+          0:
+            0:
+              sel: 1472
+              total: 4482
+            1:
+              sel: 1472
+              total: 4482
+          1:
+            0:
+              sel: 64
+              total: 687
+            1:
+              sel: 64
+              total: 687
+        1:
+          0:
+            0:
+              sel: 1846
+              total: 5066
+            1:
+              sel: 1846
+              total: 5066
+          1:
+            0:
+              sel: 428
+              total: 1336
+            1:
+              sel: 428
+              total: 1336
+        2:
+          0:
+            0:
+              sel: 2233
+              total: 5594
+            1:
+              sel: 2233
+              total: 5594
+          1:
+            0:
+              sel: 512
+              total: 1630
+            1:
+              sel: 512
+              total: 1630
+        3:
+          0:
+            0:
+              sel: 2568
+              total: 6106
+            1:
+              sel: 2568
+              total: 6106
+          1:
+            0:
+              sel: 692
+              total: 2267
+            1:
+              sel: 692
+              total: 2267
+        4:
+          0:
+            0:
+              sel: 1611
+              total: 3108
+            1:
+              sel: 1611
+              total: 3108
+          1:
+            0:
+              sel: 1001
+              total: 2396
+            1:
+              sel: 1001
+              total: 2396
+        5:
+          0:
+            0:
+              sel: 132
+              total: 230
+            1:
+              sel: 132
+              total: 230
+          1:
+            0:
+              sel: 244
+              total: 468
+            1:
+              sel: 244
+              total: 468
+      dif_uprich:
+        0:
+          0:
+            0:
+              sel: 405
+              total: 4397
+            1:
+              sel: 405
+              total: 4397
+          1:
+            0:
+              sel: 5
+              total: 539
+            1:
+              sel: 5
+              total: 539
+        1:
+          0:
+            0:
+              sel: 334
+              total: 4020
+            1:
+              sel: 334
+              total: 4020
+          1:
+            0:
+              sel: 58
+              total: 954
+            1:
+              sel: 58
+              total: 954
+        2:
+          0:
+            0:
+              sel: 261
+              total: 3190
+            1:
+              sel: 261
+              total: 3190
+          1:
+            0:
+              sel: 67
+              total: 1035
+            1:
+              sel: 67
+              total: 1035
+        3:
+          0:
+            0:
+              sel: 274
+              total: 2522
+            1:
+              sel: 274
+              total: 2522
+          1:
+            0:
+              sel: 92
+              total: 1267
+            1:
+              sel: 92
+              total: 1267
+        4:
+          0:
+            0:
+              sel: 163
+              total: 1010
+            1:
+              sel: 163
+              total: 1010
+          1:
+            0:
+              sel: 114
+              total: 1003
+            1:
+              sel: 114
+              total: 1003
+        5:
+          0:
+            0:
+              sel: 12
+              total: 58
+            1:
+              sel: 12
+              total: 58
+          1:
+            0:
+              sel: 19
+              total: 175
+            1:
+              sel: 19
+              total: 175
+      nondif:
+        0:
+          0:
+            0:
+              sel: 316327
+              total: 446075
+            1:
+              sel: 64157
+              total: 89479
+          1:
+            0:
+              sel: 7177
+              total: 46431
+            1:
+              sel: 1457
+              total: 9493
+        1:
+          0:
+            0:
+              sel: 492504
+              total: 676716
+            1:
+              sel: 101352
+              total: 137225
+          1:
+            0:
+              sel: 73670
+              total: 132302
+            1:
+              sel: 14846
+              total: 26596
+        2:
+          0:
+            0:
+              sel: 576684
+              total: 842665
+            1:
+              sel: 120842
+              total: 173999
+          1:
+            0:
+              sel: 136554
+              total: 244351
+            1:
+              sel: 27747
+              total: 48727
+        3:
+          0:
+            0:
+              sel: 892838
+              total: 1298618
+            1:
+              sel: 188736
+              total: 272827
+          1:
+            0:
+              sel: 272888
+              total: 528736
+            1:
+              sel: 56150
+              total: 104661
+        4:
+          0:
+            0:
+              sel: 947979
+              total: 1193038
+            1:
+              sel: 207543
+              total: 262586
+          1:
+            0:
+              sel: 655982
+              total: 1040316
+            1:
+              sel: 135412
+              total: 210726
+        5:
+          0:
+            0:
+              sel: 152386
+              total: 180855
+            1:
+              sel: 36069
+              total: 43251
+          1:
+            0:
+              sel: 324358
+              total: 419189
+            1:
+              sel: 69730
+              total: 90814
+vmu:
+  k:
+    failed:
+      dif:
+        0:
+          0:
+            0:
+              sel: 8501
+              total: 13290
+            1:
+              sel: 8501
+              total: 13290
+          1:
+            0:
+              sel: 300
+              total: 3680
+            1:
+              sel: 300
+              total: 3680
+        1:
+          0:
+            0:
+              sel: 10736
+              total: 15373
+            1:
+              sel: 10736
+              total: 15373
+          1:
+            0:
+              sel: 2115
+              total: 4912
+            1:
+              sel: 2115
+              total: 4912
+        2:
+          0:
+            0:
+              sel: 8668
+              total: 13797
+            1:
+              sel: 8668
+              total: 13797
+          1:
+            0:
+              sel: 2667
+              total: 5320
+            1:
+              sel: 2667
+              total: 5320
+        3:
+          0:
+            0:
+              sel: 8624
+              total: 14408
+            1:
+              sel: 8624
+              total: 14408
+          1:
+            0:
+              sel: 3368
+              total: 7330
+            1:
+              sel: 3368
+              total: 7330
+        4:
+          0:
+            0:
+              sel: 6958
+              total: 10912
+            1:
+              sel: 6958
+              total: 10912
+          1:
+            0:
+              sel: 4610
+              total: 9273
+            1:
+              sel: 4610
+              total: 9273
+        5:
+          0:
+            0:
+              sel: 889
+              total: 1439
+            1:
+              sel: 889
+              total: 1439
+          1:
+            0:
+              sel: 1583
+              total: 2542
+            1:
+              sel: 1583
+              total: 2542
+      nondif:
+        0:
+          0:
+            0:
+              sel: 155937
+              total: 230021
+            1:
+              sel: 31534
+              total: 45573
+          1:
+            0:
+              sel: 6284
+              total: 54991
+            1:
+              sel: 1265
+              total: 10462
+        1:
+          0:
+            0:
+              sel: 381507
+              total: 523566
+            1:
+              sel: 78441
+              total: 106049
+          1:
+            0:
+              sel: 67017
+              total: 141753
+            1:
+              sel: 13280
+              total: 27671
+        2:
+          0:
+            0:
+              sel: 532847
+              total: 789684
+            1:
+              sel: 111988
+              total: 163103
+          1:
+            0:
+              sel: 135540
+              total: 251018
+            1:
+              sel: 27316
+              total: 49209
+        3:
+          0:
+            0:
+              sel: 916258
+              total: 1344975
+            1:
+              sel: 191240
+              total: 279892
+          1:
+            0:
+              sel: 282567
+              total: 547437
+            1:
+              sel: 57478
+              total: 107700
+        4:
+          0:
+            0:
+              sel: 1052505
+              total: 1323739
+            1:
+              sel: 229733
+              total: 290486
+          1:
+            0:
+              sel: 691492
+              total: 1108675
+            1:
+              sel: 142941
+              total: 224911
+        5:
+          0:
+            0:
+              sel: 183993
+              total: 218860
+            1:
+              sel: 43359
+              total: 51865
+          1:
+            0:
+              sel: 379488
+              total: 488474
+            1:
+              sel: 81021
+              total: 105084
+    passed:
+      dif_dwrich:
+        0:
+          0:
+            0:
+              sel: 612
+              total: 961
+            1:
+              sel: 612
+              total: 961
+          1:
+            0:
+              sel: 15
+              total: 92
+            1:
+              sel: 15
+              total: 92
+        1:
+          0:
+            0:
+              sel: 1712
+              total: 2800
+            1:
+              sel: 1712
+              total: 2800
+          1:
+            0:
+              sel: 156
+              total: 350
+            1:
+              sel: 156
+              total: 350
+        2:
+          0:
+            0:
+              sel: 2216
+              total: 4476
+            1:
+              sel: 2216
+              total: 4476
+          1:
+            0:
+              sel: 299
+              total: 782
+            1:
+              sel: 299
+              total: 782
+        3:
+          0:
+            0:
+              sel: 2950
+              total: 7313
+            1:
+              sel: 2950
+              total: 7313
+          1:
+            0:
+              sel: 498
+              total: 1524
+            1:
+              sel: 498
+              total: 1524
+        4:
+          0:
+            0:
+              sel: 1790
+              total: 4860
+            1:
+              sel: 1790
+              total: 4860
+          1:
+            0:
+              sel: 616
+              total: 1939
+            1:
+              sel: 616
+              total: 1939
+        5:
+          0:
+            0:
+              sel: 118
+              total: 388
+            1:
+              sel: 118
+              total: 388
+          1:
+            0:
+              sel: 157
+              total: 527
+            1:
+              sel: 157
+              total: 527
+      dif_uprich:
+        0:
+          0:
+            0:
+              sel: 31
+              total: 46
+            1:
+              sel: 31
+              total: 46
+          1:
+            0:
+              sel: 0
+              total: 13
+            1:
+              sel: 0
+              total: 13
+        1:
+          0:
+            0:
+              sel: 69
+              total: 90
+            1:
+              sel: 69
+              total: 90
+          1:
+            0:
+              sel: 3
+              total: 12
+            1:
+              sel: 3
+              total: 12
+        2:
+          0:
+            0:
+              sel: 88
+              total: 131
+            1:
+              sel: 88
+              total: 131
+          1:
+            0:
+              sel: 8
+              total: 33
+            1:
+              sel: 8
+              total: 33
+        3:
+          0:
+            0:
+              sel: 159
+              total: 373
+            1:
+              sel: 159
+              total: 373
+          1:
+            0:
+              sel: 22
+              total: 71
+            1:
+              sel: 22
+              total: 71
+        4:
+          0:
+            0:
+              sel: 92
+              total: 423
+            1:
+              sel: 92
+              total: 423
+          1:
+            0:
+              sel: 26
+              total: 201
+            1:
+              sel: 26
+              total: 201
+        5:
+          0:
+            0:
+              sel: 9
+              total: 57
+            1:
+              sel: 9
+              total: 57
+          1:
+            0:
+              sel: 13
+              total: 78
+            1:
+              sel: 13
+              total: 78
+      nondif:
+        0:
+          0:
+            0:
+              sel: 155937
+              total: 230021
+            1:
+              sel: 31534
+              total: 45573
+          1:
+            0:
+              sel: 6284
+              total: 54991
+            1:
+              sel: 1265
+              total: 10462
+        1:
+          0:
+            0:
+              sel: 381507
+              total: 523566
+            1:
+              sel: 78441
+              total: 106049
+          1:
+            0:
+              sel: 67017
+              total: 141753
+            1:
+              sel: 13280
+              total: 27671
+        2:
+          0:
+            0:
+              sel: 532847
+              total: 789684
+            1:
+              sel: 111988
+              total: 163103
+          1:
+            0:
+              sel: 135540
+              total: 251018
+            1:
+              sel: 27316
+              total: 49209
+        3:
+          0:
+            0:
+              sel: 916258
+              total: 1344975
+            1:
+              sel: 191240
+              total: 279892
+          1:
+            0:
+              sel: 282567
+              total: 547437
+            1:
+              sel: 57478
+              total: 107700
+        4:
+          0:
+            0:
+              sel: 1052505
+              total: 1323739
+            1:
+              sel: 229733
+              total: 290486
+          1:
+            0:
+              sel: 691492
+              total: 1108675
+            1:
+              sel: 142941
+              total: 224911
+        5:
+          0:
+            0:
+              sel: 183993
+              total: 218860
+            1:
+              sel: 43359
+              total: 51865
+          1:
+            0:
+              sel: 379488
+              total: 488474
+            1:
+              sel: 81021
+              total: 105084
+  pi:
+    failed:
+      dif:
+        0:
+          0:
+            0:
+              sel: 4318
+              total: 12844
+            1:
+              sel: 4318
+              total: 12844
+          1:
+            0:
+              sel: 117
+              total: 1850
+            1:
+              sel: 117
+              total: 1850
+        1:
+          0:
+            0:
+              sel: 3582
+              total: 11179
+            1:
+              sel: 3582
+              total: 11179
+          1:
+            0:
+              sel: 792
+              total: 2925
+            1:
+              sel: 792
+              total: 2925
+        2:
+          0:
+            0:
+              sel: 4406
+              total: 11748
+            1:
+              sel: 4406
+              total: 11748
+          1:
+            0:
+              sel: 1002
+              total: 3513
+            1:
+              sel: 1002
+              total: 3513
+        3:
+          0:
+            0:
+              sel: 5433
+              total: 12464
+            1:
+              sel: 5433
+              total: 12464
+          1:
+            0:
+              sel: 1506
+              total: 5017
+            1:
+              sel: 1506
+              total: 5017
+        4:
+          0:
+            0:
+              sel: 3465
+              total: 6263
+            1:
+              sel: 3465
+              total: 6263
+          1:
+            0:
+              sel: 2130
+              total: 5086
+            1:
+              sel: 2130
+              total: 5086
+        5:
+          0:
+            0:
+              sel: 278
+              total: 448
+            1:
+              sel: 278
+              total: 448
+          1:
+            0:
+              sel: 529
+              total: 1008
+            1:
+              sel: 529
+              total: 1008
+      nondif:
+        0:
+          0:
+            0:
+              sel: 318401
+              total: 449000
+            1:
+              sel: 64591
+              total: 90081
+          1:
+            0:
+              sel: 7175
+              total: 46288
+            1:
+              sel: 1449
+              total: 9476
+        1:
+          0:
+            0:
+              sel: 494027
+              total: 678732
+            1:
+              sel: 101588
+              total: 137574
+          1:
+            0:
+              sel: 73646
+              total: 132183
+            1:
+              sel: 14847
+              total: 26574
+        2:
+          0:
+            0:
+              sel: 576080
+              total: 841820
+            1:
+              sel: 120706
+              total: 173782
+          1:
+            0:
+              sel: 136418
+              total: 244090
+            1:
+              sel: 27720
+              total: 48684
+        3:
+          0:
+            0:
+              sel: 891087
+              total: 1296134
+            1:
+              sel: 188342
+              total: 272257
+          1:
+            0:
+              sel: 272425
+              total: 527805
+            1:
+              sel: 56061
+              total: 104485
+        4:
+          0:
+            0:
+              sel: 946703
+              total: 1191475
+            1:
+              sel: 207256
+              total: 262238
+          1:
+            0:
+              sel: 655225
+              total: 1039139
+            1:
+              sel: 135286
+              total: 210531
+        5:
+          0:
+            0:
+              sel: 152282
+              total: 180736
+            1:
+              sel: 36049
+              total: 43227
+          1:
+            0:
+              sel: 324175
+              total: 418949
+            1:
+              sel: 69685
+              total: 90757
+    passed:
+      dif_dwrich:
+        0:
+          0:
+            0:
+              sel: 2021
+              total: 3206
+            1:
+              sel: 2021
+              total: 3206
+          1:
+            0:
+              sel: 12
+              total: 90
+            1:
+              sel: 12
+              total: 90
+        1:
+          0:
+            0:
+              sel: 1868
+              total: 3003
+            1:
+              sel: 1868
+              total: 3003
+          1:
+            0:
+              sel: 91
+              total: 222
+            1:
+              sel: 91
+              total: 222
+        2:
+          0:
+            0:
+              sel: 578
+              total: 1236
+            1:
+              sel: 578
+              total: 1236
+          1:
+            0:
+              sel: 119
+              total: 312
+            1:
+              sel: 119
+              total: 312
+        3:
+          0:
+            0:
+              sel: 290
+              total: 840
+            1:
+              sel: 290
+              total: 840
+          1:
+            0:
+              sel: 99
+              total: 384
+            1:
+              sel: 99
+              total: 384
+        4:
+          0:
+            0:
+              sel: 109
+              total: 351
+            1:
+              sel: 109
+              total: 351
+          1:
+            0:
+              sel: 65
+              total: 253
+            1:
+              sel: 65
+              total: 253
+        5:
+          0:
+            0:
+              sel: 12
+              total: 31
+            1:
+              sel: 12
+              total: 31
+          1:
+            0:
+              sel: 14
+              total: 40
+            1:
+              sel: 14
+              total: 40
+      dif_uprich:
+        0:
+          0:
+            0:
+              sel: 117
+              total: 527
+            1:
+              sel: 117
+              total: 527
+          1:
+            0:
+              sel: 0
+              total: 53
+            1:
+              sel: 0
+              total: 53
+        1:
+          0:
+            0:
+              sel: 68
+              total: 377
+            1:
+              sel: 68
+              total: 377
+          1:
+            0:
+              sel: 2
+              total: 76
+            1:
+              sel: 2
+              total: 76
+        2:
+          0:
+            0:
+              sel: 13
+              total: 179
+            1:
+              sel: 13
+              total: 179
+          1:
+            0:
+              sel: 5
+              total: 72
+            1:
+              sel: 5
+              total: 72
+        3:
+          0:
+            0:
+              sel: 4
+              total: 120
+            1:
+              sel: 4
+              total: 120
+          1:
+            0:
+              sel: 3
+              total: 70
+            1:
+              sel: 3
+              total: 70
+        4:
+          0:
+            0:
+              sel: 6
+              total: 53
+            1:
+              sel: 6
+              total: 53
+          1:
+            0:
+              sel: 1
+              total: 44
+            1:
+              sel: 1
+              total: 44
+        5:
+          0:
+            0:
+              sel: 0
+              total: 4
+            1:
+              sel: 0
+              total: 4
+          1:
+            0:
+              sel: 1
+              total: 10
+            1:
+              sel: 1
+              total: 10
+      nondif:
+        0:
+          0:
+            0:
+              sel: 318401
+              total: 449000
+            1:
+              sel: 64591
+              total: 90081
+          1:
+            0:
+              sel: 7175
+              total: 46288
+            1:
+              sel: 1449
+              total: 9476
+        1:
+          0:
+            0:
+              sel: 494027
+              total: 678732
+            1:
+              sel: 101588
+              total: 137574
+          1:
+            0:
+              sel: 73646
+              total: 132183
+            1:
+              sel: 14847
+              total: 26574
+        2:
+          0:
+            0:
+              sel: 576080
+              total: 841820
+            1:
+              sel: 120706
+              total: 173782
+          1:
+            0:
+              sel: 136418
+              total: 244090
+            1:
+              sel: 27720
+              total: 48684
+        3:
+          0:
+            0:
+              sel: 891087
+              total: 1296134
+            1:
+              sel: 188342
+              total: 272257
+          1:
+            0:
+              sel: 272425
+              total: 527805
+            1:
+              sel: 56061
+              total: 104485
+        4:
+          0:
+            0:
+              sel: 946703
+              total: 1191475
+            1:
+              sel: 207256
+              total: 262238
+          1:
+            0:
+              sel: 655225
+              total: 1039139
+            1:
+              sel: 135286
+              total: 210531
+        5:
+          0:
+            0:
+              sel: 152282
+              total: 180736
+            1:
+              sel: 36049
+              total: 43227
+          1:
+            0:
+              sel: 324175
+              total: 418949
+            1:
+              sel: 69685
+              total: 90757
