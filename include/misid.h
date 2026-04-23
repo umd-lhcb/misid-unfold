@@ -51,8 +51,16 @@ constexpr double DM_max   = 0.153;  // GeV
 
 constexpr double ONE_SIGMA = 0.682689492137;
 
+constexpr double RICH1_Z = 2500.;  // mm
+constexpr double T3_Z    = 9000.;  // mm
+
 const unordered_map<string, int> year_idx{
     {"2016", 0}, {"2017", 1}, {"2018", 2}};
+
+enum Sample { ISO_CTRL, VMU, FAKE_MU };
+
+const map<Sample, string> SAMPLES = {
+    {ISO_CTRL, "iso_ctrl"}, {VMU, "vmu"}, {FAKE_MU, "fake_mu"}};
 
 // Fit variables labels
 const TString d0_m_label = "#font[12]{m}(#font[12]{D}^{0})";
@@ -105,6 +113,59 @@ double get_d0m_upper_limit(const TString &probe, const int &p_idx,
 // Helper functions //
 //////////////////////
 
+// Check if candidate satisfies muon PID requirements.
+bool check_mu_pid_run1rdx(const bool &probe_is_muon, const double &probe_DLLmu,
+                          const double &probe_DLLe, const float &probe_ubdt,
+                          const Sample &sample) {
+  switch (sample) {
+    case ISO_CTRL:
+      return probe_is_muon && (probe_DLLe < 1.0) && (probe_DLLmu > 2.0) &&
+             (probe_ubdt > 0.25);
+    case VMU:
+      return probe_is_muon && (probe_DLLe < 1.0) && (probe_DLLmu > 2.0) &&
+             (probe_ubdt < 0.25);
+    case FAKE_MU:
+      // IMPORTANT: The FAKE_MU pid requirement is !isMuon, but here we flip it
+      // and calculate the complementary efficiency so that the K/pi misid case
+      // (with less stats) falls in the "passed" sub-sample. The proper
+      // efficiency is calculated afterwards as 1.0 - complementary_eff.
+      return probe_is_muon;
+    default:
+      cout << "ERROR Unexpected <sample> argument in check_mu_pid()" << endl;
+      return false;
+  }
+}
+
+bool check_mu_pid_run2ang(const bool &probe_is_muon, const double &probe_DLLe,
+                          const float &probe_ubdt, const Sample &sample) {
+  switch (sample) {
+    case ISO_CTRL:
+      return probe_is_muon && (probe_DLLe < 1.0) && (probe_ubdt > 0.25);
+    case VMU:
+      return probe_is_muon && (probe_DLLe < 1.0) && (probe_ubdt < 0.25);
+    case FAKE_MU:
+      // IMPORTANT: The FAKE_MU pid requirement is !isMuon, but here we flip it
+      // and calculate the complementary efficiency so that the K/pi misid case
+      // (with less stats) falls in the "passed" sub-sample. The proper
+      // efficiency is calculated afterwards as 1.0 - complementary_eff.
+      return probe_is_muon;
+    default:
+      cout << "ERROR Unexpected <sample> argument in check_mu_pid()" << endl;
+      return false;
+  }
+}
+
+bool check_mu_pid(const bool &probe_is_muon, const double &probe_DLLmu,
+                  const double &probe_DLLe, const float &probe_ubdt,
+                  const Sample &sample, const bool &run2ang) {
+  if (run2ang) {
+    return check_mu_pid_run2ang(probe_is_muon, probe_DLLe, probe_ubdt, sample);
+  } else {
+    return check_mu_pid_run1rdx(probe_is_muon, probe_DLLmu, probe_DLLe,
+                                probe_ubdt, sample);
+  }
+}
+
 // Check if track is matched to a h -> mu nu decay-in-fight chain.
 bool check_dif(const int &probe_trueid, const int &probe_daughter0_trueid,
                const int &probe_daughter1_trueid, const int &probe_mc_mom_nd,
@@ -145,6 +206,14 @@ bool comp_pdg_ids(const int &a, const int &b) {
     return a > b;
   }
 }
+
+// Split DiF tracks according to z coordinate of DiF vertex.
+// This determines whether the hadron or the muon was responsible for the RICH1
+// response.
+bool after_rich1(const double &dif_vtx_z) { return dif_vtx_z > RICH1_Z; }
+// This determines if DiF happened before T3. If not, there is no
+// resolution impact on the momentum measurement.
+bool before_t3(const double &dif_vtx_z) { return dif_vtx_z < T3_Z; }
 
 // Calculate weighted average of elements {x} with weights 1/unc^2.
 template <size_t N>

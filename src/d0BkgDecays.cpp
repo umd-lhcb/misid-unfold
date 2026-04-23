@@ -117,6 +117,8 @@ int main(int argc, char **argv) {
      cxxopts::value<string>()->default_value("gen/"))
     ("f,file", "Specify output YAML config file",
      cxxopts::value<string>()->default_value("d0_bkg_decays.yml"))
+    ("r,run2ang", "Use Run2Ang PID cuts",
+     cxxopts::value<bool>()->default_value("false"))
     ;
   // clang-format on
 
@@ -127,7 +129,14 @@ int main(int argc, char **argv) {
   }
 
   const auto ymlFile   = parsedArgs["config"].as<string>();
+  const auto run2ang   = parsedArgs["run2ang"].as<bool>();
   const auto ymlConfig = YAML::LoadFile(ymlFile)["misid_corrections"];
+
+  if (run2ang) {
+    cout << "INFO Using Run 2 Angular Analysis cuts" << endl;
+  } else {
+    cout << "INFO Using Run 1 RDx Analysis cuts" << endl;
+  }
 
   const string opath =
       parsedArgs["output"].as<string>() + "/" + parsedArgs["file"].as<string>();
@@ -149,8 +158,8 @@ int main(int argc, char **argv) {
   map<string, map<string, map<string, map<int, map<int, map<string, int>>>>>>
       ymlContent;
 
-  for (auto &sample : samples) {
-    cout << "INFO Producing " << sample << " constraints" << endl;
+  for (const auto &[sample, sample_name] : SAMPLES) {
+    cout << "INFO Producing " << sample_name << " constraints" << endl;
 
     unordered_map<string, array<array<map<string, int>, N_BINS_ETA>, N_BINS_P>>
         counts_particles_passed;
@@ -258,18 +267,12 @@ int main(int argc, char **argv) {
 
         if (!in_fit_window) continue;
 
-        bool pid_ok;
-        if (sample == "fake_mu") {
-          // For FAKE_MU, we calculate the complementary efficiency so that
-          // the "passed" sample always corresponds to the K/pi misid case
-          pid_ok = probe_ismuon;
-        } else if (sample == "vmu") {
-          pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < 1.0 &&
-                   probe_mu_ubdt < 0.25;
-        } else {
-          pid_ok = probe_ismuon && probe_mudll > 2.0 && probe_edll < 1.0 &&
-                   probe_mu_ubdt > 0.25;
-        }
+        // IMPORTANT: The FAKE_MU pid requirement is !isMuon, but here we flip
+        // it and calculate the complementary efficiency so that the K/pi misid
+        // case (with less stats) falls in the "passed" sub-sample. The proper
+        // efficiency is calculated afterwards as 1 - flipped_eff.
+        const bool pid_ok = check_mu_pid(probe_ismuon, probe_dllmu, probe_dlle,
+                                         probe_mu_ubdt, sample, run2ang);
 
         const int sign = (d0_trueid >= 0) ? 1 : -1;
 
@@ -372,9 +375,9 @@ int main(int argc, char **argv) {
                  << f_sig_unc_lo * 100. << ")%\n"
                  << endl;
 
-            ymlContent[sample][particle][subsample][p_bin][eta_bin]
+            ymlContent[sample_name][particle][subsample][p_bin][eta_bin]
                       ["signal"] = bin_signal;
-            ymlContent[sample][particle][subsample][p_bin][eta_bin]
+            ymlContent[sample_name][particle][subsample][p_bin][eta_bin]
                       ["total"] = bin_total;
           }
         }

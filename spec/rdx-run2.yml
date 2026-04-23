@@ -330,6 +330,18 @@ weight_brs:
           file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
           name: wmis_dsb_bsb
 
+pidcalib_sel_effs:
+    ntps:
+        2016:
+            k: "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2016*.root"
+            pi: "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2016*.root"
+        2017:
+            k: "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2017*.root"
+            pi: "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2017*.root"
+        2018:
+            k: "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-k/Dst_ANNK--25_09_19--mc--11774014--2018*.root"
+            pi: "ntuples/0.9.17-Bd_DstX/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--25_09_19--mc--11774014--2018*.root"
+
 misid_corrections:
     mc_ntps:
         signal:
