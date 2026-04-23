@@ -63,7 +63,11 @@ TString format_time(const int& duration) {
 
 // Calculate square root of sum of squares
 double sqrt_sum_sq(const double& x1, const double& x2) {
-  return sqrt(x1*x1 + x2*x2);
+  return std::sqrt(x1 * x1 + x2 * x2);
+}
+
+double sqrt_sum_sq(const double& x1, const double& x2, const double& x3) {
+  return std::sqrt(x1 * x1 + x2 * x2 + x3 * x3);
 }
 
 //////////////////
