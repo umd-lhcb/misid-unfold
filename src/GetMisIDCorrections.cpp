@@ -45,6 +45,7 @@
 #include "RooProdPdf.h"
 #include "RooRealVar.h"
 #include "RooUniform.h"
+#include "RooWorkspace.h"
 
 #include <yaml-cpp/yaml.h>
 #include <cxxopts.hpp>
@@ -1556,9 +1557,19 @@ int main(int argc, char **argv) {
 
     TH3D effs_mw_passed(histo_binning);
     effs_mw_passed.SetName("effs_mw_passed_" + suffix);
+    TH3D effs_mw_passed_dif_uprich(histo_binning);
+    effs_mw_passed_dif_uprich.SetName("effs_mw_passed_dif_uprich_" + suffix);
+    TH3D effs_mw_passed_dif_dwrich(histo_binning);
+    effs_mw_passed_dif_dwrich.SetName("effs_mw_passed_dif_dwrich_" + suffix);
+    TH3D effs_mw_passed_nondif(histo_binning);
+    effs_mw_passed_nondif.SetName("effs_mw_passed_nondif_" + suffix);
 
     TH3D effs_mw_failed(histo_binning);
     effs_mw_failed.SetName("effs_mw_failed_" + suffix);
+    TH3D effs_mw_failed_dif(histo_binning);
+    effs_mw_failed_dif.SetName("effs_mw_failed_dif_" + suffix);
+    TH3D effs_mw_failed_nondif(histo_binning);
+    effs_mw_failed_nondif.SetName("effs_mw_failed_nondif_" + suffix);
 
     // Check distribution of fitted parameters
     RooDataSet ds_params_calib("ds_params_calib", "ds_params_calib",
@@ -1592,9 +1603,22 @@ int main(int argc, char **argv) {
     TH3D histo_pid_raw(histo_binning);
     histo_pid_raw.SetName("eff_raw");
 
+    // And correction factor
+    TH3D histo_pid_corr(histo_binning);
+    histo_pid_corr.SetName("eff_over_eff_raw");
+
     // Create histogram to store fitted DiF fractions
-    TH3D histo_f_dif(histo_binning);
-    histo_f_dif.SetName("f_dif_" + TString(probe));
+    TH3D histo_f_dif_passed(histo_binning);
+    histo_f_dif_passed.SetName("f_dif_passed_" + TString(probe));
+
+    TH3D histo_f_dif_failed(histo_binning);
+    histo_f_dif_failed.SetName("f_dif_failed_" + TString(probe));
+
+    TH3D histo_f_rich_passed(histo_binning);
+    histo_f_rich_passed.SetName("f_rich_" + TString(probe));
+
+    TH3D histo_scale_nondif(histo_binning);
+    histo_scale_nondif.SetName("scale_nondif_" + TString(probe));
 
     for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
       for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
@@ -3412,25 +3436,51 @@ int main(int argc, char **argv) {
             // 1.0 - eff instead of eff itself.
             histo_pid_raw.SetBinContent(kin_bin, 1.0 - eff.getVal());
             histo_pid.SetBinContent(kin_bin, 1.0 - eff_corrected.getVal());
+            histo_pid_corr.SetBinContent(
+                kin_bin, (1.0 - eff_corrected.getVal()) / (1.0 - eff.getVal()));
           } else {
             histo_pid_raw.SetBinContent(kin_bin, eff.getVal());
             histo_pid.SetBinContent(kin_bin, eff_corrected.getVal());
+            histo_pid_corr.SetBinContent(kin_bin,
+                                         eff_corrected.getVal() / eff.getVal());
           }
           // Save fitted DiF fractions
-          histo_f_dif.SetBinContent(kin_bin, f_dif_calib_passed.getVal());
+          histo_f_dif_passed.SetBinContent(kin_bin,
+                                           f_dif_calib_passed.getVal());
+          histo_f_dif_failed.SetBinContent(kin_bin,
+                                           f_dif_calib_failed.getVal());
+          histo_f_rich_passed.SetBinContent(kin_bin,
+                                            f_rich_calib_passed.getVal());
+          histo_scale_nondif.SetBinContent(kin_bin,
+                                           scale_nondif_calib.getVal());
           // Save errors if fit was performed
           if (fit_result.get()) {
             histo_pid_raw.SetBinError(kin_bin,
                                       eff.getPropagatedError(*fit_result));
             histo_pid.SetBinError(
                 kin_bin, eff_corrected.getPropagatedError(*fit_result));
-            histo_f_dif.SetBinError(
+            histo_f_dif_passed.SetBinError(
                 kin_bin, f_dif_calib_passed.getPropagatedError(*fit_result));
+            histo_f_dif_failed.SetBinError(
+                kin_bin, f_dif_calib_failed.getPropagatedError(*fit_result));
           }
+          histo_f_rich_passed.SetBinError(kin_bin,
+                                          f_rich_calib_passed.getError());
+          histo_scale_nondif.SetBinError(kin_bin,
+                                         scale_nondif_calib.getError());
 
           // Store final mass-window efficiencies in histogram
           effs_mw_passed.SetBinContent(kin_bin, eff_mw_passed.getVal());
+          effs_mw_passed_dif_uprich.SetBinContent(
+              kin_bin, eff_mw_passed_dif_uprich.getVal());
+          effs_mw_passed_dif_dwrich.SetBinContent(
+              kin_bin, eff_mw_passed_dif_dwrich.getVal());
+          effs_mw_passed_nondif.SetBinContent(kin_bin,
+                                              eff_mw_passed_nondif.getVal());
           effs_mw_failed.SetBinContent(kin_bin, eff_mw_failed.getVal());
+          effs_mw_failed_dif.SetBinContent(kin_bin, eff_mw_failed_dif.getVal());
+          effs_mw_failed_nondif.SetBinContent(kin_bin,
+                                              eff_mw_failed_nondif.getVal());
 
           // Print mass-window efficiencies
           cout << "\nINFO Mass-window efficiencies\n";
@@ -3546,6 +3596,23 @@ int main(int argc, char **argv) {
                << ")";
           cout << endl;
 
+          //////////////////////////
+          // Persist fitted model //
+          //////////////////////////
+
+          TFile ofile_fit(fit_dir_path + "/fit_result.root", "RECREATE");
+          ofile_fit.cd();
+
+          RooWorkspace w("workspace_" + suffix, "workspace_" + suffix);
+          w.import(RooArgSet(model_passed, model_failed),
+                   RecycleConflictNodes());
+          w.Write();
+          if (!dry_run) {
+            fit_result->Write();
+          }
+
+          ofile_fit.Close();
+
           d0_m_var.setRange(extended_d0_m_min, extended_d0_m_max);
           dm_var.setRange(extended_dm_min, extended_dm_max);
         }
@@ -3565,6 +3632,7 @@ int main(int argc, char **argv) {
     ofile_probe.cd();
     histo_pid_raw.Write();
     histo_pid.Write();
+    histo_pid_corr.Write();
     ofile_probe.Close();
 
     // Define output file for fitted dif fractions
@@ -3574,7 +3642,10 @@ int main(int argc, char **argv) {
 
     // Save fitted DiF fractions
     ofile_f_dif.cd();
-    histo_f_dif.Write();
+    histo_f_dif_passed.Write();
+    histo_f_dif_failed.Write();
+    histo_f_rich_passed.Write();
+    histo_scale_nondif.Write();
     ofile_f_dif.Close();
 
     // Now save other distributions in common output file
@@ -3610,7 +3681,12 @@ int main(int argc, char **argv) {
     // Save efficiencies
     cout << "INFO Saving mass-window efficiencies " << endl;
     effs_mw_passed.Write();
+    effs_mw_passed_dif_uprich.Write();
+    effs_mw_passed_dif_dwrich.Write();
+    effs_mw_passed_nondif.Write();
     effs_mw_failed.Write();
+    effs_mw_failed_dif.Write();
+    effs_mw_failed_nondif.Write();
 
     // Delete calib datasets
     cout << "INFO Deleting MC datasets " << endl;
