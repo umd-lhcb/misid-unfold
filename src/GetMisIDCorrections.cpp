@@ -404,10 +404,10 @@ int main(int argc, char **argv) {
   d0_m_var.setRange("data", D0_M_min, D0_M_max);
   dm_var.setRange("data", DM_min, DM_max);
 
-  RooRealVar d0_m_shift("d0_m_shift", "d0_m_shift", 0., -0.003, 0.003, "GeV");
-  RooRealVar dm_shift("dm_shift", "dm_shift", 0., -0.0002, 0.0002, "GeV");
-  RooRealVar d0_m_scale("d0_m_scale", "d0_m_scale", 1., 0.9, 1.1, "");
-  RooRealVar dm_scale("dm_scale", "dm_scale", 1., 0.9, 1.1, "");
+  RooRealVar d0_m_shift("d0_m_shift", "d0_m_shift", 0., -0.005, 0.005, "GeV");
+  RooRealVar dm_shift("dm_shift", "dm_shift", 0., -0.00007, 0.00007, "GeV");
+  RooRealVar d0_m_scale("d0_m_scale", "d0_m_scale", 1., 0.75, 1.25, "");
+  RooRealVar dm_scale("dm_scale", "dm_scale", 1., 0.8, 1.2, "");
 
   RooConstVar d0_m_pdg("d0_m_pdg", "d0_m_pdg", D0_M);  // GeV
   RooConstVar dm_pdg("dm_pdg", "dm_pdg", DM);          // GeV
@@ -444,15 +444,15 @@ int main(int argc, char **argv) {
   // dm comb model: threshold function
   RooConstVar pi_m_pdg("pi_m_pdg", "pi_m_pdg", PI_M);  // GeV
 
-  RooRealVar c_comb_spi_failed("c_comb_spi_failed", "c_comb_spi_failed", 0., 1.,
-                               "");
-  RooRealVar c_comb_spi_passed("c_comb_spi_passed", "c_comb_spi_passed", 0., 1.,
-                               "");
+  RooRealVar c_comb_spi_failed("c_comb_spi_failed", "c_comb_spi_failed", 1e-3,
+                               1., "");
+  RooRealVar c_comb_spi_passed("c_comb_spi_passed", "c_comb_spi_passed", 1e-3,
+                               1., "");
 
-  RooRealVar c_comb_all_failed("c_comb_all_failed", "c_comb_all_failed", 0., 1.,
-                               "");
-  RooRealVar c_comb_all_passed("c_comb_all_passed", "c_comb_all_passed", 0., 1.,
-                               "");
+  RooRealVar c_comb_all_failed("c_comb_all_failed", "c_comb_all_failed", 1e-3,
+                               1., "");
+  RooRealVar c_comb_all_passed("c_comb_all_passed", "c_comb_all_passed", 1e-3,
+                               1., "");
 
   RooPowerLaw dm_comb_spi_failed("dm_comb_spi_failed", "dm_comb_spi_failed",
                                  dm_var, pi_m_pdg, c_comb_spi_failed);
@@ -464,11 +464,24 @@ int main(int argc, char **argv) {
   RooPowerLaw dm_comb_all_passed("dm_comb_all_passed", "dm_comb_all_passed",
                                  dm_var, pi_m_pdg, c_comb_all_passed);
 
+  // Build loose constraint for spi power-law coefficients linking passed and
+  // failed subsamples. Helps with stability since the passed coefficients is
+  // usually very poorly constrained is vmu and iso.
+  RooFormulaVar c_comb_spi_diff(
+      "c_comb_spi_diff", "c_comb_spi_diff", "x[0]-x[1]",
+      RooArgList(c_comb_spi_passed, c_comb_spi_failed));
+  RooRealVar c_comb_spi_diff_obs("c_comb_spi_diff_obs", "c_comb_spi_diff_obs",
+                                 0., -1., 1., "");
+  c_comb_spi_diff_obs.setConstant();
+  RooGaussian c_comb_spi_diff_constraint(
+      "c_comb_spi_diff_constraint", "c_comb_spi_diff_constraint",
+      c_comb_spi_diff_obs, c_comb_spi_diff, RooConst(0.25));
+
   // D0 comb model: exponential distribution
-  RooRealVar k_comb_all_passed("k_comb_all_passed", "k_comb_all_passed", -20.,
-                               0., "");
-  RooRealVar k_comb_all_failed("k_comb_all_failed", "k_comb_all_failed", -20.,
-                               0., "");
+  RooRealVar k_comb_all_passed("k_comb_all_passed", "k_comb_all_passed", -15.,
+                               9., "");
+  RooRealVar k_comb_all_failed("k_comb_all_failed", "k_comb_all_failed", -15.,
+                               9., "");
 
   RooExponential d0_comb_all_failed("d0_comb_all_failed", "d0_comb_all_failed",
                                     d0_m_var, k_comb_all_failed);
@@ -495,7 +508,7 @@ int main(int argc, char **argv) {
   // Scale controlling yield of mis-identified non-dif tracks in "passed"
   // sample. The nominal MC prediction is recovered when the scale is 1.
   RooRealVar scale_nondif_calib("scale_nondif_calib", "scale_nondif_calib", 1.,
-                                0.1, 20., "");
+                                0., 15., "");
 
   // Number of non-dif events shifted from failed to passed
   RooFormulaVar nondif_yield_add_passed(
@@ -518,7 +531,7 @@ int main(int argc, char **argv) {
   scale_nondif_calib_obs.setConstant();
   RooBifurGauss scale_nondif_constraint(
       "scale_nondif_constraint", "scale_nondif_constraint",
-      scale_nondif_calib_obs, scale_nondif_calib, RooConst(0.1), RooConst(5. / 3.));
+      scale_nondif_calib_obs, scale_nondif_calib, RooConst(1.), RooConst(5.));
 
   ///////////////////
   // Fit fractions //
@@ -1632,7 +1645,7 @@ int main(int argc, char **argv) {
               "d0_model_passed_nondif_" + suffix,
               "d0_model_passed_nondif_" + suffix, d0_m_var, d0_m_var, d0_m_pdg,
               d0_m_scale, d0_m_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
-              1.6, true, n_bins_keys);
+              1.5, true, n_bins_keys);
 
           cout << "INFO Building RooKeysPdf d0_model_failed_nondif with "
                << ds_mc_nondif_merged.numEntries() << " entries" << endl;
@@ -1640,7 +1653,7 @@ int main(int argc, char **argv) {
               "d0_model_failed_nondif_" + suffix,
               "d0_model_failed_nondif_" + suffix, d0_m_var, d0_m_var, d0_m_pdg,
               d0_m_scale, d0_m_shift, ds_mc_nondif_merged, RooKeysPdf::NoMirror,
-              1.6, true, n_bins_keys);
+              1.5, true, n_bins_keys);
 
           // Plot fit results
           // PDF from merged dataset is compared to separate distribution
@@ -2577,6 +2590,13 @@ int main(int argc, char **argv) {
           n_total_failed_nondif.setVal(count_total_failed_nondif[year_idx.at(
               year)][ntrks_idx][eta_idx][p_idx]);
 
+          scale_nondif_calib.setRange(
+              0., std::min(1. + n_inmw_failed_nondif.getVal() /
+                                    n_inmw_passed_nondif.getVal(),
+                           15.));
+          cout << "\nINFO Limiting scale_nondif_calib to "
+               << scale_nondif_calib.getMax() << endl;
+
           // Roughly estimate amount of background
 
           // Define approximate signal region
@@ -2792,10 +2812,6 @@ int main(int argc, char **argv) {
             cout << "\nINFO Prefit failed calib sample " << suffix << endl;
 
             scale_nondif_calib.setConstant();
-            d0_m_shift.setConstant(false);
-            d0_m_scale.setConstant(false);
-            dm_shift.setConstant(false);
-            dm_scale.setConstant(false);
 
             RooArgSet constraints_failed(f_sig_failed_constraint);
             RooArgSet global_obs_failed(f_sig_failed_obs);
@@ -2820,22 +2836,24 @@ int main(int argc, char **argv) {
             minuit_failed.optimizeConst(true);
             minuit_failed.setMinimizerType("Minuit");
 
-            minuit_failed.migrad();
+            minuit_failed.minimize("Minuit", "minimize");
 
             // Now prefit passed subsample also fixing d0_m and dm shifts and
             // scalings
             cout << "\nINFO Prefit passed calib sample " << suffix << endl;
 
-            scale_nondif_calib.setConstant();
+            if (float_dif) scale_nondif_calib.setConstant(false);
             d0_m_shift.setConstant();
             d0_m_scale.setConstant();
             dm_shift.setConstant();
             dm_scale.setConstant();
+            c_comb_spi_failed.setConstant();
 
             RooArgSet constraints_passed(f_sig_passed_constraint,
-                                         scale_nondif_constraint);
-            RooArgSet global_obs_passed(f_sig_passed_obs,
-                                        scale_nondif_calib_obs);
+                                         scale_nondif_constraint,
+                                         c_comb_spi_diff_constraint);
+            RooArgSet global_obs_passed(
+                f_sig_passed_obs, scale_nondif_calib_obs, c_comb_spi_diff_obs);
 
             unique_ptr<RooAbsReal> nll_passed(
                 model_passed.createNLL(*dataset_calib_passed, Range("fitRange"),
@@ -2850,7 +2868,7 @@ int main(int argc, char **argv) {
             minuit_passed.optimizeConst(true);
             minuit_passed.setMinimizerType("Minuit");
 
-            minuit_passed.migrad();
+            minuit_passed.minimize("Minuit", "minimize");
 
             // Now build combined NLL and perform full fit
             cout << "\nINFO Fit full calib sample " << suffix << endl;
@@ -2858,11 +2876,12 @@ int main(int argc, char **argv) {
             RooAddition nll_combined("nll_combined", "nll_combined",
                                      RooArgSet(*nll_passed, *nll_failed));
 
-            if (float_dif) scale_nondif_calib.setConstant(false);
             d0_m_shift.setConstant(false);
             d0_m_scale.setConstant(false);
             dm_shift.setConstant(false);
             dm_scale.setConstant(false);
+            c_comb_spi_failed.setConstant(false);
+            c_comb_spi_passed.setVal(c_comb_spi_failed.getVal());
 
             cout << "INFO Initial nondif_yield_add_passed value: "
                  << nondif_yield_add_passed.getVal() << endl;
@@ -2879,13 +2898,13 @@ int main(int argc, char **argv) {
             int fit_status = minuit.save()->status();
 
             int cov_matrix_status = -1;
-            if (fit_status == 0 || fit_status == 4000) {
+            if (fit_status == 0) {
               minuit.hesse();
               cov_matrix_status = minuit.save()->covQual();
             }
 
             int minos_status = -1;
-            if (use_minos && cov_matrix_status == 3) {
+            if (use_minos && fit_status == 0) {
               minos_status = minuit.minos();
             }
 
@@ -2910,12 +2929,12 @@ int main(int argc, char **argv) {
               minuit.migrad();
               fit_status = minuit.save()->status();
 
-              if (fit_status == 0 || fit_status == 4000) {
+              if (fit_status == 0) {
                 minuit.hesse();
                 cov_matrix_status = minuit.save()->covQual();
               }
 
-              if (use_minos && cov_matrix_status == 3) {
+              if (use_minos && fit_status == 0) {
                 minos_status = minuit.minos();
               }
 
@@ -3226,15 +3245,41 @@ int main(int argc, char **argv) {
           cout << " - Fitted k_comb_all_passed = " << k_comb_all_passed.getVal()
                << " vs estimated " << k_comb_all_passed_guess << " ("
                << k_comb_all_passed.getVal() / k_comb_all_passed_guess << ")\n";
+          cout << " - Fitted k_comb_all pull = "
+               << k_comb_all_passed.getVal() - k_comb_all_failed.getVal()
+               << " / "
+               << sqrt_sum_sq(k_comb_all_passed.getError(),
+                              k_comb_all_failed.getError())
+               << " = "
+               << (k_comb_all_passed.getVal() - k_comb_all_failed.getVal()) /
+                      sqrt_sum_sq(k_comb_all_passed.getError(),
+                                  k_comb_all_failed.getError())
+               << "\n";
 
           cout << " - Fitted c_comb_all_failed = " << c_comb_all_failed.getVal()
                << "\n";
           cout << " - Fitted c_comb_all_passed = " << c_comb_all_passed.getVal()
                << "\n";
+          cout << " - Fitted c_comb_all pull = "
+               << c_comb_all_passed.getVal() - c_comb_all_failed.getVal()
+               << " / "
+               << sqrt_sum_sq(c_comb_all_passed.getError(),
+                              c_comb_all_failed.getError())
+               << " = "
+               << (c_comb_all_passed.getVal() - c_comb_all_failed.getVal()) /
+                      sqrt_sum_sq(c_comb_all_passed.getError(),
+                                  c_comb_all_failed.getError())
+               << "\n";
 
           cout << " - Fitted c_comb_spi_failed = " << c_comb_spi_failed.getVal()
                << "\n";
-          cout << " - Fitted c_comb_spi_passed = " << c_comb_all_passed.getVal()
+          cout << " - Fitted c_comb_spi_passed = " << c_comb_spi_passed.getVal()
+               << "\n";
+          cout << " - Fitted c_comb_spi pull = " << c_comb_spi_diff.getVal()
+               << " / " << c_comb_spi_diff.getPropagatedError(*fit_result)
+               << " = "
+               << c_comb_spi_diff.getVal() /
+                      c_comb_spi_diff.getPropagatedError(*fit_result)
                << "\n";
 
           cout << " - Fitted non-dif passed yield = "

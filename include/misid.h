@@ -99,23 +99,6 @@ constexpr double weighted_average(const array<double, N> &x,
   return sum / sum_w;
 }
 
-// Check if fit has converged and covariant matrix is ok.
-bool fit_ok(const RooFitResult *fit) {
-  // 4000 probably means IMPROVE failed to find a new minimum, which is ok.
-  // See section "Access to the fit status" in
-  // https://root.cern.ch/doc/v624/classTH1.html#a7e7d34c91d5ebab4fc9bba3ca47dabdd
-  const bool fit_converged = (fit->status() == 4000) || (fit->status() == 0);
-
-  // Covariance matrix status (https://root.cern.ch/download/minuit.pdf)
-  // - 0 Not calculated at all
-  // - 1 Diagonal approximation only, not accurate
-  // - 2 Full matrix, but forced positive-definite
-  // - 3 Full accurate covariance matrix
-  const bool cov_matrix_ok = (fit->covQual() == 3);
-
-  return fit_converged && cov_matrix_ok;
-}
-
 // Add contents of <ds_source> to <ds_target>.
 void append_to_dataset(const RooDataSet &ds_source, RooDataSet &ds_target,
                        const RooRealVar &w_var) {
