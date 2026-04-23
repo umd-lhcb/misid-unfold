@@ -16,6 +16,7 @@
 #include <yaml-cpp/yaml.h>
 #include <cxxopts.hpp>
 
+#include "misid.h"
 #include "utils.h"
 
 using std::cout, std::endl, std::right, std::left, std::setw, std::to_string;
@@ -24,15 +25,6 @@ using std::string, std::unique_ptr, std::unordered_map, std::vector, std::map;
 ///////////////
 // Constants //
 ///////////////
-
-constexpr int Dst_ID = 413;
-
-constexpr double ONE_SIGMA = 0.682689492137086;
-
-constexpr double DM_min   = 0.141;  // GeV
-constexpr double DM_max   = 0.153;  // GeV
-constexpr double D0_M_min = 1.825;  // GeV
-constexpr double D0_M_max = 1.910;  // GeV
 
 const std::unordered_map<int, std::string> id_to_string{
     {1000070140, "N14"},
@@ -100,18 +92,6 @@ const std::unordered_map<int, std::string> id_to_string{
     {-12, "anti-nu_e"},
     {11, "e-"},
     {-11, "e+"}};
-
-constexpr double BINS_P[] = {3e+3, 6e+3, 10e+3, 15.6e+3, 27e+3, 60e+3, 100e+3};
-constexpr int    N_BINS_P = sizeof(BINS_P) / sizeof(double) - 1;
-
-// Comparator function
-bool comp_pdg_ids(const int &a, const int &b) {
-  if (abs(a) != abs(b)) {
-    return abs(a) > abs(b);
-  } else {
-    return a > b;
-  }
-}
 
 int main(int argc, char **argv) {
   cxxopts::Options argOpts(
