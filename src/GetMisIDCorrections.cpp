@@ -20,8 +20,11 @@
 #include "TH2.h"
 #include "TH3.h"
 #include "THStack.h"
+#include "TLegend.h"
+#include "TLine.h"
 #include "TMath.h"
 #include "TString.h"
+#include "TStyle.h"
 #include "TSystem.h"
 
 #include "RooAbsReal.h"
@@ -1742,14 +1745,9 @@ int main(int argc, char **argv) {
                                       Binning("bins_histos_d0_m_passed"));
           ds_mc_failed_nondif->plotOn(frame_d0_failed_nondif.get(),
                                       Binning("bins_histos_d0_m_failed"));
-          d0_model_passed_nondif.plotOn(frame_d0_passed_nondif.get(),
-                                        LineWidth(1), Range("data"),
-                                        LineColor(kRed), VLines());
+
           d0_model_passed_nondif.plotOn(frame_d0_passed_nondif.get(),
                                         LineWidth(2), NormRange("data"));
-          d0_model_failed_nondif.plotOn(frame_d0_failed_nondif.get(),
-                                        LineWidth(1), Range("data"),
-                                        LineColor(kRed), VLines());
           d0_model_failed_nondif.plotOn(frame_d0_failed_nondif.get(),
                                         LineWidth(2), NormRange("data"));
 
@@ -1760,12 +1758,6 @@ int main(int argc, char **argv) {
           // RooKeysPdf has an option to reflect data across the boundaries
           // which is useful sometimes, but it is more accurate (and faster!) to
           // simply extend the histogram range if needed.
-
-          c_double.cd(1);
-          frame_d0_passed_nondif->Draw();
-          c_double.cd(2);
-          frame_d0_failed_nondif->Draw();
-          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_nondif.pdf");
 
           ////////////////////////
           // DiF d0_m templates //
@@ -1865,12 +1857,6 @@ int main(int argc, char **argv) {
           d0_model_failed_dif.plotOn(frame_d0_failed_dif.get(), LineWidth(2),
                                      NormRange("data"));
 
-          c_double.cd(1);
-          frame_d0_passed_dif->Draw();
-          c_double.cd(2);
-          frame_d0_failed_dif->Draw();
-          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_dif.pdf");
-
           /////////////////////////
           // Non-DiF dm template //
           /////////////////////////
@@ -1898,29 +1884,19 @@ int main(int argc, char **argv) {
           // PDF from merged dataset is compared to separate distribution
           // in individual samples
           unique_ptr<RooPlot> frame_dm_passed_nondif(
-              dm_var.frame(Title("dm Passed " + tag)));
+              dm_var.frame(Title("Passed non-DiF " + tag)));
           unique_ptr<RooPlot> frame_dm_failed_nondif(
-              dm_var.frame(Title("dm Failed " + tag)));
+              dm_var.frame(Title("Failed non-DiF " + tag)));
+
           ds_mc_passed_nondif->plotOn(frame_dm_passed_nondif.get(),
                                       Binning("bins_histos_dm_passed"));
           ds_mc_failed_nondif->plotOn(frame_dm_failed_nondif.get(),
                                       Binning("bins_histos_dm_failed"));
-          dm_model_passed_nondif.plotOn(frame_dm_passed_nondif.get(),
-                                        LineWidth(1), Range("data"),
-                                        LineColor(kRed), VLines());
-          dm_model_passed_nondif.plotOn(frame_dm_passed_nondif.get(),
-                                        LineWidth(2), NormRange("data"));
-          dm_model_failed_nondif.plotOn(frame_dm_failed_nondif.get(),
-                                        LineWidth(1), Range("data"),
-                                        LineColor(kRed), VLines());
-          dm_model_failed_nondif.plotOn(frame_dm_failed_nondif.get(),
-                                        LineWidth(2), NormRange("data"));
 
-          c_double.cd(1);
-          frame_dm_passed_nondif->Draw();
-          c_double.cd(2);
-          frame_dm_failed_nondif->Draw();
-          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_nondif.pdf");
+          dm_model_passed_nondif.plotOn(frame_dm_passed_nondif.get(),
+                                        LineWidth(2), NormRange("data"));
+          dm_model_failed_nondif.plotOn(frame_dm_failed_nondif.get(),
+                                        LineWidth(2), NormRange("data"));
 
           //////////////////////
           // DiF dm templates //
@@ -1987,12 +1963,6 @@ int main(int argc, char **argv) {
                                             LineWidth(2), NormRange("data"));
           dm_model_failed_dif.plotOn(frame_dm_failed_dif.get(), LineWidth(2),
                                      NormRange("data"));
-
-          c_double.cd(1);
-          frame_dm_passed_dif->Draw();
-          c_double.cd(2);
-          frame_dm_failed_dif->Draw();
-          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_dif.pdf");
 
           ////////////////////////////////////////////////////
           // d0_m templates for mis-reconstructed D0 decays //
@@ -2171,23 +2141,15 @@ int main(int argc, char **argv) {
                              Binning(bins_histos_d0_m_d0_bkg));
             ds_d0m_d0_bkg.plotOn(frame_d0_mc_d0_bkg_total.get(),
                                  Binning(bins_histos_d0_m_d0_bkg));
-            d0m_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
-                frame_d0_mc_d0_bkg_passed.get(), LineWidth(1), LineColor(kRed),
-                Range("fitRange"), VLines());
+
             d0m_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
                 frame_d0_mc_d0_bkg_passed.get(), LineWidth(2),
                 LineColor(color_ids_d0_decays.at(d0_decay)),
                 NormRange("fitRange"));
             d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                frame_d0_mc_d0_bkg_failed.get(), LineWidth(1), LineColor(kRed),
-                Range("fitRange"), VLines());
-            d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
                 frame_d0_mc_d0_bkg_failed.get(), LineWidth(2),
                 LineColor(color_ids_d0_decays.at(d0_decay)),
                 NormRange("fitRange"));
-            d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                frame_d0_mc_d0_bkg_total.get(), LineWidth(1), LineColor(kRed),
-                Range("fitRange"), VLines());
             d0m_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
                 frame_d0_mc_d0_bkg_total.get(), LineWidth(2),
                 LineColor(color_ids_d0_decays.at(d0_decay)),
@@ -2195,10 +2157,25 @@ int main(int argc, char **argv) {
 
             c3.cd(1);
             frame_d0_mc_d0_bkg_passed->Draw();
+            unique_ptr<TLine> line_d0_mc_d0_bkg_passed_min(
+                draw_line(frame_d0_mc_d0_bkg_passed.get(), D0_M_min));
+            unique_ptr<TLine> line_d0_mc_d0_bkg_passed_max(
+                draw_line(frame_d0_mc_d0_bkg_passed.get(), D0_M_max));
+
             c3.cd(2);
             frame_d0_mc_d0_bkg_failed->Draw();
+            unique_ptr<TLine> line_d0_mc_d0_bkg_failed_min(
+                draw_line(frame_d0_mc_d0_bkg_failed.get(), D0_M_min));
+            unique_ptr<TLine> line_d0_mc_d0_bkg_failed_max(
+                draw_line(frame_d0_mc_d0_bkg_failed.get(), D0_M_max));
+
             c3.cd(3);
             frame_d0_mc_d0_bkg_total->Draw();
+            unique_ptr<TLine> line_d0_mc_d0_bkg_total_min(
+                draw_line(frame_d0_mc_d0_bkg_total.get(), D0_M_min));
+            unique_ptr<TLine> line_d0_mc_d0_bkg_total_max(
+                draw_line(frame_d0_mc_d0_bkg_total.get(), D0_M_max));
+
             c3.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg_keys_" +
                       d0_decay + ".pdf");
 
@@ -2253,6 +2230,7 @@ int main(int argc, char **argv) {
           c_double.cd(2);
           ths_d0m_d0_bkg_failed.Draw("B HIST");
           h_d0m_d0_bkg_failed.Draw("L SAME");
+          gPad->BuildLegend(); // TODO Legible legends!
 
           c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix +
                           "_d0_bkg_histos_stacked.pdf");
@@ -2280,21 +2258,9 @@ int main(int argc, char **argv) {
                                           Binning(bins_histos_d0_m_d0_bkg));
 
           d0_model_d0_bkg_passed.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
-                                        LineWidth(1), LineColor(kRed),
-                                        Range("fitRange"), VLines());
-          d0_model_d0_bkg_passed.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
                                         LineWidth(2), NormRange("fitRange"));
           d0_model_d0_bkg_failed.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
-                                        LineWidth(1), LineColor(kRed),
-                                        Range("fitRange"), VLines());
-          d0_model_d0_bkg_failed.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
                                         LineWidth(2), NormRange("fitRange"));
-
-          c_double.cd(1);
-          frame_d0_mc_d0_bkg_passed_ext->Draw();
-          c_double.cd(2);
-          frame_d0_mc_d0_bkg_failed_ext->Draw();
-          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg_ext.pdf");
 
           // Plot PDF in fit range
           d0_m_var.setRange(d0m_range_min, d0m_range_max);
@@ -2503,22 +2469,13 @@ int main(int argc, char **argv) {
                                 Binning(bins_histos_dm_d0_bkg));
 
             dm_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
-                frame_dm_mc_d0_bkg_passed.get(), LineWidth(1), LineColor(kRed),
-                Range("fitRange"), VLines());
-            dm_pdfs_d0_bkg_passed.at(d0_decay).plotOn(
                 frame_dm_mc_d0_bkg_passed.get(), LineWidth(2),
                 LineColor(color_ids_d0_decays.at(d0_decay)),
                 NormRange("fitRange"));
             dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                frame_dm_mc_d0_bkg_failed.get(), LineWidth(1), LineColor(kRed),
-                Range("fitRange"), VLines());
-            dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
                 frame_dm_mc_d0_bkg_failed.get(), LineWidth(2),
                 LineColor(color_ids_d0_decays.at(d0_decay)),
                 NormRange("fitRange"));
-            dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
-                frame_dm_mc_d0_bkg_total.get(), LineWidth(1), LineColor(kRed),
-                Range("fitRange"), VLines());
             dm_pdfs_d0_bkg_failed.at(d0_decay).plotOn(
                 frame_dm_mc_d0_bkg_total.get(), LineWidth(2),
                 LineColor(color_ids_d0_decays.at(d0_decay)),
@@ -2526,10 +2483,25 @@ int main(int argc, char **argv) {
 
             c3.cd(1);
             frame_dm_mc_d0_bkg_passed->Draw();
+            unique_ptr<TLine> line_dm_mc_d0_bkg_passed_min(
+                draw_line(frame_dm_mc_d0_bkg_passed.get(), DM_min));
+            unique_ptr<TLine> line_dm_mc_d0_bkg_passed_max(
+                draw_line(frame_dm_mc_d0_bkg_passed.get(), DM_max));
+
             c3.cd(2);
             frame_dm_mc_d0_bkg_failed->Draw();
+            unique_ptr<TLine> line_dm_mc_d0_bkg_failed_min(
+                draw_line(frame_dm_mc_d0_bkg_failed.get(), DM_min));
+            unique_ptr<TLine> line_dm_mc_d0_bkg_failed_max(
+                draw_line(frame_dm_mc_d0_bkg_failed.get(), DM_max));
+
             c3.cd(3);
             frame_dm_mc_d0_bkg_total->Draw();
+            unique_ptr<TLine> line_dm_mc_d0_bkg_total_min(
+                draw_line(frame_dm_mc_d0_bkg_total.get(), DM_min));
+            unique_ptr<TLine> line_dm_mc_d0_bkg_total_max(
+                draw_line(frame_dm_mc_d0_bkg_total.get(), DM_max));
+
             c3.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg_keys_" +
                       d0_decay + ".pdf");
 
@@ -2585,6 +2557,7 @@ int main(int argc, char **argv) {
           c_double.cd(2);
           ths_dm_d0_bkg_failed.Draw("B HIST");
           h_dm_d0_bkg_failed.Draw("L SAME");
+          gPad->BuildLegend(); // TODO Legible legends!
 
           c_double.SaveAs(fit_dir_path + "/dm_" + suffix +
                           "_d0_bkg_histos_stacked.pdf");
@@ -2612,21 +2585,9 @@ int main(int argc, char **argv) {
                                          Binning(bins_histos_dm_d0_bkg));
 
           dm_model_d0_bkg_passed.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
-                                        LineWidth(1), LineColor(kRed),
-                                        Range("fitRange"), VLines());
-          dm_model_d0_bkg_passed.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
                                         LineWidth(2), NormRange("fitRange"));
           dm_model_d0_bkg_failed.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
-                                        LineWidth(1), LineColor(kRed),
-                                        Range("fitRange"), VLines());
-          dm_model_d0_bkg_failed.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
                                         LineWidth(2), NormRange("fitRange"));
-
-          c_double.cd(1);
-          frame_dm_mc_d0_bkg_passed_ext->Draw();
-          c_double.cd(2);
-          frame_dm_mc_d0_bkg_failed_ext->Draw();
-          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg_ext.pdf");
 
           // Plot PDF in fit range
           d0_m_var.setRange(d0m_range_min, d0m_range_max);
@@ -3245,6 +3206,200 @@ int main(int argc, char **argv) {
             fit_cov_qual_calib.SetBinContent(kin_bin, cov_matrix_status);
           }
 
+          ////////////////////
+          // Plot templates //
+          ////////////////////
+
+          // Calculate template range used in fit
+          const double shifted_d0m_min =
+              (D0_M_min - d0_m_shift.getVal() - D0_M) / d0_m_scale.getVal() +
+              D0_M;
+          const double shifted_d0m_max =
+              (D0_M_max - d0_m_shift.getVal() - D0_M) / d0_m_scale.getVal() +
+              D0_M;
+          const double shifted_dm_min =
+              (DM_min - dm_shift.getVal() - DM) / dm_scale.getVal() + DM;
+          const double shifted_dm_max =
+              (DM_max - dm_shift.getVal() - DM) / dm_scale.getVal() + DM;
+
+          // Non-DiF d0_m
+
+          c_double.cd(1);
+          frame_d0_passed_nondif->Draw();
+          unique_ptr<TLine> line_d0_passed_nondif_min(
+              draw_line(frame_d0_passed_nondif.get(), D0_M_min));
+          unique_ptr<TLine> line_d0_passed_nondif_max(
+              draw_line(frame_d0_passed_nondif.get(), D0_M_max));
+          unique_ptr<TLine> line_d0_passed_nondif_min_fit(draw_line(
+              frame_d0_passed_nondif.get(), shifted_d0m_min, kOrange));
+          unique_ptr<TLine> line_d0_passed_nondif_max_fit(draw_line(
+              frame_d0_passed_nondif.get(), shifted_d0m_max, kOrange));
+
+          c_double.cd(2);
+          frame_d0_failed_nondif->Draw();
+          unique_ptr<TLine> line_d0_failed_nondif_min(
+              draw_line(frame_d0_failed_nondif.get(), D0_M_min));
+          unique_ptr<TLine> line_d0_failed_nondif_max(
+              draw_line(frame_d0_failed_nondif.get(), D0_M_max));
+          unique_ptr<TLine> line_d0_failed_nondif_min_fit(draw_line(
+              frame_d0_failed_nondif.get(), shifted_d0m_min, kOrange));
+          unique_ptr<TLine> line_d0_failed_nondif_max_fit(draw_line(
+              frame_d0_failed_nondif.get(), shifted_d0m_max, kOrange));
+
+          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_nondif.pdf");
+
+          // DiF d0_m
+
+          c3.cd(1);
+          frame_d0_passed_dif_uprich->Draw();
+          unique_ptr<TLine> line_d0_passed_dif_uprich_min(
+              draw_line(frame_d0_passed_dif_uprich.get(), D0_M_min));
+          unique_ptr<TLine> line_d0_passed_dif_uprich_max(
+              draw_line(frame_d0_passed_dif_uprich.get(), D0_M_max));
+          unique_ptr<TLine> line_d0_passed_dif_uprich_min_fit(draw_line(
+              frame_d0_passed_dif_uprich.get(), shifted_d0m_min, kOrange));
+          unique_ptr<TLine> line_d0_passed_dif_uprich_max_fit(draw_line(
+              frame_d0_passed_dif_uprich.get(), shifted_d0m_max, kOrange));
+
+          c3.cd(2);
+          frame_d0_passed_dif_dwrich->Draw();
+          unique_ptr<TLine> line_d0_passed_dif_dwrich_min(
+              draw_line(frame_d0_passed_dif_dwrich.get(), D0_M_min));
+          unique_ptr<TLine> line_d0_passed_dif_dwrich_max(
+              draw_line(frame_d0_passed_dif_dwrich.get(), D0_M_max));
+          unique_ptr<TLine> line_d0_passed_dif_dwrich_min_fit(draw_line(
+              frame_d0_passed_dif_dwrich.get(), shifted_d0m_min, kOrange));
+          unique_ptr<TLine> line_d0_passed_dif_dwrich_max_fit(draw_line(
+              frame_d0_passed_dif_dwrich.get(), shifted_d0m_max, kOrange));
+
+          c3.cd(3);
+          frame_d0_failed_dif->Draw();
+          unique_ptr<TLine> line_d0_failed_dif_min(
+              draw_line(frame_d0_failed_dif.get(), D0_M_min));
+          unique_ptr<TLine> line_d0_failed_dif_max(
+              draw_line(frame_d0_failed_dif.get(), D0_M_max));
+          unique_ptr<TLine> line_d0_failed_dif_min_fit(
+              draw_line(frame_d0_failed_dif.get(), shifted_d0m_min, kOrange));
+          unique_ptr<TLine> line_d0_failed_dif_max_fit(
+              draw_line(frame_d0_failed_dif.get(), shifted_d0m_max, kOrange));
+
+          c3.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_dif.pdf");
+
+          // Non-DiF dm
+
+          c_double.cd(1);
+          frame_dm_passed_nondif->Draw();
+          unique_ptr<TLine> line_dm_passed_nondif_min(
+              draw_line(frame_dm_passed_nondif.get(), DM_min));
+          unique_ptr<TLine> line_dm_passed_nondif_max(
+              draw_line(frame_dm_passed_nondif.get(), DM_max));
+          unique_ptr<TLine> line_dm_passed_nondif_min_fit(
+              draw_line(frame_dm_passed_nondif.get(), shifted_dm_min, kOrange));
+          unique_ptr<TLine> line_dm_passed_nondif_max_fit(
+              draw_line(frame_dm_passed_nondif.get(), shifted_dm_max, kOrange));
+
+          c_double.cd(2);
+          frame_dm_failed_nondif->Draw();
+          unique_ptr<TLine> line_dm_failed_nondif_min(
+              draw_line(frame_dm_failed_nondif.get(), DM_min));
+          unique_ptr<TLine> line_dm_failed_nondif_max(
+              draw_line(frame_dm_failed_nondif.get(), DM_max));
+          unique_ptr<TLine> line_dm_failed_nondif_min_fit(
+              draw_line(frame_dm_failed_nondif.get(), shifted_dm_min, kOrange));
+          unique_ptr<TLine> line_dm_failed_nondif_max_fit(
+              draw_line(frame_dm_failed_nondif.get(), shifted_dm_max, kOrange));
+
+          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_nondif.pdf");
+
+          // DiF dm
+
+          c3.cd(1);
+          frame_dm_passed_dif_uprich->Draw();
+          unique_ptr<TLine> line_dm_passed_dif_uprich_min(
+              draw_line(frame_dm_passed_dif_uprich.get(), DM_min));
+          unique_ptr<TLine> line_dm_passed_dif_uprich_max(
+              draw_line(frame_dm_passed_dif_uprich.get(), DM_max));
+          unique_ptr<TLine> line_dm_passed_dif_uprich_min_fit(draw_line(
+              frame_dm_passed_dif_uprich.get(), shifted_dm_min, kOrange));
+          unique_ptr<TLine> line_dm_passed_dif_uprich_max_fit(draw_line(
+              frame_dm_passed_dif_uprich.get(), shifted_dm_max, kOrange));
+
+          c3.cd(2);
+          frame_dm_passed_dif_dwrich->Draw();
+          unique_ptr<TLine> line_dm_passed_dif_dwrich_min(
+              draw_line(frame_dm_passed_dif_dwrich.get(), DM_min));
+          unique_ptr<TLine> line_dm_passed_dif_dwrich_max(
+              draw_line(frame_dm_passed_dif_dwrich.get(), DM_max));
+          unique_ptr<TLine> line_dm_passed_dif_dwrich_min_fit(draw_line(
+              frame_dm_passed_dif_dwrich.get(), shifted_dm_min, kOrange));
+          unique_ptr<TLine> line_dm_passed_dif_dwrich_max_fit(draw_line(
+              frame_dm_passed_dif_dwrich.get(), shifted_dm_max, kOrange));
+
+          c3.cd(3);
+          frame_dm_failed_dif->Draw();
+          unique_ptr<TLine> line_dm_failed_dif_min(
+              draw_line(frame_dm_failed_dif.get(), DM_min));
+          unique_ptr<TLine> line_dm_failed_dif_max(
+              draw_line(frame_dm_failed_dif.get(), DM_max));
+          unique_ptr<TLine> line_dm_failed_dif_min_fit(
+              draw_line(frame_dm_failed_dif.get(), shifted_dm_min, kOrange));
+          unique_ptr<TLine> line_dm_failed_dif_max_fit(
+              draw_line(frame_dm_failed_dif.get(), shifted_dm_max, kOrange));
+
+          c3.SaveAs(fit_dir_path + "/dm_" + suffix + "_dif.pdf");
+
+          // D0 bkg d0_m
+
+          c_double.cd(1);
+          frame_d0_mc_d0_bkg_passed_ext->Draw();
+          unique_ptr<TLine> line_d0_mc_d0_bkg_passed_ext_min(
+              draw_line(frame_d0_mc_d0_bkg_passed_ext.get(), D0_M_min));
+          unique_ptr<TLine> line_d0_mc_d0_bkg_passed_ext_max(
+              draw_line(frame_d0_mc_d0_bkg_passed_ext.get(), D0_M_max));
+          unique_ptr<TLine> line_d0_mc_d0_bkg_passed_ext_min_fit(draw_line(
+              frame_d0_mc_d0_bkg_passed_ext.get(), shifted_d0m_min, kOrange));
+          unique_ptr<TLine> line_d0_mc_d0_bkg_passed_ext_max_fit(draw_line(
+              frame_d0_mc_d0_bkg_passed_ext.get(), shifted_d0m_max, kOrange));
+
+          c_double.cd(2);
+          frame_d0_mc_d0_bkg_failed_ext->Draw();
+          unique_ptr<TLine> line_d0_mc_d0_bkg_failed_ext_min(
+              draw_line(frame_d0_mc_d0_bkg_failed_ext.get(), D0_M_min));
+          unique_ptr<TLine> line_d0_mc_d0_bkg_failed_ext_max(
+              draw_line(frame_d0_mc_d0_bkg_failed_ext.get(), D0_M_max));
+          unique_ptr<TLine> line_d0_mc_d0_bkg_failed_ext_min_fit(draw_line(
+              frame_d0_mc_d0_bkg_failed_ext.get(), shifted_d0m_min, kOrange));
+          unique_ptr<TLine> line_d0_mc_d0_bkg_failed_ext_max_fit(draw_line(
+              frame_d0_mc_d0_bkg_failed_ext.get(), shifted_d0m_max, kOrange));
+
+          c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix + "_d0_bkg_ext.pdf");
+
+          // D0 bkg dm
+
+          c_double.cd(1);
+          frame_dm_mc_d0_bkg_passed_ext->Draw();
+          unique_ptr<TLine> line_dm_mc_d0_bkg_passed_ext_min(
+              draw_line(frame_dm_mc_d0_bkg_passed_ext.get(), DM_min));
+          unique_ptr<TLine> line_dm_mc_d0_bkg_passed_ext_max(
+              draw_line(frame_dm_mc_d0_bkg_passed_ext.get(), DM_max));
+          unique_ptr<TLine> line_dm_mc_d0_bkg_passed_ext_min_fit(draw_line(
+              frame_dm_mc_d0_bkg_passed_ext.get(), shifted_dm_min, kOrange));
+          unique_ptr<TLine> line_dm_mc_d0_bkg_passed_ext_max_fit(draw_line(
+              frame_dm_mc_d0_bkg_passed_ext.get(), shifted_dm_max, kOrange));
+
+          c_double.cd(2);
+          frame_dm_mc_d0_bkg_failed_ext->Draw();
+          unique_ptr<TLine> line_dm_mc_d0_bkg_failed_ext_min(
+              draw_line(frame_dm_mc_d0_bkg_failed_ext.get(), DM_min));
+          unique_ptr<TLine> line_dm_mc_d0_bkg_failed_ext_max(
+              draw_line(frame_dm_mc_d0_bkg_failed_ext.get(), DM_max));
+          unique_ptr<TLine> line_dm_mc_d0_bkg_failed_ext_min_fit(draw_line(
+              frame_dm_mc_d0_bkg_failed_ext.get(), shifted_dm_min, kOrange));
+          unique_ptr<TLine> line_dm_mc_d0_bkg_failed_ext_max_fit(draw_line(
+              frame_dm_mc_d0_bkg_failed_ext.get(), shifted_dm_max, kOrange));
+
+          c_double.SaveAs(fit_dir_path + "/dm_" + suffix + "_d0_bkg_ext.pdf");
+
           //////////////////////
           // Plot fit results //
           //////////////////////
@@ -3313,96 +3468,141 @@ int main(int argc, char **argv) {
                                          CutRange(range));
             dataset_calib_failed->plotOn(frame_dm_calib_failed.get(),
                                          Binning(bins_histos_dm_failed),
-                                         CutRange(range));
+                                         CutRange(range), Name("data"));
 
-            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2));
-            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(sig_passed),
-                                LineColor(kTeal + 2));
-            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(d0_bkg_passed),
-                                LineColor(kViolet));
-            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_spi_passed),
-                                LineColor(kOrange));
-            model_passed.plotOn(frame_d0_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_all_passed),
-                                LineColor(kRed));
+            const double n_entries_passed =
+                dataset_calib_passed->sumEntries("", "fitRange");
+            const double n_entries_failed =
+                dataset_calib_failed->sumEntries("", "fitRange");
 
-            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2));
-            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(sig_failed),
-                                LineColor(kTeal + 2));
-            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(d0_bkg_failed),
-                                LineColor(kViolet));
-            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_spi_failed),
-                                LineColor(kOrange));
-            model_failed.plotOn(frame_d0_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_all_failed),
-                                LineColor(kRed));
+            model_passed.plotOn(
+                frame_d0_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2));
+            model_passed.plotOn(
+                frame_d0_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(sig_passed), LineColor(kTeal + 2));
+            model_passed.plotOn(
+                frame_d0_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(d0_bkg_passed), LineColor(kViolet));
+            model_passed.plotOn(
+                frame_d0_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_spi_passed), LineColor(kOrange));
+            model_passed.plotOn(
+                frame_d0_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_all_passed), LineColor(kRed));
 
-            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2));
-            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(sig_passed),
-                                LineColor(kTeal + 2));
-            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(d0_bkg_passed),
-                                LineColor(kViolet));
-            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_spi_passed),
-                                LineColor(kOrange));
-            model_passed.plotOn(frame_dm_calib_passed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_all_passed),
-                                LineColor(kRed));
+            model_failed.plotOn(
+                frame_d0_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2));
+            model_failed.plotOn(
+                frame_d0_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(sig_failed), LineColor(kTeal + 2));
+            model_failed.plotOn(
+                frame_d0_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(d0_bkg_failed), LineColor(kViolet));
+            model_failed.plotOn(
+                frame_d0_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_spi_failed), LineColor(kOrange));
+            model_failed.plotOn(
+                frame_d0_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_all_failed), LineColor(kRed));
 
-            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2));
-            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(sig_failed),
-                                LineColor(kTeal + 2));
-            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(d0_bkg_failed),
-                                LineColor(kViolet));
-            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_spi_failed),
-                                LineColor(kOrange));
-            model_failed.plotOn(frame_dm_calib_failed.get(), Range(range),
-                                ProjectionRange(range), NormRange("fitRange"),
-                                LineWidth(2), Components(comb_all_failed),
-                                LineColor(kRed));
+            model_passed.plotOn(
+                frame_dm_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2));
+            model_passed.plotOn(
+                frame_dm_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(sig_passed), LineColor(kTeal + 2));
+            model_passed.plotOn(
+                frame_dm_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(d0_bkg_passed), LineColor(kViolet));
+            model_passed.plotOn(
+                frame_dm_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_spi_passed), LineColor(kOrange));
+            model_passed.plotOn(
+                frame_dm_calib_passed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_passed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_all_passed), LineColor(kRed));
+
+            model_failed.plotOn(
+                frame_dm_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Name("model"));
+            model_failed.plotOn(
+                frame_dm_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(sig_failed), LineColor(kTeal + 2),
+                Name("signal"));
+            model_failed.plotOn(
+                frame_dm_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(d0_bkg_failed), LineColor(kViolet),
+                Name("d0_bkg"));
+            model_failed.plotOn(
+                frame_dm_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_spi_failed), LineColor(kOrange),
+                Name("comb_spi"));
+            model_failed.plotOn(
+                frame_dm_calib_failed.get(), Range(range),
+                ProjectionRange(range), NormRange("fitRange"),
+                Normalization(n_entries_failed, RooAbsReal::NumEvent),
+                LineWidth(2), Components(comb_all_failed), LineColor(kRed),
+                Name("comb_all"));
 
             c_four.cd(1);
             frame_d0_calib_passed->Draw();
+
             c_four.cd(2);
             frame_dm_calib_passed->Draw();
+
             c_four.cd(3);
             frame_d0_calib_failed->Draw();
+
             c_four.cd(4);
             frame_dm_calib_failed->Draw();
+
+            unique_ptr<TLegend> leg_fit(new TLegend(0.70, 0.60, 0.90, 0.90));
+            leg_fit->AddEntry("data", "Data", "PE");
+            leg_fit->AddEntry("model", "Full model", "L");
+            leg_fit->AddEntry("signal", "Signal", "L");
+            leg_fit->AddEntry("d0_bkg", "Misreco. D0", "L");
+            leg_fit->AddEntry("comb_spi", "spi comb.", "L");
+            leg_fit->AddEntry("comb_all", "D0 comb.", "L");
+            leg_fit->Draw("SAME");
 
             c_four.SaveAs(fit_dir_path + "/fit_calib_" + suffix + name_suffix +
                           ".pdf");
@@ -3411,22 +3611,22 @@ int main(int argc, char **argv) {
           cout << "\nINFO Plotting full fit region" << endl;
           plot_fit_results("fitRange", "");
 
-          cout << "\nINFO Plotting signal region" << endl;
-          plot_fit_results("sig", "_sig");
+          //   cout << "\nINFO Plotting signal region" << endl;
+          //   plot_fit_results("sig", "_sig");
 
-          cout << "\nINFO Plotting soft pion bkg regions" << endl;
-          plot_fit_results("sb1_1", "_sb1_1");
-          plot_fit_results("sb1_2", "_sb1_2");
+          //   cout << "\nINFO Plotting soft pion bkg regions" << endl;
+          //   plot_fit_results("sb1_1", "_sb1_1");
+          //   plot_fit_results("sb1_2", "_sb1_2");
 
-          cout << "\nINFO Plotting d0 bkg regions" << endl;
-          plot_fit_results("sb2_1", "_sb2_1");
-          plot_fit_results("sb2_2", "_sb2_2");
+          //   cout << "\nINFO Plotting d0 bkg regions" << endl;
+          //   plot_fit_results("sb2_1", "_sb2_1");
+          //   plot_fit_results("sb2_2", "_sb2_2");
 
-          cout << "\nINFO Plotting all comb regions" << endl;
-          plot_fit_results("sb3_1", "_sb3_1");
-          plot_fit_results("sb3_2", "_sb3_2");
-          plot_fit_results("sb3_3", "_sb3_3");
-          plot_fit_results("sb3_4", "_sb3_4");
+          //   cout << "\nINFO Plotting all comb regions" << endl;
+          //   plot_fit_results("sb3_1", "_sb3_1");
+          //   plot_fit_results("sb3_2", "_sb3_2");
+          //   plot_fit_results("sb3_3", "_sb3_3");
+          //   plot_fit_results("sb3_4", "_sb3_4");
 
           // Save fitted PID efficiency
           if (fake_mu) {

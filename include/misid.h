@@ -272,6 +272,15 @@ void plot_dataset(const RooDataSet &ds, const TString path) {
   }
 }
 
+TLine *draw_line(const RooPlot *rp, const double &x, const EColor &color = kRed,
+                 const ELineStyle &style = kDashed) {
+  TLine *line = new TLine(x, rp->GetMinimum(), x, rp->GetMaximum());
+  line->SetLineColor(color);
+  line->SetLineStyle(style);
+  line->Draw();
+  return line;
+}
+
 ///////////////////
 // Color palette //
 ///////////////////
