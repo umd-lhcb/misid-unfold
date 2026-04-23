@@ -1401,10 +1401,10 @@ int main(int argc, char **argv) {
     // Now loop over calib samples and make fits
 
     // Define calib datasets
-    RooDataSet *datasets_calib_passed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] = {
-        {{nullptr}}};
-    RooDataSet *datasets_calib_failed[N_BINS_NTRACKS][N_BINS_ETA][N_BINS_P] = {
-        {{nullptr}}};
+    array<array<array<RooDataSet *, N_BINS_P>, N_BINS_ETA>, N_BINS_NTRACKS>
+        datasets_calib_passed;
+    array<array<array<RooDataSet *, N_BINS_P>, N_BINS_ETA>, N_BINS_NTRACKS>
+        datasets_calib_failed;
 
     // Initialize calib datasets
     cout << "INFO Initializing calib datasets " << endl;
@@ -3907,30 +3907,6 @@ int main(int argc, char **argv) {
     effs_mw_failed.Write();
     effs_mw_failed_dif.Write();
     effs_mw_failed_nondif.Write();
-
-    // Delete calib datasets
-    cout << "INFO Deleting MC datasets " << endl;
-    for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
-      for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
-        for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
-          delete datasets_calib_passed[ntrks_idx][eta_idx][p_idx];
-          delete datasets_calib_failed[ntrks_idx][eta_idx][p_idx];
-        }
-      }
-    }
-
-    // Delete MC datasets
-    cout << "INFO Deleting MC datasets " << endl;
-    for (int eta_idx = 0; eta_idx < N_BINS_ETA; eta_idx++) {
-      for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
-        delete datasets_mc_passed_dif[eta_idx][p_idx];
-        delete datasets_mc_failed_dif[eta_idx][p_idx];
-        for (int ntrks_idx = 0; ntrks_idx < N_BINS_NTRACKS; ntrks_idx++) {
-          delete datasets_mc_passed_nondif[ntrks_idx][eta_idx][p_idx];
-          delete datasets_mc_failed_nondif[ntrks_idx][eta_idx][p_idx];
-        }
-      }
-    }
   }
 
   ofile.Close();
