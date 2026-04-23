@@ -16,8 +16,8 @@ TIME_STAMP	:=	$(shell date +"%y_%m_%d_%H_%M")
 COMPILER     := $(shell root-config --cxx)
 CXXFLAGS     := $(shell root-config --cflags) -Iinclude
 LINKFLAGS    := $(shell root-config --libs)
-ADDCXXFLAGS  := -O2 -march=native -mtune=native
-ADDLINKFLAGS := -lyaml-cpp -lRooFitCore -lRooFit -lRooStats -lRooUnfold
+ADDCXXFLAGS  := -O3 -march=native -mtune=native -Wall
+ADDLINKFLAGS := -lyaml-cpp -lRooFitCore -lRooFit
 
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
@@ -58,7 +58,7 @@ test-nix:
 
 # Generation of true to tag misID efficiency
 
-# K, pi and p efficincies with PIDCalib
+# K, pi and p efficiencies with PIDCalib
 .PHONY: build-rdx-true-to-tag-2016-glacier build-rdx-true-to-tag-2017-glacier build-rdx-true-to-tag-2018-glacier
 build-rdx-true-to-tag-2016-glacier:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_glacier-2016)
@@ -99,7 +99,7 @@ test-pidcalib2-wrapper-glacier:
 test-pidcalib2-wrapper-lxplus:
 	./scripts/pidcalib_wrapper.py -c $(YML_FILE) -o $(GENPATH) --dry-run -m lxplus
 
-# ghost efficincies and e conditional efficiencies
+# Ghost efficiencies and e conditional efficiencies
 .PHONY: build-rdx-true-to-tag-2016-local build-rdx-true-to-tag-2017-local build-rdx-true-to-tag-2018-local
 build-rdx-true-to-tag-2016-local:
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-true_to_tag_local-2016)
@@ -353,17 +353,11 @@ test-get-particle-name: ./ntuples/0.9.6-2016_production/Dst_D0-mu_misid-study-st
 # Compile C++ #
 ###############
 
-$(BINPATH)/ApplyMisIDWeight: ApplyMisIDWeight.cpp
-	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) -lyaml-cpp
-
 $(BINPATH)/compareEffs: compareEffs.cpp
-	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS)
+	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS)
 
-$(BINPATH)/GetMisIDCorrections: GetMisIDCorrections.cpp
-	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp -lRooFitCore -lRooFit
-
-$(BINPATH)/d0BkgDecays: d0BkgDecays.cpp
-	$(COMPILER) $(CXXFLAGS) -Wall -O3 -march=native -mtune=native -o $@ $< $(LINKFLAGS) -lyaml-cpp
+$(BINPATH)/UnfoldMisID: UnfoldMisID.cpp
+	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS) -lRooUnfold
 
 $(BINPATH)/%: %.cpp
 	$(COMPILER) $(CXXFLAGS) $(ADDCXXFLAGS) -o $@ $< $(LINKFLAGS) $(ADDLINKFLAGS)
