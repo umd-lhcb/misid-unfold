@@ -38,6 +38,11 @@ def parse_input():
                         required=True,
                         help="specify output dir.")
 
+    parser.add_argument("-r",
+                        "--run2ang",
+                        action="store_true",
+                        help="Use run2ang PID cuts.")
+
     return parser.parse_args()
 
 
@@ -74,6 +79,11 @@ if __name__ == "__main__":
     with open(args.config, "r") as f:
         config = safe_load(f)
 
+    if args.run2ang:
+        global_cuts_build_histos = ' & (k_p < 200) & (pi_p < 200) & (mu_p < 100) & (iso_p1 < 200) & (iso_p2 < 200) & (iso_p3 < 200) & (nspdhits < 450) & tracks_chi2ndof_ok'
+    else:
+        global_cuts_build_histos = ''
+
     for year in config["input_ntps"]:
         print(f"\nWorking on {year} samples")
         for particle, subconfig in config["input_ntps"][year].items():
@@ -87,7 +97,7 @@ if __name__ == "__main__":
             for br_name in config["binning"]:
                 histo_brs.append(evaluator.eval(br_name))
 
-            global_cut_expr = subconfig["cuts"]
+            global_cut_expr = subconfig["cuts"] + global_cuts_build_histos
             global_cut = evaluator.eval(global_cut_expr)
             print(f"  Global cuts: {global_cut_expr}")
 
@@ -96,9 +106,7 @@ if __name__ == "__main__":
                 print(f"    Skim cuts for {s}: {skim_cut_expr}")
 
                 for sp, cut_expr in config["tags"].items():
-                    print(
-                        f"    - {histo_name_gen(sp)} cuts: {cut_expr}"
-                    )
+                    print(f"    - {histo_name_gen(sp)} cuts: {cut_expr}")
                     cut = evaluator.eval(cut_expr)
 
                     # Make sure the evaluator is aware of the new variable

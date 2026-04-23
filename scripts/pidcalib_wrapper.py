@@ -79,6 +79,13 @@ def parse_input():
         "-m", "--mode", default="glacier", help="specify operation mode."
     )
 
+    parser.add_argument(
+        "-u",
+        "--ubdt-version",
+        help="Select uBDT training",
+        choices=["run1rdx", "run2ang"],
+    )
+
     return parser.parse_args()
 
 
@@ -125,7 +132,7 @@ def run_cmd(cmd, dry_run=False):
 
 
 def true_to_tag_gen(
-    directive, dry_run=False, debug=False, mode="lxplus"
+    directive, dry_run=False, debug=False, mode="lxplus", ubdt_version=None
 ):
     bin_vars = " " + " ".join(f"--bin-var {b}" for b in directive.bin_vars)
     cuts = ""
@@ -141,6 +148,9 @@ def true_to_tag_gen(
     --particle {directive.sample_name} \
     --binning-file ./tmp/{JSON_BIN_FILENAME} \
     --cut "{directive.cut}"'''
+
+    if ubdt_version is not None:
+        cmd += f' --ubdt-version {ubdt_version}'
 
     cmd += cuts
     cmd += bin_vars
@@ -305,4 +315,4 @@ if __name__ == "__main__":
                             print(f"    {i}")
 
     for d in directives:
-        true_to_tag_gen(d, dry_run=args.dry_run, debug=args.debug, mode=args.mode)
+        true_to_tag_gen(d, dry_run=args.dry_run, debug=args.debug, mode=args.mode, ubdt_version=args.ubdt_version)

@@ -37,7 +37,23 @@ PARTICLES = {
 }
 
 ####
-def get_cuts(p):
+def get_cuts_run2ang(p):
+    # Included HLT2, Stripping and Offline mu cuts, except:
+    # - uBDT cut, which is added explicitly below.
+    # - IPCHI2 cut, which shouldn't affect the smearing AND rejects most
+    #   signal events on our dominantly prompt charm MC.
+    cuts =    f" ETA( {p}_P, {p}_PZ ) > 1.7"
+    cuts += f" & ETA( {p}_P, {p}_PZ ) < 5"
+    cuts += f" & {p}_TRACK_GhostProb < 0.5"
+    cuts += f" & {p}_isMuon"
+    cuts += f" & {p}_PIDe < 1"
+    cuts += f" & {p}_P > 3 * GeV"
+    cuts += f" & {p}_P < 100 * GeV"
+    cuts +=  " & LOG10pp(K_PX, K_PY, K_PZ, pi_PX, pi_PY, pi_PZ) > -6.5"
+    cuts +=  " & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6"
+    return cuts
+
+def get_cuts_run1rdx(p):
     # Included HLT2, Stripping and Offline mu cuts, except:
     # - uBDT cut, which is added explicitly below.
     # - IPCHI2 cut, which shouldn't affect the smearing AND rejects most
@@ -53,12 +69,16 @@ def get_cuts(p):
     cuts +=  " & LOG10pp(K_PX, K_PY, K_PZ, pi_PX, pi_PY, pi_PZ) > -6.5"
     cuts +=  " & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6"
     return cuts
-CUTS = {
-    "k_smr":            get_cuts("K")  + " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25",
-    "pi_smr":           get_cuts("pi") + " & abs(K_TRUEID)  == 321 & BDTmuCut > 0.25",
-    "k_smr_ubdt_veto":  get_cuts("K")  + " & abs(pi_TRUEID) == 211 & BDTmuCut < 0.25",
-    "pi_smr_ubdt_veto": get_cuts("pi") + " & abs(K_TRUEID)  == 321 & BDTmuCut < 0.25",
-}
+
+def get_cuts(p, run2ang=False):
+    if run2ang:
+        return get_cuts_run2ang(p)
+    else:
+        return get_cuts_run1rdx(p)
+
+# FIXME
+# Run 1 MC sample used here contains BDT weights with run 1 training.
+# Not ideal for run2ang cuts.
 
 ####
 PLOT_NBINS = 100
@@ -87,6 +107,7 @@ def parse_input():
 
     parser.add_argument("ntps", nargs="+", help="specify input ntuples.")
     parser.add_argument("-o", "--output", required=True, help="specify output dir.")
+    parser.add_argument("-r", "--run2ang", action="store_true", help="Use run2ang PID cuts.")
 
     parser.add_argument(
         "--plot",
@@ -122,6 +143,18 @@ if __name__ == "__main__":
     mplhep.style.use("LHCb2")
     args = parse_input()
     output_ntp = uproot.recreate(f"{args.output}/{OUTPUT_NTP_NAME}")
+
+    if args.run2ang:
+        print('Using Run 2 Ang PID cuts')
+    else:
+        print('Using Run 1 RDx PID cuts')
+
+    CUTS = {
+        "k_smr":            get_cuts("K", args.run2ang)  + " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25",
+        "pi_smr":           get_cuts("pi", args.run2ang) + " & abs(K_TRUEID)  == 321 & BDTmuCut > 0.25",
+        "k_smr_ubdt_veto":  get_cuts("K", args.run2ang)  + " & abs(pi_TRUEID) == 211 & BDTmuCut < 0.25",
+        "pi_smr_ubdt_veto": get_cuts("pi", args.run2ang) + " & abs(K_TRUEID)  == 321 & BDTmuCut < 0.25"
+    }
 
     ptcls = list(PARTICLES.keys())
     for (idx, n) in enumerate(args.ntps):
