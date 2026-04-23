@@ -513,9 +513,12 @@ int main(int argc, char **argv) {
                  nondif_yield_add_passed));
 
   // Build constraint for non-dif scaling
-  RooBifurGauss scale_nondif_constrain(
-      "scale_nondif_constrain", "scale_nondif_constrain", scale_nondif_calib,
-      RooConst(1.0), RooConst(0.1), RooConst(5. / 3.));
+  RooRealVar scale_nondif_calib_obs("scale_nondif_calib_obs",
+                                    "scale_nondif_calib_obs", 1., 0., 15., "");
+  scale_nondif_calib_obs.setConstant();
+  RooBifurGauss scale_nondif_constraint(
+      "scale_nondif_constraint", "scale_nondif_constraint",
+      scale_nondif_calib_obs, scale_nondif_calib, RooConst(0.1), RooConst(5. / 3.));
 
   ///////////////////
   // Fit fractions //
@@ -581,27 +584,29 @@ int main(int argc, char **argv) {
                              RooArgList(f_sig_phys_failed, n_failed));
 
   // Constraints for amount of D0 bkg
-  RooRealVar f_sig_passed_mean("f_sig_passed_mean", "f_sig_passed_mean", 1.,
-                               "");
+  RooRealVar f_sig_passed_obs("f_sig_passed_obs", "f_sig_passed_obs", 0.5, 0.,
+                              1., "");
+  f_sig_passed_obs.setConstant();
   RooRealVar f_sig_passed_unc_hi("f_sig_passed_unc_hi", "f_sig_passed_unc_hi",
-                                 0., "");
+                                 0.5, "");
   RooRealVar f_sig_passed_unc_lo("f_sig_passed_unc_lo", "f_sig_passed_unc_lo",
-                                 0., "");
+                                 0.5, "");
 
-  RooBifurGauss f_sig_passed_constrain(
-      "f_sig_passed_constrain", "f_sig_passed_constrain", f_sig_passed,
-      f_sig_passed_mean, f_sig_passed_unc_lo, f_sig_passed_unc_hi);
+  RooBifurGauss f_sig_passed_constraint(
+      "f_sig_passed_constraint", "f_sig_passed_constraint", f_sig_passed_obs,
+      f_sig_passed, f_sig_passed_unc_lo, f_sig_passed_unc_hi);
 
-  RooRealVar f_sig_failed_mean("f_sig_failed_mean", "f_sig_failed_mean", 1.,
-                               "");
+  RooRealVar f_sig_failed_obs("f_sig_failed_obs", "f_sig_failed_obs", 0.5, 0.,
+                              1., "");
+  f_sig_failed_obs.setConstant();
   RooRealVar f_sig_failed_unc_hi("f_sig_failed_unc_hi", "f_sig_failed_unc_hi",
-                                 0., "");
+                                 0.5, "");
   RooRealVar f_sig_failed_unc_lo("f_sig_failed_unc_lo", "f_sig_failed_unc_lo",
-                                 0., "");
+                                 0.5, "");
 
-  RooBifurGauss f_sig_failed_constrain(
-      "f_sig_failed_constrain", "f_sig_failed_constrain", f_sig_failed,
-      f_sig_failed_mean, f_sig_failed_unc_lo, f_sig_failed_unc_hi);
+  RooBifurGauss f_sig_failed_constraint(
+      "f_sig_failed_constraint", "f_sig_failed_constraint", f_sig_failed_obs,
+      f_sig_failed, f_sig_failed_unc_lo, f_sig_failed_unc_hi);
 
   // Raw PID efficiency (no mass-window correction)
   RooFormulaVar eff("eff", "eff", "x[0] / (x[0] + x[1])",
@@ -665,14 +670,23 @@ int main(int argc, char **argv) {
       dm_shift, d0_m_scale, dm_scale);
 
   // Check proportions in mis-reconstructed D0 bkg
-  unordered_map<string, vector<unordered_map<string, int>>>
-      d0_bkg_counts_passed{{"k", vector<unordered_map<string, int>>(6)},
-                           {"pi", vector<unordered_map<string, int>>(6)}};
-  unordered_map<string, vector<unordered_map<string, int>>>
-      d0_bkg_counts_failed{{"k", vector<unordered_map<string, int>>(6)},
-                           {"pi", vector<unordered_map<string, int>>(6)}};
+  unordered_map<string, array<unordered_map<string, int>, N_BINS_P>>
+      d0_bkg_counts_passed;
+  unordered_map<string, array<unordered_map<string, int>, N_BINS_P>>
+      d0_bkg_counts_failed;
 
-  for (auto probe : particles) {
+  d0_bkg_counts_passed.reserve(particles.size());
+  d0_bkg_counts_failed.reserve(particles.size());
+  for (const auto &part : particles) {
+    for (int p_idx = 0; p_idx < N_BINS_P; p_idx++) {
+      for (const auto &decay_pair : w_d0_decays) {
+        d0_bkg_counts_passed[part][p_idx][decay_pair.first] = 0;
+        d0_bkg_counts_failed[part][p_idx][decay_pair.first] = 0;
+      }
+    }
+  }
+
+  for (const auto &probe : particles) {
     cout << "INFO Selecting " << probe << endl;
 
     const TString tag = (probe == "pi") ? "k" : "pi";
@@ -734,11 +748,13 @@ int main(int argc, char **argv) {
       print_files(ch_mc);
 
       // Define variable to access input ntuples
-      int dst_id, probe_trueid, probe_daughter0_trueid, ntracks;
+      int dst_id, probe_trueid, probe_daughter0_trueid, ntracks,
+          dst_vtx_ndof, d0_vtx_ndof;
 
       double dst_m, d0_m, probe_p, probe_pz, probe_pt, probe_dllmu, probe_dlle,
           spi_p, spi_pt, tag_p, tag_pz, tag_pt, k_track_chi2ndof,
-          pi_track_chi2ndof, spi_track_chi2ndof, k_px, k_py, pi_px, pi_py;
+          pi_track_chi2ndof, spi_track_chi2ndof, k_px, k_py, pi_px, pi_py,
+          dst_vtx_chi2, d0_vtx_chi2, k_ghostprob, pi_ghostprob, spi_ghostprob;
 
       float probe_mu_ubdt;
 
@@ -748,7 +764,11 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchStatus("*", false);
       ch_mc.SetBranchAddress("dst_M", &dst_m);
       ch_mc.SetBranchAddress("dst_TRUEID", &dst_id);
+      ch_mc.SetBranchAddress("dst_ENDVERTEX_CHI2", &dst_vtx_chi2);
+      ch_mc.SetBranchAddress("dst_ENDVERTEX_NDOF", &dst_vtx_ndof);
       ch_mc.SetBranchAddress("d0_M", &d0_m);
+      ch_mc.SetBranchAddress("d0_ENDVERTEX_CHI2", &d0_vtx_chi2);
+      ch_mc.SetBranchAddress("d0_ENDVERTEX_NDOF", &d0_vtx_ndof);
       ch_mc.SetBranchAddress("spi_P", &spi_p);
       ch_mc.SetBranchAddress("spi_PT", &spi_pt);
       ch_mc.SetBranchAddress(tag + "_P", &tag_p);
@@ -772,6 +792,9 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress("k_TRACK_CHI2NDOF", &k_track_chi2ndof);
       ch_mc.SetBranchAddress("pi_TRACK_CHI2NDOF", &pi_track_chi2ndof);
       ch_mc.SetBranchAddress("spi_TRACK_CHI2NDOF", &spi_track_chi2ndof);
+      ch_mc.SetBranchAddress("k_TRACK_GhostProb", &k_ghostprob);
+      ch_mc.SetBranchAddress("pi_TRACK_GhostProb", &pi_ghostprob);
+      ch_mc.SetBranchAddress("spi_TRACK_GhostProb", &spi_ghostprob);
       ch_mc.SetBranchAddress("nTracks", &ntracks);
 
       int count_tm = 0, count_cond = 0, count_calib_sel = 0, count_range = 0,
@@ -811,6 +834,10 @@ int main(int argc, char **argv) {
         if ((spi_p < 1000.) || (spi_pt < 100.)) continue;
         if ((k_track_chi2ndof > 3.) || (pi_track_chi2ndof > 3.) ||
             (spi_track_chi2ndof > 3.))
+          continue;
+
+        if ((dst_vtx_chi2 / dst_vtx_ndof) > 15 ||
+            (d0_vtx_chi2 / d0_vtx_ndof) > 10)
           continue;
 
         double k_pz, pi_pz;
@@ -1049,11 +1076,12 @@ int main(int argc, char **argv) {
       // Define variable to access input ntuples
       int dst_id, probe_trueid, ntracks, k_mother_id, k_gd_mother_id,
           k_gd_gd_mother_id, k_gd_gd_gd_mother_id, pi_mother_id,
-          pi_gd_mother_id, pi_gd_gd_mother_id, pi_gd_gd_gd_mother_id;
+          pi_gd_mother_id, pi_gd_gd_mother_id, pi_gd_gd_gd_mother_id,
+          dst_vtx_ndof, d0_vtx_ndof;
 
       double dst_m, d0_m, probe_p, probe_pz, probe_pt, probe_dllmu, probe_dlle,
-          spi_p, spi_pt, tag_p, tag_pz, tag_pt, k_track_chi2ndof,
-          pi_track_chi2ndof, spi_track_chi2ndof, k_px, k_py, pi_px, pi_py;
+          spi_p, spi_pt, tag_p, tag_pz, tag_pt, k_px, k_py, pi_px, pi_py,
+          dst_vtx_chi2, d0_vtx_chi2, k_ghostprob, pi_ghostprob, spi_ghostprob;
 
       float probe_mu_ubdt;
 
@@ -1063,7 +1091,11 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchStatus("*", false);
       ch_mc.SetBranchAddress("dst_M", &dst_m);
       ch_mc.SetBranchAddress("dst_TRUEID", &dst_id);
+      ch_mc.SetBranchAddress("dst_ENDVERTEX_CHI2", &dst_vtx_chi2);
+      ch_mc.SetBranchAddress("dst_ENDVERTEX_NDOF", &dst_vtx_ndof);
       ch_mc.SetBranchAddress("d0_M", &d0_m);
+      ch_mc.SetBranchAddress("d0_ENDVERTEX_CHI2", &d0_vtx_chi2);
+      ch_mc.SetBranchAddress("d0_ENDVERTEX_NDOF", &d0_vtx_ndof);
       ch_mc.SetBranchAddress("spi_P", &spi_p);
       ch_mc.SetBranchAddress("spi_PT", &spi_pt);
       ch_mc.SetBranchAddress(tag + "_P", &tag_p);
@@ -1091,9 +1123,9 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress("pi_MC_GD_GD_MOTHER_ID", &pi_gd_gd_mother_id);
       ch_mc.SetBranchAddress("pi_MC_GD_GD_GD_MOTHER_ID",
                              &pi_gd_gd_gd_mother_id);
-      ch_mc.SetBranchAddress("k_TRACK_CHI2NDOF", &k_track_chi2ndof);
-      ch_mc.SetBranchAddress("pi_TRACK_CHI2NDOF", &pi_track_chi2ndof);
-      ch_mc.SetBranchAddress("spi_TRACK_CHI2NDOF", &spi_track_chi2ndof);
+      ch_mc.SetBranchAddress("k_TRACK_GhostProb", &k_ghostprob);
+      ch_mc.SetBranchAddress("pi_TRACK_GhostProb", &pi_ghostprob);
+      ch_mc.SetBranchAddress("spi_TRACK_GhostProb", &spi_ghostprob);
       ch_mc.SetBranchAddress("nTracks", &ntracks);
 
       int count_tm = 0, count_cond = 0, count_calib_sel = 0, count_range = 0,
@@ -1151,9 +1183,6 @@ int main(int argc, char **argv) {
         if ((tag_p < 2000.) || (tag_pt < 250.)) continue;
         if ((probe_p < 2000.) || (probe_pt < 250.)) continue;
         if ((spi_p < 1000.) || (spi_pt < 100.)) continue;
-        if (k_track_chi2ndof > 3. || pi_track_chi2ndof > 3. ||
-            spi_track_chi2ndof > 3.)
-          continue;
 
         double k_pz, pi_pz;
         if (probe == "k") {
@@ -1197,7 +1226,7 @@ int main(int argc, char **argv) {
         // Not applying MuonUnbiased conditional cut in MC
         // since some kinematical bins have very low statistics
 
-        if (probe_p < 3000. || probe_p >= 100000. || ntracks >= 600) continue;
+        if (probe_p < 3000. || probe_p >= 100000.) continue;
 
         const double probe_eta =
             0.5 * std::log((probe_p + probe_pz) / (probe_p - probe_pz));
@@ -1242,16 +1271,23 @@ int main(int argc, char **argv) {
         d0_m_var.setVal(d0_m);
         dm_var.setVal(dm);
 
+        const bool vtx_quality_ok = (dst_vtx_chi2 / dst_vtx_ndof) < 15. &&
+                                    (d0_vtx_chi2 / d0_vtx_ndof) < 10.;
+
+        // Track and vertex quality cuts are considered when evaluating
+        // predicted proportions of different D0 decays, but not when building
+        // individual PDFs (due to poor stats)
+
         if (pid_ok) {
           // Fill "passed" samples
           datasets_d0_bkg_mc_passed.at(d0_decay)[(p_bin - 1)].addFast(fit_vars);
-          if (in_fit_window) {
+          if (in_fit_window && vtx_quality_ok) {
             d0_bkg_counts_passed[probe][p_bin - 1][d0_decay]++;
           }
         } else {
           // Fill "failed" samples
           datasets_d0_bkg_mc_failed.at(d0_decay)[(p_bin - 1)].addFast(fit_vars);
-          if (in_fit_window) {
+          if (in_fit_window && vtx_quality_ok) {
             d0_bkg_counts_failed[probe][p_bin - 1][d0_decay]++;
           }
         }
@@ -1793,14 +1829,16 @@ int main(int argc, char **argv) {
 
           unordered_map<string, RooKeysPdf> d0m_pdfs_d0_bkg_passed;
           unordered_map<string, RooKeysPdf> d0m_pdfs_d0_bkg_failed;
+          d0m_pdfs_d0_bkg_passed.reserve(d0_bkg_decays.size());
+          d0m_pdfs_d0_bkg_failed.reserve(d0_bkg_decays.size());
+
           unordered_map<string, RooRealVar> d0m_fs_d0_bkg_passed;
           unordered_map<string, RooRealVar> d0m_fs_d0_bkg_failed;
-          unordered_map<string, RooRealVar> d0m_fs_extended_d0_bkg_passed;
-          unordered_map<string, RooRealVar> d0m_fs_extended_d0_bkg_failed;
+          d0m_fs_d0_bkg_passed.reserve(d0_bkg_decays.size());
+          d0m_fs_d0_bkg_failed.reserve(d0_bkg_decays.size());
+
           RooArgList d0m_pdf_list_d0_bkg_passed, d0m_pdf_list_d0_bkg_failed,
-              d0m_f_list_d0_bkg_passed, d0m_f_list_d0_bkg_failed,
-              d0m_f_extended_list_d0_bkg_passed,
-              d0m_f_extended_list_d0_bkg_failed;
+              d0m_f_list_d0_bkg_passed, d0m_f_list_d0_bkg_failed;
 
           RooDataSet ds_d0m_d0_bkg_passed_sum(
               "ds_d0m_d0_bkg_passed_sum_" + suffix,
@@ -1813,6 +1851,9 @@ int main(int argc, char **argv) {
 
           unordered_map<string, TH1D> d0m_histos_d0_bkg_passed;
           unordered_map<string, TH1D> d0m_histos_d0_bkg_failed;
+          d0m_histos_d0_bkg_passed.reserve(d0_bkg_decays.size());
+          d0m_histos_d0_bkg_failed.reserve(d0_bkg_decays.size());
+
           TH1D    h_d0m_d0_bkg_passed("h_d0m_d0_bkg_passed_" + suffix,
                                       "h_d0m_d0_bkg_passed_" + suffix,
                                       bins_histos_d0_m_d0_bkg.numBins(),
@@ -1824,25 +1865,14 @@ int main(int argc, char **argv) {
                                       bins_histos_d0_m_d0_bkg.lowBound(),
                                       bins_histos_d0_m_d0_bkg.highBound());
           THStack ths_d0m_d0_bkg_passed("ths_d0m_d0_bkg_passed_" + suffix,
-                                        "ths_d0m_d0_bkg_passed_" + suffix);
+                                        tag + ";" + d0_m_label);
           THStack ths_d0m_d0_bkg_failed("ths_d0m_d0_bkg_failed_" + suffix,
-                                        "ths_d0m_d0_bkg_failed_" + suffix);
+                                        tag + ";" + d0_m_label);
 
-          double sum_f_passed_d0m = 0., sum_f_failed_d0m = 0.,
-                 sum_f_ext_passed_d0m = 0., sum_f_ext_failed_d0m = 0.;
-
-          double d0_bkg_sum_passed = 0., d0_bkg_sum_failed = 0.,
-                 d0_bkg_sum_extended_passed = 0.,
-                 d0_bkg_sum_extended_failed = 0.;
+          double sum_f_passed_d0m = 0., sum_f_failed_d0m = 0.;
+          double d0_bkg_sum_passed = 0., d0_bkg_sum_failed = 0.;
 
           for (const auto &d0_decay : d0_bkg_decays) {
-            // Total counts over extended range
-            d0_bkg_sum_extended_passed +=
-                w_d0_decays.at(d0_decay) *
-                datasets_d0_bkg_mc_passed[d0_decay][p_idx].numEntries();
-            d0_bkg_sum_extended_failed +=
-                w_d0_decays.at(d0_decay) *
-                datasets_d0_bkg_mc_failed[d0_decay][p_idx].numEntries();
             // Total counts in pidcalib mass window
             d0_bkg_sum_passed += w_d0_decays.at(d0_decay) *
                                  d0_bkg_counts_passed[probe][p_idx][d0_decay];
@@ -1857,18 +1887,35 @@ int main(int argc, char **argv) {
             RooDataSet &ds_passed = datasets_d0_bkg_mc_passed[d0_decay][p_idx];
             RooDataSet &ds_failed = datasets_d0_bkg_mc_failed[d0_decay][p_idx];
 
-            const double n_passed_d0_decay =
-                ds_passed.numEntries() * w_d0_decays.at(d0_decay);
-            const double n_failed_d0_decay =
-                ds_failed.numEntries() * w_d0_decays.at(d0_decay);
+            const double &w_decay = w_d0_decays.at(d0_decay);
 
-            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_passed_d0_decay /
-                            (n_passed_d0_decay + n_failed_d0_decay));
+            const double n_passed_d0_decay =
+                ds_passed.sumEntries("", "fitRange");
+            const double n_failed_d0_decay =
+                ds_failed.sumEntries("", "fitRange");
+
+            const double &n_mw_passed_d0_decay =
+                d0_bkg_counts_passed[probe][p_idx][d0_decay];
+            const double &n_mw_failed_d0_decay =
+                d0_bkg_counts_failed[probe][p_idx][d0_decay];
+
+            const double w_passed =
+                n_passed_d0_decay + n_failed_d0_decay > 0
+                    ? w_decay * n_mw_passed_d0_decay /
+                          (n_passed_d0_decay + n_failed_d0_decay)
+                    : 0.;
+
+            const double w_failed =
+                n_passed_d0_decay + n_failed_d0_decay > 0
+                    ? w_decay * n_mw_failed_d0_decay /
+                          (n_passed_d0_decay + n_failed_d0_decay)
+                    : 0.;
+
+            w_d0_bkg.setVal(w_passed);
             append_to_dataset(ds_passed, ds_d0m_d0_bkg_passed_sum, w_d0_bkg);
             append_to_dataset(ds_failed, ds_d0m_d0_bkg_passed_sum, w_d0_bkg);
 
-            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_failed_d0_decay /
-                            (n_passed_d0_decay + n_failed_d0_decay));
+            w_d0_bkg.setVal(w_failed);
             append_to_dataset(ds_passed, ds_d0m_d0_bkg_failed_sum, w_d0_bkg);
             append_to_dataset(ds_failed, ds_d0m_d0_bkg_failed_sum, w_d0_bkg);
 
@@ -1910,10 +1957,8 @@ int main(int argc, char **argv) {
             h_passed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
             h_failed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
 
-            h_passed_merged.Scale(n_passed_d0_decay /
-                                  h_passed_merged.GetEntries());
-            h_failed_merged.Scale(n_failed_d0_decay /
-                                  h_failed_merged.GetEntries());
+            h_passed_merged.Scale(w_passed);
+            h_failed_merged.Scale(w_failed);
             ths_d0m_d0_bkg_passed.Add(&h_passed_merged);
             ths_d0m_d0_bkg_failed.Add(&h_failed_merged);
             h_d0m_d0_bkg_passed.Add(&h_passed_merged);
@@ -1940,11 +1985,11 @@ int main(int argc, char **argv) {
                            n_bins_keys));
 
             unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed(
-                d0_m_var.frame(Title("d0_m Passed " + tag)));
+                d0_m_var.frame(Title("Passed " + tag)));
             unique_ptr<RooPlot> frame_d0_mc_d0_bkg_failed(
-                d0_m_var.frame(Title("d0_m Failed " + tag)));
+                d0_m_var.frame(Title("Failed " + tag)));
             unique_ptr<RooPlot> frame_d0_mc_d0_bkg_total(
-                d0_m_var.frame(Title("d0_m Total " + tag)));
+                d0_m_var.frame(Title("Total " + tag)));
 
             ds_passed.plotOn(frame_d0_mc_d0_bkg_passed.get(),
                              Binning(bins_histos_d0_m_d0_bkg));
@@ -1987,7 +2032,7 @@ int main(int argc, char **argv) {
             d0m_pdf_list_d0_bkg_failed.add(d0m_pdfs_d0_bkg_failed.at(d0_decay));
 
             if (d0_decay != d0_bkg_decays.back()) {
-              // Here we calculate fit fractions, so the this must be omitted
+              // Here we calculate fit fractions, so this must be omitted
               // for the last component
 
               // Fit fractions within fit range
@@ -1995,60 +2040,26 @@ int main(int argc, char **argv) {
                   d0_decay,
                   RooRealVar("d0_f_d0_bkg_passed_" + suffix_bkg,
                              "d0_f_d0_bkg_passed_" + suffix_bkg,
-                             w_d0_decays.at(d0_decay) *
-                                 d0_bkg_counts_passed[probe][p_idx][d0_decay] /
-                                 d0_bkg_sum_passed,
+                             w_decay * n_mw_passed_d0_decay / d0_bkg_sum_passed,
                              ""));
 
               d0m_fs_d0_bkg_failed.emplace(
                   d0_decay,
                   RooRealVar("d0_f_d0_bkg_failed_" + suffix_bkg,
                              "d0_f_d0_bkg_failed_" + suffix_bkg,
-                             w_d0_decays.at(d0_decay) *
-                                 d0_bkg_counts_failed[probe][p_idx][d0_decay] /
-                                 d0_bkg_sum_failed,
+                             w_decay * n_mw_failed_d0_decay / d0_bkg_sum_failed,
                              ""));
 
               d0m_f_list_d0_bkg_passed.add(d0m_fs_d0_bkg_passed.at(d0_decay));
               d0m_f_list_d0_bkg_failed.add(d0m_fs_d0_bkg_failed.at(d0_decay));
 
-              // Fit fractions over extended range
-              d0m_fs_extended_d0_bkg_passed.emplace(
-                  d0_decay,
-                  RooRealVar("d0_f_extended_d0_bkg_passed_" + suffix_bkg,
-                             "d0_f_extended_d0_bkg_passed_" + suffix_bkg,
-                             n_passed_d0_decay / d0_bkg_sum_extended_passed,
-                             ""));
-
-              d0m_fs_extended_d0_bkg_failed.emplace(
-                  d0_decay,
-                  RooRealVar("d0_f_extended_d0_bkg_failed_" + suffix_bkg,
-                             "d0_f_extended_d0_bkg_failed_" + suffix_bkg,
-                             n_failed_d0_decay / d0_bkg_sum_extended_failed,
-                             ""));
-
-              d0m_f_extended_list_d0_bkg_passed.add(
-                  d0m_fs_extended_d0_bkg_passed.at(d0_decay));
-              d0m_f_extended_list_d0_bkg_failed.add(
-                  d0m_fs_extended_d0_bkg_failed.at(d0_decay));
-
               cout << "INFO " << d0_decay << " f passed: "
                    << d0m_fs_d0_bkg_passed.at(d0_decay).getVal() << endl;
               cout << "INFO " << d0_decay << " f failed: "
                    << d0m_fs_d0_bkg_failed.at(d0_decay).getVal() << endl;
-              cout << "INFO " << d0_decay << " f ext passed: "
-                   << d0m_fs_extended_d0_bkg_passed.at(d0_decay).getVal()
-                   << endl;
-              cout << "INFO " << d0_decay << " f ext failed: "
-                   << d0m_fs_extended_d0_bkg_failed.at(d0_decay).getVal()
-                   << endl;
 
               sum_f_passed_d0m += d0m_fs_d0_bkg_passed.at(d0_decay).getVal();
               sum_f_failed_d0m += d0m_fs_d0_bkg_failed.at(d0_decay).getVal();
-              sum_f_ext_passed_d0m +=
-                  d0m_fs_extended_d0_bkg_passed.at(d0_decay).getVal();
-              sum_f_ext_failed_d0m +=
-                  d0m_fs_extended_d0_bkg_failed.at(d0_decay).getVal();
             }
           }
 
@@ -2056,10 +2067,6 @@ int main(int argc, char **argv) {
                << " f passed: " << 1. - sum_f_passed_d0m << endl;
           cout << "INFO " << d0_bkg_decays.back()
                << " f failed: " << 1. - sum_f_failed_d0m << endl;
-          cout << "INFO " << d0_bkg_decays.back()
-               << " f ext passed: " << 1. - sum_f_ext_passed_d0m << endl;
-          cout << "INFO " << d0_bkg_decays.back()
-               << " f ext failed: " << 1. - sum_f_ext_failed_d0m << endl;
 
           // Plot stacked histograms
           h_d0m_d0_bkg_passed.SetLineColor(kBlack);
@@ -2082,22 +2089,10 @@ int main(int argc, char **argv) {
                                            "d0_model_d0_bkg_passed_" + suffix,
                                            d0m_pdf_list_d0_bkg_passed,
                                            d0m_f_list_d0_bkg_passed);
-
           RooAddPdf d0_model_d0_bkg_failed("d0_model_d0_bkg_failed_" + suffix,
                                            "d0_model_d0_bkg_failed_" + suffix,
                                            d0m_pdf_list_d0_bkg_failed,
                                            d0m_f_list_d0_bkg_failed);
-
-          // Build pdfs fit fractions calculated within the extended range
-          RooAddPdf d0_model_d0_bkg_passed_ext(
-              "d0_model_d0_bkg_passed_ext_" + suffix,
-              "d0_model_d0_bkg_passed_ext_" + suffix,
-              d0m_pdf_list_d0_bkg_passed, d0m_f_extended_list_d0_bkg_passed);
-
-          RooAddPdf d0_model_d0_bkg_failed_ext(
-              "d0_model_d0_bkg_failed_ext_" + suffix,
-              "d0_model_d0_bkg_failed_ext_" + suffix,
-              d0m_pdf_list_d0_bkg_failed, d0m_f_extended_list_d0_bkg_failed);
 
           // Plot PDF over extended range
           unique_ptr<RooPlot> frame_d0_mc_d0_bkg_passed_ext(
@@ -2110,18 +2105,16 @@ int main(int argc, char **argv) {
           ds_d0m_d0_bkg_failed_sum.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
                                           Binning(bins_histos_d0_m_d0_bkg));
 
-          d0_model_d0_bkg_passed_ext.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
-                                            LineWidth(1), LineColor(kRed),
-                                            Range("fitRange"), VLines());
-          d0_model_d0_bkg_passed_ext.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
-                                            LineWidth(2),
-                                            NormRange("fitRange"));
-          d0_model_d0_bkg_failed_ext.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
-                                            LineWidth(1), LineColor(kRed),
-                                            Range("fitRange"), VLines());
-          d0_model_d0_bkg_failed_ext.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
-                                            LineWidth(2),
-                                            NormRange("fitRange"));
+          d0_model_d0_bkg_passed.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
+                                        LineWidth(1), LineColor(kRed),
+                                        Range("fitRange"), VLines());
+          d0_model_d0_bkg_passed.plotOn(frame_d0_mc_d0_bkg_passed_ext.get(),
+                                        LineWidth(2), NormRange("fitRange"));
+          d0_model_d0_bkg_failed.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
+                                        LineWidth(1), LineColor(kRed),
+                                        Range("fitRange"), VLines());
+          d0_model_d0_bkg_failed.plotOn(frame_d0_mc_d0_bkg_failed_ext.get(),
+                                        LineWidth(2), NormRange("fitRange"));
 
           c_double.cd(1);
           frame_d0_mc_d0_bkg_passed_ext->Draw();
@@ -2149,11 +2142,12 @@ int main(int argc, char **argv) {
               ds_d0m_d0_bkg_passed_sum.sumEntries("", "fitRange");
           const double d0_bkg_norm_failed_d0m =
               ds_d0m_d0_bkg_failed_sum.sumEntries("", "fitRange");
-          d0_model_d0_bkg_passed_ext.plotOn(
+
+          d0_model_d0_bkg_passed.plotOn(
               frame_d0_mc_d0_bkg_passed.get(), LineWidth(2), Range("fitRange"),
               Normalization(d0_bkg_norm_passed_d0m, RooAbsReal::NumEvent),
               ProjectionRange("fitRange"));
-          d0_model_d0_bkg_failed_ext.plotOn(
+          d0_model_d0_bkg_failed.plotOn(
               frame_d0_mc_d0_bkg_failed.get(), LineWidth(2), Range("fitRange"),
               Normalization(d0_bkg_norm_failed_d0m, RooAbsReal::NumEvent),
               ProjectionRange("fitRange"));
@@ -2176,14 +2170,16 @@ int main(int argc, char **argv) {
 
           unordered_map<string, RooKeysPdf> dm_pdfs_d0_bkg_passed;
           unordered_map<string, RooKeysPdf> dm_pdfs_d0_bkg_failed;
+          dm_pdfs_d0_bkg_passed.reserve(d0_bkg_decays.size());
+          dm_pdfs_d0_bkg_failed.reserve(d0_bkg_decays.size());
+
           unordered_map<string, RooRealVar> dm_fs_d0_bkg_passed;
           unordered_map<string, RooRealVar> dm_fs_d0_bkg_failed;
-          unordered_map<string, RooRealVar> dm_fs_extended_d0_bkg_passed;
-          unordered_map<string, RooRealVar> dm_fs_extended_d0_bkg_failed;
+          dm_fs_d0_bkg_passed.reserve(d0_bkg_decays.size());
+          dm_fs_d0_bkg_failed.reserve(d0_bkg_decays.size());
+
           RooArgList dm_pdf_list_d0_bkg_passed, dm_pdf_list_d0_bkg_failed,
-              dm_f_list_d0_bkg_passed, dm_f_list_d0_bkg_failed,
-              dm_f_extended_list_d0_bkg_passed,
-              dm_f_extended_list_d0_bkg_failed;
+              dm_f_list_d0_bkg_passed, dm_f_list_d0_bkg_failed;
 
           RooDataSet ds_dm_d0_bkg_passed_sum(
               "ds_dm_d0_bkg_passed_sum_" + suffix,
@@ -2196,7 +2192,10 @@ int main(int argc, char **argv) {
 
           unordered_map<string, TH1D> dm_histos_d0_bkg_passed;
           unordered_map<string, TH1D> dm_histos_d0_bkg_failed;
-          TH1D                        h_dm_d0_bkg_passed(
+          dm_histos_d0_bkg_passed.reserve(d0_bkg_decays.size());
+          dm_histos_d0_bkg_failed.reserve(d0_bkg_decays.size());
+
+          TH1D h_dm_d0_bkg_passed(
               "h_dm_d0_bkg_passed_" + suffix, "h_dm_d0_bkg_passed_" + suffix,
               bins_histos_dm_d0_bkg.numBins(), bins_histos_dm_d0_bkg.lowBound(),
               bins_histos_dm_d0_bkg.highBound());
@@ -2204,13 +2203,13 @@ int main(int argc, char **argv) {
               "h_dm_d0_bkg_failed_" + suffix, "h_dm_d0_bkg_failed_" + suffix,
               bins_histos_dm_d0_bkg.numBins(), bins_histos_dm_d0_bkg.lowBound(),
               bins_histos_dm_d0_bkg.highBound());
-          THStack ths_dm_d0_bkg_passed("ths_dm_d0_bkg_passed_" + suffix,
-                                       "ths_dm_d0_bkg_passed_" + suffix);
-          THStack ths_dm_d0_bkg_failed("ths_dm_d0_bkg_failed_" + suffix,
-                                       "ths_dm_d0_bkg_failed_" + suffix);
 
-          double sum_f_passed_dm = 0., sum_f_failed_dm = 0.,
-                 sum_f_ext_passed_dm = 0., sum_f_ext_failed_dm = 0.;
+          THStack ths_dm_d0_bkg_passed("ths_dm_d0_bkg_passed_" + suffix,
+                                       tag + ";" + dm_label);
+          THStack ths_dm_d0_bkg_failed("ths_dm_d0_bkg_failed_" + suffix,
+                                       tag + ";" + dm_label);
+
+          double sum_f_passed_dm = 0., sum_f_failed_dm = 0.;
 
           for (const auto &d0_decay : d0_bkg_decays) {
             cout << "\nINFO Producing dm PDFs for " << d0_decay << endl;
@@ -2219,17 +2218,35 @@ int main(int argc, char **argv) {
             RooDataSet &ds_passed = datasets_d0_bkg_mc_passed[d0_decay][p_idx];
             RooDataSet &ds_failed = datasets_d0_bkg_mc_failed[d0_decay][p_idx];
 
-            const double n_passed_d0_decay =
-                ds_passed.numEntries() * w_d0_decays.at(d0_decay);
-            const double n_failed_d0_decay =
-                ds_failed.numEntries() * w_d0_decays.at(d0_decay);
+            const double &w_decay = w_d0_decays.at(d0_decay);
 
-            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_passed_d0_decay /
-                            (n_passed_d0_decay + n_failed_d0_decay));
+            const double n_passed_d0_decay =
+                ds_passed.sumEntries("", "fitRange");
+            const double n_failed_d0_decay =
+                ds_failed.sumEntries("", "fitRange");
+
+            const double &n_mw_passed_d0_decay =
+                d0_bkg_counts_passed[probe][p_idx][d0_decay];
+            const double &n_mw_failed_d0_decay =
+                d0_bkg_counts_failed[probe][p_idx][d0_decay];
+
+            const double w_passed =
+                n_passed_d0_decay + n_failed_d0_decay > 0
+                    ? w_decay * n_mw_passed_d0_decay /
+                          (n_passed_d0_decay + n_failed_d0_decay)
+                    : 0.;
+
+            const double w_failed =
+                n_passed_d0_decay + n_failed_d0_decay > 0
+                    ? w_decay * n_mw_failed_d0_decay /
+                          (n_passed_d0_decay + n_failed_d0_decay)
+                    : 0.;
+
+            w_d0_bkg.setVal(w_passed);
             append_to_dataset(ds_passed, ds_dm_d0_bkg_passed_sum, w_d0_bkg);
             append_to_dataset(ds_failed, ds_dm_d0_bkg_passed_sum, w_d0_bkg);
 
-            w_d0_bkg.setVal(w_d0_decays.at(d0_decay) * n_failed_d0_decay /
+            w_d0_bkg.setVal(w_decay * n_mw_failed_d0_decay /
                             (n_passed_d0_decay + n_failed_d0_decay));
             append_to_dataset(ds_passed, ds_dm_d0_bkg_failed_sum, w_d0_bkg);
             append_to_dataset(ds_failed, ds_dm_d0_bkg_failed_sum, w_d0_bkg);
@@ -2272,10 +2289,8 @@ int main(int argc, char **argv) {
             h_passed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
             h_failed_merged.SetFillColor(color_ids_d0_decays.at(d0_decay));
 
-            h_passed_merged.Scale(n_passed_d0_decay /
-                                  h_passed_merged.GetEntries());
-            h_failed_merged.Scale(n_failed_d0_decay /
-                                  h_failed_merged.GetEntries());
+            h_passed_merged.Scale(w_passed);
+            h_failed_merged.Scale(w_failed);
             ths_dm_d0_bkg_passed.Add(&h_passed_merged);
             ths_dm_d0_bkg_failed.Add(&h_failed_merged);
             h_dm_d0_bkg_passed.Add(&h_passed_merged);
@@ -2288,7 +2303,7 @@ int main(int argc, char **argv) {
                 RooKeysPdf("dm_model_d0_bkg_passed_" + suffix_bkg,
                            "dm_model_d0_bkg_passed_" + suffix_bkg, dm_var,
                            dm_var, dm_pdg, dm_scale, dm_shift, ds_dm_d0_bkg,
-                           RooKeysPdf::NoMirror, 1.6, true, n_bins_keys));
+                           RooKeysPdf::NoMirror, 1.8, true, n_bins_keys));
 
             cout << "INFO Building RooKeysPdf dm_model_d0_bkg_failed with "
                  << ds_dm_d0_bkg.numEntries() << " entries" << endl;
@@ -2297,7 +2312,7 @@ int main(int argc, char **argv) {
                 RooKeysPdf("dm_model_d0_bkg_failed_" + suffix_bkg,
                            "dm_model_d0_bkg_failed_" + suffix_bkg, dm_var,
                            dm_var, dm_pdg, dm_scale, dm_shift, ds_dm_d0_bkg,
-                           RooKeysPdf::NoMirror, 1.6, true, n_bins_keys));
+                           RooKeysPdf::NoMirror, 1.8, true, n_bins_keys));
 
             unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed(
                 dm_var.frame(Title("Passed " + tag)));
@@ -2356,40 +2371,17 @@ int main(int argc, char **argv) {
                   d0_decay,
                   RooRealVar("dm_f_d0_bkg_passed_" + suffix_bkg,
                              "dm_f_d0_bkg_passed_" + suffix_bkg,
-                             w_d0_decays.at(d0_decay) *
-                                 d0_bkg_counts_passed[probe][p_idx][d0_decay] /
-                                 d0_bkg_sum_passed,
+                             w_decay * n_mw_passed_d0_decay / d0_bkg_sum_passed,
                              ""));
 
               dm_fs_d0_bkg_failed.emplace(
                   d0_decay,
                   RooRealVar("dm_f_d0_bkg_failed_" + suffix_bkg,
                              "dm_f_d0_bkg_failed_" + suffix_bkg,
-                             w_d0_decays.at(d0_decay) *
-                                 d0_bkg_counts_failed[probe][p_idx][d0_decay] /
-                                 d0_bkg_sum_failed,
+                             w_decay * n_mw_failed_d0_decay / d0_bkg_sum_failed,
                              ""));
               dm_f_list_d0_bkg_passed.add(dm_fs_d0_bkg_passed.at(d0_decay));
               dm_f_list_d0_bkg_failed.add(dm_fs_d0_bkg_failed.at(d0_decay));
-
-              // Fit fractions over extended range
-              dm_fs_extended_d0_bkg_passed.emplace(
-                  d0_decay,
-                  RooRealVar("dm_f_extended_d0_bkg_passed_" + suffix_bkg,
-                             "dm_f_extended_d0_bkg_passed_" + suffix_bkg,
-                             n_passed_d0_decay / d0_bkg_sum_extended_passed,
-                             ""));
-
-              dm_fs_extended_d0_bkg_failed.emplace(
-                  d0_decay,
-                  RooRealVar("dm_f_extended_d0_bkg_failed_" + suffix_bkg,
-                             "dm_f_extended_d0_bkg_failed_" + suffix_bkg,
-                             n_failed_d0_decay / d0_bkg_sum_extended_failed,
-                             ""));
-              dm_f_extended_list_d0_bkg_passed.add(
-                  dm_fs_extended_d0_bkg_passed.at(d0_decay));
-              dm_f_extended_list_d0_bkg_failed.add(
-                  dm_fs_extended_d0_bkg_failed.at(d0_decay));
 
               cout << "INFO " << d0_decay
                    << " f passed: " << dm_fs_d0_bkg_passed.at(d0_decay).getVal()
@@ -2397,19 +2389,9 @@ int main(int argc, char **argv) {
               cout << "INFO " << d0_decay
                    << " f failed: " << dm_fs_d0_bkg_failed.at(d0_decay).getVal()
                    << endl;
-              cout << "INFO " << d0_decay << " f ext passed: "
-                   << dm_fs_extended_d0_bkg_passed.at(d0_decay).getVal()
-                   << endl;
-              cout << "INFO " << d0_decay << " f ext failed: "
-                   << dm_fs_extended_d0_bkg_failed.at(d0_decay).getVal()
-                   << endl;
 
               sum_f_passed_dm += dm_fs_d0_bkg_passed.at(d0_decay).getVal();
               sum_f_failed_dm += dm_fs_d0_bkg_failed.at(d0_decay).getVal();
-              sum_f_ext_passed_dm +=
-                  dm_fs_extended_d0_bkg_passed.at(d0_decay).getVal();
-              sum_f_ext_failed_dm +=
-                  dm_fs_extended_d0_bkg_failed.at(d0_decay).getVal();
             }
           }
 
@@ -2417,10 +2399,6 @@ int main(int argc, char **argv) {
                << " f passed: " << 1. - sum_f_passed_dm << endl;
           cout << "INFO " << d0_bkg_decays.back()
                << " f failed: " << 1. - sum_f_failed_dm << endl;
-          cout << "INFO " << d0_bkg_decays.back()
-               << " f ext passed: " << 1. - sum_f_ext_passed_dm << endl;
-          cout << "INFO " << d0_bkg_decays.back()
-               << " f ext failed: " << 1. - sum_f_ext_failed_dm << endl;
 
           // Plot stacked histograms
           h_dm_d0_bkg_passed.SetLineColor(kBlack);
@@ -2448,17 +2426,6 @@ int main(int argc, char **argv) {
                                            dm_pdf_list_d0_bkg_failed,
                                            dm_f_list_d0_bkg_failed);
 
-          // Build pdfs fit fractions calculated within the extended range
-          RooAddPdf dm_model_d0_bkg_passed_ext(
-              "dm_model_d0_bkg_passed_ext_" + suffix,
-              "dm_model_d0_bkg_passed_ext_" + suffix, dm_pdf_list_d0_bkg_passed,
-              dm_f_extended_list_d0_bkg_passed);
-
-          RooAddPdf dm_model_d0_bkg_failed_ext(
-              "dm_model_d0_bkg_failed_ext_" + suffix,
-              "dm_model_d0_bkg_failed_ext_" + suffix, dm_pdf_list_d0_bkg_failed,
-              dm_f_extended_list_d0_bkg_failed);
-
           // Plot PDF over extended range
           unique_ptr<RooPlot> frame_dm_mc_d0_bkg_passed_ext(
               dm_var.frame(Title("Passed " + tag)));
@@ -2470,18 +2437,16 @@ int main(int argc, char **argv) {
           ds_dm_d0_bkg_failed_sum.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
                                          Binning(bins_histos_dm_d0_bkg));
 
-          dm_model_d0_bkg_passed_ext.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
-                                            LineWidth(1), LineColor(kRed),
-                                            Range("fitRange"), VLines());
-          dm_model_d0_bkg_passed_ext.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
-                                            LineWidth(2),
-                                            NormRange("fitRange"));
-          dm_model_d0_bkg_failed_ext.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
-                                            LineWidth(1), LineColor(kRed),
-                                            Range("fitRange"), VLines());
-          dm_model_d0_bkg_failed_ext.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
-                                            LineWidth(2),
-                                            NormRange("fitRange"));
+          dm_model_d0_bkg_passed.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
+                                        LineWidth(1), LineColor(kRed),
+                                        Range("fitRange"), VLines());
+          dm_model_d0_bkg_passed.plotOn(frame_dm_mc_d0_bkg_passed_ext.get(),
+                                        LineWidth(2), NormRange("fitRange"));
+          dm_model_d0_bkg_failed.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
+                                        LineWidth(1), LineColor(kRed),
+                                        Range("fitRange"), VLines());
+          dm_model_d0_bkg_failed.plotOn(frame_dm_mc_d0_bkg_failed_ext.get(),
+                                        LineWidth(2), NormRange("fitRange"));
 
           c_double.cd(1);
           frame_dm_mc_d0_bkg_passed_ext->Draw();
@@ -2509,11 +2474,12 @@ int main(int argc, char **argv) {
               ds_dm_d0_bkg_passed_sum.sumEntries("", "fitRange");
           const double d0_bkg_norm_failed_dm =
               ds_dm_d0_bkg_failed_sum.sumEntries("", "fitRange");
-          dm_model_d0_bkg_passed_ext.plotOn(
+
+          dm_model_d0_bkg_passed.plotOn(
               frame_dm_mc_d0_bkg_passed.get(), LineWidth(2), Range("fitRange"),
               Normalization(d0_bkg_norm_passed_dm, RooAbsReal::NumEvent),
               ProjectionRange("fitRange"));
-          dm_model_d0_bkg_failed_ext.plotOn(
+          dm_model_d0_bkg_failed.plotOn(
               frame_dm_mc_d0_bkg_failed.get(), LineWidth(2), Range("fitRange"),
               Normalization(d0_bkg_norm_failed_dm, RooAbsReal::NumEvent),
               ProjectionRange("fitRange"));
@@ -2711,72 +2677,53 @@ int main(int argc, char **argv) {
           f_spi_passed.setVal(f_spi_passed_guess);
           f_spi_failed.setVal(f_spi_failed_guess);
 
-          // Constrain yield of D0 bkg based on MC
+          // Loosely constrain yield of D0 bkg based on MC
           const double d0_bkg_passed_signal =
-              ymlBkg[sample][probe]["passed"][p_idx]["signal"].as<double>();
+              ymlBkg[sample_name][probe]["passed"][p_idx][eta_idx]["signal"]
+                  .as<int>();
           const double d0_bkg_passed_total =
-              ymlBkg[sample][probe]["passed"][p_idx]["total"].as<double>();
+              ymlBkg[sample_name][probe]["passed"][p_idx][eta_idx]["total"]
+                  .as<int>();
           const double d0_bkg_failed_signal =
-              ymlBkg[sample][probe]["failed"][p_idx]["signal"].as<double>();
+              ymlBkg[sample_name][probe]["failed"][p_idx][eta_idx]["signal"]
+                  .as<int>();
           const double d0_bkg_failed_total =
-              ymlBkg[sample][probe]["failed"][p_idx]["total"].as<double>();
-
-          // Additional width on constraints to account for MC-data
-          // discrepancies and outdated BFs in decay.dec
-          constexpr double d0_bkg_syst_unc = 0.02;
+              ymlBkg[sample_name][probe]["failed"][p_idx][eta_idx]["total"]
+                  .as<int>();
 
           const double f_sig_passed_guess =
-              d0_bkg_passed_signal / d0_bkg_passed_total;
-          const double f_sig_passed_guess_unc_hi =
-              TEfficiency::Wilson(d0_bkg_passed_total, d0_bkg_passed_signal,
-                                  ONE_SIGMA, true) -
-              f_sig_passed_guess;
-          const double f_sig_passed_guess_unc_lo =
-              f_sig_passed_guess - TEfficiency::Wilson(d0_bkg_passed_total,
-                                                       d0_bkg_passed_signal,
-                                                       ONE_SIGMA, false);
+              d0_bkg_passed_signal * 1.0 / d0_bkg_passed_total;
+          const double f_sig_passed_guess_bayes =
+              (d0_bkg_passed_signal + 1) * 1.0 / (d0_bkg_passed_total + 2);
 
-          const double f_sig_passed_guess_unc_total_hi =
-              sqrt_sum_sq(f_sig_passed_guess_unc_hi, d0_bkg_syst_unc);
-          const double f_sig_passed_guess_unc_total_lo =
-              sqrt_sum_sq(f_sig_passed_guess_unc_lo, d0_bkg_syst_unc);
-
-          f_sig_passed_mean.setVal(f_sig_passed_guess);
-          f_sig_passed_unc_hi.setVal(std::min(f_sig_passed_guess_unc_total_hi,
-                                              1.0 - f_sig_passed_guess));
-          f_sig_passed_unc_lo.setVal(
-              std::min(f_sig_passed_guess_unc_total_lo, f_sig_passed_guess));
+          f_sig_passed_obs.setVal(f_sig_passed_guess_bayes);
+          f_sig_passed_unc_hi.setVal(1.0 - f_sig_passed_guess_bayes);
+          f_sig_passed_unc_lo.setVal(f_sig_passed_guess_bayes);
 
           const double f_sig_failed_guess =
-              d0_bkg_failed_signal / d0_bkg_failed_total;
-          const double f_sig_failed_guess_unc_hi =
-              TEfficiency::Wilson(d0_bkg_failed_total, d0_bkg_failed_signal,
-                                  ONE_SIGMA, true) -
-              f_sig_failed_guess;
-          const double f_sig_failed_guess_unc_lo =
-              f_sig_failed_guess - TEfficiency::Wilson(d0_bkg_failed_total,
-                                                       d0_bkg_failed_signal,
-                                                       ONE_SIGMA, false);
+              d0_bkg_failed_signal * 1.0 / d0_bkg_failed_total;
+          const double f_sig_failed_guess_bayes =
+              (d0_bkg_failed_signal + 1) * 1.0 / (d0_bkg_failed_total + 2);
 
-          const double f_sig_failed_guess_unc_total_hi =
-              sqrt_sum_sq(f_sig_failed_guess_unc_hi, d0_bkg_syst_unc);
-          const double f_sig_failed_guess_unc_total_lo =
-              sqrt_sum_sq(f_sig_failed_guess_unc_lo, d0_bkg_syst_unc);
+          f_sig_failed_obs.setVal(f_sig_failed_guess_bayes);
+          f_sig_failed_unc_hi.setVal(1.0 - f_sig_failed_guess_bayes);
+          f_sig_failed_unc_lo.setVal(f_sig_failed_guess_bayes);
 
-          f_sig_failed_mean.setVal(f_sig_failed_guess);
-          f_sig_failed_unc_hi.setVal(std::min(f_sig_failed_guess_unc_total_hi,
-                                              1.0 - f_sig_failed_guess));
-          f_sig_failed_unc_lo.setVal(
-              std::min(f_sig_failed_guess_unc_total_lo, f_sig_failed_guess));
+          // NOTE: If we ever fix the ratio, the value set here should be the
+          // nominal (i.e. the non-bayes estimate)
+          f_sig_passed.setVal(f_sig_passed_guess_bayes);
+          f_sig_failed.setVal(f_sig_failed_guess_bayes);
 
-          f_sig_passed.setVal(f_sig_passed_guess);
-          f_sig_failed.setVal(f_sig_failed_guess);
+          cout << "\nINFO Predicted ratios of D0 bkg to signal:\n";
+          cout << "  - f_sig_passed = " << f_sig_passed_guess << "\n";
+          cout << "  - f_sig_failed = " << f_sig_failed_guess << endl;
 
-          cout << "\nINFO Constrained ratios of D0 bkg to signal:\n";
-          cout << "  - f_sig_passed: " << f_sig_passed_guess << " + "
+          cout << "\nINFO Constraints (using Bayes estimator with uniform "
+                  "prior):\n";
+          cout << "  - f_sig_passed: " << f_sig_passed_obs.getVal() << " + "
                << f_sig_passed_unc_hi.getVal() << " - "
                << f_sig_passed_unc_lo.getVal() << "\n";
-          cout << "  - f_sig_failed: " << f_sig_failed_guess << " + "
+          cout << "  - f_sig_failed: " << f_sig_failed_obs.getVal() << " + "
                << f_sig_failed_unc_hi.getVal() << " - "
                << f_sig_failed_unc_lo.getVal() << endl;
 
@@ -2850,12 +2797,13 @@ int main(int argc, char **argv) {
             dm_shift.setConstant(false);
             dm_scale.setConstant(false);
 
-            unique_ptr<RooAbsReal> nll_failed(model_failed.createNLL(
-                *dataset_calib_failed, Range("fitRange"),
-                ExternalConstraints(
-                    RooArgSet(f_sig_failed_constrain, scale_nondif_constrain)),
-                GlobalObservables(
-                    RooArgSet(f_sig_failed, scale_nondif_calib))));
+            RooArgSet constraints_failed(f_sig_failed_constraint);
+            RooArgSet global_obs_failed(f_sig_failed_obs);
+
+            unique_ptr<RooAbsReal> nll_failed(
+                model_failed.createNLL(*dataset_calib_failed, Range("fitRange"),
+                                       ExternalConstraints(constraints_failed),
+                                       GlobalObservables(global_obs_failed)));
             // Default nll name causes issues when combining the nlls below
             nll_failed->SetName("nll_failed_" + suffix);
 
@@ -2884,12 +2832,15 @@ int main(int argc, char **argv) {
             dm_shift.setConstant();
             dm_scale.setConstant();
 
-            unique_ptr<RooAbsReal> nll_passed(model_passed.createNLL(
-                *dataset_calib_passed, Range("fitRange"),
-                ExternalConstraints(
-                    RooArgSet(f_sig_passed_constrain, scale_nondif_constrain)),
-                GlobalObservables(
-                    RooArgSet(f_sig_passed, scale_nondif_calib))));
+            RooArgSet constraints_passed(f_sig_passed_constraint,
+                                         scale_nondif_constraint);
+            RooArgSet global_obs_passed(f_sig_passed_obs,
+                                        scale_nondif_calib_obs);
+
+            unique_ptr<RooAbsReal> nll_passed(
+                model_passed.createNLL(*dataset_calib_passed, Range("fitRange"),
+                                       ExternalConstraints(constraints_passed),
+                                       GlobalObservables(global_obs_passed)));
             nll_passed->SetName("nll_passed_" + suffix);
 
             RooMinimizer minuit_passed(*nll_passed);
@@ -2993,7 +2944,7 @@ int main(int argc, char **argv) {
             if (cov_matrix_status == 3) {
               // Monitor how much f_sig deviates from constraint
               double f_sig_passed_sigma =
-                  f_sig_passed.getVal() - f_sig_passed_guess;
+                  f_sig_passed.getVal() - f_sig_passed_obs.getVal();
               if (f_sig_passed_sigma >= 0.) {
                 f_sig_passed_sigma /= f_sig_passed_unc_hi.getVal();
               } else {
@@ -3001,7 +2952,7 @@ int main(int argc, char **argv) {
               }
 
               double f_sig_failed_sigma =
-                  f_sig_failed.getVal() - f_sig_failed_guess;
+                  f_sig_failed.getVal() - f_sig_failed_obs.getVal();
               if (f_sig_failed_sigma >= 0.) {
                 f_sig_failed_sigma /= f_sig_failed_unc_hi.getVal();
               } else {
@@ -3254,13 +3205,13 @@ int main(int argc, char **argv) {
                << f_phys_failed.getVal() / f_phys_failed_guess << ")\n";
 
           cout << " - Fitted f_sig_passed = " << f_sig_passed.getVal()
-               << " vs estimated " << f_sig_passed_guess << " ("
-               << f_sig_passed.getVal() / f_sig_passed_guess << "), "
-               << f_sig_passed_pull.getVal() << " sigma away from constrain\n";
+               << " vs estimated " << f_sig_passed_obs.getVal() << " ("
+               << f_sig_passed.getVal() / f_sig_passed_obs.getVal() << "), "
+               << f_sig_passed_pull.getVal() << " sigma away from constraint\n";
           cout << " - Fitted f_sig_failed = " << f_sig_failed.getVal()
-               << " vs estimated " << f_sig_failed_guess << " ("
-               << f_sig_failed.getVal() / f_sig_failed_guess << "), "
-               << f_sig_failed_pull.getVal() << " sigma away from constrain\n";
+               << " vs estimated " << f_sig_failed_obs.getVal() << " ("
+               << f_sig_failed.getVal() / f_sig_failed_obs.getVal() << "), "
+               << f_sig_failed_pull.getVal() << " sigma away from constraint\n";
 
           cout << " - Fitted f_spi_passed = " << f_spi_passed.getVal()
                << " vs estimated " << f_spi_passed_guess << " ("

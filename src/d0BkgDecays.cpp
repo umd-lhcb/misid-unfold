@@ -19,7 +19,7 @@
 #include "TCanvas.h"
 #include "TChain.h"
 #include "TEfficiency.h"
-#include "TH1D.h"
+#include "TH2D.h"
 #include "TString.h"
 
 #include <yaml-cpp/yaml.h>
@@ -134,30 +134,30 @@ int main(int argc, char **argv) {
   cout << "INFO Output will be saved in " << opath << endl;
 
   int dst_trueid, d0_trueid, d0_dauther0_id, d0_dauther1_id, d0_dauther2_id,
-      d0_dauther3_id, d0_dauther4_id, ntracks;
+      d0_dauther3_id, d0_dauther4_id, ntracks, dst_vtx_ndof, d0_vtx_ndof;
   double dst_m, d0_m, probe_p, probe_pz, k_track_chi2ndof, pi_track_chi2ndof,
-      spi_track_chi2ndof, probe_mudll, probe_edll;
+      spi_track_chi2ndof, probe_dlle, probe_dllmu, k_ghostprob, pi_ghostprob,
+      spi_ghostprob, dst_vtx_chi2, d0_vtx_chi2, d0_dira;
   float probe_mu_ubdt;
   bool  probe_ismuon, probe_hasmuon;
 
-  TH1D histo_binning("histo_binning", ";p", N_BINS_P, BINS_P);
-
-  const vector<string> samples = {"iso_ctrl", "vmu", "fake_mu"};
+  TH2D histo_binning("histo_binning", ";p;#eta", N_BINS_P, BINS_P, N_BINS_ETA,
+                     BINS_ETA);
 
   const vector<string> particles = {"k", "pi"};
 
-  map<string, map<string, map<string, map<int, map<string, int>>>>> ymlContent;
+  map<string, map<string, map<string, map<int, map<int, map<string, int>>>>>>
+      ymlContent;
 
   for (auto &sample : samples) {
     cout << "INFO Producing " << sample << " constraints" << endl;
 
-    unordered_map<string, vector<map<string, int>>> counts_particles_passed;
-    unordered_map<string, vector<map<string, int>>> counts_particles_failed;
+    unordered_map<string, array<array<map<string, int>, N_BINS_ETA>, N_BINS_P>>
+        counts_particles_passed;
+    unordered_map<string, array<array<map<string, int>, N_BINS_ETA>, N_BINS_P>>
+        counts_particles_failed;
 
     for (auto &probe : particles) {
-      counts_particles_passed.emplace(probe, vector<map<string, int>>(6));
-      counts_particles_failed.emplace(probe, vector<map<string, int>>(6));
-
       auto &counts_passed = counts_particles_passed[probe];
       auto &counts_failed = counts_particles_failed[probe];
 
@@ -174,8 +174,13 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchStatus("*", false);
       ch_mc.SetBranchAddress("dst_TRUEID", &dst_trueid);
       ch_mc.SetBranchAddress("dst_M", &dst_m);
+      ch_mc.SetBranchAddress("dst_ENDVERTEX_CHI2", &dst_vtx_chi2);
+      ch_mc.SetBranchAddress("dst_ENDVERTEX_NDOF", &dst_vtx_ndof);
       ch_mc.SetBranchAddress("d0_TRUEID", &d0_trueid);
       ch_mc.SetBranchAddress("d0_M", &d0_m);
+      ch_mc.SetBranchAddress("d0_ENDVERTEX_CHI2", &d0_vtx_chi2);
+      ch_mc.SetBranchAddress("d0_ENDVERTEX_NDOF", &d0_vtx_ndof);
+      ch_mc.SetBranchAddress("d0_DIRA_OWNPV", &d0_dira);
       ch_mc.SetBranchAddress("d0_DAUGHTER0_ID", &d0_dauther0_id);
       ch_mc.SetBranchAddress("d0_DAUGHTER1_ID", &d0_dauther1_id);
       ch_mc.SetBranchAddress("d0_DAUGHTER2_ID", &d0_dauther2_id);
@@ -185,21 +190,30 @@ int main(int argc, char **argv) {
       ch_mc.SetBranchAddress((probe + "_PZ").c_str(), &probe_pz);
       ch_mc.SetBranchAddress((probe + "_isMuon").c_str(), &probe_ismuon);
       ch_mc.SetBranchAddress((probe + "_hasMuon").c_str(), &probe_hasmuon);
-      ch_mc.SetBranchAddress((probe + "_PIDmu").c_str(), &probe_mudll);
-      ch_mc.SetBranchAddress((probe + "_PIDe").c_str(), &probe_edll);
+      ch_mc.SetBranchAddress((probe + "_PIDmu").c_str(), &probe_dllmu);
+      ch_mc.SetBranchAddress((probe + "_PIDe").c_str(), &probe_dlle);
       ch_mc.SetBranchAddress("k_TRACK_CHI2NDOF", &k_track_chi2ndof);
       ch_mc.SetBranchAddress("pi_TRACK_CHI2NDOF", &pi_track_chi2ndof);
       ch_mc.SetBranchAddress("spi_TRACK_CHI2NDOF", &spi_track_chi2ndof);
+      ch_mc.SetBranchAddress("k_TRACK_GhostProb", &k_ghostprob);
+      ch_mc.SetBranchAddress("pi_TRACK_GhostProb", &pi_ghostprob);
+      ch_mc.SetBranchAddress("spi_TRACK_GhostProb", &spi_ghostprob);
       ch_mc.SetBranchAddress((probe + "_bdt_mu").c_str(), &probe_mu_ubdt);
       ch_mc.SetBranchAddress("nTracks", &ntracks);
 
       const int entries_mc = ch_mc.GetEntries();
+
+      int p_bin = 0, eta_bin = 0, dummy = 0;
       cout << "INFO Starting MC event loop over " << entries_mc << " entries"
            << endl;
       for (int evt = 0; evt < entries_mc; evt++) {
         ch_mc.GetEntry(evt);
 
         if (std::abs(dst_trueid) != Dst_ID) {
+          continue;
+        }
+
+        if (std::abs(d0_trueid) == 0) {
           continue;
         }
 
@@ -218,13 +232,25 @@ int main(int argc, char **argv) {
             (spi_track_chi2ndof > 3.))
           continue;
 
-        // Determine kinematical bin
-        const int p_bin = histo_binning.FindBin(probe_p);
+        // Included for completeness; Cut already applied at reconstruction
+        if ((k_ghostprob > 0.4) || (pi_ghostprob > 0.4) ||
+            (spi_ghostprob > 0.4))
+          continue;
 
+        if ((dst_vtx_chi2 / dst_vtx_ndof) > 15 ||
+            (d0_vtx_chi2 / d0_vtx_ndof) > 10)
+          continue;
+
+        // Determine kinematical bin
+        const int kin_bin = histo_binning.FindBin(probe_p, probe_eta);
+        histo_binning.GetBinXYZ(kin_bin, p_bin, eta_bin, dummy);
         const bool reduced_fit_range = (probe == "pi") && (p_bin <= 2);
 
         const double dm = (dst_m - d0_m) * 0.001;
         d0_m            = d0_m * 0.001;
+
+        const int p_idx   = p_bin - 1;
+        const int eta_idx = eta_bin - 1;
 
         const bool in_fit_window = reduced_fit_range
                                        ? in_range(D0_M_min, d0_m, 1.900) &&
@@ -248,8 +274,6 @@ int main(int argc, char **argv) {
 
         const int sign = (d0_trueid >= 0) ? 1 : -1;
 
-        const int p_idx = p_bin - 1;
-
         vector<int> daughter_ids{d0_dauther0_id * sign, d0_dauther1_id * sign,
                                  d0_dauther2_id * sign, d0_dauther3_id * sign,
                                  d0_dauther4_id * sign};
@@ -266,17 +290,30 @@ int main(int argc, char **argv) {
           }
         }
 
+        auto &bin_counts_passed = counts_passed[p_idx][eta_idx];
+        auto &bin_counts_failed = counts_failed[p_idx][eta_idx];
+
         if (pid_ok) {
-          counts_passed[p_idx][decay_string]++;
+          if (bin_counts_passed.count(decay_string) == 0) {
+            bin_counts_passed[decay_string] = 1;
+          } else {
+            bin_counts_passed[decay_string] += 1;
+          }
         } else {
-          counts_failed[p_idx][decay_string]++;
+          if (bin_counts_failed.count(decay_string) == 0) {
+            bin_counts_failed[decay_string] = 1;
+          } else {
+            bin_counts_failed[decay_string] += 1;
+          }
         }
       }
     }
 
     // Probably not the most efficient solution, but avoids duplicating the loop
     // below
-    const unordered_map<string, unordered_map<string, vector<map<string, int>>>>
+    const unordered_map<
+        string, unordered_map<string, array<array<map<string, int>, N_BINS_ETA>,
+                                            N_BINS_P>>>
         counts_particles_all{{"passed", counts_particles_passed},
                              {"failed", counts_particles_failed}};
 
@@ -292,48 +329,55 @@ int main(int argc, char **argv) {
              << endl;
         for (unsigned p_bin = 0; p_bin < N_BINS_P; p_bin++) {
           cout << " - p bin " << p_bin << endl;
-          const auto &count_decs = counts[p_bin];
-          int         bin_total  = 0;
-          for (const auto &dec_count : count_decs) {
-            bin_total += dec_count.second;
+          for (unsigned eta_bin = 0; eta_bin < N_BINS_ETA; eta_bin++) {
+            cout << " -- eta bin " << eta_bin << endl;
+            const auto &count_decs = counts[p_bin][eta_bin];
+            int         bin_total  = 0;
+            for (const auto &dec_count : count_decs) {
+              bin_total += dec_count.second;
+            }
+            for (const auto &dec_count : count_decs) {
+              const auto &decay = dec_count.first;
+              const auto &count = dec_count.second;
+              cout << " --- " << left << setw(30) << decay << ": " << right
+                   << setw(5) << count << " / " << bin_total << " = " << right
+                   << setw(5) << count * 100. / bin_total << "%" << endl;
+            }
+            const int bin_signal = count_decs.at("D0 -> K- pi+");
+            const int bin_bkg    = bin_total - bin_signal;
+
+            // Bkg / Total
+            const double f_bkg = (bin_bkg * 1.0) / bin_total;
+            const double f_bkg_unc_hi =
+                TEfficiency::Wilson(bin_total, bin_bkg, ONE_SIGMA, true) -
+                f_bkg;
+            const double f_bkg_unc_lo =
+                f_bkg -
+                TEfficiency::Wilson(bin_total, bin_bkg, ONE_SIGMA, false);
+            cout << " -- bkg / total: " << right << setw(6) << bin_bkg << " / "
+                 << bin_total << " = (" << setw(5) << f_bkg * 100. << " + "
+                 << setw(4) << f_bkg_unc_hi * 100. << " - " << setw(4)
+                 << f_bkg_unc_lo * 100. << ")%" << endl;
+
+            // Sig / Total
+            const double f_sig = (bin_signal * 1.0) / bin_total;
+            const double f_sig_unc_hi =
+                TEfficiency::Wilson(bin_total, bin_signal, ONE_SIGMA, true) -
+                f_sig;
+            const double f_sig_unc_lo =
+                f_sig -
+                TEfficiency::Wilson(bin_total, bin_signal, ONE_SIGMA, false);
+            cout << " -- sig / total: " << right << setw(6) << bin_signal
+                 << " / " << bin_total << " = (" << setw(5) << f_sig * 100.
+                 << " + " << setw(4) << f_sig_unc_hi * 100. << " - " << setw(4)
+                 << f_sig_unc_lo * 100. << ")%\n"
+                 << endl;
+
+            ymlContent[sample][particle][subsample][p_bin][eta_bin]
+                      ["signal"] = bin_signal;
+            ymlContent[sample][particle][subsample][p_bin][eta_bin]
+                      ["total"] = bin_total;
           }
-          for (const auto &dec_count : count_decs) {
-            const auto &decay = dec_count.first;
-            const auto &count = dec_count.second;
-            cout << " -- " << left << setw(30) << decay << ": " << right
-                 << setw(5) << count << " / " << bin_total << " = " << right
-                 << setw(5) << count * 100. / bin_total << "%" << endl;
-          }
-          const int bin_signal = count_decs.at("D0 -> K- pi+");
-          const int bin_bkg    = bin_total - bin_signal;
-
-          // Bkg / Total
-          const double f_bkg = (bin_bkg * 1.0) / bin_total;
-          const double f_bkg_unc_hi =
-              TEfficiency::Wilson(bin_total, bin_bkg, ONE_SIGMA, true) - f_bkg;
-          const double f_bkg_unc_lo =
-              f_bkg - TEfficiency::Wilson(bin_total, bin_bkg, ONE_SIGMA, false);
-          cout << " -- bkg / total: " << right << setw(6) << bin_bkg << " / "
-               << bin_total << " = (" << setw(5) << f_bkg * 100. << " + "
-               << setw(4) << f_bkg_unc_hi * 100. << " - " << setw(4)
-               << f_bkg_unc_lo * 100. << ")%" << endl;
-
-          // Sig / Total
-          const double f_sig = (bin_signal * 1.0) / bin_total;
-          const double f_sig_unc_hi =
-              TEfficiency::Wilson(bin_total, bin_signal, ONE_SIGMA, true) -
-              f_sig;
-          const double f_sig_unc_lo =
-              f_sig -
-              TEfficiency::Wilson(bin_total, bin_signal, ONE_SIGMA, false);
-          cout << " -- sig / total: " << right << setw(6) << bin_signal << " / "
-               << bin_total << " = (" << setw(5) << f_sig * 100. << " + "
-               << setw(4) << f_sig_unc_hi * 100. << " - " << setw(4)
-               << f_sig_unc_lo * 100. << ")%\n"
-               << endl;
-
-          ymlContent[sample][particle][subsample][p_bin]["signal"] = bin_signal;
-          ymlContent[sample][particle][subsample][p_bin]["total"]  = bin_total;
         }
       }
     }
