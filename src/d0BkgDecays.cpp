@@ -244,7 +244,6 @@ int main(int argc, char **argv) {
         // Determine kinematical bin
         const int kin_bin = histo_binning.FindBin(probe_p, probe_eta);
         histo_binning.GetBinXYZ(kin_bin, p_bin, eta_bin, dummy);
-        const bool reduced_fit_range = (probe == "pi") && (p_bin <= 2);
 
         const double dm = (dst_m - d0_m) * 0.001;
         d0_m            = d0_m * 0.001;
@@ -252,11 +251,11 @@ int main(int argc, char **argv) {
         const int p_idx   = p_bin - 1;
         const int eta_idx = eta_bin - 1;
 
-        const bool in_fit_window = reduced_fit_range
-                                       ? in_range(D0_M_min, d0_m, 1.900) &&
-                                             in_range(DM_min, dm, DM_max)
-                                       : in_range(D0_M_min, d0_m, D0_M_max) &&
-                                             in_range(DM_min, dm, DM_max);
+        const bool in_fit_window =
+            in_range(D0_M_min, d0_m,
+                     get_d0m_upper_limit(probe, p_idx, eta_idx)) &&
+            in_range(DM_min, dm, DM_max);
+
         if (!in_fit_window) continue;
 
         bool pid_ok;

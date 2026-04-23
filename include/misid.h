@@ -71,6 +71,36 @@ constexpr int N_BINS_P       = sizeof(BINS_P) / sizeof(double) - 1;
 constexpr int N_BINS_ETA     = sizeof(BINS_ETA) / sizeof(double) - 1;
 constexpr int N_BINS_NTRACKS = sizeof(BINS_NTRACKS) / sizeof(double) - 1;
 
+// Get upper d0_M fit limit according to kinematical bin.
+// The PIDCalib range extends to 1.910 GeV, but we may have to exclude some of
+// it due to distortions introduced by the WM cut, which are easily accounted
+// for in the MC-derived PDFs but not in the combinatorial shapes.
+double get_d0m_upper_limit(const TString &probe, const int &p_idx,
+                           const int &eta_idx) {
+  if (probe == "k") {
+    if (p_idx == 5) {
+      return 1.900;
+    }
+    if (p_idx == 4) {
+      return 1.902;
+    }
+    if (p_idx == 3 && eta_idx == 0) {
+      return 1.906;
+    }
+  } else if (probe == "pi") {
+    if (p_idx == 2) {
+      return 1.906;
+    }
+    if (p_idx == 1) {
+      return 1.904;
+    }
+    if (p_idx == 0) {
+      return 1.902;
+    }
+  }
+  return 1.910;
+}
+
 //////////////////////
 // Helper functions //
 //////////////////////

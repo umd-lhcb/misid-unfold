@@ -914,16 +914,13 @@ int main(int argc, char **argv) {
         const double dm = (dst_m - d0_m) * 0.001;
         d0_m            = d0_m * 0.001;
 
-        const bool reduced_fit_range = (probe == "pi") && (p_bin <= 2);
-
         const bool in_extended_window =
             in_var_range(d0_m_var, d0_m) && in_var_range(dm_var, dm);
 
-        const bool in_fit_window = reduced_fit_range
-                                       ? in_range(D0_M_min, d0_m, 1.900) &&
-                                             in_range(DM_min, dm, DM_max)
-                                       : in_range(D0_M_min, d0_m, D0_M_max) &&
-                                             in_range(DM_min, dm, DM_max);
+        const bool in_fit_window =
+            in_range(D0_M_min, d0_m,
+                     get_d0m_upper_limit(probe, p_bin - 1, eta_bin - 1)) &&
+            in_range(DM_min, dm, DM_max);
         if (in_fit_window) count_mw++;
 
         // Check for decay in flight of probe hadron
@@ -1267,13 +1264,10 @@ int main(int argc, char **argv) {
             in_var_range(d0_m_var, d0_m) && in_var_range(dm_var, dm);
         if (!in_extended_window) continue;
 
-        const bool reduced_fit_range = (probe == "pi") && (p_bin <= 2);
-
-        const bool in_fit_window = reduced_fit_range
-                                       ? in_range(D0_M_min, d0_m, 1.900) &&
-                                             in_range(DM_min, dm, DM_max)
-                                       : in_range(D0_M_min, d0_m, D0_M_max) &&
-                                             in_range(DM_min, dm, DM_max);
+        const bool in_fit_window =
+            in_range(D0_M_min, d0_m,
+                     get_d0m_upper_limit(probe, p_bin - 1, eta_bin - 1)) &&
+            in_range(DM_min, dm, DM_max);
         if (in_fit_window) count_mw++;
 
         // PID
@@ -1576,16 +1570,11 @@ int main(int argc, char **argv) {
           const auto &dataset_calib_failed =
               datasets_calib_failed[ntrks_idx][eta_idx][p_idx];
 
-          if ((probe == "pi") && (p_idx <= 1)) {
-            // Use reduced fit range excluding higher D0 mass region to avoid
-            // upper mass threshold in some kinematic bins
-            d0_m_var.setRange("fitRange", 1.825, 1.900);
-            dm_var.setRange("fitRange", 0.141, 0.153);
-          } else {
-            // Use full fit range
-            d0_m_var.setRange("fitRange", 1.825, 1.910);
-            dm_var.setRange("fitRange", 0.141, 0.153);
-          }
+          // Use reduced fit range excluding higher D0 mass region to avoid
+          // upper mass threshold in some kinematic bins
+          d0_m_var.setRange("fitRange", 1.825,
+                            get_d0m_upper_limit(probe, p_idx, eta_idx));
+          dm_var.setRange("fitRange", 0.141, 0.153);
 
           const int n_calib_passed =
               dataset_calib_passed->sumEntries("", "fitRange");
