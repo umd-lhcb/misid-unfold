@@ -311,23 +311,23 @@ input_ntps:
 weight_brs:
     TupleBminus/DecayTree:
         - prefix: D0
-          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          file: ".././histos/rdx-26_04_24_07_02-unfolded/unfolded.root"
           name: wmis_norm
         - prefix: D0_bsb
-          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          file: ".././histos/rdx-26_04_24_07_02-unfolded/unfolded.root"
           name: wmis_bsb
     TupleB0/DecayTree:
         - prefix: Dst
-          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          file: ".././histos/rdx-26_04_24_07_02-unfolded/unfolded.root"
           name: wmis_norm
         - prefix: Dst_dsb
-          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          file: ".././histos/rdx-26_04_24_07_02-unfolded/unfolded.root"
           name: wmis_dsb
         - prefix: Dst_bsb
-          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          file: ".././histos/rdx-26_04_24_07_02-unfolded/unfolded.root"
           name: wmis_bsb
         - prefix: Dst_dsb_bsb
-          file: ".././histos/rdx-25_11_16_17_57-unfolded/unfolded.root"
+          file: ".././histos/rdx-26_04_24_07_02-unfolded/unfolded.root"
           name: wmis_dsb_bsb
 
 pidcalib_sel_effs:
