@@ -21,7 +21,6 @@ from pyTuplingUtils.plot import plot_histo, ax_add_args_histo
 # Configurable #
 ################
 
-OUTPUT_NTP_NAME = "dif.root"
 TREE_NAME = "mytuple/DecayTree"
 
 ADD_LABELS = ["x", "y", "z"]
@@ -142,14 +141,19 @@ def plot(br, title, filename, nbins=40):
 if __name__ == "__main__":
     mplhep.style.use("LHCb2")
     args = parse_input()
-    output_ntp = uproot.recreate(f"{args.output}/{OUTPUT_NTP_NAME}")
+
+    if args.run2ang:
+        output_ntp_name = "dif_run2ang.root"
+    else:
+        output_ntp_name = "dif.root"
+    output_ntp = uproot.recreate(f"{args.output}/{output_ntp_name}")
 
     if args.run2ang:
         print('Using Run 2 Ang PID cuts')
     else:
         print('Using Run 1 RDx PID cuts')
 
-    CUTS = {
+    cuts = {
         "k_smr":            get_cuts("K", args.run2ang)  + " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25",
         "pi_smr":           get_cuts("pi", args.run2ang) + " & abs(K_TRUEID)  == 321 & BDTmuCut > 0.25",
         "k_smr_ubdt_veto":  get_cuts("K", args.run2ang)  + " & abs(pi_TRUEID) == 211 & BDTmuCut < 0.25",
@@ -168,8 +172,8 @@ if __name__ == "__main__":
         true_brs = [evaluator.eval(f"{prefix}_{b}") for b in TRUE_P_BRS]
         reco_brs = [evaluator.eval(f"{prefix}_{b}") for b in RECO_P_BRS]
 
-        print(f"  Global cuts: {CUTS[ptcl]}")
-        global_cut = evaluator.eval(CUTS[ptcl])
+        print(f"  Global cuts: {cuts[ptcl]}")
+        global_cut = evaluator.eval(cuts[ptcl])
         output_brs = []
         output_tree = dict()
 
