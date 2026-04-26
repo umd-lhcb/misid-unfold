@@ -2230,7 +2230,7 @@ int main(int argc, char **argv) {
           c_double.cd(2);
           ths_d0m_d0_bkg_failed.Draw("B HIST");
           h_d0m_d0_bkg_failed.Draw("L SAME");
-          gPad->BuildLegend(); // TODO Legible legends!
+          gPad->BuildLegend();  // TODO Legible legends!
 
           c_double.SaveAs(fit_dir_path + "/d0_m_" + suffix +
                           "_d0_bkg_histos_stacked.pdf");
@@ -2557,7 +2557,7 @@ int main(int argc, char **argv) {
           c_double.cd(2);
           ths_dm_d0_bkg_failed.Draw("B HIST");
           h_dm_d0_bkg_failed.Draw("L SAME");
-          gPad->BuildLegend(); // TODO Legible legends!
+          gPad->BuildLegend();  // TODO Legible legends!
 
           c_double.SaveAs(fit_dir_path + "/dm_" + suffix +
                           "_d0_bkg_histos_stacked.pdf");

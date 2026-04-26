@@ -718,8 +718,8 @@ int main(int argc, char** argv) {
   }
 
   // save output
-  auto outputFilename = parsedArgs["output"].as<string>() + "/" +
-                        parsedArgs["outputHisto"].as<string>();
+  auto  outputFilename = parsedArgs["output"].as<string>() + "/" +
+                         parsedArgs["outputHisto"].as<string>();
   TFile ntpOut(outputFilename.c_str(), "RECREATE");
 
   for (const auto& [key, h] : histoOut) {

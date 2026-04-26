@@ -104,9 +104,9 @@ const std::unordered_map<int, std::string> id_to_string{
     {-11, "e+"}};
 
 int main(int argc, char **argv) {
-  cxxopts::Options argOpts(
-      "d0BkgDecays",
-      "Estimate amount of D0 bkg relative to signal decays in minimum-bias MC.");
+  cxxopts::Options argOpts("d0BkgDecays",
+                           "Estimate amount of D0 bkg relative to signal "
+                           "decays in minimum-bias MC.");
 
   // clang-format off
   argOpts.add_options()
