@@ -38,10 +38,17 @@ endif
 # Configuration #
 #################
 
-EFFICIENCIES := ./histos/rdx-26_04_24_06_52-merged/merged.root
-UNFOLDED := ./histos/rdx-26_04_24_07_02-unfolded/unfolded.root
-TAGGED := ./histos/rdx-26_04_14_07_02-tag/tagged.root
-DIF    := ./histos/generic-26_04_14_06_57-dif_smearing/dif.root
+EFFICIENCIES         := ./histos/rdx-26_04_24_06_52-merged/merged.root
+EFFICIENCIES_RUN2ANG := ./histos/rdx-26_04_26_04_11-merged-run2ang/merged.root
+
+UNFOLDED         := ./histos/rdx-26_04_24_07_02-unfolded/unfolded.root
+UNFOLDED_RUN2ANG := ./histos/rdx-26_04_26_04_13-unfolded-run2ang/unfolded_run2ang.root
+
+TAGGED         := ./histos/rdx-26_04_14_07_02-tag/tagged.root
+TAGGED_RUN2ANG := ./histos/rdx-26_04_14_07_30-tag-run2ang/tagged.root
+
+DIF         := ./histos/generic-26_04_14_06_57-dif_smearing/dif.root
+DIF_RUN2ANG := ./histos/generic-26_04_14_06_57-dif_smearing-run2ang/dif_run2ang.root
 
 
 ###########
@@ -403,10 +410,21 @@ build-rdx-unfolded: $(BINPATH)/UnfoldMisID
 	$< --iteration 5 -e $(EFFICIENCIES) -y $(TAGGED) -o $(OUT_DIR) \
 		-c $(YML_FILE) 2>&1 | tee $(OUT_DIR)/stdout.log
 
+build-rdx-unfolded-run2ang: $(BINPATH)/UnfoldMisID
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-unfolded-run2ang)
+	@mkdir -p $(OUT_DIR)
+	$< --iteration 5 -e $(EFFICIENCIES_RUN2ANG) -y $(TAGGED_RUN2ANG) -o $(OUT_DIR) \
+		-c $(YML_FILE_RUN2ANG) --outputHisto "unfolded_run2ang.root" 2>&1 | tee $(OUT_DIR)/stdout.log
+
 test-unfold: $(BINPATH)/UnfoldMisID
 	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-test-unfold)
 	@mkdir -p $(OUT_DIR)
-	$< -c $(YML_FILE) --dryRun --debug -y $(TAGGED) -e $(EFFICIENCIES) -o $(OUT_DIR)  | tee $(OUT_DIR)/stdout.log
+	$< -c $(YML_FILE) --dryRun --debug -y $(TAGGED) -e $(EFFICIENCIES) -o $(OUT_DIR) 2>&1 | tee $(OUT_DIR)/stdout.log
+
+test-unfold-run2ang: $(BINPATH)/UnfoldMisID
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-test-unfold-run2ang)
+	@mkdir -p $(OUT_DIR)
+	$< -c $(YML_FILE_RUN2ANG) --dryRun --debug -y $(TAGGED_RUN2ANG) -e $(EFFICIENCIES_RUN2ANG) -o $(OUT_DIR) --outputHisto "unfolded_run2ang.root" 2>&1 | tee $(OUT_DIR)/stdout.log
 
 
 # Test of application of misID weights
@@ -441,6 +459,38 @@ test-apply-rdx-weights-2018: $(BINPATH)/ApplyMisIDWeight \
 	$< --debug -a -Y 2018 -i $(word 2, $^) -x $(word 3, $^) \
 		--kSmrBrName k_smr --piSmrBrName pi_smr \
 		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE) | tee $(OUT_DIR)/stdout.log
+
+test-apply-rdx-weights-run2ang: test-apply-rdx-weights-2016-run2ang test-apply-rdx-weights-2017-run2ang test-apply-rdx-weights-2018-run2ang
+
+test-apply-rdx-weights-2016-run2ang: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision16_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco16_Stripping28r2_90000000_SEMILEPTONIC.DST--000-dv.root \
+	$(DIF_RUN2ANG)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2016-run2ang)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid_run2ang.root)
+	@mkdir -p $(OUT_DIR)
+	$< --debug -a -Y 2016 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE_RUN2ANG) | tee $(OUT_DIR)/stdout.log
+
+test-apply-rdx-weights-2017-run2ang: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision17_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco17_Stripping29r2_90000000_SEMILEPTONIC.DST--000-dv.root \
+	$(DIF_RUN2ANG)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2017-run2ang)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid_run2ang.root)
+	@mkdir -p $(OUT_DIR)
+	$< --debug -a -Y 2017 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE_RUN2ANG) | tee $(OUT_DIR)/stdout.log
+
+test-apply-rdx-weights-2018-run2ang: $(BINPATH)/ApplyMisIDWeight \
+	./ntuples/0.9.18-misid_pid_kept/data/Dst_D0--25_09_15--mu_misid--LHCb_Collision18_Beam6500GeV-VeloClosed-MagDown_Real_Data_Reco18_Stripping34_90000000_SEMILEPTONIC.DST--000-dv.root \
+	$(DIF_RUN2ANG)
+	$(eval OUT_DIR	:=	$(GENPATH)/rdx-$(TIME_STAMP)-weights-2018-run2ang)
+	$(eval AUX_NTP	:=	$(basename $(notdir $(word 2, $^)))--aux_misid_run2ang.root)
+	@mkdir -p $(OUT_DIR)
+	$< --debug -a -Y 2018 -i $(word 2, $^) -x $(word 3, $^) \
+		--kSmrBrName k_smr --piSmrBrName pi_smr \
+		-o $(OUT_DIR)/$(AUX_NTP) -c $(YML_FILE_RUN2ANG) | tee $(OUT_DIR)/stdout.log
 
 
 # Aux. efficiencies for iso track PID cuts on true ghost
