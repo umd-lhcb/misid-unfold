@@ -102,21 +102,37 @@ int main(int argc, char** argv) {
         histo_new_proj.SetBinContent(p_idx + 1,
                                      histo_new->GetBinContent(bin_idx));
 
-        histo_ref_proj.SetBinError(p_idx + 1, histo_ref->GetBinError(bin_idx));
-        histo_new_proj.SetBinError(p_idx + 1, histo_new->GetBinError(bin_idx));
+        double error_ref = histo_ref->GetBinError(bin_idx);
+        double error_new = histo_new->GetBinError(bin_idx);
+
+        // For our custom efficiencies, this probably means the fit for this bin
+        // is not fully convergent.
+        if (std::isnan(error_ref)) {
+          cout << "WARNING Ref histo has NaN error in bin " << ntrks_idx << " "
+               << eta_idx << " " << p_idx << ". Setting to 1e-6" << endl;
+          error_ref = 1e-6;
+        }
+        if (std::isnan(error_new)) {
+          cout << "WARNING New histo has NaN error in bin " << ntrks_idx << " "
+               << eta_idx << " " << p_idx << ". Setting to 1e-6" << endl;
+          error_new = 1e-6;
+        }
+
+        histo_ref_proj.SetBinError(p_idx + 1, error_ref);
+        histo_new_proj.SetBinError(p_idx + 1, error_new);
       }
 
       histo_ref_proj.SetLineColor(kBlack);
       histo_new_proj.SetLineColor(kRed);
 
       TGraphErrors tge_ref(&histo_ref_proj);
-      tge_ref.SetName("tge_ref");
+      tge_ref.SetName("tge_ref_" + suffix);
       tge_ref.SetLineColor(kBlack);
       tge_ref.SetMarkerColor(kBlack);
       tge_ref.SetMarkerStyle(8);
 
       TGraphErrors tge_new(&histo_new_proj);
-      tge_new.SetName("tge_new");
+      tge_new.SetName("tge_new_" + suffix);
       tge_new.SetLineColor(kRed);
       tge_new.SetMarkerColor(kRed);
       tge_new.SetMarkerStyle(8);
@@ -124,7 +140,7 @@ int main(int argc, char** argv) {
       tge_ref.SetTitle("ref");
       tge_new.SetTitle("new");
 
-      TMultiGraph mg("mg", "");
+      TMultiGraph mg("mg_" + suffix, "");
 
       mg.Add(&tge_ref);
       mg.Add(&tge_new);
