@@ -1,0 +1,1272 @@
+INFO Using Run 2 Angular Analysis cuts
+INFO Output will be saved in ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang/
+INFO Output will be saved in ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang/pidcalib_sel_effs_run2ang.yml
+INFO Producing iso_ctrl selection efficiencies
+INFO Selecting k
+INFO Reading 2016 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2016--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2016--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3493635 entries
+INFO Reading 2017 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2017--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2017--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3471335 entries
+INFO Reading 2018 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2018--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2018--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3473352 entries
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_0_1_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_iso_ctrl_1_1_5.pdf has been created
+
+INFO Bin 0 0 0
+INFO - Passed dif up:  24.7734 + 2.44644 - 2.29448% (82 / 331)
+INFO - Passed dif dw:  53.4323 + 1.51539 - 1.52175% (576 / 1078)
+INFO - Passed non-dif: 67.7436 + 0.0978818 - 0.0980376% (154261 / 227713)
+INFO - Failed dif:     67.1368 + 0.374153 - 0.37634% (10519 / 15668)
+INFO - Failed non-dif: 67.7436 + 0.0978818 - 0.0980376% (154261 / 227713)
+
+INFO Bin 0 0 1
+INFO - Passed dif up:  34.2569 + 2.41868 - 2.33957% (136 / 397)
+INFO - Passed dif dw:  53.8905 + 1.33472 - 1.34032% (748 / 1388)
+INFO - Passed non-dif: 72.8526 + 0.0617269 - 0.0618151% (377614 / 518326)
+INFO - Failed dif:     71.5427 + 0.298866 - 0.300769% (16203 / 22648)
+INFO - Failed non-dif: 72.8526 + 0.0617269 - 0.0618151% (377614 / 518326)
+
+INFO Bin 0 0 2
+INFO - Passed dif up:  30.8642 + 2.6219 - 2.50414% (100 / 324)
+INFO - Passed dif dw:  31.5916 + 1.33239 - 1.30281% (393 / 1244)
+INFO - Passed non-dif: 67.4711 + 0.0529105 - 0.0529551% (528511 / 783315)
+INFO - Failed dif:     64.0521 + 0.306597 - 0.307748% (15630 / 24402)
+INFO - Failed non-dif: 67.4711 + 0.0529105 - 0.0529551% (528511 / 783315)
+
+INFO Bin 0 0 3
+INFO - Passed dif up:  38.5057 + 2.6379 - 2.57203% (134 / 348)
+INFO - Passed dif dw:  23.3883 + 1.17863 - 1.13876% (312 / 1334)
+INFO - Passed non-dif: 68.1242 + 0.0402779 - 0.040305% (911250 / 1337631)
+INFO - Failed dif:     59.2206 + 0.287259 - 0.287891% (17293 / 29201)
+INFO - Failed non-dif: 68.1242 + 0.0402779 - 0.040305% (911250 / 1337631)
+
+INFO Bin 0 0 4
+INFO - Passed dif up:  44.6043 + 2.99534 - 2.95666% (124 / 278)
+INFO - Passed dif dw:  38.5437 + 0.972534 - 0.96347% (974 / 2527)
+INFO - Passed non-dif: 79.5146 + 0.0350966 - 0.0351413% (1050157 / 1320709)
+INFO - Failed dif:     62.145 + 0.371601 - 0.373032% (10546 / 16970)
+INFO - Failed non-dif: 79.5146 + 0.0350966 - 0.0351413% (1050157 / 1320709)
+
+INFO Bin 0 0 5
+INFO - Passed dif up:  33.3333 + 9.02136 - 7.94609% (10 / 30)
+INFO - Passed dif dw:  40.3101 + 2.17613 - 2.13865% (208 / 516)
+INFO - Passed non-dif: 84.063 + 0.0780395 - 0.0783504% (184187 / 219106)
+INFO - Failed dif:     53.8168 + 1.53563 - 1.54291% (564 / 1048)
+INFO - Failed non-dif: 84.063 + 0.0780395 - 0.0783504% (184187 / 219106)
+
+INFO Bin 0 1 0
+INFO - Passed dif up:  0.625 + 0.99937 - 0.386016% (1 / 160)
+INFO - Passed dif dw:  9.28962 + 1.63027 - 1.40841% (34 / 366)
+INFO - Passed non-dif: 11.3213 + 0.13572 - 0.134315% (6235 / 55073)
+INFO - Failed dif:     10.5576 + 0.556314 - 0.531608% (337 / 3192)
+INFO - Failed non-dif: 11.3213 + 0.13572 - 0.134315% (6235 / 55073)
+
+INFO Bin 0 1 1
+INFO - Passed dif up:  6.639 + 1.78957 - 1.43121% (16 / 241)
+INFO - Passed dif dw:  37.6 + 1.95588 - 1.91626% (235 / 625)
+INFO - Passed non-dif: 47.2057 + 0.132831 - 0.132791% (66697 / 141290)
+INFO - Failed dif:     48.2438 + 0.710227 - 0.709518% (2390 / 4954)
+INFO - Failed non-dif: 47.2057 + 0.132831 - 0.132791% (66697 / 141290)
+
+INFO Bin 0 1 2
+INFO - Passed dif up:  16.6667 + 2.54292 - 2.2663% (40 / 240)
+INFO - Passed dif dw:  36.2229 + 1.91102 - 1.86843% (234 / 646)
+INFO - Passed non-dif: 53.9901 + 0.0996466 - 0.0996785% (135025 / 250092)
+INFO - Failed dif:     52.0347 + 0.62706 - 0.627702% (3299 / 6340)
+INFO - Failed non-dif: 53.9901 + 0.0996466 - 0.0996785% (135025 / 250092)
+
+INFO Bin 0 1 3
+INFO - Passed dif up:  18.5039 + 2.55846 - 2.31143% (47 / 254)
+INFO - Passed dif dw:  26.7717 + 1.41143 - 1.36575% (272 / 1016)
+INFO - Passed non-dif: 51.6167 + 0.0676404 - 0.0676463% (281725 / 545802)
+INFO - Failed dif:     47.6904 + 0.511394 - 0.51091% (4553 / 9547)
+INFO - Failed non-dif: 51.6167 + 0.0676404 - 0.0676463% (281725 / 545802)
+
+INFO Bin 0 1 4
+INFO - Passed dif up:  28.0702 + 2.491 - 2.36313% (96 / 342)
+INFO - Passed dif dw:  32.5095 + 1.02928 - 1.01267% (684 / 2104)
+INFO - Passed non-dif: 62.3745 + 0.0460253 - 0.0460477% (690703 / 1107348)
+INFO - Failed dif:     51.3053 + 0.488637 - 0.488887% (5365 / 10457)
+INFO - Failed non-dif: 62.3745 + 0.0460253 - 0.0460477% (690703 / 1107348)
+
+INFO Bin 0 1 5
+INFO - Passed dif up:  35.1648 + 5.14199 - 4.81948% (32 / 91)
+INFO - Passed dif dw:  40.2963 + 1.90092 - 1.87221% (272 / 675)
+INFO - Passed non-dif: 77.6917 + 0.0594958 - 0.0596091% (379678 / 488698)
+INFO - Failed dif:     57.9757 + 1.06205 - 1.06949% (1243 / 2144)
+INFO - Failed non-dif: 77.6917 + 0.0594958 - 0.0596091% (379678 / 488698)
+
+INFO Bin 1 0 0
+INFO - Passed dif up:  24.7734 + 2.44644 - 2.29448% (82 / 331)
+INFO - Passed dif dw:  53.4323 + 1.51539 - 1.52175% (576 / 1078)
+INFO - Passed non-dif: 69.1271 + 0.217104 - 0.217952% (31177 / 45101)
+INFO - Failed dif:     67.1368 + 0.374153 - 0.37634% (10519 / 15668)
+INFO - Failed non-dif: 69.1271 + 0.217104 - 0.217952% (31177 / 45101)
+
+INFO Bin 1 0 1
+INFO - Passed dif up:  34.2569 + 2.41868 - 2.33957% (136 / 397)
+INFO - Passed dif dw:  53.8905 + 1.33472 - 1.34032% (748 / 1388)
+INFO - Passed non-dif: 73.9771 + 0.135099 - 0.135555% (77764 / 105119)
+INFO - Failed dif:     71.5427 + 0.298866 - 0.300769% (16203 / 22648)
+INFO - Failed non-dif: 73.9771 + 0.135099 - 0.135555% (77764 / 105119)
+
+INFO Bin 1 0 2
+INFO - Passed dif up:  30.8642 + 2.6219 - 2.50414% (100 / 324)
+INFO - Passed dif dw:  31.5916 + 1.33239 - 1.30281% (393 / 1244)
+INFO - Passed non-dif: 68.6652 + 0.115164 - 0.115394% (111173 / 161906)
+INFO - Failed dif:     64.0521 + 0.306597 - 0.307748% (15630 / 24402)
+INFO - Failed non-dif: 68.6652 + 0.115164 - 0.115394% (111173 / 161906)
+
+INFO Bin 1 0 3
+INFO - Passed dif up:  38.5057 + 2.6379 - 2.57203% (134 / 348)
+INFO - Passed dif dw:  23.3883 + 1.17863 - 1.13876% (312 / 1334)
+INFO - Passed non-dif: 68.3225 + 0.088097 - 0.0882286% (190242 / 278447)
+INFO - Failed dif:     59.2206 + 0.287259 - 0.287891% (17293 / 29201)
+INFO - Failed non-dif: 68.3225 + 0.088097 - 0.0882286% (190242 / 278447)
+
+INFO Bin 1 0 4
+INFO - Passed dif up:  44.6043 + 2.99534 - 2.95666% (124 / 278)
+INFO - Passed dif dw:  38.5437 + 0.972534 - 0.96347% (974 / 2527)
+INFO - Passed non-dif: 79.0785 + 0.0754392 - 0.0756398% (229277 / 289936)
+INFO - Failed dif:     62.145 + 0.371601 - 0.373032% (10546 / 16970)
+INFO - Failed non-dif: 79.0785 + 0.0754392 - 0.0756398% (229277 / 289936)
+
+INFO Bin 1 0 5
+INFO - Passed dif up:  33.3333 + 9.02136 - 7.94609% (10 / 30)
+INFO - Passed dif dw:  40.3101 + 2.17613 - 2.13865% (208 / 516)
+INFO - Passed non-dif: 83.6059 + 0.161848 - 0.163142% (43399 / 51909)
+INFO - Failed dif:     53.8168 + 1.53563 - 1.54291% (564 / 1048)
+INFO - Failed non-dif: 83.6059 + 0.161848 - 0.163142% (43399 / 51909)
+
+INFO Bin 1 1 0
+INFO - Passed dif up:  0.625 + 0.99937 - 0.386016% (1 / 160)
+INFO - Passed dif dw:  9.28962 + 1.63027 - 1.40841% (34 / 366)
+INFO - Passed non-dif: 12.0322 + 0.32194 - 0.314673% (1257 / 10447)
+INFO - Failed dif:     10.5576 + 0.556314 - 0.531608% (337 / 3192)
+INFO - Failed non-dif: 12.0322 + 0.32194 - 0.314673% (1257 / 10447)
+
+INFO Bin 1 1 1
+INFO - Passed dif up:  6.639 + 1.78957 - 1.43121% (16 / 241)
+INFO - Passed dif dw:  37.6 + 1.95588 - 1.91626% (235 / 625)
+INFO - Passed non-dif: 47.9665 + 0.300849 - 0.300702% (13233 / 27588)
+INFO - Failed dif:     48.2438 + 0.710227 - 0.709518% (2390 / 4954)
+INFO - Failed non-dif: 47.9665 + 0.300849 - 0.300702% (13233 / 27588)
+
+INFO Bin 1 1 2
+INFO - Passed dif up:  16.6667 + 2.54292 - 2.2663% (40 / 240)
+INFO - Passed dif dw:  36.2229 + 1.91102 - 1.86843% (234 / 646)
+INFO - Passed non-dif: 55.5257 + 0.224278 - 0.224503% (27232 / 49044)
+INFO - Failed dif:     52.0347 + 0.62706 - 0.627702% (3299 / 6340)
+INFO - Failed non-dif: 55.5257 + 0.224278 - 0.224503% (27232 / 49044)
+
+INFO Bin 1 1 3
+INFO - Passed dif up:  18.5039 + 2.55846 - 2.31143% (47 / 254)
+INFO - Passed dif dw:  26.7717 + 1.41143 - 1.36575% (272 / 1016)
+INFO - Passed non-dif: 53.3641 + 0.152161 - 0.152224% (57336 / 107443)
+INFO - Failed dif:     47.6904 + 0.511394 - 0.51091% (4553 / 9547)
+INFO - Failed non-dif: 53.3641 + 0.152161 - 0.152224% (57336 / 107443)
+
+INFO Bin 1 1 4
+INFO - Passed dif up:  28.0702 + 2.491 - 2.36313% (96 / 342)
+INFO - Passed dif dw:  32.5095 + 1.02928 - 1.01267% (684 / 2104)
+INFO - Passed non-dif: 63.5543 + 0.101459 - 0.101579% (142837 / 224748)
+INFO - Failed dif:     51.3053 + 0.488637 - 0.488887% (5365 / 10457)
+INFO - Failed non-dif: 63.5543 + 0.101459 - 0.101579% (142837 / 224748)
+
+INFO Bin 1 1 5
+INFO - Passed dif up:  35.1648 + 5.14199 - 4.81948% (32 / 91)
+INFO - Passed dif dw:  40.2963 + 1.90092 - 1.87221% (272 / 675)
+INFO - Passed non-dif: 77.1069 + 0.129341 - 0.129857% (81037 / 105097)
+INFO - Failed dif:     57.9757 + 1.06205 - 1.06949% (1243 / 2144)
+INFO - Failed non-dif: 77.1069 + 0.129341 - 0.129857% (81037 / 105097)
+INFO Selecting pi
+INFO Reading 2016 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2016--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2016--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3493635 entries
+INFO Reading 2017 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2017--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2017--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3471335 entries
+INFO Reading 2018 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2018--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2018--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3473352 entries
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_0_1_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_iso_ctrl_1_1_5.pdf has been created
+
+INFO Bin 0 0 0
+INFO - Passed dif up:  9.21083 + 0.445426 - 0.426877% (405 / 4397)
+INFO - Passed dif dw:  32.8425 + 0.705262 - 0.697608% (1472 / 4482)
+INFO - Passed non-dif: 70.9134 + 0.0679527 - 0.0680465% (316327 / 446075)
+INFO - Failed dif:     63.1359 + 0.454163 - 0.456503% (7087 / 11225)
+INFO - Failed non-dif: 70.9134 + 0.0679527 - 0.0680465% (316327 / 446075)
+
+INFO Bin 0 0 1
+INFO - Passed dif up:  8.30846 + 0.445761 - 0.425024% (334 / 4020)
+INFO - Passed dif dw:  36.439 + 0.67877 - 0.673417% (1846 / 5066)
+INFO - Passed non-dif: 72.7785 + 0.0540734 - 0.0541407% (492504 / 676716)
+INFO - Failed dif:     65.0293 + 0.536698 - 0.540533% (5097 / 7838)
+INFO - Failed non-dif: 72.7785 + 0.0540734 - 0.0541407% (492504 / 676716)
+
+INFO Bin 0 0 2
+INFO - Passed dif up:  8.18182 + 0.498488 - 0.472278% (261 / 3190)
+INFO - Passed dif dw:  39.9178 + 0.656525 - 0.652921% (2233 / 5594)
+INFO - Passed non-dif: 68.4357 + 0.0506086 - 0.0506523% (576684 / 842665)
+INFO - Failed dif:     53.1504 + 0.86535 - 0.867249% (1763 / 3317)
+INFO - Failed non-dif: 68.4357 + 0.0506086 - 0.0506523% (576684 / 842665)
+
+INFO Bin 0 0 3
+INFO - Passed dif up:  10.8644 + 0.635246 - 0.604223% (274 / 2522)
+INFO - Passed dif dw:  42.057 + 0.632994 - 0.630393% (2568 / 6106)
+INFO - Passed non-dif: 68.7529 + 0.0406589 - 0.0406877% (892838 / 1298618)
+INFO - Failed dif:     42.4799 + 1.18833 - 1.1797% (740 / 1742)
+INFO - Failed non-dif: 68.7529 + 0.0406589 - 0.0406877% (892838 / 1298618)
+
+INFO Bin 0 0 4
+INFO - Passed dif up:  16.1386 + 1.19099 - 1.12401% (163 / 1010)
+INFO - Passed dif dw:  51.834 + 0.895533 - 0.896712% (1611 / 3108)
+INFO - Passed non-dif: 79.4592 + 0.0369627 - 0.037012% (947979 / 1193038)
+INFO - Failed dif:     38.0878 + 1.93975 - 1.90246% (243 / 638)
+INFO - Failed non-dif: 79.4592 + 0.0369627 - 0.037012% (947979 / 1193038)
+
+INFO Bin 0 0 5
+INFO - Passed dif up:  20.6897 + 5.79383 - 4.80026% (12 / 58)
+INFO - Passed dif dw:  57.3913 + 3.22178 - 3.28577% (132 / 230)
+INFO - Passed non-dif: 84.2587 + 0.0854478 - 0.0858267% (152386 / 180855)
+INFO - Failed dif:     42.3077 + 6.93295 - 6.64268% (22 / 52)
+INFO - Failed non-dif: 84.2587 + 0.0854478 - 0.0858267% (152386 / 180855)
+
+INFO Bin 0 1 0
+INFO - Passed dif up:  0.927644 + 0.513309 - 0.331559% (5 / 539)
+INFO - Passed dif dw:  9.31587 + 1.16882 - 1.05055% (64 / 687)
+INFO - Passed non-dif: 15.4573 + 0.168509 - 0.167021% (7177 / 46431)
+INFO - Failed dif:     8.23723 + 1.1858 - 1.04842% (50 / 607)
+INFO - Failed non-dif: 15.4573 + 0.168509 - 0.167021% (7177 / 46431)
+
+INFO Bin 0 1 1
+INFO - Passed dif up:  6.07966 + 0.820603 - 0.728623% (58 / 954)
+INFO - Passed dif dw:  32.0359 + 1.28963 - 1.26276% (428 / 1336)
+INFO - Passed non-dif: 55.6832 + 0.136529 - 0.136615% (73670 / 132302)
+INFO - Failed dif:     47.4747 + 1.77647 - 1.7701% (376 / 792)
+INFO - Failed non-dif: 55.6832 + 0.136529 - 0.136615% (73670 / 132302)
+
+INFO Bin 0 1 2
+INFO - Passed dif up:  6.47343 + 0.807628 - 0.7236% (67 / 1035)
+INFO - Passed dif dw:  31.411 + 1.16077 - 1.13798% (512 / 1630)
+INFO - Passed non-dif: 55.8844 + 0.100422 - 0.10047% (136554 / 244351)
+INFO - Failed dif:     41.3793 + 1.62519 - 1.60663% (384 / 928)
+INFO - Failed non-dif: 55.8844 + 0.100422 - 0.10047% (136554 / 244351)
+
+INFO Bin 0 1 3
+INFO - Passed dif up:  7.26125 + 0.763231 - 0.69582% (92 / 1267)
+INFO - Passed dif dw:  30.5249 + 0.975611 - 0.958437% (692 / 2267)
+INFO - Passed non-dif: 51.6114 + 0.0687235 - 0.0687296% (272888 / 528736)
+INFO - Failed dif:     32.7711 + 1.64912 - 1.60766% (272 / 830)
+INFO - Failed non-dif: 51.6114 + 0.0687235 - 0.0687296% (272888 / 528736)
+
+INFO Bin 0 1 4
+INFO - Passed dif up:  11.3659 + 1.04091 - 0.963954% (114 / 1003)
+INFO - Passed dif dw:  41.778 + 1.01079 - 1.00393% (1001 / 2396)
+INFO - Passed non-dif: 63.056 + 0.0473083 - 0.0473334% (655982 / 1040316)
+INFO - Failed dif:     32.3529 + 1.91853 - 1.86095% (198 / 612)
+INFO - Failed non-dif: 63.056 + 0.0473083 - 0.0473334% (655982 / 1040316)
+
+INFO Bin 0 1 5
+INFO - Passed dif up:  10.8571 + 2.57794 - 2.13313% (19 / 175)
+INFO - Passed dif dw:  52.1368 + 2.30212 - 2.31124% (244 / 468)
+INFO - Passed non-dif: 77.3775 + 0.0645555 - 0.0646861% (324358 / 419189)
+INFO - Failed dif:     44.9153 + 4.60266 - 4.5172% (53 / 118)
+INFO - Failed non-dif: 77.3775 + 0.0645555 - 0.0646861% (324358 / 419189)
+
+INFO Bin 1 0 0
+INFO - Passed dif up:  9.21083 + 0.445426 - 0.426877% (405 / 4397)
+INFO - Passed dif dw:  32.8425 + 0.705262 - 0.697608% (1472 / 4482)
+INFO - Passed non-dif: 71.7006 + 0.150344 - 0.15083% (64157 / 89479)
+INFO - Failed dif:     63.1359 + 0.454163 - 0.456503% (7087 / 11225)
+INFO - Failed non-dif: 71.7006 + 0.150344 - 0.15083% (64157 / 89479)
+
+INFO Bin 1 0 1
+INFO - Passed dif up:  8.30846 + 0.445761 - 0.425024% (334 / 4020)
+INFO - Passed dif dw:  36.439 + 0.67877 - 0.673417% (1846 / 5066)
+INFO - Passed non-dif: 73.8583 + 0.118444 - 0.118791% (101352 / 137225)
+INFO - Failed dif:     65.0293 + 0.536698 - 0.540533% (5097 / 7838)
+INFO - Failed non-dif: 73.8583 + 0.118444 - 0.118791% (101352 / 137225)
+
+INFO Bin 1 0 2
+INFO - Passed dif up:  8.18182 + 0.498488 - 0.472278% (261 / 3190)
+INFO - Passed dif dw:  39.9178 + 0.656525 - 0.652921% (2233 / 5594)
+INFO - Passed non-dif: 69.4498 + 0.110313 - 0.110537% (120842 / 173999)
+INFO - Failed dif:     53.1504 + 0.86535 - 0.867249% (1763 / 3317)
+INFO - Failed non-dif: 69.4498 + 0.110313 - 0.110537% (120842 / 173999)
+
+INFO Bin 1 0 3
+INFO - Passed dif up:  10.8644 + 0.635246 - 0.604223% (274 / 2522)
+INFO - Passed dif dw:  42.057 + 0.632994 - 0.630393% (2568 / 6106)
+INFO - Passed non-dif: 69.1779 + 0.0883334 - 0.088474% (188736 / 272827)
+INFO - Failed dif:     42.4799 + 1.18833 - 1.1797% (740 / 1742)
+INFO - Failed non-dif: 69.1779 + 0.0883334 - 0.088474% (188736 / 272827)
+
+INFO Bin 1 0 4
+INFO - Passed dif up:  16.1386 + 1.19099 - 1.12401% (163 / 1010)
+INFO - Passed dif dw:  51.834 + 0.895533 - 0.896712% (1611 / 3108)
+INFO - Passed non-dif: 79.0381 + 0.0793218 - 0.0795429% (207543 / 262586)
+INFO - Failed dif:     38.0878 + 1.93975 - 1.90246% (243 / 638)
+INFO - Failed non-dif: 79.0381 + 0.0793218 - 0.0795429% (207543 / 262586)
+
+INFO Bin 1 0 5
+INFO - Passed dif up:  20.6897 + 5.79383 - 4.80026% (12 / 58)
+INFO - Passed dif dw:  57.3913 + 3.22178 - 3.28577% (132 / 230)
+INFO - Passed non-dif: 83.3946 + 0.178163 - 0.179707% (36069 / 43251)
+INFO - Failed dif:     42.3077 + 6.93295 - 6.64268% (22 / 52)
+INFO - Failed non-dif: 83.3946 + 0.178163 - 0.179707% (36069 / 43251)
+
+INFO Bin 1 1 0
+INFO - Passed dif up:  0.927644 + 0.513309 - 0.331559% (5 / 539)
+INFO - Passed dif dw:  9.31587 + 1.16882 - 1.05055% (64 / 687)
+INFO - Passed non-dif: 15.3482 + 0.3736 - 0.3663% (1457 / 9493)
+INFO - Failed dif:     8.23723 + 1.1858 - 1.04842% (50 / 607)
+INFO - Failed non-dif: 15.3482 + 0.3736 - 0.3663% (1457 / 9493)
+
+INFO Bin 1 1 1
+INFO - Passed dif up:  6.07966 + 0.820603 - 0.728623% (58 / 954)
+INFO - Passed dif dw:  32.0359 + 1.28963 - 1.26276% (428 / 1336)
+INFO - Passed non-dif: 55.8204 + 0.304284 - 0.304722% (14846 / 26596)
+INFO - Failed dif:     47.4747 + 1.77647 - 1.7701% (376 / 792)
+INFO - Failed non-dif: 55.8204 + 0.304284 - 0.304722% (14846 / 26596)
+
+INFO Bin 1 1 2
+INFO - Passed dif up:  6.47343 + 0.807628 - 0.7236% (67 / 1035)
+INFO - Passed dif dw:  31.411 + 1.16077 - 1.13798% (512 / 1630)
+INFO - Passed non-dif: 56.9438 + 0.224169 - 0.224454% (27747 / 48727)
+INFO - Failed dif:     41.3793 + 1.62519 - 1.60663% (384 / 928)
+INFO - Failed non-dif: 56.9438 + 0.224169 - 0.224454% (27747 / 48727)
+
+INFO Bin 1 1 3
+INFO - Passed dif up:  7.26125 + 0.763231 - 0.69582% (92 / 1267)
+INFO - Passed dif dw:  30.5249 + 0.975611 - 0.958437% (692 / 2267)
+INFO - Passed non-dif: 53.6494 + 0.154105 - 0.154175% (56150 / 104661)
+INFO - Failed dif:     32.7711 + 1.64912 - 1.60766% (272 / 830)
+INFO - Failed non-dif: 53.6494 + 0.154105 - 0.154175% (56150 / 104661)
+
+INFO Bin 1 1 4
+INFO - Passed dif up:  11.3659 + 1.04091 - 0.963954% (114 / 1003)
+INFO - Passed dif dw:  41.778 + 1.01079 - 1.00393% (1001 / 2396)
+INFO - Passed non-dif: 64.2597 + 0.104329 - 0.104465% (135412 / 210726)
+INFO - Failed dif:     32.3529 + 1.91853 - 1.86095% (198 / 612)
+INFO - Failed non-dif: 64.2597 + 0.104329 - 0.104465% (135412 / 210726)
+
+INFO Bin 1 1 5
+INFO - Passed dif up:  10.8571 + 2.57794 - 2.13313% (19 / 175)
+INFO - Passed dif dw:  52.1368 + 2.30212 - 2.31124% (244 / 468)
+INFO - Passed non-dif: 76.7833 + 0.139811 - 0.140401% (69730 / 90814)
+INFO - Failed dif:     44.9153 + 4.60266 - 4.5172% (53 / 118)
+INFO - Failed non-dif: 76.7833 + 0.139811 - 0.140401% (69730 / 90814)
+INFO Producing vmu selection efficiencies
+INFO Selecting k
+INFO Reading 2016 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2016--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2016--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3493635 entries
+INFO Reading 2017 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2017--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2017--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3471335 entries
+INFO Reading 2018 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2018--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2018--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3473352 entries
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_0_1_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_vmu_1_1_5.pdf has been created
+
+INFO Bin 0 0 0
+INFO - Passed dif up:  67.3913 + 6.47783 - 7.21788% (31 / 46)
+INFO - Passed dif dw:  63.6837 + 1.53636 - 1.56481% (612 / 961)
+INFO - Passed non-dif: 67.7925 + 0.0973509 - 0.0975056% (155937 / 230021)
+INFO - Failed dif:     63.9654 + 0.415392 - 0.417493% (8501 / 13290)
+INFO - Failed non-dif: 67.7925 + 0.0973509 - 0.0975056% (155937 / 230021)
+
+INFO Bin 0 0 1
+INFO - Passed dif up:  76.6667 + 4.15038 - 4.73646% (69 / 90)
+INFO - Passed dif dw:  61.1429 + 0.917014 - 0.92497% (1712 / 2800)
+INFO - Passed non-dif: 72.867 + 0.0614072 - 0.0614946% (381507 / 523566)
+INFO - Failed dif:     69.8367 + 0.36887 - 0.371451% (10736 / 15373)
+INFO - Failed non-dif: 72.867 + 0.0614072 - 0.0614946% (381507 / 523566)
+
+INFO Bin 0 0 2
+INFO - Passed dif up:  67.1756 + 3.95907 - 4.21931% (88 / 131)
+INFO - Passed dif dw:  49.5085 + 0.747342 - 0.747122% (2216 / 4476)
+INFO - Passed non-dif: 67.476 + 0.0526948 - 0.052739% (532847 / 789684)
+INFO - Failed dif:     62.8253 + 0.410489 - 0.412348% (8668 / 13797)
+INFO - Failed non-dif: 67.476 + 0.0526948 - 0.052739% (532847 / 789684)
+
+INFO Bin 0 0 3
+INFO - Passed dif up:  42.6273 + 2.57697 - 2.53754% (159 / 373)
+INFO - Passed dif dw:  40.3391 + 0.574951 - 0.572309% (2950 / 7313)
+INFO - Passed non-dif: 68.1245 + 0.0401677 - 0.0401947% (916258 / 1344975)
+INFO - Failed dif:     59.8556 + 0.407681 - 0.409049% (8624 / 14408)
+INFO - Failed non-dif: 68.1245 + 0.0401677 - 0.0401947% (916258 / 1344975)
+
+INFO Bin 0 0 4
+INFO - Passed dif up:  21.7494 + 2.07121 - 1.93796% (92 / 423)
+INFO - Passed dif dw:  36.8313 + 0.69454 - 0.689122% (1790 / 4860)
+INFO - Passed non-dif: 79.51 + 0.0350594 - 0.035104% (1052505 / 1323739)
+INFO - Failed dif:     63.7647 + 0.458874 - 0.461397% (6958 / 10912)
+INFO - Failed non-dif: 79.51 + 0.0350594 - 0.035104% (1052505 / 1323739)
+
+INFO Bin 0 0 5
+INFO - Passed dif up:  15.7895 + 5.41402 - 4.23435% (9 / 57)
+INFO - Passed dif dw:  30.4124 + 2.38337 - 2.28266% (118 / 388)
+INFO - Passed non-dif: 84.0688 + 0.0780716 - 0.0783829% (183993 / 218860)
+INFO - Failed dif:     61.779 + 1.27238 - 1.28874% (889 / 1439)
+INFO - Failed non-dif: 84.0688 + 0.0780716 - 0.0783829% (183993 / 218860)
+
+INFO Bin 0 1 0
+INFO - Passed dif up:  0 + 7.14286 - 0% (0 / 13)
+INFO - Passed dif dw:  16.3043 + 4.20997 - 3.48533% (15 / 92)
+INFO - Passed non-dif: 11.4273 + 0.13637 - 0.134967% (6284 / 54991)
+INFO - Failed dif:     8.15217 + 0.462524 - 0.439787% (300 / 3680)
+INFO - Failed non-dif: 11.4273 + 0.13637 - 0.134967% (6284 / 54991)
+
+INFO Bin 0 1 1
+INFO - Passed dif up:  25 + 14.0857 - 10.2395% (3 / 12)
+INFO - Passed dif dw:  44.5714 + 2.66854 - 2.63761% (156 / 350)
+INFO - Passed non-dif: 47.2773 + 0.132623 - 0.132585% (67017 / 141753)
+INFO - Failed dif:     43.0578 + 0.707845 - 0.705019% (2115 / 4912)
+INFO - Failed non-dif: 47.2773 + 0.132623 - 0.132585% (67017 / 141753)
+
+INFO Bin 0 1 2
+INFO - Passed dif up:  24.2424 + 8.14608 - 6.63093% (8 / 33)
+INFO - Passed dif dw:  38.2353 + 1.75178 - 1.72173% (299 / 782)
+INFO - Passed non-dif: 53.9961 + 0.0994617 - 0.0994935% (135540 / 251018)
+INFO - Failed dif:     50.1316 + 0.685419 - 0.685469% (2667 / 5320)
+INFO - Failed non-dif: 53.9961 + 0.0994617 - 0.0994935% (135540 / 251018)
+
+INFO Bin 0 1 3
+INFO - Passed dif up:  30.9859 + 5.72033 - 5.19216% (22 / 71)
+INFO - Passed dif dw:  32.6772 + 1.21248 - 1.18976% (498 / 1524)
+INFO - Passed non-dif: 51.6164 + 0.0675393 - 0.0675452% (282567 / 547437)
+INFO - Failed dif:     45.9482 + 0.582599 - 0.581494% (3368 / 7330)
+INFO - Failed non-dif: 51.6164 + 0.0675393 - 0.0675452% (282567 / 547437)
+
+INFO Bin 0 1 4
+INFO - Passed dif up:  12.9353 + 2.55181 - 2.18484% (26 / 201)
+INFO - Passed dif dw:  31.769 + 1.06648 - 1.04768% (616 / 1939)
+INFO - Passed non-dif: 62.371 + 0.0459986 - 0.046021% (691492 / 1108675)
+INFO - Failed dif:     49.7142 + 0.519224 - 0.519163% (4610 / 9273)
+INFO - Failed non-dif: 62.371 + 0.0459986 - 0.046021% (691492 / 1108675)
+
+INFO Bin 0 1 5
+INFO - Passed dif up:  16.6667 + 4.63607 - 3.79219% (13 / 78)
+INFO - Passed dif dw:  29.7913 + 2.02896 - 1.95241% (157 / 527)
+INFO - Passed non-dif: 77.6885 + 0.0595125 - 0.0596259% (379488 / 488474)
+INFO - Failed dif:     62.2738 + 0.956357 - 0.96601% (1583 / 2542)
+INFO - Failed non-dif: 77.6885 + 0.0595125 - 0.0596259% (379488 / 488474)
+
+INFO Bin 1 0 0
+INFO - Passed dif up:  67.3913 + 6.47783 - 7.21788% (31 / 46)
+INFO - Passed dif dw:  63.6837 + 1.53636 - 1.56481% (612 / 961)
+INFO - Passed non-dif: 69.1945 + 0.215847 - 0.216689% (31534 / 45573)
+INFO - Failed dif:     63.9654 + 0.415392 - 0.417493% (8501 / 13290)
+INFO - Failed non-dif: 69.1945 + 0.215847 - 0.216689% (31534 / 45573)
+
+INFO Bin 1 0 1
+INFO - Passed dif up:  76.6667 + 4.15038 - 4.73646% (69 / 90)
+INFO - Passed dif dw:  61.1429 + 0.917014 - 0.92497% (1712 / 2800)
+INFO - Passed non-dif: 73.9668 + 0.134524 - 0.134976% (78441 / 106049)
+INFO - Failed dif:     69.8367 + 0.36887 - 0.371451% (10736 / 15373)
+INFO - Failed non-dif: 73.9668 + 0.134524 - 0.134976% (78441 / 106049)
+
+INFO Bin 1 0 2
+INFO - Passed dif up:  67.1756 + 3.95907 - 4.21931% (88 / 131)
+INFO - Passed dif dw:  49.5085 + 0.747342 - 0.747122% (2216 / 4476)
+INFO - Passed non-dif: 68.6609 + 0.114745 - 0.114974% (111988 / 163103)
+INFO - Failed dif:     62.8253 + 0.410489 - 0.412348% (8668 / 13797)
+INFO - Failed non-dif: 68.6609 + 0.114745 - 0.114974% (111988 / 163103)
+
+INFO Bin 1 0 3
+INFO - Passed dif up:  42.6273 + 2.57697 - 2.53754% (159 / 373)
+INFO - Passed dif dw:  40.3391 + 0.574951 - 0.572309% (2950 / 7313)
+INFO - Passed non-dif: 68.3264 + 0.0878666 - 0.0879975% (191240 / 279892)
+INFO - Failed dif:     59.8556 + 0.407681 - 0.409049% (8624 / 14408)
+INFO - Failed non-dif: 68.3264 + 0.0878666 - 0.0879975% (191240 / 279892)
+
+INFO Bin 1 0 4
+INFO - Passed dif up:  21.7494 + 2.07121 - 1.93796% (92 / 423)
+INFO - Passed dif dw:  36.8313 + 0.69454 - 0.689122% (1790 / 4860)
+INFO - Passed non-dif: 79.0857 + 0.0753582 - 0.0755585% (229733 / 290486)
+INFO - Failed dif:     63.7647 + 0.458874 - 0.461397% (6958 / 10912)
+INFO - Failed non-dif: 79.0857 + 0.0753582 - 0.0755585% (229733 / 290486)
+
+INFO Bin 1 0 5
+INFO - Passed dif up:  15.7895 + 5.41402 - 4.23435% (9 / 57)
+INFO - Passed dif dw:  30.4124 + 2.38337 - 2.28266% (118 / 388)
+INFO - Passed non-dif: 83.5997 + 0.161941 - 0.163236% (43359 / 51865)
+INFO - Failed dif:     61.779 + 1.27238 - 1.28874% (889 / 1439)
+INFO - Failed non-dif: 83.5997 + 0.161941 - 0.163236% (43359 / 51865)
+
+INFO Bin 1 1 0
+INFO - Passed dif up:  0 + 7.14286 - 0% (0 / 13)
+INFO - Passed dif dw:  16.3043 + 4.20997 - 3.48533% (15 / 92)
+INFO - Passed non-dif: 12.0914 + 0.322376 - 0.315129% (1265 / 10462)
+INFO - Failed dif:     8.15217 + 0.462524 - 0.439787% (300 / 3680)
+INFO - Failed non-dif: 12.0914 + 0.322376 - 0.315129% (1265 / 10462)
+
+INFO Bin 1 1 1
+INFO - Passed dif up:  25 + 14.0857 - 10.2395% (3 / 12)
+INFO - Passed dif dw:  44.5714 + 2.66854 - 2.63761% (156 / 350)
+INFO - Passed non-dif: 47.9925 + 0.300403 - 0.300258% (13280 / 27671)
+INFO - Failed dif:     43.0578 + 0.707845 - 0.705019% (2115 / 4912)
+INFO - Failed non-dif: 47.9925 + 0.300403 - 0.300258% (13280 / 27671)
+
+INFO Bin 1 1 2
+INFO - Passed dif up:  24.2424 + 8.14608 - 6.63093% (8 / 33)
+INFO - Passed dif dw:  38.2353 + 1.75178 - 1.72173% (299 / 782)
+INFO - Passed non-dif: 55.5102 + 0.22391 - 0.224134% (27316 / 49209)
+INFO - Failed dif:     50.1316 + 0.685419 - 0.685469% (2667 / 5320)
+INFO - Failed non-dif: 55.5102 + 0.22391 - 0.224134% (27316 / 49209)
+
+INFO Bin 1 1 3
+INFO - Passed dif up:  30.9859 + 5.72033 - 5.19216% (22 / 71)
+INFO - Passed dif dw:  32.6772 + 1.21248 - 1.18976% (498 / 1524)
+INFO - Passed non-dif: 53.3686 + 0.151979 - 0.152041% (57478 / 107700)
+INFO - Failed dif:     45.9482 + 0.582599 - 0.581494% (3368 / 7330)
+INFO - Failed non-dif: 53.3686 + 0.151979 - 0.152041% (57478 / 107700)
+
+INFO Bin 1 1 4
+INFO - Passed dif up:  12.9353 + 2.55181 - 2.18484% (26 / 201)
+INFO - Passed dif dw:  31.769 + 1.06648 - 1.04768% (616 / 1939)
+INFO - Passed non-dif: 63.5545 + 0.101422 - 0.101542% (142941 / 224911)
+INFO - Failed dif:     49.7142 + 0.519224 - 0.519163% (4610 / 9273)
+INFO - Failed non-dif: 63.5545 + 0.101422 - 0.101542% (142941 / 224911)
+
+INFO Bin 1 1 5
+INFO - Passed dif up:  16.6667 + 4.63607 - 3.79219% (13 / 78)
+INFO - Passed dif dw:  29.7913 + 2.02896 - 1.95241% (157 / 527)
+INFO - Passed non-dif: 77.1012 + 0.129361 - 0.129877% (81021 / 105084)
+INFO - Failed dif:     62.2738 + 0.956357 - 0.96601% (1583 / 2542)
+INFO - Failed non-dif: 77.1012 + 0.129361 - 0.129877% (81021 / 105084)
+INFO Selecting pi
+INFO Reading 2016 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2016--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2016--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3493635 entries
+INFO Reading 2017 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2017--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2017--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3471335 entries
+INFO Reading 2018 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2018--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2018--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3473352 entries
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_0_1_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_vmu_1_1_5.pdf has been created
+
+INFO Bin 0 0 0
+INFO - Passed dif up:  22.2011 + 1.86208 - 1.75678% (117 / 527)
+INFO - Passed dif dw:  63.0381 + 0.848317 - 0.856448% (2021 / 3206)
+INFO - Passed non-dif: 70.9134 + 0.0677312 - 0.0678243% (318401 / 449000)
+INFO - Failed dif:     33.6188 + 0.418095 - 0.415545% (4318 / 12844)
+INFO - Failed non-dif: 70.9134 + 0.0677312 - 0.0678243% (318401 / 449000)
+
+INFO Bin 0 0 1
+INFO - Passed dif up:  18.0371 + 2.064 - 1.89489% (68 / 377)
+INFO - Passed dif dw:  62.2045 + 0.880616 - 0.888742% (1868 / 3003)
+INFO - Passed non-dif: 72.7868 + 0.053988 - 0.0540551% (494027 / 678732)
+INFO - Failed dif:     32.0422 + 0.442936 - 0.439723% (3582 / 11179)
+INFO - Failed non-dif: 72.7868 + 0.053988 - 0.0540551% (494027 / 678732)
+
+INFO Bin 0 0 2
+INFO - Passed dif up:  7.26257 + 2.1863 - 1.71144% (13 / 179)
+INFO - Passed dif dw:  46.7638 + 1.42126 - 1.41603% (578 / 1236)
+INFO - Passed non-dif: 68.4327 + 0.0506353 - 0.0506791% (576080 / 841820)
+INFO - Failed dif:     37.5043 + 0.447712 - 0.445585% (4406 / 11748)
+INFO - Failed non-dif: 68.4327 + 0.0506353 - 0.0506791% (576080 / 841820)
+
+INFO Bin 0 0 3
+INFO - Passed dif up:  3.33333 + 2.0625 - 1.29115% (4 / 120)
+INFO - Passed dif dw:  34.5238 + 1.65797 - 1.62117% (290 / 840)
+INFO - Passed non-dif: 68.7496 + 0.040699 - 0.0407279% (891087 / 1296134)
+INFO - Failed dif:     43.5895 + 0.44466 - 0.443631% (5433 / 12464)
+INFO - Failed non-dif: 68.7496 + 0.040699 - 0.0407279% (891087 / 1296134)
+
+INFO Bin 0 0 4
+INFO - Passed dif up:  11.3208 + 5.08711 - 3.65454% (6 / 53)
+INFO - Passed dif dw:  31.0541 + 2.52069 - 2.41304% (109 / 351)
+INFO - Passed non-dif: 79.4564 + 0.0369888 - 0.0370382% (946703 / 1191475)
+INFO - Failed dif:     55.3249 + 0.627306 - 0.629006% (3465 / 6263)
+INFO - Failed non-dif: 79.4564 + 0.0369888 - 0.0370382% (946703 / 1191475)
+
+INFO Bin 0 0 5
+INFO - Passed dif up:  0 + 20 - 0% (0 / 4)
+INFO - Passed dif dw:  38.7097 + 8.9706 - 8.26495% (12 / 31)
+INFO - Passed non-dif: 84.2566 + 0.0854805 - 0.0858595% (152282 / 180736)
+INFO - Failed dif:     62.0536 + 2.26337 - 2.31706% (278 / 448)
+INFO - Failed non-dif: 84.2566 + 0.0854805 - 0.0858595% (152282 / 180736)
+
+INFO Bin 0 1 0
+INFO - Passed dif up:  0 + 1.85185 - 0% (0 / 53)
+INFO - Passed dif dw:  13.3333 + 3.98912 - 3.18326% (12 / 90)
+INFO - Passed non-dif: 15.5008 + 0.168962 - 0.167471% (7175 / 46288)
+INFO - Failed dif:     6.32432 + 0.589828 - 0.542637% (117 / 1850)
+INFO - Failed non-dif: 15.5008 + 0.168962 - 0.167471% (7175 / 46288)
+
+INFO Bin 0 1 1
+INFO - Passed dif up:  2.63158 + 2.54031 - 1.30996% (2 / 76)
+INFO - Passed dif dw:  40.991 + 3.3341 - 3.2533% (91 / 222)
+INFO - Passed non-dif: 55.7152 + 0.13658 - 0.136667% (73646 / 132183)
+INFO - Failed dif:     27.0769 + 0.829348 - 0.813679% (792 / 2925)
+INFO - Failed non-dif: 55.7152 + 0.13658 - 0.136667% (73646 / 132183)
+
+INFO Bin 0 1 2
+INFO - Passed dif up:  6.94444 + 3.62298 - 2.44338% (5 / 72)
+INFO - Passed dif dw:  38.141 + 2.78367 - 2.7079% (119 / 312)
+INFO - Passed non-dif: 55.8884 + 0.100475 - 0.100523% (136418 / 244090)
+INFO - Failed dif:     28.5226 + 0.767826 - 0.755602% (1002 / 3513)
+INFO - Failed non-dif: 55.8884 + 0.100475 - 0.100523% (136418 / 244090)
+
+INFO Bin 0 1 3
+INFO - Passed dif up:  4.28571 + 3.13225 - 1.84453% (3 / 70)
+INFO - Passed dif dw:  25.7812 + 2.29314 - 2.16733% (99 / 384)
+INFO - Passed non-dif: 51.6147 + 0.0687839 - 0.06879% (272425 / 527805)
+INFO - Failed dif:     30.0179 + 0.651015 - 0.643051% (1506 / 5017)
+INFO - Failed non-dif: 51.6147 + 0.0687839 - 0.06879% (272425 / 527805)
+
+INFO Bin 0 1 4
+INFO - Passed dif up:  2.27273 + 3.52244 - 1.40122% (1 / 44)
+INFO - Passed dif dw:  25.6917 + 2.83893 - 2.64753% (65 / 253)
+INFO - Passed non-dif: 63.0546 + 0.0473354 - 0.0473606% (655225 / 1039139)
+INFO - Failed dif:     41.8797 + 0.693325 - 0.690133% (2130 / 5086)
+INFO - Failed non-dif: 63.0546 + 0.0473354 - 0.0473606% (655225 / 1039139)
+
+INFO Bin 0 1 5
+INFO - Passed dif up:  10 + 13.3853 - 6.11255% (1 / 10)
+INFO - Passed dif dw:  35 + 7.82385 - 7.09214% (14 / 40)
+INFO - Passed non-dif: 77.3782 + 0.0645733 - 0.064704% (324175 / 418949)
+INFO - Failed dif:     52.4802 + 1.56968 - 1.57459% (529 / 1008)
+INFO - Failed non-dif: 77.3782 + 0.0645733 - 0.064704% (324175 / 418949)
+
+INFO Bin 1 0 0
+INFO - Passed dif up:  22.2011 + 1.86208 - 1.75678% (117 / 527)
+INFO - Passed dif dw:  63.0381 + 0.848317 - 0.856448% (2021 / 3206)
+INFO - Passed non-dif: 71.7032 + 0.149838 - 0.15032% (64591 / 90081)
+INFO - Failed dif:     33.6188 + 0.418095 - 0.415545% (4318 / 12844)
+INFO - Failed non-dif: 71.7032 + 0.149838 - 0.15032% (64591 / 90081)
+
+INFO Bin 1 0 1
+INFO - Passed dif up:  18.0371 + 2.064 - 1.89489% (68 / 377)
+INFO - Passed dif dw:  62.2045 + 0.880616 - 0.888742% (1868 / 3003)
+INFO - Passed non-dif: 73.8424 + 0.118317 - 0.118663% (101588 / 137574)
+INFO - Failed dif:     32.0422 + 0.442936 - 0.439723% (3582 / 11179)
+INFO - Failed non-dif: 73.8424 + 0.118317 - 0.118663% (101588 / 137574)
+
+INFO Bin 1 0 2
+INFO - Passed dif up:  7.26257 + 2.1863 - 1.71144% (13 / 179)
+INFO - Passed dif dw:  46.7638 + 1.42126 - 1.41603% (578 / 1236)
+INFO - Passed non-dif: 69.4583 + 0.110374 - 0.110597% (120706 / 173782)
+INFO - Failed dif:     37.5043 + 0.447712 - 0.445585% (4406 / 11748)
+INFO - Failed non-dif: 69.4583 + 0.110374 - 0.110597% (120706 / 173782)
+
+INFO Bin 1 0 3
+INFO - Passed dif up:  3.33333 + 2.0625 - 1.29115% (4 / 120)
+INFO - Passed dif dw:  34.5238 + 1.65797 - 1.62117% (290 / 840)
+INFO - Passed non-dif: 69.178 + 0.0884257 - 0.0885665% (188342 / 272257)
+INFO - Failed dif:     43.5895 + 0.44466 - 0.443631% (5433 / 12464)
+INFO - Failed non-dif: 69.178 + 0.0884257 - 0.0885665% (188342 / 272257)
+
+INFO Bin 1 0 4
+INFO - Passed dif up:  11.3208 + 5.08711 - 3.65454% (6 / 53)
+INFO - Passed dif dw:  31.0541 + 2.52069 - 2.41304% (109 / 351)
+INFO - Passed non-dif: 79.0335 + 0.0793807 - 0.0796021% (207256 / 262238)
+INFO - Failed dif:     55.3249 + 0.627306 - 0.629006% (3465 / 6263)
+INFO - Failed non-dif: 79.0335 + 0.0793807 - 0.0796021% (207256 / 262238)
+
+INFO Bin 1 0 5
+INFO - Passed dif up:  0 + 20 - 0% (0 / 4)
+INFO - Passed dif dw:  38.7097 + 8.9706 - 8.26495% (12 / 31)
+INFO - Passed non-dif: 83.3946 + 0.178212 - 0.179757% (36049 / 43227)
+INFO - Failed dif:     62.0536 + 2.26337 - 2.31706% (278 / 448)
+INFO - Failed non-dif: 83.3946 + 0.178212 - 0.179757% (36049 / 43227)
+
+INFO Bin 1 1 0
+INFO - Passed dif up:  0 + 1.85185 - 0% (0 / 53)
+INFO - Passed dif dw:  13.3333 + 3.98912 - 3.18326% (12 / 90)
+INFO - Passed non-dif: 15.2913 + 0.373381 - 0.366056% (1449 / 9476)
+INFO - Failed dif:     6.32432 + 0.589828 - 0.542637% (117 / 1850)
+INFO - Failed non-dif: 15.2913 + 0.373381 - 0.366056% (1449 / 9476)
+
+INFO Bin 1 1 1
+INFO - Passed dif up:  2.63158 + 2.54031 - 1.30996% (2 / 76)
+INFO - Passed dif dw:  40.991 + 3.3341 - 3.2533% (91 / 222)
+INFO - Passed non-dif: 55.8704 + 0.304372 - 0.304814% (14847 / 26574)
+INFO - Failed dif:     27.0769 + 0.829348 - 0.813679% (792 / 2925)
+INFO - Failed non-dif: 55.8704 + 0.304372 - 0.304814% (14847 / 26574)
+
+INFO Bin 1 1 2
+INFO - Passed dif up:  6.94444 + 3.62298 - 2.44338% (5 / 72)
+INFO - Passed dif dw:  38.141 + 2.78367 - 2.7079% (119 / 312)
+INFO - Passed non-dif: 56.9386 + 0.224271 - 0.224557% (27720 / 48684)
+INFO - Failed dif:     28.5226 + 0.767826 - 0.755602% (1002 / 3513)
+INFO - Failed non-dif: 56.9386 + 0.224271 - 0.224557% (27720 / 48684)
+
+INFO Bin 1 1 3
+INFO - Passed dif up:  4.28571 + 3.13225 - 1.84453% (3 / 70)
+INFO - Passed dif dw:  25.7812 + 2.29314 - 2.16733% (99 / 384)
+INFO - Passed non-dif: 53.6546 + 0.154234 - 0.154304% (56061 / 104485)
+INFO - Failed dif:     30.0179 + 0.651015 - 0.643051% (1506 / 5017)
+INFO - Failed non-dif: 53.6546 + 0.154234 - 0.154304% (56061 / 104485)
+
+INFO Bin 1 1 4
+INFO - Passed dif up:  2.27273 + 3.52244 - 1.40122% (1 / 44)
+INFO - Passed dif dw:  25.6917 + 2.83893 - 2.64753% (65 / 253)
+INFO - Passed non-dif: 64.2594 + 0.104378 - 0.104513% (135286 / 210531)
+INFO - Failed dif:     41.8797 + 0.693325 - 0.690133% (2130 / 5086)
+INFO - Failed non-dif: 64.2594 + 0.104378 - 0.104513% (135286 / 210531)
+
+INFO Bin 1 1 5
+INFO - Passed dif up:  10 + 13.3853 - 6.11255% (1 / 10)
+INFO - Passed dif dw:  35 + 7.82385 - 7.09214% (14 / 40)
+INFO - Passed non-dif: 76.782 + 0.139857 - 0.140448% (69685 / 90757)
+INFO - Failed dif:     52.4802 + 1.56968 - 1.57459% (529 / 1008)
+INFO - Failed non-dif: 76.782 + 0.139857 - 0.140448% (69685 / 90757)
+INFO Producing fake_mu selection efficiencies
+INFO Selecting k
+INFO Reading 2016 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2016--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2016--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3493635 entries
+INFO Reading 2017 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2017--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2017--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3471335 entries
+INFO Reading 2018 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2018--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-k/Dst_ANNK--26_02_08--mc--11774014--2018--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3473352 entries
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_0_1_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_k_fake_mu_1_1_5.pdf has been created
+
+INFO Bin 0 0 0
+INFO - Passed dif up:  30 + 2.4008 - 2.29582% (114 / 380)
+INFO - Passed dif dw:  58.2359 + 1.08443 - 1.09245% (1195 / 2052)
+INFO - Passed non-dif: 67.7756 + 0.0972038 - 0.0973578% (156414 / 230782)
+INFO - Failed dif:     66.2123 + 0.450915 - 0.453882% (7237 / 10930)
+INFO - Failed non-dif: 67.7756 + 0.0972038 - 0.0973578% (156414 / 230782)
+
+INFO Bin 0 0 1
+INFO - Passed dif up:  42.3313 + 2.24775 - 2.21645% (207 / 489)
+INFO - Passed dif dw:  58.7872 + 0.756881 - 0.761059% (2472 / 4205)
+INFO - Passed non-dif: 72.864 + 0.0613596 - 0.0614468% (382111 / 524417)
+INFO - Failed dif:     72.655 + 0.397609 - 0.401248% (9047 / 12452)
+INFO - Failed non-dif: 72.864 + 0.0613596 - 0.0614468% (382111 / 524417)
+
+INFO Bin 0 0 2
+INFO - Passed dif up:  41.2664 + 2.31703 - 2.27897% (189 / 458)
+INFO - Passed dif dw:  45.6257 + 0.658244 - 0.65672% (2618 / 5738)
+INFO - Passed non-dif: 67.4783 + 0.0526849 - 0.0527291% (533046 / 789952)
+INFO - Failed dif:     66.7146 + 0.432082 - 0.434911% (7883 / 11816)
+INFO - Failed non-dif: 67.4783 + 0.0526849 - 0.0527291% (533046 / 789952)
+
+INFO Bin 0 0 3
+INFO - Passed dif up:  40.4696 + 1.8361 - 1.80981% (293 / 724)
+INFO - Passed dif dw:  37.7398 + 0.522459 - 0.519626% (3266 / 8654)
+INFO - Passed non-dif: 68.1242 + 0.0401658 - 0.0401927% (916348 / 1345113)
+INFO - Failed dif:     64.2497 + 0.427597 - 0.429878% (8028 / 12495)
+INFO - Failed non-dif: 68.1242 + 0.0401658 - 0.0401927% (916348 / 1345113)
+
+INFO Bin 0 0 4
+INFO - Passed dif up:  30.8131 + 1.7702 - 1.71554% (216 / 701)
+INFO - Passed dif dw:  37.3968 + 0.564482 - 0.561072% (2764 / 7391)
+INFO - Passed non-dif: 79.5123 + 0.0350455 - 0.03509% (1053285 / 1324682)
+INFO - Failed dif:     70.7554 + 0.544697 - 0.550715% (4880 / 6897)
+INFO - Failed non-dif: 79.5123 + 0.0350455 - 0.03509% (1053285 / 1324682)
+
+INFO Bin 0 0 5
+INFO - Passed dif up:  21.8391 + 4.73586 - 4.09584% (19 / 87)
+INFO - Passed dif dw:  36.0619 + 1.61165 - 1.58085% (326 / 904)
+INFO - Passed non-dif: 84.0636 + 0.0780121 - 0.0783228% (184312 / 219253)
+INFO - Failed dif:     67.2941 + 2.23275 - 2.31394% (286 / 425)
+INFO - Failed non-dif: 84.0636 + 0.0780121 - 0.0783228% (184312 / 219253)
+
+INFO Bin 0 1 0
+INFO - Passed dif up:  0.561798 + 0.899386 - 0.347004% (1 / 178)
+INFO - Passed dif dw:  10.7296 + 1.5187 - 1.35052% (50 / 466)
+INFO - Passed non-dif: 11.398 + 0.135588 - 0.134197% (6326 / 55501)
+INFO - Failed dif:     8.47124 + 0.569211 - 0.536498% (215 / 2538)
+INFO - Failed non-dif: 11.398 + 0.135588 - 0.134197% (6326 / 55501)
+
+INFO Bin 0 1 1
+INFO - Passed dif up:  7.48031 + 1.82259 - 1.4891% (19 / 254)
+INFO - Passed dif dw:  40.102 + 1.57491 - 1.55473% (393 / 980)
+INFO - Passed non-dif: 47.239 + 0.132311 - 0.132272% (67274 / 142412)
+INFO - Failed dif:     47.7925 + 0.878236 - 0.876873% (1548 / 3239)
+INFO - Failed non-dif: 47.239 + 0.132311 - 0.132272% (67274 / 142412)
+
+INFO Bin 0 1 2
+INFO - Passed dif up:  17.5824 + 2.42107 - 2.18444% (48 / 273)
+INFO - Passed dif dw:  37.404 + 1.2866 - 1.26903% (536 / 1433)
+INFO - Passed non-dif: 53.9918 + 0.0993609 - 0.0993927% (135806 / 251531)
+INFO - Failed dif:     54.2337 + 0.807931 - 0.810163% (2056 / 3791)
+INFO - Failed non-dif: 53.9918 + 0.0993609 - 0.0993927% (135806 / 251531)
+
+INFO Bin 0 1 3
+INFO - Passed dif up:  21.4724 + 2.35971 - 2.18523% (70 / 326)
+INFO - Passed dif dw:  30.3102 + 0.918259 - 0.902804% (772 / 2547)
+INFO - Passed non-dif: 51.6142 + 0.0675086 - 0.0675145% (282813 / 547936)
+INFO - Failed dif:     50.0832 + 0.679894 - 0.679925% (2708 / 5407)
+INFO - Failed non-dif: 51.6142 + 0.0675086 - 0.0675145% (282813 / 547936)
+
+INFO Bin 0 1 4
+INFO - Passed dif up:  22.4265 + 1.83796 - 1.73677% (122 / 544)
+INFO - Passed dif dw:  32.1402 + 0.738083 - 0.729267% (1302 / 4051)
+INFO - Passed non-dif: 62.3696 + 0.045979 - 0.0460013% (692077 / 1109639)
+INFO - Failed dif:     55.0598 + 0.663584 - 0.665389% (3085 / 5603)
+INFO - Failed non-dif: 62.3696 + 0.045979 - 0.0460013% (692077 / 1109639)
+
+INFO Bin 0 1 5
+INFO - Passed dif up:  26.6272 + 3.53032 - 3.25535% (45 / 169)
+INFO - Passed dif dw:  35.7973 + 1.39288 - 1.36931% (431 / 1204)
+INFO - Passed non-dif: 77.6916 + 0.0594721 - 0.0595853% (379982 / 489090)
+INFO - Failed dif:     66.2226 + 1.44283 - 1.47367% (696 / 1051)
+INFO - Failed non-dif: 77.6916 + 0.0594721 - 0.0595853% (379982 / 489090)
+
+INFO Bin 1 0 0
+INFO - Passed dif up:  30 + 2.4008 - 2.29582% (114 / 380)
+INFO - Passed dif dw:  58.2359 + 1.08443 - 1.09245% (1195 / 2052)
+INFO - Passed non-dif: 69.1958 + 0.215434 - 0.216273% (31655 / 45747)
+INFO - Failed dif:     66.2123 + 0.450915 - 0.453882% (7237 / 10930)
+INFO - Failed non-dif: 69.1958 + 0.215434 - 0.216273% (31655 / 45747)
+
+INFO Bin 1 0 1
+INFO - Passed dif up:  42.3313 + 2.24775 - 2.21645% (207 / 489)
+INFO - Passed dif dw:  58.7872 + 0.756881 - 0.761059% (2472 / 4205)
+INFO - Passed non-dif: 73.9576 + 0.134371 - 0.134822% (78628 / 106315)
+INFO - Failed dif:     72.655 + 0.397609 - 0.401248% (9047 / 12452)
+INFO - Failed non-dif: 73.9576 + 0.134371 - 0.134822% (78628 / 106315)
+
+INFO Bin 1 0 2
+INFO - Passed dif up:  41.2664 + 2.31703 - 2.27897% (189 / 458)
+INFO - Passed dif dw:  45.6257 + 0.658244 - 0.65672% (2618 / 5738)
+INFO - Passed non-dif: 68.6596 + 0.114703 - 0.114931% (112071 / 163227)
+INFO - Failed dif:     66.7146 + 0.432082 - 0.434911% (7883 / 11816)
+INFO - Failed non-dif: 68.6596 + 0.114703 - 0.114931% (112071 / 163227)
+
+INFO Bin 1 0 3
+INFO - Passed dif up:  40.4696 + 1.8361 - 1.80981% (293 / 724)
+INFO - Passed dif dw:  37.7398 + 0.522459 - 0.519626% (3266 / 8654)
+INFO - Passed non-dif: 68.3261 + 0.0878538 - 0.0879847% (191296 / 279975)
+INFO - Failed dif:     64.2497 + 0.427597 - 0.429878% (8028 / 12495)
+INFO - Failed non-dif: 68.3261 + 0.0878538 - 0.0879847% (191296 / 279975)
+
+INFO Bin 1 0 4
+INFO - Passed dif up:  30.8131 + 1.7702 - 1.71554% (216 / 701)
+INFO - Passed dif dw:  37.3968 + 0.564482 - 0.561072% (2764 / 7391)
+INFO - Passed non-dif: 79.083 + 0.0753278 - 0.0755279% (229933 / 290749)
+INFO - Failed dif:     70.7554 + 0.544697 - 0.550715% (4880 / 6897)
+INFO - Failed non-dif: 79.083 + 0.0753278 - 0.0755279% (229933 / 290749)
+
+INFO Bin 1 0 5
+INFO - Passed dif up:  21.8391 + 4.73586 - 4.09584% (19 / 87)
+INFO - Passed dif dw:  36.0619 + 1.61165 - 1.58085% (326 / 904)
+INFO - Passed non-dif: 83.6061 + 0.161799 - 0.163093% (43425 / 51940)
+INFO - Failed dif:     67.2941 + 2.23275 - 2.31394% (286 / 425)
+INFO - Failed non-dif: 83.6061 + 0.161799 - 0.163093% (43425 / 51940)
+
+INFO Bin 1 1 0
+INFO - Passed dif up:  0.561798 + 0.899386 - 0.347004% (1 / 178)
+INFO - Passed dif dw:  10.7296 + 1.5187 - 1.35052% (50 / 466)
+INFO - Passed non-dif: 12.0512 + 0.320484 - 0.313294% (1272 / 10555)
+INFO - Failed dif:     8.47124 + 0.569211 - 0.536498% (215 / 2538)
+INFO - Failed non-dif: 12.0512 + 0.320484 - 0.313294% (1272 / 10555)
+
+INFO Bin 1 1 1
+INFO - Passed dif up:  7.48031 + 1.82259 - 1.4891% (19 / 254)
+INFO - Passed dif dw:  40.102 + 1.57491 - 1.55473% (393 / 980)
+INFO - Passed non-dif: 47.9524 + 0.299627 - 0.299479% (13337 / 27813)
+INFO - Failed dif:     47.7925 + 0.878236 - 0.876873% (1548 / 3239)
+INFO - Failed non-dif: 47.9524 + 0.299627 - 0.299479% (13337 / 27813)
+
+INFO Bin 1 1 2
+INFO - Passed dif up:  17.5824 + 2.42107 - 2.18444% (48 / 273)
+INFO - Passed dif dw:  37.404 + 1.2866 - 1.26903% (536 / 1433)
+INFO - Passed non-dif: 55.5074 + 0.223627 - 0.223851% (27384 / 49334)
+INFO - Failed dif:     54.2337 + 0.807931 - 0.810163% (2056 / 3791)
+INFO - Failed non-dif: 55.5074 + 0.223627 - 0.223851% (27384 / 49334)
+
+INFO Bin 1 1 3
+INFO - Passed dif up:  21.4724 + 2.35971 - 2.18523% (70 / 326)
+INFO - Passed dif dw:  30.3102 + 0.918259 - 0.902804% (772 / 2547)
+INFO - Passed non-dif: 53.3817 + 0.151873 - 0.151936% (57570 / 107846)
+INFO - Failed dif:     50.0832 + 0.679894 - 0.679925% (2708 / 5407)
+INFO - Failed non-dif: 53.3817 + 0.151873 - 0.151936% (57570 / 107846)
+
+INFO Bin 1 1 4
+INFO - Passed dif up:  22.4265 + 1.83796 - 1.73677% (122 / 544)
+INFO - Passed dif dw:  32.1402 + 0.738083 - 0.729267% (1302 / 4051)
+INFO - Passed non-dif: 63.5538 + 0.101366 - 0.101486% (143099 / 225162)
+INFO - Failed dif:     55.0598 + 0.663584 - 0.665389% (3085 / 5603)
+INFO - Failed non-dif: 63.5538 + 0.101366 - 0.101486% (143099 / 225162)
+
+INFO Bin 1 1 5
+INFO - Passed dif up:  26.6272 + 3.53032 - 3.25535% (45 / 169)
+INFO - Passed dif dw:  35.7973 + 1.39288 - 1.36931% (431 / 1204)
+INFO - Passed non-dif: 77.1055 + 0.129287 - 0.129802% (81108 / 105191)
+INFO - Failed dif:     66.2226 + 1.44283 - 1.47367% (696 / 1051)
+INFO - Failed non-dif: 77.1055 + 0.129287 - 0.129802% (81108 / 105191)
+INFO Selecting pi
+INFO Reading 2016 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2016--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2016--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3493635 entries
+INFO Reading 2017 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2017--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2017--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3471335 entries
+INFO Reading 2018 ntuples
+INFO Opened MC files:
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2018--md--bd_dstx.root
+  - ntuples/0.9.19-run2ang_noDLLmu/bd_dstx_mc-misid_corrections-pi/Dst_ANNPi--26_02_08--mc--11774014--2018--mu--bd_dstx.root
+INFO Setting input branches 
+INFO Starting MC event loop over 3473352 entries
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_0_1_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_0_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_0_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_0_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_0_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_0_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_0_5.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_1_0.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_1_1.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_1_2.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_1_3.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_1_4.pdf has been created
+Info in <TCanvas::Print>: pdf file ./gen/rdx-26_04_13_17_39-pidcalib_sel_effs_run2ang//h2_d0m_dm_pi_fake_mu_1_1_5.pdf has been created
+
+INFO Bin 0 0 0
+INFO - Passed dif up:  10.5507 + 0.44432 - 0.428407% (523 / 4957)
+INFO - Passed dif dw:  45.3496 + 0.567568 - 0.566362% (3496 / 7709)
+INFO - Passed non-dif: 70.9131 + 0.0676967 - 0.0677898% (318726 / 449460)
+INFO - Failed dif:     60.8605 + 0.837397 - 0.843841% (2051 / 3370)
+INFO - Failed non-dif: 70.9131 + 0.0676967 - 0.0677898% (318726 / 449460)
+
+INFO Bin 0 0 1
+INFO - Passed dif up:  9.1217 + 0.441906 - 0.42345% (404 / 4429)
+INFO - Passed dif dw:  45.9029 + 0.554467 - 0.553455% (3714 / 8091)
+INFO - Passed non-dif: 72.7839 + 0.0539425 - 0.0540095% (494874 / 679922)
+INFO - Failed dif:     59.325 + 2.05197 - 2.08504% (334 / 563)
+INFO - Failed non-dif: 72.7839 + 0.0539425 - 0.0540095% (494874 / 679922)
+
+INFO Bin 0 0 2
+INFO - Passed dif up:  8.12648 + 0.482175 - 0.457435% (275 / 3384)
+INFO - Passed dif dw:  41.1541 + 0.59606 - 0.593475% (2817 / 6845)
+INFO - Passed non-dif: 68.4323 + 0.050574 - 0.0506177% (577478 / 843868)
+INFO - Failed dif:     45.5189 + 2.42616 - 2.40508% (193 / 424)
+INFO - Failed non-dif: 68.4323 + 0.050574 - 0.0506177% (577478 / 843868)
+
+INFO Bin 0 0 3
+INFO - Passed dif up:  10.5064 + 0.611107 - 0.581267% (278 / 2646)
+INFO - Passed dif dw:  41.1333 + 0.591361 - 0.588811% (2860 / 6953)
+INFO - Passed non-dif: 68.7523 + 0.0406533 - 0.0406822% (893082 / 1298984)
+INFO - Failed dif:     45.6193 + 2.74678 - 2.72039% (151 / 331)
+INFO - Failed non-dif: 68.7523 + 0.0406533 - 0.0406822% (893082 / 1298984)
+
+INFO Bin 0 0 4
+INFO - Passed dif up:  15.8984 + 1.15351 - 1.08941% (169 / 1063)
+INFO - Passed dif dw:  49.7692 + 0.849224 - 0.849091% (1725 / 3466)
+INFO - Passed non-dif: 79.4585 + 0.0369623 - 0.0370117% (948011 / 1193089)
+INFO - Failed dif:     47.7419 + 4.01362 - 3.98467% (74 / 155)
+INFO - Failed non-dif: 79.4585 + 0.0369623 - 0.0370117% (948011 / 1193089)
+
+INFO Bin 0 0 5
+INFO - Passed dif up:  19.3548 + 5.48767 - 4.51481% (12 / 62)
+INFO - Passed dif dw:  55.3435 + 3.04522 - 3.08586% (145 / 262)
+INFO - Passed non-dif: 84.2578 + 0.085449 - 0.0858278% (152387 / 180858)
+INFO - Failed dif:     61.5385 + 12.2043 - 13.8526% (8 / 13)
+INFO - Failed non-dif: 84.2578 + 0.085449 - 0.0858278% (152387 / 180858)
+
+INFO Bin 0 1 0
+INFO - Passed dif up:  0.83612 + 0.463069 - 0.298916% (5 / 598)
+INFO - Passed dif dw:  9.69388 + 1.10861 - 1.00592% (76 / 784)
+INFO - Passed non-dif: 15.4814 + 0.168382 - 0.166899% (7208 / 46559)
+INFO - Failed dif:     0.692042 + 0.685675 - 0.345621% (2 / 289)
+INFO - Failed non-dif: 15.4814 + 0.168382 - 0.166899% (7208 / 46559)
+
+INFO Bin 0 1 1
+INFO - Passed dif up:  5.80271 + 0.770672 - 0.685266% (60 / 1034)
+INFO - Passed dif dw:  33.2907 + 1.20274 - 1.18135% (520 / 1562)
+INFO - Passed non-dif: 55.6959 + 0.136347 - 0.136433% (73879 / 132647)
+INFO - Failed dif:     36.2319 + 5.94516 - 5.55179% (25 / 69)
+INFO - Failed non-dif: 55.6959 + 0.136347 - 0.136433% (73879 / 132647)
+
+INFO Bin 0 1 2
+INFO - Passed dif up:  6.43432 + 0.773092 - 0.695296% (72 / 1119)
+INFO - Passed dif dw:  32.4131 + 1.06705 - 1.04908% (634 / 1956)
+INFO - Passed non-dif: 55.8812 + 0.10035 - 0.100398% (136744 / 244705)
+INFO - Failed dif:     30.3371 + 5.06921 - 4.63226% (27 / 89)
+INFO - Failed non-dif: 55.8812 + 0.10035 - 0.100398% (136744 / 244705)
+
+INFO Bin 0 1 3
+INFO - Passed dif up:  7.14818 + 0.735344 - 0.671577% (96 / 1343)
+INFO - Passed dif dw:  29.876 + 0.894729 - 0.879609% (795 / 2661)
+INFO - Passed non-dif: 51.6132 + 0.068712 - 0.0687181% (272988 / 528911)
+INFO - Failed dif:     30 + 3.86405 - 3.59915% (45 / 150)
+INFO - Failed non-dif: 51.6132 + 0.068712 - 0.0687181% (272988 / 528911)
+
+INFO Bin 0 1 4
+INFO - Passed dif up:  10.9524 + 1.00117 - 0.926869% (115 / 1050)
+INFO - Passed dif dw:  40.294 + 0.955756 - 0.948442% (1069 / 2653)
+INFO - Passed non-dif: 63.0549 + 0.0473071 - 0.0473322% (656010 / 1040379)
+INFO - Failed dif:     39.6313 + 3.36072 - 3.26559% (86 / 217)
+INFO - Failed non-dif: 63.0549 + 0.0473071 - 0.0473322% (656010 / 1040379)
+
+INFO Bin 0 1 5
+INFO - Passed dif up:  10.7527 + 2.48493 - 2.06517% (20 / 186)
+INFO - Passed dif dw:  50.7843 + 2.21006 - 2.21313% (259 / 510)
+INFO - Passed non-dif: 77.3777 + 0.0645544 - 0.064685% (324368 / 419201)
+INFO - Failed dif:     51.0204 + 7.04922 - 7.09003% (25 / 49)
+INFO - Failed non-dif: 77.3777 + 0.0645544 - 0.064685% (324368 / 419201)
+
+INFO Bin 1 0 0
+INFO - Passed dif up:  10.5507 + 0.44432 - 0.428407% (523 / 4957)
+INFO - Passed dif dw:  45.3496 + 0.567568 - 0.566362% (3496 / 7709)
+INFO - Passed non-dif: 71.7065 + 0.149765 - 0.150247% (64652 / 90162)
+INFO - Failed dif:     60.8605 + 0.837397 - 0.843841% (2051 / 3370)
+INFO - Failed non-dif: 71.7065 + 0.149765 - 0.150247% (64652 / 90162)
+
+INFO Bin 1 0 1
+INFO - Passed dif up:  9.1217 + 0.441906 - 0.42345% (404 / 4429)
+INFO - Passed dif dw:  45.9029 + 0.554467 - 0.553455% (3714 / 8091)
+INFO - Passed non-dif: 73.8481 + 0.118186 - 0.118532% (101807 / 137860)
+INFO - Failed dif:     59.325 + 2.05197 - 2.08504% (334 / 563)
+INFO - Failed non-dif: 73.8481 + 0.118186 - 0.118532% (101807 / 137860)
+
+INFO Bin 1 0 2
+INFO - Passed dif up:  8.12648 + 0.482175 - 0.457435% (275 / 3384)
+INFO - Passed dif dw:  41.1541 + 0.59606 - 0.593475% (2817 / 6845)
+INFO - Passed non-dif: 69.4543 + 0.110231 - 0.110455% (121020 / 174244)
+INFO - Failed dif:     45.5189 + 2.42616 - 2.40508% (193 / 424)
+INFO - Failed non-dif: 69.4543 + 0.110231 - 0.110455% (121020 / 174244)
+
+INFO Bin 1 0 3
+INFO - Passed dif up:  10.5064 + 0.611107 - 0.581267% (278 / 2646)
+INFO - Passed dif dw:  41.1333 + 0.591361 - 0.588811% (2860 / 6953)
+INFO - Passed non-dif: 69.1771 + 0.0883221 - 0.0884626% (188785 / 272901)
+INFO - Failed dif:     45.6193 + 2.74678 - 2.72039% (151 / 331)
+INFO - Failed non-dif: 69.1771 + 0.0883221 - 0.0884626% (188785 / 272901)
+
+INFO Bin 1 0 4
+INFO - Passed dif up:  15.8984 + 1.15351 - 1.08941% (169 / 1063)
+INFO - Passed dif dw:  49.7692 + 0.849224 - 0.849091% (1725 / 3466)
+INFO - Passed non-dif: 79.0383 + 0.0793184 - 0.0795395% (207560 / 262607)
+INFO - Failed dif:     47.7419 + 4.01362 - 3.98467% (74 / 155)
+INFO - Failed non-dif: 79.0383 + 0.0793184 - 0.0795395% (207560 / 262607)
+
+INFO Bin 1 0 5
+INFO - Passed dif up:  19.3548 + 5.48767 - 4.51481% (12 / 62)
+INFO - Passed dif dw:  55.3435 + 3.04522 - 3.08586% (145 / 262)
+INFO - Passed non-dif: 83.3946 + 0.178163 - 0.179707% (36069 / 43251)
+INFO - Failed dif:     61.5385 + 12.2043 - 13.8526% (8 / 13)
+INFO - Failed non-dif: 83.3946 + 0.178163 - 0.179707% (36069 / 43251)
+
+INFO Bin 1 1 0
+INFO - Passed dif up:  0.83612 + 0.463069 - 0.298916% (5 / 598)
+INFO - Passed dif dw:  9.69388 + 1.10861 - 1.00592% (76 / 784)
+INFO - Passed non-dif: 15.3459 + 0.372904 - 0.365629% (1462 / 9527)
+INFO - Failed dif:     0.692042 + 0.685675 - 0.345621% (2 / 289)
+INFO - Failed non-dif: 15.3459 + 0.372904 - 0.365629% (1462 / 9527)
+
+INFO Bin 1 1 1
+INFO - Passed dif up:  5.80271 + 0.770672 - 0.685266% (60 / 1034)
+INFO - Passed dif dw:  33.2907 + 1.20274 - 1.18135% (520 / 1562)
+INFO - Passed non-dif: 55.8497 + 0.303851 - 0.30429% (14894 / 26668)
+INFO - Failed dif:     36.2319 + 5.94516 - 5.55179% (25 / 69)
+INFO - Failed non-dif: 55.8497 + 0.303851 - 0.30429% (14894 / 26668)
+
+INFO Bin 1 1 2
+INFO - Passed dif up:  6.43432 + 0.773092 - 0.695296% (72 / 1119)
+INFO - Passed dif dw:  32.4131 + 1.06705 - 1.04908% (634 / 1956)
+INFO - Passed non-dif: 56.9382 + 0.224001 - 0.224285% (27787 / 48802)
+INFO - Failed dif:     30.3371 + 5.06921 - 4.63226% (27 / 89)
+INFO - Failed non-dif: 56.9382 + 0.224001 - 0.224285% (27787 / 48802)
+
+INFO Bin 1 1 3
+INFO - Passed dif up:  7.14818 + 0.735344 - 0.671577% (96 / 1343)
+INFO - Passed dif dw:  29.876 + 0.894729 - 0.879609% (795 / 2661)
+INFO - Passed non-dif: 53.6506 + 0.154079 - 0.154149% (56170 / 104696)
+INFO - Failed dif:     30 + 3.86405 - 3.59915% (45 / 150)
+INFO - Failed non-dif: 53.6506 + 0.154079 - 0.154149% (56170 / 104696)
+
+INFO Bin 1 1 4
+INFO - Passed dif up:  10.9524 + 1.00117 - 0.926869% (115 / 1050)
+INFO - Passed dif dw:  40.294 + 0.955756 - 0.948442% (1069 / 2653)
+INFO - Passed non-dif: 64.2583 + 0.104323 - 0.104459% (135427 / 210754)
+INFO - Failed dif:     39.6313 + 3.36072 - 3.26559% (86 / 217)
+INFO - Failed non-dif: 64.2583 + 0.104323 - 0.104459% (135427 / 210754)
+
+INFO Bin 1 1 5
+INFO - Passed dif up:  10.7527 + 2.48493 - 2.06517% (20 / 186)
+INFO - Passed dif dw:  50.7843 + 2.21006 - 2.21313% (259 / 510)
+INFO - Passed non-dif: 76.7821 + 0.13981 - 0.1404% (69732 / 90818)
+INFO - Failed dif:     51.0204 + 7.04922 - 7.09003% (25 / 49)
+INFO - Failed non-dif: 76.7821 + 0.13981 - 0.1404% (69732 / 90818)
