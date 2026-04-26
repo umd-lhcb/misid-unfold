@@ -50,13 +50,12 @@ The output folders are located in `gen` folder.
     3. Run `nix develop` in the project root
     4. In the resulting shell, run `make build-d0-decays` to produce constraints for the fits. The output files will be saved in `gen/rdx-<timestamp>-d0_decays`.
     5. Copy `d0_decays.yml` from the output folder to `spec/`.
-    6. Now run `make build-rdx-misid-mc-corrections-2016`, `make build-rdx-misid-mc-corrections-fake_mu-2016` and `make build-rdx-misid-mc-corrections-2016-vmu` to actually perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections-2016`, `gen/rdx-<timestamp>-misid-mc-corrections-2016-fake_mu` and `gen/rdx-<timestamp>-misid-mc-corrections-2016-vmu`, respectively.
-    7. Each of the three output folders above will contain two root files `*TrueToMuTag*`. Copy them into the `-corrected` folder produced in step $1.5$ along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
+    6. Now run `make build-rdx-misid-mc-corrections-2016`, `make build-rdx-misid-mc-corrections-2016-fake_mu` and `make build-rdx-misid-mc-corrections-2016-vmu` to perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections-2016`, `gen/rdx-<timestamp>-misid-mc-corrections-2016-fake_mu` and `gen/rdx-<timestamp>-misid-mc-corrections-2016-vmu`, respectively.
+    7. Each of the three output folders above will contain two root files `*TrueToMuTag*`. Copy them into the `-corrected` folder produced in step 1.5 along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
     8. You may revert to the usual root-curated version by reverting the changes to `flake.nix` and running `nix flake lock --update-input root-curated` again.
 
-
 > [!TIP]
-> The three `make` commands in step $2.5$ may be executed concurrently, and this is probably preferable since each takes about 12 hours!
+> The three `make` commands in step $2.6$ may be executed concurrently, and this is probably preferable since each takes about 12 hours!
 > One alternative is to use `screen` sessions:
 >
 > ```shell
@@ -69,13 +68,13 @@ The output folders are located in `gen` folder.
 > ```
 >
 > The screen sessions may be reattached with e.g. `screen -r misid-iso`, and killed from inside with CTRL+A+K.
+>
+> **Please make sure not to run more than 3 instances at once as they are quite memory-hungry.**
 
 > [!IMPORTANT]
-> To run step 2 with different PID cuts, changes must be made to two C++ files: `src/d0BkgDecays.cpp` and `src/GetMisIDCorrection.cpp`.
->
-> In `src/d0BkgDecays.cpp`, the event loop must be modified around lines 248-259.
->
-> In `src/GetMisIDCorrection.cpp`, the **three** event loops must be modified similarly, around lines 999-1010, 1336-1347 and 1514-1526.
+> To run step 2 with different PID cuts, you should change the definition of the function `check_mu_pid()` in `include/misid.h` to reflect your analysis.
+> This function is subsequently called in `src/d0BkgDecays.cpp` and in`src/GetMisIDCorrection.cpp`.
+> If you need to change modify the function arguments, make sure to also update the cpp files.
 
 3. Generate $e$ efficiencies with _original_ `pidcalib` samples (i.e. ntuples that lack UBDT branch, so we need to account for this later).
 
@@ -100,7 +99,7 @@ The output folders are located in `gen` folder.
 
 > [!IMPORTANT]
 > The steps above will produce the necessary efficiencies for 2016 data.
-> You must repeat them for the other years by replacing 2016 with 2017 and then 2018.
+> You can also replace 2016 with 2017 or 2018 to target other years, or use "yearless" commands (e.g. `make build-rdx-misid-mc-corrections`) to run the three years in sequence.
 
 Starting from the next step, all operations are done locally or on `glacier` and `nix develop` is always assumed.
 
