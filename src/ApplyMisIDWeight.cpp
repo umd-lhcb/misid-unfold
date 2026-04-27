@@ -306,7 +306,7 @@ RNode computeDiFVars(RNode df, F& randGetter, string suffix,
     return estB4Mom(v4BReco, v3BFlight);
   };
 
-  vector<string> brNames = {"mm2", "q2", "el", "b_m"};
+  vector<string> brNames = {"mm2", "q2", "el", "b_m", "v4_mu"};
   for (auto& n : brNames) outputBrs.emplace_back(n + suffix);
 
   return df.Define("v4_mu" + suffix, rebuildMu4MomPartial, {"v4_mu"})
