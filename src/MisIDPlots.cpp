@@ -20,6 +20,7 @@
 #include "TLine.h"
 #include "TMath.h"
 #include "TString.h"
+#include "TStyle.h"
 #include "TSystem.h"
 #include "TText.h"
 
@@ -184,6 +185,8 @@ int main(int argc, char **argv) {
     cout << argOpts.help() << endl;
     return 0;
   }
+
+  gStyle->SetOptStat(0);
 
   // Read arguments
   const auto ymlFile   = parsedArgs["config"].as<string>();

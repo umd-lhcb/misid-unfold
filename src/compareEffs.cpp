@@ -84,13 +84,22 @@ int main(int argc, char** argv) {
 
       TString suffix = TString::Format("%d_%d", ntrks_idx, eta_idx);
 
+      const auto    axis_eta     = histo_ref->GetYaxis();
+      const auto    axis_ntracks = histo_ref->GetZaxis();
+      const TString tag =
+          TString::Format("(%.0f < nTracks < %.0f, %.1f < #eta < %.1f)",
+                          axis_ntracks->GetBinLowEdge(ntrks_idx + 1),
+                          axis_ntracks->GetBinUpEdge(ntrks_idx + 1),
+                          axis_eta->GetBinLowEdge(eta_idx + 1),
+                          axis_eta->GetBinUpEdge(eta_idx + 1));
+
       // I tried using histo_ref_k->ProjectionX("_px", eta_idx + 1, eta_idx + 1,
       // ntrks_idx + 1, ntrks_idx + 1) to get a 1D slice of the 3D histogram,
       // but for some reason it produces wrong results. To be sure, let's do it
       // manually
-      TH1D histo_ref_proj("histo_ref_proj" + suffix, "", n_p_bins,
+      TH1D histo_ref_proj("histo_ref_proj" + suffix, tag+";#font[12]{p} (MeV)", n_p_bins,
                           histo_ref->GetXaxis()->GetXbins()->GetArray());
-      TH1D histo_new_proj("histo_new_proj" + suffix, "", n_p_bins,
+      TH1D histo_new_proj("histo_new_proj" + suffix, tag+";#font[12]{p} (MeV)", n_p_bins,
                           histo_new->GetXaxis()->GetXbins()->GetArray());
 
       for (int p_idx = 0; p_idx < n_p_bins; p_idx++) {
@@ -144,16 +153,6 @@ int main(int argc, char** argv) {
 
       mg.Add(&tge_ref);
       mg.Add(&tge_new);
-
-      const auto    axis_eta     = histo_ref->GetYaxis();
-      const auto    axis_ntracks = histo_ref->GetZaxis();
-      const TString tag =
-          TString::Format("(%.0f < nTracks < %.0f, %.1f < #eta < %.1f)",
-                          axis_ntracks->GetBinLowEdge(ntrks_idx + 1),
-                          axis_ntracks->GetBinUpEdge(ntrks_idx + 1),
-                          axis_eta->GetBinLowEdge(eta_idx + 1),
-                          axis_eta->GetBinUpEdge(eta_idx + 1));
-
       mg.SetTitle(tag);
       mg.Draw("AP");
       c.BuildLegend();
@@ -161,6 +160,8 @@ int main(int argc, char** argv) {
 
       c_ratio.cd();
 
+      histo_new_proj.SetStats(false);
+      histo_ref_proj.SetStats(false);
       TRatioPlot rp(&histo_new_proj, &histo_ref_proj);
       rp.Draw();
       const double max = 1.1 * std::max(histo_new_proj.GetMaximum(),
