@@ -16,7 +16,6 @@ from pyTuplingUtils.boolean.eval import BooleanEvaluator
 from pyTuplingUtils.utils import gen_histo
 from pyTuplingUtils.plot import plot_histo, ax_add_args_histo
 
-
 ################
 # Configurable #
 ################
@@ -35,29 +34,34 @@ PARTICLES = {
     "pi_smr_ubdt_veto": "pi",
 }
 
+
 ####
 def get_cuts_run2ang(p):
     # Included HLT2, Stripping and Offline mu cuts, except:
     # - uBDT cut, which is added explicitly below.
     # - IPCHI2 cut, which shouldn't affect the smearing AND rejects most
     #   signal events on our dominantly prompt charm MC.
-    cuts =    f" ETA( {p}_P, {p}_PZ ) > 1.7"
+    cuts = f"{p}_TRACK_CHI2NDOF < 3"
+    cuts += f" & ETA( {p}_P, {p}_PZ ) > 1.7"
     cuts += f" & ETA( {p}_P, {p}_PZ ) < 5"
     cuts += f" & {p}_TRACK_GhostProb < 0.5"
     cuts += f" & {p}_isMuon"
     cuts += f" & {p}_PIDe < 1"
     cuts += f" & {p}_P > 3 * GeV"
     cuts += f" & {p}_P < 100 * GeV"
-    cuts +=  " & LOG10pp(K_PX, K_PY, K_PZ, pi_PX, pi_PY, pi_PZ) > -6.5"
-    cuts +=  " & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6"
+    cuts += f" & {p}_TRUEORIGINVERTEX_Z == D_TRUEENDVERTEX_Z"
+    cuts += " & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6"
+    cuts += " & abs(D_TRUEID) == 421"
     return cuts
+
 
 def get_cuts_run1rdx(p):
     # Included HLT2, Stripping and Offline mu cuts, except:
     # - uBDT cut, which is added explicitly below.
     # - IPCHI2 cut, which shouldn't affect the smearing AND rejects most
     #   signal events on our dominantly prompt charm MC.
-    cuts =    f" ETA( {p}_P, {p}_PZ ) > 1.7"
+    cuts = f"{p}_TRACK_CHI2NDOF < 3"
+    cuts += f" & ETA( {p}_P, {p}_PZ ) > 1.7"
     cuts += f" & ETA( {p}_P, {p}_PZ ) < 5"
     cuts += f" & {p}_TRACK_GhostProb < 0.5"
     cuts += f" & {p}_isMuon"
@@ -65,15 +69,18 @@ def get_cuts_run1rdx(p):
     cuts += f" & {p}_PIDe < 1"
     cuts += f" & {p}_P > 3 * GeV"
     cuts += f" & {p}_P < 100 * GeV"
-    cuts +=  " & LOG10pp(K_PX, K_PY, K_PZ, pi_PX, pi_PY, pi_PZ) > -6.5"
-    cuts +=  " & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6"
+    cuts += f" & {p}_TRUEORIGINVERTEX_Z == D_TRUEENDVERTEX_Z"
+    cuts += " & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6"
+    cuts += " & abs(D_TRUEID) == 421"
     return cuts
+
 
 def get_cuts(p, run2ang=False):
     if run2ang:
         return get_cuts_run2ang(p)
     else:
         return get_cuts_run1rdx(p)
+
 
 # FIXME
 # Run 1 MC sample used here contains BDT weights with run 1 training.
@@ -95,7 +102,6 @@ PLOT_VAR_ALIASES = {
     "PZ": r"$p_z^{reco} / p_z^{true}$",
 }
 
-
 #######################
 # Command line parser #
 #######################
@@ -105,8 +111,14 @@ def parse_input():
     parser = ArgumentParser(description="build decay-in-flight histos.")
 
     parser.add_argument("ntps", nargs="+", help="specify input ntuples.")
-    parser.add_argument("-o", "--output", required=True, help="specify output dir.")
-    parser.add_argument("-r", "--run2ang", action="store_true", help="Use run2ang PID cuts.")
+    parser.add_argument("-o",
+                        "--output",
+                        required=True,
+                        help="specify output dir.")
+    parser.add_argument("-r",
+                        "--run2ang",
+                        action="store_true",
+                        help="Use run2ang PID cuts.")
 
     parser.add_argument(
         "--plot",
@@ -154,10 +166,18 @@ if __name__ == "__main__":
         print('Using Run 1 RDx PID cuts')
 
     cuts = {
-        "k_smr":            get_cuts("K", args.run2ang)  + " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25",
-        "pi_smr":           get_cuts("pi", args.run2ang) + " & abs(K_TRUEID)  == 321 & BDTmuCut > 0.25",
-        "k_smr_ubdt_veto":  get_cuts("K", args.run2ang)  + " & abs(pi_TRUEID) == 211 & BDTmuCut < 0.25",
-        "pi_smr_ubdt_veto": get_cuts("pi", args.run2ang) + " & abs(K_TRUEID)  == 321 & BDTmuCut < 0.25"
+        "k_smr":
+        get_cuts("K", args.run2ang) +
+        " & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25 & (abs(K_TRUEID) == 13 | abs(K_TRUEID)  == 321)",
+        "pi_smr":
+        get_cuts("pi", args.run2ang) +
+        " & abs(K_TRUEID)  == 321 & BDTmuCut > 0.25 & (abs(pi_TRUEID) == 13 | abs(pi_TRUEID) == 211)",
+        "k_smr_ubdt_veto":
+        get_cuts("K", args.run2ang) +
+        " & abs(pi_TRUEID) == 211 & BDTmuCut < 0.25 & (abs(K_TRUEID) == 13 | abs(K_TRUEID)  == 321)",
+        "pi_smr_ubdt_veto":
+        get_cuts("pi", args.run2ang) +
+        " & abs(K_TRUEID)  == 321 & BDTmuCut < 0.25 & (abs(pi_TRUEID) == 13 | abs(pi_TRUEID) == 211)"
     }
 
     ptcls = list(PARTICLES.keys())
@@ -165,19 +185,26 @@ if __name__ == "__main__":
         evaluator = BooleanEvaluator(n, TREE_NAME)
         ptcl = ptcls[idx]
         prefix = PARTICLES[ptcl]
-        print(f"\nWorking on {ptcl}, with a branch prefix {prefix}")
+        prefix_sister = "K" if prefix == "pi" else "pi"
+        print(
+            f"\nWorking on {ptcl}, with branch prefix {prefix} and sister {prefix_sister}"
+        )
         print(f"  Input ntuple: {n}")
         print(f"  Output tree name: {ptcl}")
 
-        true_brs = [evaluator.eval(f"{prefix}_{b}") for b in TRUE_P_BRS]
-        reco_brs = [evaluator.eval(f"{prefix}_{b}") for b in RECO_P_BRS]
-
         print(f"  Global cuts: {cuts[ptcl]}")
         global_cut = evaluator.eval(cuts[ptcl])
-        output_brs = []
         output_tree = dict()
 
         # Produce branches for PxPyPz strategy
+        output_brs = []
+
+        # FIXME
+        # PxPyPz method partially incorrect.
+        # MC truth information must be calculated using D and sister D daughter,
+        # similarly to PThetaPhi method.
+        true_brs = [evaluator.eval(f"{prefix}_{b}") for b in TRUE_P_BRS]
+        reco_brs = [evaluator.eval(f"{prefix}_{b}") for b in RECO_P_BRS]
         for i in range(len(RECO_P_BRS)):
             # reco / true !!!
             ratio = np.true_divide(
@@ -200,31 +227,43 @@ if __name__ == "__main__":
             output_tree[br_name] = br[global_cut]
 
         # Produce branches for PThetaPhi strategy
-        true_px = evaluator.eval(f"{prefix}_TRUEP_X")
-        true_py = evaluator.eval(f"{prefix}_TRUEP_Y")
-        true_pz = evaluator.eval(f"{prefix}_TRUEP_Z")
-        true_pt = evaluator.eval(f"{prefix}_TRUEPT")
+
+        # When track is matched to muon, the TRUE_P* variables will
+        # correspond to the muon and not to the D0 daughter. Therefore,
+        # calculate it from D0 and sister particle.
+        # Note: Truth-matching above makes sure that second track is
+        # actually matched to the true MC sister.
+        true_D_px = evaluator.eval("D_TRUEP_X")[global_cut]
+        true_D_py = evaluator.eval("D_TRUEP_Y")[global_cut]
+        true_D_pz = evaluator.eval("D_TRUEP_Z")[global_cut]
+
+        true_sis_px = evaluator.eval(f"{prefix_sister}_TRUEP_X")[global_cut]
+        true_sis_py = evaluator.eval(f"{prefix_sister}_TRUEP_Y")[global_cut]
+        true_sis_pz = evaluator.eval(f"{prefix_sister}_TRUEP_Z")[global_cut]
+
+        true_px = true_D_px - true_sis_px
+        true_py = true_D_py - true_sis_py
+        true_pz = true_D_pz - true_sis_pz
+        true_pt = np.sqrt(np.add(np.power(true_px, 2), np.power(true_py, 2)))
         true_p = np.sqrt(np.add(np.power(true_pt, 2), np.power(true_pz, 2)))
-        reco_px = evaluator.eval(f"{prefix}_PX")
-        reco_py = evaluator.eval(f"{prefix}_PY")
-        reco_pz = evaluator.eval(f"{prefix}_PZ")
-        reco_pt = evaluator.eval(f"{prefix}_PT")
-        reco_p = evaluator.eval(f"{prefix}_P")
+
+        reco_px = evaluator.eval(f"{prefix}_PX")[global_cut]
+        reco_py = evaluator.eval(f"{prefix}_PY")[global_cut]
+        reco_pz = evaluator.eval(f"{prefix}_PZ")[global_cut]
+        reco_pt = evaluator.eval(f"{prefix}_PT")[global_cut]
+        reco_p = evaluator.eval(f"{prefix}_P")[global_cut]
 
         # Get P ratio
-        ratio_p = np.divide(reco_p,
-                            true_p,
-                            out=np.zeros_like(reco_p),
-                            where=true_p > 0)
+        ratio_p = np.divide(reco_p, true_p)
 
-        output_tree[f"{ptcl}_rP"] = ratio_p[global_cut]
+        output_tree[f"{ptcl}_rP"] = ratio_p
 
         # Get theta variation
         true_theta = np.arccos(np.divide(true_pz, true_p))
         reco_theta = np.arccos(np.divide(reco_pz, reco_p))
         delta_theta = np.subtract(reco_theta, true_theta)
 
-        output_tree[f"{ptcl}_dTheta"] = delta_theta[global_cut]
+        output_tree[f"{ptcl}_dTheta"] = delta_theta
 
         # Get phi variation
         true_abs_phi = np.arccos(np.divide(true_px, true_pt))
@@ -247,7 +286,7 @@ if __name__ == "__main__":
                            out=delta_phi,
                            where=delta_phi <= -math.pi)
 
-        output_tree[f"{ptcl}_dPhi"] = delta_phi[global_cut]
+        output_tree[f"{ptcl}_dPhi"] = delta_phi
 
         # now write the tree
         output_ntp[ptcl] = output_tree

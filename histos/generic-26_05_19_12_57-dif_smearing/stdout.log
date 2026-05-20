@@ -1,0 +1,21 @@
+Using Run 1 RDx PID cuts
+
+Working on k_smr, with a branch prefix K and sister pi
+  Input ntuple: ./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root
+  Output tree name: k_smr
+  Global cuts: K_TRACK_CHI2NDOF < 3 & ETA( K_P, K_PZ ) > 1.7 & ETA( K_P, K_PZ ) < 5 & K_TRACK_GhostProb < 0.5 & K_isMuon & K_PIDmu > 2.0 & K_PIDe < 1 & K_P > 3 * GeV & K_P < 100 * GeV & K_TRUEORIGINVERTEX_Z == D_TRUEENDVERTEX_Z & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6 & abs(D_TRUEID) == 421 & abs(pi_TRUEID) == 211 & BDTmuCut > 0.25 & (abs(K_TRUEID) == 13 | abs(K_TRUEID)  == 321)
+
+Working on pi_smr, with a branch prefix pi and sister K
+  Input ntuple: ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+  Output tree name: pi_smr
+  Global cuts: pi_TRACK_CHI2NDOF < 3 & ETA( pi_P, pi_PZ ) > 1.7 & ETA( pi_P, pi_PZ ) < 5 & pi_TRACK_GhostProb < 0.5 & pi_isMuon & pi_PIDmu > 2.0 & pi_PIDe < 1 & pi_P > 3 * GeV & pi_P < 100 * GeV & pi_TRUEORIGINVERTEX_Z == D_TRUEENDVERTEX_Z & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6 & abs(D_TRUEID) == 421 & abs(K_TRUEID)  == 321 & BDTmuCut > 0.25 & (abs(pi_TRUEID) == 13 | abs(pi_TRUEID) == 211)
+
+Working on k_smr_ubdt_veto, with a branch prefix K and sister pi
+  Input ntuple: ./ntuples/ref-rdx-run1/K-mix/K--17_06_28--mix--2011-2012--md-mu--greg.root
+  Output tree name: k_smr_ubdt_veto
+  Global cuts: K_TRACK_CHI2NDOF < 3 & ETA( K_P, K_PZ ) > 1.7 & ETA( K_P, K_PZ ) < 5 & K_TRACK_GhostProb < 0.5 & K_isMuon & K_PIDmu > 2.0 & K_PIDe < 1 & K_P > 3 * GeV & K_P < 100 * GeV & K_TRUEORIGINVERTEX_Z == D_TRUEENDVERTEX_Z & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6 & abs(D_TRUEID) == 421 & abs(pi_TRUEID) == 211 & BDTmuCut < 0.25 & (abs(K_TRUEID) == 13 | abs(K_TRUEID)  == 321)
+
+Working on pi_smr_ubdt_veto, with a branch prefix pi and sister K
+  Input ntuple: ./ntuples/ref-rdx-run1/Pi-mix/Pi--17_06_28--mix--2011-2012--md-mu--greg.root
+  Output tree name: pi_smr_ubdt_veto
+  Global cuts: pi_TRACK_CHI2NDOF < 3 & ETA( pi_P, pi_PZ ) > 1.7 & ETA( pi_P, pi_PZ ) < 5 & pi_TRACK_GhostProb < 0.5 & pi_isMuon & pi_PIDmu > 2.0 & pi_PIDe < 1 & pi_P > 3 * GeV & pi_P < 100 * GeV & pi_TRUEORIGINVERTEX_Z == D_TRUEENDVERTEX_Z & (D_ENDVERTEX_CHI2 / D_ENDVERTEX_NDOF) < 6 & abs(D_TRUEID) == 421 & abs(K_TRUEID)  == 321 & BDTmuCut < 0.25 & (abs(pi_TRUEID) == 13 | abs(pi_TRUEID) == 211)
