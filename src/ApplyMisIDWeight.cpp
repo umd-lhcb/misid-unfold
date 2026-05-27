@@ -28,8 +28,6 @@
 #include "kinematic.h"
 #include "utils.h"
 
-#define RAND_SEED 42
-
 using namespace std;
 using ROOT::RDataFrame;
 using ROOT::Math::PxPyPzEVector;
@@ -43,7 +41,8 @@ using ROOT::RDF::RNode;
 typedef vector<pair<string, string>> vPStrStr;
 typedef vector<pair<regex, string>>  vPRegStr;
 
-const double PRE_SCALE_CORRECTION = 10.0;
+constexpr int    RAND_SEED            = 42;
+constexpr double PRE_SCALE_CORRECTION = 10.0;
 
 static const vPStrStr MU_BRANCH_DEFS{
     // PIDCalib name, DaVinci name w/o particle name
@@ -98,10 +97,9 @@ static const string D0_TEST_BR  = "d0_PX";
 
 // Idea stolen from:
 //   https://root-forum.cern.ch/t/running-rdataframes-define-in-for-loop/32484/2
-RNode defineBranch(RNode df, string particle = "mu",
+RNode defineBranch(RNode df, const string& particle = "mu",
                    const vPStrStr& rules = MU_BRANCH_DEFS,
                    const bool& debug = false, unsigned idx = 0) {
-  // auto df = init_df.Alias(alias, particle+"_"+raw);
   if (rules.size() == idx) return df;
 
   auto inputBrName = rules[idx].second;
@@ -147,7 +145,7 @@ pair<vPStrStr, vector<string>> genTaggedCutDirective(
 // Helpers for weight computation //
 ////////////////////////////////////
 
-vector<TString> buildHistoWtNames(string                 targetParticle,
+vector<TString> buildHistoWtNames(const string&          targetParticle,
                                   const vector<TString>& skims,
                                   const string& year, YAML::Node node) {
   vector<TString> result{};
@@ -168,15 +166,16 @@ vector<TString> buildHistoWtNames(string                 targetParticle,
 }
 
 tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
-    RNode df, TFile* ntpHisto, string histoPrefix, string weightBrPrefix,
-    vector<TString> histoWtNames, const bool& debug = false) {
+    RNode df, TFile* ntpHisto, const string& histoPrefix,
+    const string& weightBrPrefix, const vector<TString>& histoWtNames,
+    const bool& debug = false) {
   auto outputBrs = vector<string>{};
   auto histos    = vector<TH3D*>{};
 
   for (const auto& h : histoWtNames) {
-    auto histoName = string(histoPrefix + "__" + h);
+    const TString histoName = histoPrefix + "__" + h;
     if (debug) cout << "  Loading histo " << histoName << endl;
-    auto histoWt = static_cast<TH3D*>(ntpHisto->Get(histoName.data()));
+    auto histoWt = static_cast<TH3D*>(ntpHisto->Get(histoName));
     if (!histoWt)
       throw runtime_error("Could not get histogram with name " + histoName);
     histos.emplace_back(histoWt);
@@ -204,16 +203,61 @@ tuple<RNode, vector<string>, vector<TH3D*>> applyWtFromHistos(
                    },
                    {"P", "ETA", "nTracks"});
     outputBrs.emplace_back(brName);
+
+    // Also produce weights with smeared muon kinematics
+    if (histoName.EndsWith("_kTrueOnly")) {
+      const auto brNameSmr = brName + "_smr_k";
+      if (histoName.Contains("_vmu_")) {
+        if (debug)
+          cout << "  Generating " << brNameSmr << " with vmu smearing..."
+               << endl;
+        df = df.Define(brNameSmr,
+                       [histoWt, prescale](double& x, double& y, double& z) {
+                         auto binIdx = histoWt->FindFixBin(x, y, z);
+                         return histoWt->GetBinContent(binIdx) * prescale;
+                       },
+                       {"mu_p_smr_k_vmu", "mu_eta_smr_k_vmu", "nTracks"});
+      } else {
+        if (debug) cout << "  Generating " << brNameSmr << "..." << endl;
+        df = df.Define(brNameSmr,
+                       [histoWt, prescale](double& x, double& y, double& z) {
+                         auto binIdx = histoWt->FindFixBin(x, y, z);
+                         return histoWt->GetBinContent(binIdx) * prescale;
+                       },
+                       {"mu_p_smr_k", "mu_eta_smr_k", "nTracks"});
+      }
+      outputBrs.emplace_back(brNameSmr);
+    } else if (histoName.EndsWith("_piTrueOnly")) {
+      const auto brNameSmr = brName + "_smr_pi";
+      if (histoName.Contains("_vmu_")) {
+        if (debug)
+          cout << "  Generating " << brNameSmr << " with vmu smearing..."
+               << endl;
+        df = df.Define(brNameSmr,
+                       [histoWt, prescale](double& x, double& y, double& z) {
+                         auto binIdx = histoWt->FindFixBin(x, y, z);
+                         return histoWt->GetBinContent(binIdx) * prescale;
+                       },
+                       {"mu_p_smr_pi_vmu", "mu_eta_smr_pi_vmu", "nTracks"});
+      } else {
+        if (debug) cout << "  Generating " << brNameSmr << "..." << endl;
+        df = df.Define(brNameSmr,
+                       [histoWt, prescale](double& x, double& y, double& z) {
+                         auto binIdx = histoWt->FindFixBin(x, y, z);
+                         return histoWt->GetBinContent(binIdx) * prescale;
+                       },
+                       {"mu_p_smr_pi", "mu_eta_smr_pi", "nTracks"});
+      }
+      outputBrs.emplace_back(brNameSmr);
+    }
   }
 
   return {df, outputBrs, histos};
 }
 
-pair<vPStrStr, vector<string>> genWtDirective(YAML::Node             node,
-                                              const string&          wtPrefix,
-                                              const vector<TString>& skims,
-                                              const bool& debug = false,
-                                              string brPrefix   = "is_misid_") {
+pair<vPStrStr, vector<string>> genWtDirective(
+    YAML::Node node, const string& wtPrefix, const vector<TString>& skims,
+    const bool& debug = false, const string& brPrefix = "is_misid_") {
   vPStrStr       directives{};
   vector<string> outputBrs{};
   const auto     wtTargetParticle = "MuTag";
@@ -256,6 +300,26 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node             node,
       outputBrs.emplace_back(wtNameSingleTrue);
       directives.emplace_back(pair{wtNameSingleTrue, expr});
       if (debug) cout << "  " << wtNameSingleTrue << " = " << expr << endl;
+
+      // Also produce weights with smeared muon kinematics
+      if (wtNameSingleTrue.EndsWith("_k") || wtNameSingleTrue.EndsWith("_pi")) {
+        const TString smr_suffix =
+            wtNameSingleTrue.EndsWith("_k") ? "_smr_k" : "_smr_pi";
+        expr  = ""s;
+        first = true;
+        for (const auto& p : particles) {
+          const auto wtBrName = wtPrefix + "_" + p + "TagTo" +
+                                wtTargetParticle + "_" + skim + "_" + pTrue +
+                                "TrueOnly" + smr_suffix;
+          if (!first) expr += " + ";
+          first = false;
+          expr += brPrefix + p + "*" + wtBrName;
+        }
+        auto wtNameSingleTrueSmr = wtNameSingleTrue + smr_suffix;
+        outputBrs.emplace_back(wtNameSingleTrueSmr);
+        directives.emplace_back(pair{wtNameSingleTrueSmr, expr});
+        if (debug) cout << "  " << wtNameSingleTrueSmr << " = " << expr << endl;
+      }
     }
   }
 
@@ -266,9 +330,9 @@ pair<vPStrStr, vector<string>> genWtDirective(YAML::Node             node,
 // Rest frame variable helpers //
 /////////////////////////////////
 
-auto getRandSmrHelper(vector<vector<double>>& smr) {
+auto getRandSmrHelper(const vector<vector<double>>& smr) {
   auto size = make_shared<unsigned long>(smr.size());
-  auto rng  = make_shared<TRandomMixMax256>(42);
+  auto rng  = make_shared<TRandomMixMax256>(RAND_SEED);
 
   return [&smr, size, rng] {
     unsigned long rand = rng->Uniform(0, *(size.get()));
@@ -276,15 +340,15 @@ auto getRandSmrHelper(vector<vector<double>>& smr) {
   };
 }
 
-vector<string> setBrPrefix(const string prefix, const vector<string> vars) {
+vector<string> setBrPrefix(const string& prefix, const vector<string>& vars) {
   vector<string> result{};
   result.reserve(vars.size());
   for (const auto& v : vars) result.emplace_back(prefix + "_" + v);
   return result;
 }
 
-void getSmrFac(vector<vector<double>>& result, string auxFile,
-               string prefix = "k_smr") {
+void getSmrFac(vector<vector<double>>& result, const string& auxFile,
+               const string& prefix = "k_smr") {
   auto df = RDataFrame(prefix, auxFile);
   df.Foreach(
       [&](double x, double y, double z, double rP, double dTheta, double dPhi) {
@@ -294,8 +358,8 @@ void getSmrFac(vector<vector<double>>& result, string auxFile,
 }
 
 template <typename F>
-RNode computeDiFVars(RNode df, F& randGetter, string suffix,
-                     vector<string>& outputBrs, string smr_mode) {
+RNode computeDiFVars(RNode df, F& randGetter, const string& suffix,
+                     vector<string>& outputBrs, const string& smr_mode) {
   // we probably did some unnecessary copies here, but deducing those nested
   // lambdas can be quite hard so I'm just being lazy here.
   auto rebuildMu4MomPartial = [=, &randGetter](PxPyPzEVector v4Mu) {
@@ -306,7 +370,8 @@ RNode computeDiFVars(RNode df, F& randGetter, string suffix,
     return estB4Mom(v4BReco, v3BFlight);
   };
 
-  vector<string> brNames = {"mm2", "q2", "el", "b_m", "v4_mu"};
+  vector<string> brNames = {"mm2",   "q2",     "el",  "b_m",
+                            "v4_mu", "mu_eta", "mu_p"};
   for (auto& n : brNames) outputBrs.emplace_back(n + suffix);
 
   return df.Define("v4_mu" + suffix, rebuildMu4MomPartial, {"v4_mu"})
@@ -317,14 +382,16 @@ RNode computeDiFVars(RNode df, F& randGetter, string suffix,
               {"v4_b_est" + suffix, "v4_b_reco" + suffix})
       .Define("q2" + suffix, q2, {"v4_b_est" + suffix, "v4_d"})
       .Define("el" + suffix, el, {"v4_b_est" + suffix, "v4_mu" + suffix})
-      .Define("b_m" + suffix, calcBM, {"v4_b_reco" + suffix});
+      .Define("b_m" + suffix, calcBM, {"v4_b_reco" + suffix})
+      .Define("mu_eta" + suffix, eta, {"v4_mu" + suffix})
+      .Define("mu_p" + suffix, P, {"v4_mu" + suffix});
 }
 
 template <typename F1, typename F2>
 pair<RNode, vector<string>> defRestFrameVars(RNode df, TTree* tree,
                                              F1& randKGetter, F2& randPiGetter,
-                                             string smr_mode,
-                                             string brSuffix = "") {
+                                             const string& smr_mode,
+                                             const string& brSuffix = "") {
   vector<string> outputBrs{};
   string         dMeson = ""s;
   string         bMeson = ""s;

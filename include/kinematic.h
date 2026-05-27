@@ -106,3 +106,7 @@ Double_t q2(const PxPyPzEVector& v4BEst, const PxPyPzEVector& v4D) {
 
 // in MeV!
 Double_t calcBM(const PxPyPzEVector& v4BReco) { return v4BReco.M(); }
+
+Double_t eta(const PxPyPzEVector& v4) { return v4.Eta(); }
+
+Double_t P(const PxPyPzEVector& v4) { return v4.P(); }
