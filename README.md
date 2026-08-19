@@ -12,10 +12,17 @@ cd misid-unfold
 
 # Do this only once, right after cloning
 git remote add glacier git@10.229.60.85:misid-unfold
+git remote add acadia git@acadia.physics.umd.edu:misid-unfold
 git annex init --version=7
 # Before proceeding, make sure you do not have uncommitted/unstashed changes in the repo,
 # because 'git annex sync' commits and then pushes everything
 git annex sync
+```
+
+If working on glacier/acadia, it's also best to not create copies of all our ntuples, so instead link to their locations already stored on the server (if they exist):
+```shell
+cd scripts
+python create_ntuple_<acadia/glacier>_links.py
 ```
 
 > [!TIP]
