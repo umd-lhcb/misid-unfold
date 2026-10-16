@@ -53,13 +53,11 @@ The output folders are located in `gen` folder.
 2. Generate $K\to\mu$ and $\pi\to\mu$ misid efficiencies through fits to the modified `pidcalib` samples.
 
     1. Clone this project on `glacier`
-    2. Modify your `flake.nix` file replacing `root-curated.url = "github:umd-lhcb/root-curated"` with `root-curated.url = "github:umd-lhcb/root-curated/lmg_misid_validation_fit_v6_36"`, then run `nix flake lock --update-input root-curated`.
-    3. Run `nix develop` in the project root
-    4. In the resulting shell, run `make build-d0-decays` to produce constraints for the fits. The output files will be saved in `gen/rdx-<timestamp>-d0_decays`.
-    5. Copy `d0_decays.yml` from the output folder to `spec/`.
-    6. Now run `make build-rdx-misid-mc-corrections-2016`, `make build-rdx-misid-mc-corrections-2016-fake_mu` and `make build-rdx-misid-mc-corrections-2016-vmu` to perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections-2016`, `gen/rdx-<timestamp>-misid-mc-corrections-2016-fake_mu` and `gen/rdx-<timestamp>-misid-mc-corrections-2016-vmu`, respectively.
-    7. Each of the three output folders above will contain two root files `*TrueToMuTag*`. Copy them into the `-corrected` folder produced in step 1.5 along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
-    8. You may revert to the usual root-curated version by reverting the changes to `flake.nix` and running `nix flake lock --update-input root-curated` again.
+    2. Run `nix develop` in the project root
+    3. In the resulting shell, run `make build-d0-decays` to produce constraints for the fits. The output files will be saved in `gen/rdx-<timestamp>-d0_decays`.
+    4. Copy `d0_decays.yml` from the output folder to `spec/`.
+    5. Now run `make build-rdx-misid-mc-corrections-2016`, `make build-rdx-misid-mc-corrections-2016-fake_mu` and `make build-rdx-misid-mc-corrections-2016-vmu` to perform the fits. The output files will be saved in `gen/rdx-<timestamp>-misid-mc-corrections-2016`, `gen/rdx-<timestamp>-misid-mc-corrections-2016-fake_mu` and `gen/rdx-<timestamp>-misid-mc-corrections-2016-vmu`, respectively.
+    6. Each of the three output folders above will contain two root files `*TrueToMuTag*`. Copy them into the `-corrected` folder produced in step 1.5 along with the other $K$, $\pi$ and $p$ efficiencies. This will overwrite the $K\to\mu$ and $\pi\to\mu$ efficiencies from PIDCalib, which are still preserved in the non`-corrected` folder.
 
 > [!TIP]
 > The three `make` commands in step $2.6$ may be executed concurrently, and this is probably preferable since each takes about 12 hours!

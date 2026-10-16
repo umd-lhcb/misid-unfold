@@ -2,7 +2,7 @@
   description = "Unfolding Muon misID samples.";
 
   inputs = {
-    root-curated.url = "github:umd-lhcb/root-curated";
+    root-curated.url = "github:umd-lhcb/root-curated/lmg_misid_validation_fit_v6_36";
     nixpkgs.follows = "root-curated/nixpkgs";
     flake-utils.follows = "root-curated/flake-utils";
     pyTuplingUtils.url = "github:umd-lhcb/pyTuplingUtils";
@@ -88,6 +88,13 @@
             export PATH=$(pwd)/scripts:$(pwd)/bin:$PATH
             export MPLBACKEND=agg  # the backend w/o a UI
             export MPLCONFIGDIR=$(pwd)/.matplotlib
+
+            # Get location of RooUnfold package
+            export ROOUNFOLD_DIR=${pkgs.roounfold}
+            export ROOT_DIR=${pkgs.root}
+            export LIBYAML_DIR=${pkgs.libyamlcpp}
+            export CXXOPTS_DIR=${pkgs.cxxopts}
+            export BOOST_DIR=${pkgs.boost}
           '';
         };
       });
