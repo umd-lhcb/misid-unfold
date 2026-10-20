@@ -44,7 +44,7 @@ EFFICIENCIES_RUN2ANG := ./histos/rdx-26_04_26_04_11-merged-run2ang/merged.root
 UNFOLDED         := ./histos/rdx-26_04_24_07_02-unfolded/unfolded.root
 UNFOLDED_RUN2ANG := ./histos/rdx-26_04_26_04_13-unfolded-run2ang/unfolded_run2ang.root
 
-TAGGED         := ./histos/rdx-26_04_14_07_02-tag/tagged.root
+TAGGED         := ./histos/rdx-26_10_16_02_22-tag/tagged.root
 TAGGED_RUN2ANG := ./histos/rdx-26_04_14_07_30-tag-run2ang/tagged.root
 
 DIF         := ./histos/generic-26_04_14_06_57-dif_smearing/dif.root
